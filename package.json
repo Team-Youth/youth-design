@@ -1,5 +1,5 @@
 {
-  "name": "@youth-design/design-system",
+  "name": "@team-youth/youth-design",
   "version": "1.0.0",
   "description": "Youth Design System - 청년 의료 플랫폼을 위한 전문 디자인 시스템",
   "main": "dist/index.js",
@@ -69,13 +69,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-org/youth-design-system.git"
+    "url": "git+https://github.com/Team-Youth/youth-design.git"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
   "bugs": {
-    "url": "https://github.com/your-org/youth-design-system/issues"
+    "url": "https://github.com/Team-Youth/youth-design/issues"
   },
-  "homepage": "https://github.com/your-org/youth-design-system#readme"
+  "homepage": "https://github.com/Team-Youth/youth-design#readme"
 }
