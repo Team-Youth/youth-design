@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { typography } from '../tokens/typography';
 
@@ -13,45 +14,43 @@ const TypeSample: React.FC<TypeSampleProps> = ({
   style, 
   description,
   sampleText = '청년 의료 플랫폼을 위한 디자인 시스템' 
-}) => (
-  <div style={{ marginBottom: '32px', padding: '16px', border: '1px solid #E8EAED', borderRadius: '8px' }}>
-    <div style={{ 
-      fontFamily: 'Pretendard, sans-serif', 
-      fontSize: '12px', 
-      fontWeight: 600, 
-      color: '#505862',
-      marginBottom: '8px',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
-    }}>
-      {label}
-    </div>
-    
-    <div style={style}>
-      {sampleText}
-    </div>
-    
-    <div style={{ marginTop: '12px' }}>
+}) => {
+  // Convert fontSize object to CSS string
+  const cssStyle = {
+    ...style,
+    fontSize: typeof style.fontSize === 'object' ? style.fontSize.rem : style.fontSize
+  };
+
+  return (
+    <div style={{ marginBottom: '32px', padding: '20px', border: '1px solid #E8EAED', borderRadius: '8px' }}>
       <div style={{ 
-        fontFamily: 'Pretendard, sans-serif', 
-        fontSize: '11px', 
-        color: '#8D97A5',
-        marginBottom: '4px'
+        fontSize: '14px', 
+        fontWeight: 600, 
+        color: '#7248D9', 
+        marginBottom: '8px',
+        fontFamily: 'Pretendard, sans-serif'
       }}>
-        Font Size: {style.fontSize} | Font Weight: {style.fontWeight} | Line Height: {style.lineHeight}
+        {label}
       </div>
+      
+      <div style={cssStyle}>
+        {sampleText}
+      </div>
+      
       {description && (
         <div style={{ 
-          fontFamily: 'Pretendard, sans-serif', 
-          fontSize: '11px', 
-          color: '#505862'
+          fontSize: '12px', 
+          color: '#8D97A5', 
+          marginTop: '12px',
+          lineHeight: '1.4',
+          fontFamily: 'Pretendard, sans-serif'
         }}>
           {description}
         </div>
       )}
     </div>
-  </div>
-);
+  );
+};
 
 interface FontWeightSampleProps {
   weight: number;

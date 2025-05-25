@@ -1,7 +1,6 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { borders } from '../tokens/borders';
-import { radius } from '../tokens/radius';
-import { shadows } from '../tokens/shadows';
+import { radius, shadows, borders } from '../tokens';
 
 interface TokenSampleProps {
   name: string;
@@ -82,7 +81,7 @@ const CombinedExample: React.FC = () => (
       padding: '20px',
       backgroundColor: '#FFFFFF',
       borderRadius: radius.xs,
-      border: `${borders.s} solid #E8EAED`,
+      border: `${borders.border.s} solid #E8EAED`,
     }}>
       <div style={{ 
         fontFamily: 'Pretendard, sans-serif', 
@@ -130,7 +129,7 @@ const CombinedExample: React.FC = () => (
       padding: '20px',
       backgroundColor: '#FFFFFF',
       borderRadius: radius.l,
-      border: `${borders.m} solid #7248D9`,
+      border: `${borders.border.m} solid #7248D9`,
       boxShadow: shadows.s,
     }}>
       <div style={{ 
@@ -200,22 +199,22 @@ export const Borders: Story = {
       
       <TokenSample
         name="border-s"
-        value={borders.s}
-        style={{ border: `${borders.s} solid #7248D9` }}
+        value={borders.border.s}
+        style={{ border: `${borders.border.s} solid #7248D9` }}
         description="UI 요소의 기본적인 구분감을 제공할 때 사용합니다."
       />
       
       <TokenSample
         name="border-m"
-        value={borders.m}
-        style={{ border: `${borders.m} solid #7248D9` }}
+        value={borders.border.m}
+        style={{ border: `${borders.border.m} solid #7248D9` }}
         description="요소가 서로 밀접하게 배치되어 있거나, 구분감이 약할 경우에 사용할 수 있습니다."
       />
       
       <TokenSample
         name="border-l"
-        value={borders.l}
-        style={{ border: `${borders.l} solid #7248D9` }}
+        value={borders.border.l}
+        style={{ border: `${borders.border.l} solid #7248D9` }}
         description="중요한 요소를 강조하거나, 요소 간 강한 대비가 필요할 때 사용합니다."
       />
     </div>
@@ -397,7 +396,7 @@ export const CombinedTokens: Story = {
           backgroundColor: '#FFFFFF',
           borderRadius: radius.m,
           boxShadow: shadows.m,
-          border: `${borders.s} solid #E5DEF9`,
+          border: `${borders.border.s} solid #E5DEF9`,
           marginBottom: '16px'
         }}>
           <div style={{ 
@@ -436,7 +435,7 @@ export const CombinedTokens: Story = {
               backgroundColor: '#FFFFFF',
               color: '#7248D9',
               borderRadius: radius.xs,
-              border: `${borders.s} solid #7248D9`,
+              border: `${borders.border.s} solid #7248D9`,
               fontFamily: 'Pretendard, sans-serif',
               fontSize: '12px'
             }}>
