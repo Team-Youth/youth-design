@@ -1,0 +1,39 @@
+{
+    "spacing": {
+      "description": [
+        "스페이싱(Spacing)은 균일한 요소와 간격을 사용하여 UI의 체계적인 배열을 도와줍니다.",
+        "페이지, 템플릿, 컴포넌트의 사이즈와 간격 및 수치를 해당 단위로 맞춰 사용하는 것을 권장합니다.",
+        "스페이싱의 기본 단위는 4와 8의 배수에 기반한 9가지로 규정하여 사용합니다.",
+        "8의 배수는 가장 큰 기본 배수이며, 80을 포함하고 있는 2와 4의 배수도 사용 가능합니다."
+      ],
+      "styles": {
+        "spacing-xxxs": {
+          "value": "2px"
+        },
+        "spacing-xxs": {
+          "value": "4px"
+        },
+        "spacing-xs": {
+          "value": "8px"
+        },
+        "spacing-s": {
+          "value": "12px"
+        },
+        "spacing-m": {
+          "value": "16px"
+        },
+        "spacing-l": {
+          "value": "20px"
+        },
+        "spacing-xl": {
+          "value": "24px"
+        },
+        "spacing-xxl": {
+          "value": "32px"
+        },
+        "spacing-xxxl": {
+          "value": "40px"
+        }
+      }
+    }
+  }

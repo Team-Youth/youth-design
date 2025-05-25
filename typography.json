@@ -1,0 +1,153 @@
+{
+    "typography": {
+      "overview": [
+        "타이포그래피는 서비스와 사용자가 커뮤니케이션하는 주요 요소이며, 텍스트 목적과 기능에 따라 세부 및 스타일을 유연하게 사용합니다.",
+        "개발 접점 요소(Design Token)로 지정된 요소만 일관된 이름을 부여하여 관리합니다.",
+        "폰트, 텍스트별 스타일을 정의하고, 각 스타일의 사용법을 명확히 규정하여 일관된 타이포그래피 경험을 제공합니다."
+      ],
+      "typeface": {
+        "fontFamily": "Pretendard",
+        "usage": [
+          "나눔바른펜이 웹사이트에 사용되는 모든 폰트는 Pretendard를 기반으로 합니다.",
+          "웹폰트 Pretendard-Variable로 임베딩되어 사용합니다.",
+          "iOS, Android 기본 폰트 설정을 따릅니다."
+        ],
+        "link": "다운로드 링크"
+      },
+      "fontSizes": {
+        "font-size-xxxxl": { "px": 32, "rem": "2rem" },
+        "font-size-xxxl":  { "px": 28, "rem": "1.75rem" },
+        "font-size-xxl":   { "px": 24, "rem": "1.5rem" },
+        "font-size-xl":    { "px": 20, "rem": "1.25rem" },
+        "font-size-l":     { "px": 18, "rem": "1.125rem" },
+        "font-size-m":     { "px": 16, "rem": "1rem" },
+        "font-size-s":     { "px": 14, "rem": "0.875rem" },
+        "font-size-xs":    { "px": 12, "rem": "0.75rem" },
+        "font-size-xxs":   { "px": 10, "rem": "0.625rem" },
+        "font-size-xxxs":  { "px": 11, "rem": "0.688rem" }
+      },
+      "fontWeights": {
+        "font-weight-bold":       700,
+        "font-weight-semibold":   600,
+        "font-weight-medium":     500,
+        "font-weight-regular":    400
+      },
+      "lineHeights": {
+        "line-height-xxxxl": 42,
+        "line-height-xxxl":  36,
+        "line-height-xxl":   32,
+        "line-height-xl":    28,
+        "line-height-l":     24,
+        "line-height-m":     24,
+        "line-height-s":     22,
+        "line-height-xs":    20,
+        "line-height-xxs":   18,
+        "line-height-xxxs":  17
+      },
+      "letterSpacings": {
+        "letter-spacing-m":  "0",
+        "letter-spacing-s":  "-1%",
+        "letter-spacing-xs": "-2%"
+      },
+      "textStyles": {
+        "Display1": {
+          "fontSize":       "font-size-xxxxl",
+          "fontWeight":     "font-weight-bold",
+          "lineHeight":     "line-height-xxxxl",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "주목도를 높이고 큰 타이틀 영역 강조에 사용합니다.",
+            "대화 UI에서 서브타이틀, 페이지 제목 등 섹션 나눔에 많이 사용합니다.",
+            "다양한 레이아웃에서 사용됩니다."
+          ]
+        },
+        "Display2": {
+          "fontSize":       "font-size-xxxl",
+          "fontWeight":     "font-weight-bold",
+          "lineHeight":     "line-height-xxxl",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "중간 크기 타이틀에 사용됩니다.",
+            "카드 헤더, 모달 제목, 챕터 제목 등에 사용됩니다."
+          ]
+        },
+        "Heading1": {
+          "fontSize":       "font-size-xxl",
+          "fontWeight":     "font-weight-bold",
+          "lineHeight":     "line-height-xxl",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "정보성 카드 타이틀에 주로 사용됩니다.",
+            "사용자 입력 폼의 필드명에 사용됩니다."
+          ]
+        },
+        "Heading2": {
+          "fontSize":       "font-size-xl",
+          "fontWeight":     "font-weight-semibold",
+          "lineHeight":     "line-height-xl",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "섹션 구분 타이틀 등에 사용됩니다.",
+            "사용자 입력 폼의 라벨에 사용됩니다."
+          ]
+        },
+        "Heading3": {
+          "fontSize":       "font-size-l",
+          "fontWeight":     "font-weight-semibold",
+          "lineHeight":     "line-height-l",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "소제목 등에 사용됩니다.",
+            "문단 내 강조 텍스트로 사용됩니다."
+          ]
+        },
+        "Heading4": {
+          "fontSize":       "font-size-m",
+          "fontWeight":     "font-weight-semibold",
+          "lineHeight":     "line-height-m",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "리스트 아이템, 버튼 텍스트 등에 사용됩니다.",
+            "태그, 카테고리, 배지 텍스트 등에 사용됩니다."
+          ]
+        },
+        "Heading5": {
+          "fontSize":       "font-size-s",
+          "fontWeight":     "font-weight-semibold",
+          "lineHeight":     "line-height-s",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "부가 정보, 캡션 등에 사용됩니다."
+          ]
+        },
+        "Body1": {
+          "fontSize":       "font-size-m",
+          "fontWeight":     "font-weight-regular",
+          "lineHeight":     "line-height-l",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "주요 본문 텍스트에 사용됩니다.",
+            "개행 없는 문단에서 쉽게 읽히도록 설계되었습니다."
+          ]
+        },
+        "Body2": {
+          "fontSize":       "font-size-s",
+          "fontWeight":     "font-weight-regular",
+          "lineHeight":     "line-height-s",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "보조 본문 텍스트에 사용됩니다."
+          ]
+        },
+        "Caption": {
+          "fontSize":       "font-size-xs",
+          "fontWeight":     "font-weight-regular",
+          "lineHeight":     "line-height-xs",
+          "letterSpacing":  "letter-spacing-m",
+          "usage": [
+            "보조 정보나 컴포넌트 레벨에서 사용됩니다."
+          ]
+        }
+      }
+    }
+  }
