@@ -1,6 +1,6 @@
 {
   "name": "@team-youth/youth-design",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "description": "Youth Design System - 청년 의료 플랫폼을 위한 전문 디자인 시스템",
   "main": "dist/index.js",
