@@ -226,7 +226,7 @@ export const FontSizes: Story = {
         }}>
           <div style={{ 
             fontFamily: 'Pretendard, sans-serif',
-            fontSize: `${value}px`,
+            fontSize: value,
             color: '#25282D',
             minWidth: '300px'
           }}>
@@ -238,7 +238,7 @@ export const FontSizes: Story = {
             color: '#8D97A5',
             marginLeft: '16px'
           }}>
-            {value}px / {(value / 16).toFixed(3)}rem
+            {value} ({Math.round(parseFloat(value) * 16)}px)
           </div>
         </div>
       ))}

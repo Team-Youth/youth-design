@@ -203,18 +203,27 @@ var fontFamily = {
   /** 웹사이트에 사용되는 모든 폰트는 Pretendard를 기반으로 함 */
   primary: 'Pretendard'
 };
-// Font Sizes (px 값으로 직접 사용 가능)
+// Font Sizes (rem 단위로 반응형 지원)
 var fontSize = {
-  xxxxl: 32,
-  xxxl: 28,
-  xxl: 24,
-  xl: 20,
-  l: 18,
-  m: 16,
-  s: 14,
-  xs: 12,
-  xxs: 10,
-  xxxs: 11
+  xxxxl: '2rem',
+  // 32px
+  xxxl: '1.75rem',
+  // 28px
+  xxl: '1.5rem',
+  // 24px
+  xl: '1.25rem',
+  // 20px
+  l: '1.125rem',
+  // 18px
+  m: '1rem',
+  // 16px
+  s: '0.875rem',
+  // 14px
+  xs: '0.75rem',
+  // 12px
+  xxs: '0.625rem',
+  // 10px
+  xxxs: '0.688rem' // 11px
 };
 // Font Weights
 var fontWeight = {
