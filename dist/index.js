@@ -203,48 +203,18 @@ var fontFamily = {
   /** 웹사이트에 사용되는 모든 폰트는 Pretendard를 기반으로 함 */
   primary: 'Pretendard'
 };
-// Font Sizes
+// Font Sizes (px 값으로 직접 사용 가능)
 var fontSize = {
-  xxxxl: {
-    px: 32,
-    rem: '2rem'
-  },
-  xxxl: {
-    px: 28,
-    rem: '1.75rem'
-  },
-  xxl: {
-    px: 24,
-    rem: '1.5rem'
-  },
-  xl: {
-    px: 20,
-    rem: '1.25rem'
-  },
-  l: {
-    px: 18,
-    rem: '1.125rem'
-  },
-  m: {
-    px: 16,
-    rem: '1rem'
-  },
-  s: {
-    px: 14,
-    rem: '0.875rem'
-  },
-  xs: {
-    px: 12,
-    rem: '0.75rem'
-  },
-  xxs: {
-    px: 10,
-    rem: '0.625rem'
-  },
-  xxxs: {
-    px: 11,
-    rem: '0.688rem'
-  }
+  xxxxl: 32,
+  xxxl: 28,
+  xxl: 24,
+  xl: 20,
+  l: 18,
+  m: 16,
+  s: 14,
+  xs: 12,
+  xxs: 10,
+  xxxs: 11
 };
 // Font Weights
 var fontWeight = {
@@ -255,16 +225,16 @@ var fontWeight = {
 };
 // Line Heights
 var lineHeight = {
-  xxxxl: 42,
-  xxxl: 36,
-  xxl: 32,
-  xl: 28,
-  l: 24,
-  m: 24,
-  s: 22,
-  xs: 20,
-  xxs: 18,
-  xxxs: 17
+  xxxxl: '42px',
+  xxxl: '36px',
+  xxl: '32px',
+  xl: '28px',
+  l: '24px',
+  m: '24px',
+  s: '22px',
+  xs: '20px',
+  xxs: '18px',
+  xxxs: '17px'
 };
 // Letter Spacings
 var letterSpacing = {
@@ -272,7 +242,7 @@ var letterSpacing = {
   s: '-1%',
   xs: '-2%'
 };
-// Text Styles
+// Text Styles (React.CSSProperties 호환)
 var textStyles = {
   /** 주목도를 높이고 큰 타이틀 영역 강조에 사용 */
   display1: {

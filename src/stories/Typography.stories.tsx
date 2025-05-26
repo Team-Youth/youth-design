@@ -15,12 +15,6 @@ const TypeSample: React.FC<TypeSampleProps> = ({
   description,
   sampleText = '청년 의료 플랫폼을 위한 디자인 시스템' 
 }) => {
-  // Convert fontSize object to CSS string
-  const cssStyle = {
-    ...style,
-    fontSize: typeof style.fontSize === 'object' ? style.fontSize.rem : style.fontSize
-  };
-
   return (
     <div style={{ marginBottom: '32px', padding: '20px', border: '1px solid #E8EAED', borderRadius: '8px' }}>
       <div style={{ 
@@ -33,7 +27,7 @@ const TypeSample: React.FC<TypeSampleProps> = ({
         {label}
       </div>
       
-      <div style={cssStyle}>
+      <div style={style}>
         {sampleText}
       </div>
       
@@ -232,7 +226,7 @@ export const FontSizes: Story = {
         }}>
           <div style={{ 
             fontFamily: 'Pretendard, sans-serif',
-            fontSize: `${value.px}px`,
+            fontSize: `${value}px`,
             color: '#25282D',
             minWidth: '300px'
           }}>
@@ -244,7 +238,7 @@ export const FontSizes: Story = {
             color: '#8D97A5',
             marginLeft: '16px'
           }}>
-            {value.px}px / {value.rem}
+            {value}px / {(value / 16).toFixed(3)}rem
           </div>
         </div>
       ))}
