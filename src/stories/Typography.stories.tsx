@@ -172,6 +172,13 @@ export const TextStyles: Story = {
       />
       
       <TypeSample
+        label="Body 3"
+        style={typography.textStyles.body3}
+        description="본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장됩니다."
+        sampleText="추가 정보나 세부 사항을 표시할 때 사용하는 작은 크기의 본문 텍스트입니다."
+      />
+      
+      <TypeSample
         label="Caption"
         style={typography.textStyles.caption}
         description="보조 정보나 컴포넌트 레벨에서 사용됩니다."
@@ -296,6 +303,13 @@ export const MedicalContent: Story = {
             marginTop: '4px'
           }}>
             * 예약 취소는 진료 시간 2시간 전까지만 가능합니다.
+          </div>
+          <div style={{ 
+            ...typography.textStyles.body3,
+            color: '#8D97A5',
+            marginTop: '8px'
+          }}>
+            취소 수수료는 발생하지 않으며, 온라인 또는 전화로 취소 가능합니다.
           </div>
         </div>
       </div>

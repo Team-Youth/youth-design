@@ -126,6 +126,14 @@ export const textStyles = {
     letterSpacing: letterSpacing.m,
     fontFamily: fontFamily.primary,
   },
+  /** 본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장 */
+  body3: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.xxs,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary,
+  },
   /** 보조 정보나 컴포넌트 레벨에서 사용 */
   caption: {
     fontSize: fontSize.xs,

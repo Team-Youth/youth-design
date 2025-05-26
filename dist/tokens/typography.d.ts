@@ -114,6 +114,14 @@ export declare const textStyles: {
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
+    /** 본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장 */
+    readonly body3: {
+        readonly fontSize: "0.75rem";
+        readonly fontWeight: 400;
+        readonly lineHeight: "18px";
+        readonly letterSpacing: "0";
+        readonly fontFamily: "Pretendard";
+    };
     /** 보조 정보나 컴포넌트 레벨에서 사용 */
     readonly caption: {
         readonly fontSize: "0.75rem";
@@ -233,6 +241,14 @@ export declare const typography: {
             readonly fontSize: "0.875rem";
             readonly fontWeight: 400;
             readonly lineHeight: "22px";
+            readonly letterSpacing: "0";
+            readonly fontFamily: "Pretendard";
+        };
+        /** 본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장 */
+        readonly body3: {
+            readonly fontSize: "0.75rem";
+            readonly fontWeight: 400;
+            readonly lineHeight: "18px";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
