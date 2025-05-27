@@ -1,6 +1,6 @@
 'use strict';
 
-var jsxRuntime = require('react/jsx-runtime');
+Object.defineProperty(exports, '__esModule', { value: true });
 
 /**
  * Color Design Tokens
@@ -515,235 +515,32 @@ var tokens = {
     return Promise.resolve().then(function () { return borders$1; });
   }
 };
-
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
-
-
-var __assign = function() {
-    __assign = Object.assign || function __assign(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
+// Re-export everything as default
+var index = {
+  colors: function () {
+    return Promise.resolve().then(function () { return colors$1; });
+  },
+  typography: function () {
+    return Promise.resolve().then(function () { return typography$1; });
+  },
+  spacing: function () {
+    return Promise.resolve().then(function () { return spacing$1; });
+  },
+  radius: function () {
+    return Promise.resolve().then(function () { return radius$1; });
+  },
+  shadows: function () {
+    return Promise.resolve().then(function () { return shadows$1; });
+  },
+  borders: function () {
+    return Promise.resolve().then(function () { return borders$1; });
+  }
 };
 
-typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
-    var e = new Error(message);
-    return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
-};
-
-var LoadingIcon = function () {
-  return jsxRuntime.jsx("svg", {
-    width: "16",
-    height: "16",
-    viewBox: "0 0 16 16",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    className: "loading-icon",
-    children: jsxRuntime.jsx("circle", {
-      cx: "8",
-      cy: "8",
-      r: "6",
-      stroke: "currentColor",
-      strokeWidth: "2",
-      strokeLinecap: "round",
-      strokeDasharray: "37.7",
-      strokeDashoffset: "37.7"
-    })
-  });
-};
-var BoxButton = function (_a) {
-  var _b = _a.type,
-    type = _b === void 0 ? 'solid' : _b,
-    _c = _a.size,
-    size = _c === void 0 ? 'l' : _c,
-    _d = _a.property,
-    property = _d === void 0 ? 'normal' : _d,
-    icon = _a.icon,
-    children = _a.children,
-    onClick = _a.onClick,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e,
-    _f = _a.isLoading,
-    isLoading = _f === void 0 ? false : _f;
-  // Size configurations
-  var sizeConfig = {
-    l: {
-      paddingX: '16px',
-      paddingY: '12px',
-      gap: '4px',
-      borderRadius: '12px',
-      width: '320px',
-      height: '48px'
-    },
-    m: {
-      paddingX: '12px',
-      paddingY: '8px',
-      gap: '4px',
-      borderRadius: '8px',
-      width: '320px',
-      height: '40px'
-    },
-    s: {
-      paddingX: '8px',
-      paddingY: '6px',
-      gap: '4px',
-      borderRadius: '4px',
-      width: '320px',
-      height: '32px'
-    }
-  };
-  var getStyles = function () {
-    var config = sizeConfig[size];
-    var styles = {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: config.gap,
-      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
-      borderRadius: config.borderRadius,
-      width: config.width,
-      height: config.height,
-      border: '1px solid transparent',
-      cursor: property === 'disabled' || isLoading ? 'not-allowed' : 'pointer',
-      transition: 'all 0.2s ease',
-      fontSize: '14px',
-      fontWeight: '500'
-    };
-    if (type === 'solid') {
-      switch (property) {
-        case 'normal':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.mainviolet,
-            color: colors.semantic.background.primary,
-            border: "1px solid ".concat(colors.primary.mainviolet)
-          });
-          break;
-        case 'hovered':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.tint.violet[600],
-            color: colors.semantic.background.primary,
-            border: "1px solid ".concat(colors.primary.tint.violet[600])
-          });
-          break;
-        case 'pressed':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.tint.violet[700],
-            color: colors.semantic.background.primary,
-            border: "1px solid ".concat(colors.primary.tint.violet[700])
-          });
-          break;
-        case 'disabled':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.semantic.disabled.background,
-            color: colors.semantic.disabled.foreground,
-            border: "1px solid ".concat(colors.semantic.disabled.background),
-            cursor: 'not-allowed'
-          });
-          break;
-      }
-    } else if (type === 'ghost') {
-      switch (property) {
-        case 'normal':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.semantic.background.primary,
-            color: colors.semantic.text.primary,
-            border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-          });
-          break;
-        case 'hovered':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.coolGray[100],
-            color: colors.semantic.text.primary,
-            border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-          });
-          break;
-        case 'pressed':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.coolGray[100],
-            color: colors.semantic.text.primary,
-            border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-          });
-          break;
-        case 'disabled':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.semantic.background.primary,
-            color: colors.semantic.disabled.foreground,
-            border: "".concat(border.s, " ").concat(colors.semantic.disabled.foreground),
-            cursor: 'not-allowed'
-          });
-          break;
-      }
-    }
-    // Loading state overrides
-    if (isLoading) {
-      if (type === 'solid') {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.mainviolet,
-          color: colors.semantic.background.primary,
-          border: "".concat(border.s, " ").concat(colors.primary.mainviolet),
-          cursor: 'not-allowed'
-        });
-      } else {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.background.primary,
-          color: colors.semantic.text.primary,
-          border: "".concat(border.s, " ").concat(colors.semantic.border.strong),
-          cursor: 'not-allowed'
-        });
-      }
-    }
-    return styles;
-  };
-  var handleClick = function () {
-    if (property !== 'disabled' && !isLoading && onClick) {
-      onClick();
-    }
-  };
-  var renderContent = function () {
-    if (isLoading) {
-      return jsxRuntime.jsx(LoadingIcon, {});
-    }
-    return jsxRuntime.jsxs(jsxRuntime.Fragment, {
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && jsxRuntime.jsx("span", {
-        children: icon.left
-      }), children && jsxRuntime.jsx("span", {
-        children: children
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && jsxRuntime.jsx("span", {
-        children: icon.right
-      })]
-    });
-  };
-  return jsxRuntime.jsx("button", {
-    style: getStyles(),
-    onClick: handleClick,
-    disabled: property === 'disabled' || isLoading,
-    className: className,
-    children: renderContent()
-  });
-};
-
-exports.BoxButton = BoxButton;
 exports.borders = borders;
 exports.colors = colors;
 exports.coolGray = coolGray;
+exports.default = index;
 exports.fontFamily = fontFamily;
 exports.fontSize = fontSize;
 exports.fontWeight = fontWeight;

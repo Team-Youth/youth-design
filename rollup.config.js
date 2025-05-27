@@ -1,20 +1,21 @@
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
 import babel from '@rollup/plugin-babel';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import typescript from '@rollup/plugin-typescript';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import postcss from 'rollup-plugin-postcss';
 
-export default {
-  input: 'src/index.ts',
+const createConfig = (input, outputDir) => ({
+  input,
   output: [
     {
-      file: 'dist/index.js',
+      file: `dist/${outputDir}/index.js`,
       format: 'cjs',
       exports: 'named',
       sourcemap: true,
     },
     {
-      file: 'dist/index.esm.js',
+      file: `dist/${outputDir}/index.esm.js`,
       format: 'esm',
       exports: 'named',
       sourcemap: true,
@@ -26,8 +27,15 @@ export default {
       browser: true,
     }),
     commonjs(),
+    postcss({
+      extract: true,
+      minimize: true,
+    }),
     typescript({
       tsconfig: './tsconfig.json',
+      declaration: true,
+      declarationDir: `dist/${outputDir}`,
+      rootDir: 'src',
     }),
     babel({
       babelHelpers: 'bundled',
@@ -35,4 +43,13 @@ export default {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
     }),
   ],
-}; 
+});
+
+export default [
+  // Main entry point
+  createConfig('src/index.ts', '.'),
+  // Token entry point
+  createConfig('src/tokens/index.ts', 'token'),
+  // Components entry point
+  createConfig('src/components/index.ts', 'components'),
+]; 
