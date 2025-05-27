@@ -3,7 +3,7 @@ import './BoxButton.css';
 export interface BoxButtonProps {
     type?: 'solid' | 'ghost';
     size?: 'l' | 'm' | 's';
-    property?: 'normal' | 'hovered' | 'pressed' | 'disabled';
+    disabled?: boolean;
     icon?: {
         left?: React.ReactNode;
         right?: React.ReactNode;

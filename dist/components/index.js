@@ -1,6 +1,7 @@
 'use strict';
 
 var jsxRuntime = require('react/jsx-runtime');
+var react = require('react');
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -262,8 +263,8 @@ var BoxButton = function (_a) {
     type = _b === void 0 ? 'solid' : _b,
     _c = _a.size,
     size = _c === void 0 ? 'l' : _c,
-    _d = _a.property,
-    property = _d === void 0 ? 'normal' : _d,
+    _d = _a.disabled,
+    disabled = _d === void 0 ? false : _d,
     icon = _a.icon,
     children = _a.children,
     onClick = _a.onClick,
@@ -271,6 +272,12 @@ var BoxButton = function (_a) {
     className = _e === void 0 ? '' : _e,
     _f = _a.isLoading,
     isLoading = _f === void 0 ? false : _f;
+  var _g = react.useState(false),
+    isHovered = _g[0],
+    setIsHovered = _g[1];
+  var _h = react.useState(false),
+    isPressed = _h[0],
+    setIsPressed = _h[1];
   // Size configurations
   var sizeConfig = {
     l: {
@@ -310,74 +317,58 @@ var BoxButton = function (_a) {
       width: config.width,
       height: config.height,
       border: '1px solid transparent',
-      cursor: property === 'disabled' || isLoading ? 'not-allowed' : 'pointer',
+      cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
       transition: 'all 0.2s ease',
       fontSize: '14px',
       fontWeight: '500'
     };
     if (type === 'solid') {
-      switch (property) {
-        case 'normal':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.mainviolet,
-            color: colors.semantic.background.primary,
-            border: "1px solid ".concat(colors.primary.mainviolet)
-          });
-          break;
-        case 'hovered':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.tint.violet[600],
-            color: colors.semantic.background.primary,
-            border: "1px solid ".concat(colors.primary.tint.violet[600])
-          });
-          break;
-        case 'pressed':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.tint.violet[700],
-            color: colors.semantic.background.primary,
-            border: "1px solid ".concat(colors.primary.tint.violet[700])
-          });
-          break;
-        case 'disabled':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.semantic.disabled.background,
-            color: colors.semantic.disabled.foreground,
-            border: "1px solid ".concat(colors.semantic.disabled.background),
-            cursor: 'not-allowed'
-          });
-          break;
+      if (disabled) {
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.semantic.disabled.background,
+          color: colors.semantic.disabled.foreground,
+          border: "1px solid ".concat(colors.semantic.disabled.background),
+          cursor: 'not-allowed'
+        });
+      } else if (isPressed) {
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.primary.tint.violet[700],
+          color: colors.semantic.background.primary,
+          border: "1px solid ".concat(colors.primary.tint.violet[700])
+        });
+      } else if (isHovered) {
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.primary.tint.violet[600],
+          color: colors.semantic.background.primary,
+          border: "1px solid ".concat(colors.primary.tint.violet[600])
+        });
+      } else {
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.primary.mainviolet,
+          color: colors.semantic.background.primary,
+          border: "1px solid ".concat(colors.primary.mainviolet)
+        });
       }
     } else if (type === 'ghost') {
-      switch (property) {
-        case 'normal':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.semantic.background.primary,
-            color: colors.semantic.text.primary,
-            border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-          });
-          break;
-        case 'hovered':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.coolGray[100],
-            color: colors.semantic.text.primary,
-            border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-          });
-          break;
-        case 'pressed':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.coolGray[100],
-            color: colors.semantic.text.primary,
-            border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-          });
-          break;
-        case 'disabled':
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.semantic.background.primary,
-            color: colors.semantic.disabled.foreground,
-            border: "".concat(border.s, " ").concat(colors.semantic.disabled.foreground),
-            cursor: 'not-allowed'
-          });
-          break;
+      if (disabled) {
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.semantic.background.primary,
+          color: colors.semantic.disabled.foreground,
+          border: "".concat(border.s, " ").concat(colors.semantic.disabled.foreground),
+          cursor: 'not-allowed'
+        });
+      } else if (isPressed || isHovered) {
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.primary.coolGray[100],
+          color: colors.semantic.text.primary,
+          border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
+        });
+      } else {
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.semantic.background.primary,
+          color: colors.semantic.text.primary,
+          border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
+        });
       }
     }
     // Loading state overrides
@@ -401,9 +392,26 @@ var BoxButton = function (_a) {
     return styles;
   };
   var handleClick = function () {
-    if (property !== 'disabled' && !isLoading && onClick) {
+    if (!disabled && !isLoading && onClick) {
       onClick();
     }
+  };
+  var handleMouseEnter = function () {
+    if (!disabled && !isLoading) {
+      setIsHovered(true);
+    }
+  };
+  var handleMouseLeave = function () {
+    setIsHovered(false);
+    setIsPressed(false);
+  };
+  var handleMouseDown = function () {
+    if (!disabled && !isLoading) {
+      setIsPressed(true);
+    }
+  };
+  var handleMouseUp = function () {
+    setIsPressed(false);
   };
   var renderContent = function () {
     if (isLoading) {
@@ -422,7 +430,11 @@ var BoxButton = function (_a) {
   return jsxRuntime.jsx("button", {
     style: getStyles(),
     onClick: handleClick,
-    disabled: property === 'disabled' || isLoading,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    onMouseDown: handleMouseDown,
+    onMouseUp: handleMouseUp,
+    disabled: disabled || isLoading,
     className: className,
     children: renderContent()
   });
