@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Font } from './Font';
 import { textStyles, fontWeight } from '../../tokens/typography';
+import { colors } from '../../tokens/colors';
 
 const meta: Meta<typeof Font> = {
   title: 'Components/Font',
@@ -25,14 +26,12 @@ const meta: Meta<typeof Font> = {
       description: 'Font weight override',
     },
     color: {
-      control: 'select',
-      options: ['primary', 'secondary', 'tertiary', 'disabled', 'inverse', 'success', 'warning', 'error', 'info'],
-      description: 'Text color',
+      control: 'color',
+      description: 'Text color (hex, rgb, etc.)',
     },
     hoverColor: {
-      control: 'select',
-      options: ['primary', 'secondary', 'tertiary', 'disabled', 'inverse', 'success', 'warning', 'error', 'info'],
-      description: 'Hover color',
+      control: 'color',
+      description: 'Hover color (hex, rgb, etc.)',
     },
     align: {
       control: 'select',
@@ -101,17 +100,17 @@ export const FontWeights: Story = {
 export const Colors: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', backgroundColor: '#f5f5f5', padding: '20px' }}>
-      <Font type="body1" color="primary">Primary - 가장 중요한 정보</Font>
-      <Font type="body1" color="secondary">Secondary - 부가적인 내용</Font>
-      <Font type="body1" color="tertiary">Tertiary - 시각적 우선순위가 낮은 텍스트</Font>
-      <Font type="body1" color="disabled">Disabled - 비활성화된 상태</Font>
+      <Font type="body1" color={colors.semantic.text.primary}>Primary - 가장 중요한 정보</Font>
+      <Font type="body1" color={colors.semantic.text.secondary}>Secondary - 부가적인 내용</Font>
+      <Font type="body1" color={colors.semantic.text.tertiary}>Tertiary - 시각적 우선순위가 낮은 텍스트</Font>
+      <Font type="body1" color={colors.semantic.text.disabled}>Disabled - 비활성화된 상태</Font>
       <div style={{ backgroundColor: '#333', padding: '12px', borderRadius: '4px' }}>
-        <Font type="body1" color="inverse">Inverse - 어두운 배경 위의 밝은 텍스트</Font>
+        <Font type="body1" color={colors.semantic.text.inverse}>Inverse - 어두운 배경 위의 밝은 텍스트</Font>
       </div>
-      <Font type="body1" color="success">Success - 작업 완료, 저장 성공</Font>
-      <Font type="body1" color="warning">Warning - 주의가 필요한 상황</Font>
-      <Font type="body1" color="error">Error - 오류 상태나 실패 메시지</Font>
-      <Font type="body1" color="info">Info - 보조적인 정보나 안내 메시지</Font>
+      <Font type="body1" color={colors.semantic.state.success}>Success - 작업 완료, 저장 성공</Font>
+      <Font type="body1" color={colors.semantic.state.warning}>Warning - 주의가 필요한 상황</Font>
+      <Font type="body1" color={colors.semantic.state.error}>Error - 오류 상태나 실패 메시지</Font>
+      <Font type="body1" color={colors.semantic.state.info}>Info - 보조적인 정보나 안내 메시지</Font>
     </div>
   ),
 };
@@ -119,14 +118,28 @@ export const Colors: Story = {
 export const WithHover: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-      <Font type="body1" color="primary" hoverColor="info">
+      <Font type="body1" color={colors.semantic.text.primary} hoverColor={colors.semantic.state.info}>
         마우스를 올려보세요 (Primary → Info)
       </Font>
-      <Font type="body1" color="secondary" hoverColor="success">
+      <Font type="body1" color={colors.semantic.text.secondary} hoverColor={colors.semantic.state.success}>
         호버 효과가 있는 텍스트 (Secondary → Success)
       </Font>
-      <Font type="heading3" color="tertiary" hoverColor="error" underline>
+      <Font type="heading3" color={colors.semantic.text.tertiary} hoverColor={colors.semantic.state.error} underline>
         밑줄과 호버 효과 (Tertiary → Error)
+      </Font>
+    </div>
+  ),
+};
+
+export const CustomColors: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <Font type="heading2" color="#7248D9">브랜드 메인 컬러</Font>
+      <Font type="body1" color="#FF6B6B">커스텀 빨간색</Font>
+      <Font type="body1" color="#4ECDC4">커스텀 청록색</Font>
+      <Font type="body1" color="rgb(255, 193, 7)">RGB 노란색</Font>
+      <Font type="body1" color="hsl(120, 100%, 50%)" hoverColor="#FF4757">
+        HSL 초록색 (호버: 빨간색)
       </Font>
     </div>
   ),
@@ -168,7 +181,7 @@ export const Playground: Story = {
   args: {
     type: 'heading2',
     fontWeight: 'semibold',
-    color: 'primary',
+    color: colors.semantic.text.primary,
     children: '플레이그라운드에서 다양한 옵션을 테스트해보세요!',
   },
 }; 

@@ -8,27 +8,15 @@ export type FontType = keyof typeof textStyles;
 // Font weight types from our design system
 export type FontWeight = keyof typeof fontWeightTokens;
 
-// Color types - using semantic colors for text
-export type FontColor = 
-  | 'primary' 
-  | 'secondary' 
-  | 'tertiary' 
-  | 'disabled' 
-  | 'inverse'
-  | 'success'
-  | 'warning'
-  | 'error'
-  | 'info';
-
 export interface FontProps {
   /** Typography variant (display1, display2, heading1, etc.) */
   type: FontType;
   /** Font weight override (bold, semibold, medium, regular) */
   fontWeight?: FontWeight;
   /** Text color */
-  color?: FontColor;
+  color?: string;
   /** Hover color */
-  hoverColor?: FontColor;
+  hoverColor?: string;
   /** Text alignment */
   align?: 'left' | 'center' | 'right' | 'justify';
   /** White space handling */
@@ -45,35 +33,10 @@ export interface FontProps {
   children?: ReactNode;
 }
 
-const getColorValue = (colorType: FontColor): string => {
-  switch (colorType) {
-    case 'primary':
-      return colors.semantic.text.primary;
-    case 'secondary':
-      return colors.semantic.text.secondary;
-    case 'tertiary':
-      return colors.semantic.text.tertiary;
-    case 'disabled':
-      return colors.semantic.text.disabled;
-    case 'inverse':
-      return colors.semantic.text.inverse;
-    case 'success':
-      return colors.semantic.state.success;
-    case 'warning':
-      return colors.semantic.state.warning;
-    case 'error':
-      return colors.semantic.state.error;
-    case 'info':
-      return colors.semantic.state.info;
-    default:
-      return colors.semantic.text.primary;
-  }
-};
-
 export const Font: React.FC<FontProps> = ({
   type,
   fontWeight,
-  color = 'primary',
+  color = colors.semantic.text.primary,
   hoverColor,
   align = 'left',
   whiteSpace,
@@ -89,7 +52,7 @@ export const Font: React.FC<FontProps> = ({
     ...baseStyle,
     // Override font weight if provided
     ...(fontWeight && { fontWeight: fontWeightTokens[fontWeight] }),
-    color: getColorValue(color),
+    color: color,
     textAlign: align,
     whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
     textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
@@ -103,13 +66,13 @@ export const Font: React.FC<FontProps> = ({
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
     if (hoverColor) {
-      e.currentTarget.style.color = getColorValue(hoverColor);
+      e.currentTarget.style.color = hoverColor;
     }
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLElement>) => {
     if (hoverColor) {
-      e.currentTarget.style.color = getColorValue(color);
+      e.currentTarget.style.color = color;
     }
   };
 
