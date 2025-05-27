@@ -801,8 +801,150 @@ var Font = function (_a) {
   });
 };
 
+var TextInput = react.forwardRef(function (_a, ref) {
+  var _b = _a.placeholder,
+    placeholder = _b === void 0 ? 'Placeholder' : _b,
+    value = _a.value,
+    defaultValue = _a.defaultValue,
+    onChange = _a.onChange,
+    onFocus = _a.onFocus,
+    onBlur = _a.onBlur,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c,
+    _d = _a.error,
+    error = _d === void 0 ? false : _d,
+    errorMessage = _a.errorMessage,
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.type,
+    type = _f === void 0 ? 'text' : _f,
+    _g = _a.size,
+    size = _g === void 0 ? 'l' : _g;
+  var _h = react.useState(false),
+    isFocused = _h[0],
+    setIsFocused = _h[1];
+  var _j = react.useState(defaultValue || ''),
+    internalValue = _j[0],
+    setInternalValue = _j[1];
+  // Size configurations
+  var sizeConfig = {
+    l: __assign(__assign({
+      paddingX: '16px',
+      paddingY: '12px',
+      borderRadius: '12px',
+      height: '48px'
+    }, textStyles.body1), {
+      fontWeight: fontWeight.regular
+    }),
+    m: __assign(__assign({
+      paddingX: '12px',
+      paddingY: '8px',
+      borderRadius: '8px',
+      height: '40px'
+    }, textStyles.body2), {
+      fontWeight: fontWeight.regular
+    }),
+    s: __assign(__assign({
+      paddingX: '8px',
+      paddingY: '6px',
+      borderRadius: '4px',
+      height: '32px'
+    }, textStyles.body3), {
+      fontWeight: fontWeight.regular
+    })
+  };
+  var getStyles = function () {
+    var config = sizeConfig[size];
+    var styles = {
+      width: '100%',
+      height: config.height,
+      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
+      borderRadius: config.borderRadius,
+      fontSize: config.fontSize,
+      fontWeight: config.fontWeight,
+      lineHeight: config.lineHeight,
+      border: "".concat(border.s, " transparent"),
+      outline: 'none',
+      transition: 'all 0.2s ease',
+      fontFamily: 'inherit'
+    };
+    if (disabled) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.disabled.foreground,
+        border: "".concat(border.s, " ").concat(colors.semantic.disabled.background),
+        cursor: 'not-allowed'
+      });
+    } else if (error) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.semantic.state.error)
+      });
+    } else if (isFocused) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.primary.mainviolet),
+        boxShadow: "0 0 0 3px ".concat(colors.primary.tint.violet[100])
+      });
+    } else {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.semantic.border.default)
+      });
+    }
+    return styles;
+  };
+  var handleFocus = function () {
+    if (!disabled) {
+      setIsFocused(true);
+      onFocus === null || onFocus === void 0 ? void 0 : onFocus();
+    }
+  };
+  var handleBlur = function () {
+    setIsFocused(false);
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur();
+  };
+  var handleChange = function (e) {
+    var newValue = e.target.value;
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
+  };
+  var inputValue = value !== undefined ? value : internalValue;
+  return jsxRuntime.jsxs("div", {
+    className: "text-input-container ".concat(className),
+    children: [jsxRuntime.jsx("input", {
+      ref: ref,
+      type: type,
+      value: inputValue,
+      placeholder: placeholder,
+      onChange: handleChange,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      disabled: disabled,
+      style: getStyles(),
+      className: "text-input"
+    }), error && errorMessage && jsxRuntime.jsx("div", {
+      style: {
+        marginTop: '4px',
+        fontSize: '12px',
+        color: colors.semantic.state.error,
+        fontWeight: fontWeight.regular
+      },
+      className: "error-message",
+      children: errorMessage
+    })]
+  });
+});
+TextInput.displayName = 'TextInput';
+
 exports.BoxButton = BoxButton;
 exports.Font = Font;
+exports.TextInput = TextInput;
 exports.borders = borders;
 exports.colors = colors;
 exports.coolGray = coolGray;
