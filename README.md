@@ -29,7 +29,7 @@
 1. **Node.js** (버전 18 이상)
 2. **yarn** (패키지 매니저)
 3. **Git** (버전 관리)
-4. **VS Code** (코드 에디터, 추천)
+4. **Cursor** (코드 에디터, 추천)
 
 ---
 
@@ -58,13 +58,16 @@ yarn --version
 # 1.22.0 같은 버전이 나오면 성공!
 ```
 
-### 3단계: VS Code 설치 (추천)
+### 3단계: Cursor 설치 (추천)
 
-1. [VS Code 공식 웹사이트](https://code.visualstudio.com/)에서 다운로드
-2. 설치 후 다음 확장 프로그램 설치:
+1. [Cursor 공식 웹사이트](https://www.cursor.so/)에서 다운로드
+2. 설치 후 다음 확장 프로그램(또는 플러그인) 설치:
    - **Korean Language Pack** (한국어 지원)
    - **Prettier** (코드 정리)
    - **ES7+ React/Redux/React-Native snippets**
+   - **GitHub Copilot** (AI 코드 추천, 선택)
+
+> 참고: Cursor는 VS Code 기반이므로, VS Code의 대부분의 확장 프로그램을 그대로 사용할 수 있습니다.
 
 ### 4단계: 프로젝트 클론하기
 
