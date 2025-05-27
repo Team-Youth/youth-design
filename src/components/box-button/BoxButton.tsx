@@ -55,7 +55,6 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
     l: {
       paddingX: '16px',
       paddingY: '12px',
-      gap: '4px',
       borderRadius: '12px',
       width: '320px',
       height: '48px',
@@ -65,7 +64,6 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
     m: {
       paddingX: '12px',
       paddingY: '8px',
-      gap: '4px',
       borderRadius: '8px',
       width: '320px',
       height: '40px',
@@ -75,7 +73,6 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
     s: {
       paddingX: '8px',
       paddingY: '6px',
-      gap: '4px',
       borderRadius: '4px',
       width: '320px',
       height: '32px',
@@ -90,7 +87,6 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: config.gap,
       padding: `${config.paddingY} ${config.paddingX}`,
       borderRadius: config.borderRadius,
       width: config.width,
@@ -216,19 +212,15 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
     }
 
     return (
-      <>
-        {icon?.left && (
-          <span style={{ display: 'flex', alignItems: 'center' }}>
-            {icon.left}
-          </span>
-        )}
+      <div style={{ display: 'flex', alignItems: 'center', gap:'4px' }}>
+        {icon?.left && 
+            icon.left
+        }
         {children && <span>{children}</span>}
-        {icon?.right && (
-          <span style={{ display: 'flex', alignItems: 'center' }}>
-            {icon.right}
-          </span>
-        )}
-      </>
+        {icon?.right && 
+            icon.right
+        }
+      </div>
     );
   };
 
