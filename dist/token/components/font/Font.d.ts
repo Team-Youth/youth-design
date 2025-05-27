@@ -2,16 +2,15 @@ import React, { ReactNode } from 'react';
 import { textStyles, fontWeight as fontWeightTokens } from '../../tokens/typography';
 export type FontType = keyof typeof textStyles;
 export type FontWeight = keyof typeof fontWeightTokens;
-export type FontColor = 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'inverse' | 'success' | 'warning' | 'error' | 'info';
 export interface FontProps {
     /** Typography variant (display1, display2, heading1, etc.) */
     type: FontType;
     /** Font weight override (bold, semibold, medium, regular) */
     fontWeight?: FontWeight;
     /** Text color */
-    color?: FontColor;
+    color?: string;
     /** Hover color */
-    hoverColor?: FontColor;
+    hoverColor?: string;
     /** Text alignment */
     align?: 'left' | 'center' | 'right' | 'justify';
     /** White space handling */

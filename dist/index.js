@@ -752,35 +752,11 @@ var BoxButton = function (_a) {
   });
 };
 
-var getColorValue = function (colorType) {
-  switch (colorType) {
-    case 'primary':
-      return colors.semantic.text.primary;
-    case 'secondary':
-      return colors.semantic.text.secondary;
-    case 'tertiary':
-      return colors.semantic.text.tertiary;
-    case 'disabled':
-      return colors.semantic.text.disabled;
-    case 'inverse':
-      return colors.semantic.text.inverse;
-    case 'success':
-      return colors.semantic.state.success;
-    case 'warning':
-      return colors.semantic.state.warning;
-    case 'error':
-      return colors.semantic.state.error;
-    case 'info':
-      return colors.semantic.state.info;
-    default:
-      return colors.semantic.text.primary;
-  }
-};
 var Font = function (_a) {
   var type = _a.type,
     fontWeight$1 = _a.fontWeight,
     _b = _a.color,
-    color = _b === void 0 ? 'primary' : _b,
+    color = _b === void 0 ? colors.semantic.text.primary : _b,
     hoverColor = _a.hoverColor,
     _c = _a.align,
     align = _c === void 0 ? 'left' : _c,
@@ -796,7 +772,7 @@ var Font = function (_a) {
   var fontStyles = __assign(__assign(__assign(__assign({}, baseStyle), fontWeight$1 && {
     fontWeight: fontWeight[fontWeight$1]
   }), {
-    color: getColorValue(color),
+    color: color,
     textAlign: align,
     whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
     textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
@@ -808,12 +784,12 @@ var Font = function (_a) {
   }), style);
   var handleMouseEnter = function (e) {
     if (hoverColor) {
-      e.currentTarget.style.color = getColorValue(hoverColor);
+      e.currentTarget.style.color = hoverColor;
     }
   };
   var handleMouseLeave = function (e) {
     if (hoverColor) {
-      e.currentTarget.style.color = getColorValue(color);
+      e.currentTarget.style.color = color;
     }
   };
   return jsxRuntime.jsx("span", {
