@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { fontWeight, textStyles } from '../../tokens';
 import { border } from '../../tokens/borders';
 import { colors } from '../../tokens/colors';
 import './BoxButton.css';
@@ -21,20 +22,17 @@ const LoadingIcon = () => (
   <svg
     width="16"
     height="16"
-    viewBox="0 0 16 16"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 50 50"
     className="loading-icon"
   >
     <circle
-      cx="8"
-      cy="8"
-      r="6"
+      cx="25"
+      cy="25"
+      r="20"
+      fill="none"
       stroke="currentColor"
-      strokeWidth="2"
+      strokeWidth="4"
       strokeLinecap="round"
-      strokeDasharray="37.7"
-      strokeDashoffset="37.7"
     />
   </svg>
 );
@@ -61,6 +59,8 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
       borderRadius: '12px',
       width: '320px',
       height: '48px',
+      ...textStyles.body1,
+      fontWeight: fontWeight.medium
     },
     m: {
       paddingX: '12px',
@@ -69,6 +69,8 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
       borderRadius: '8px',
       width: '320px',
       height: '40px',
+          ...textStyles.body2,
+      fontWeight: fontWeight.medium
     },
     s: {
       paddingX: '8px',
@@ -77,6 +79,8 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
       borderRadius: '4px',
       width: '320px',
       height: '32px',
+          ...textStyles.body3,
+      fontWeight: fontWeight.medium
     },
   };
 
@@ -213,9 +217,17 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
 
     return (
       <>
-        {icon?.left && <span>{icon.left}</span>}
+        {icon?.left && (
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+            {icon.left}
+          </span>
+        )}
         {children && <span>{children}</span>}
-        {icon?.right && <span>{icon.right}</span>}
+        {icon?.right && (
+          <span style={{ display: 'flex', alignItems: 'center' }}>
+            {icon.right}
+          </span>
+        )}
       </>
     );
   };
