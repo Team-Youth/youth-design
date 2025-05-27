@@ -37,38 +37,6 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
 };
 
 /**
- * Border Design Tokens
- * 컴포넌트에 테두리를 추가하여 구분감을 제공하는 속성
- */
-// Border Widths
-var borderWidth = {
-  /** UI 요소의 기본적인 구분감을 제공할 때 사용 */
-  s: '1px',
-  /** 1px보다 더 명확한 구분이 필요할 때 사용 */
-  m: '1.5px',
-  /** 중요한 요소를 강조하거나, 요소 간 강한 대비가 필요할 때 사용 */
-  l: '2px'
-};
-// Border Styles
-var borderStyle = {
-  solid: 'solid',
-  dashed: 'dashed',
-  dotted: 'dotted',
-  none: 'none'
-};
-// Combined Border Tokens
-var border = {
-  /** 기본 보더 - UI 요소의 기본적인 구분감 제공 */
-  s: "".concat(borderWidth.s, " ").concat(borderStyle.solid),
-  /** 중간 보더 - 더 명확한 구분이 필요할 때 */
-  m: "".concat(borderWidth.m, " ").concat(borderStyle.solid),
-  /** 큰 보더 - 중요한 요소 강조나 강한 대비가 필요할 때 */
-  l: "".concat(borderWidth.l, " ").concat(borderStyle.solid),
-  /** 보더 없음 */
-  none: borderStyle.none
-};
-
-/**
  * Color Design Tokens
  * 브랜드 아이덴티티와 UI 의미 전달을 위한 컬러 시스템
  */
@@ -238,23 +206,201 @@ var colors = {
   }
 };
 
+/**
+ * Typography Design Tokens
+ * 서비스와 사용자가 커뮤니케이션하는 주요 요소
+ */
+// Font Family
+var fontFamily = {
+  /** 웹사이트에 사용되는 모든 폰트는 Pretendard를 기반으로 함 */
+  primary: 'Pretendard'
+};
+// Font Sizes (rem 단위로 반응형 지원)
+var fontSize = {
+  xxxxl: '2rem',
+  // 32px
+  xxxl: '1.75rem',
+  // 28px
+  xxl: '1.5rem',
+  // 24px
+  xl: '1.25rem',
+  // 20px
+  l: '1.125rem',
+  // 18px
+  m: '1rem',
+  // 16px
+  s: '0.875rem',
+  // 14px
+  xs: '0.75rem',
+  // 12px
+  xxs: '0.625rem',
+  // 10px
+  xxxs: '0.688rem' // 11px
+};
+// Font Weights
+var fontWeight = {
+  bold: 700,
+  semibold: 600,
+  medium: 500,
+  regular: 400
+};
+// Line Heights
+var lineHeight = {
+  xxxxl: '42px',
+  xxxl: '36px',
+  xxl: '32px',
+  xl: '28px',
+  l: '24px',
+  m: '24px',
+  s: '22px',
+  xs: '20px',
+  xxs: '18px',
+  xxxs: '17px'
+};
+// Letter Spacings
+var letterSpacing = {
+  m: '0',
+  s: '-1%',
+  xs: '-2%'
+};
+// Text Styles (React.CSSProperties 호환)
+var textStyles = {
+  /** 주목도를 높이고 큰 타이틀 영역 강조에 사용 */
+  display1: {
+    fontSize: fontSize.xxxxl,
+    fontWeight: fontWeight.bold,
+    lineHeight: lineHeight.xxxxl,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 중간 크기 타이틀에 사용 */
+  display2: {
+    fontSize: fontSize.xxxl,
+    fontWeight: fontWeight.bold,
+    lineHeight: lineHeight.xxxl,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 정보성 카드 타이틀에 주로 사용 */
+  heading1: {
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.bold,
+    lineHeight: lineHeight.xxl,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 섹션 구분 타이틀 등에 사용 */
+  heading2: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.xl,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 소제목 등에 사용 */
+  heading3: {
+    fontSize: fontSize.l,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.l,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 리스트 아이템, 버튼 텍스트 등에 사용 */
+  heading4: {
+    fontSize: fontSize.m,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.m,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 부가 정보, 캡션 등에 사용 */
+  heading5: {
+    fontSize: fontSize.s,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.s,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 주요 본문 텍스트에 사용 */
+  body1: {
+    fontSize: fontSize.m,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.l,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 보조 본문 텍스트에 사용 */
+  body2: {
+    fontSize: fontSize.s,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.s,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장 */
+  body3: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.xxs,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 보조 정보나 컴포넌트 레벨에서 사용 */
+  caption: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.xs,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  }
+};
+
+/**
+ * Border Design Tokens
+ * 컴포넌트에 테두리를 추가하여 구분감을 제공하는 속성
+ */
+// Border Widths
+var borderWidth = {
+  /** UI 요소의 기본적인 구분감을 제공할 때 사용 */
+  s: '1px',
+  /** 1px보다 더 명확한 구분이 필요할 때 사용 */
+  m: '1.5px',
+  /** 중요한 요소를 강조하거나, 요소 간 강한 대비가 필요할 때 사용 */
+  l: '2px'
+};
+// Border Styles
+var borderStyle = {
+  solid: 'solid',
+  dashed: 'dashed',
+  dotted: 'dotted',
+  none: 'none'
+};
+// Combined Border Tokens
+var border = {
+  /** 기본 보더 - UI 요소의 기본적인 구분감 제공 */
+  s: "".concat(borderWidth.s, " ").concat(borderStyle.solid),
+  /** 중간 보더 - 더 명확한 구분이 필요할 때 */
+  m: "".concat(borderWidth.m, " ").concat(borderStyle.solid),
+  /** 큰 보더 - 중요한 요소 강조나 강한 대비가 필요할 때 */
+  l: "".concat(borderWidth.l, " ").concat(borderStyle.solid),
+  /** 보더 없음 */
+  none: borderStyle.none
+};
+
 var LoadingIcon = function () {
   return jsxRuntime.jsx("svg", {
     width: "16",
     height: "16",
-    viewBox: "0 0 16 16",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 50 50",
     className: "loading-icon",
     children: jsxRuntime.jsx("circle", {
-      cx: "8",
-      cy: "8",
-      r: "6",
+      cx: "25",
+      cy: "25",
+      r: "20",
+      fill: "none",
       stroke: "currentColor",
-      strokeWidth: "2",
-      strokeLinecap: "round",
-      strokeDasharray: "37.7",
-      strokeDashoffset: "37.7"
+      strokeWidth: "4",
+      strokeLinecap: "round"
     })
   });
 };
@@ -280,30 +426,33 @@ var BoxButton = function (_a) {
     setIsPressed = _h[1];
   // Size configurations
   var sizeConfig = {
-    l: {
+    l: __assign(__assign({
       paddingX: '16px',
       paddingY: '12px',
-      gap: '4px',
       borderRadius: '12px',
       width: '320px',
       height: '48px'
-    },
-    m: {
+    }, textStyles.body1), {
+      fontWeight: fontWeight.medium
+    }),
+    m: __assign(__assign({
       paddingX: '12px',
       paddingY: '8px',
-      gap: '4px',
       borderRadius: '8px',
       width: '320px',
       height: '40px'
-    },
-    s: {
+    }, textStyles.body2), {
+      fontWeight: fontWeight.medium
+    }),
+    s: __assign(__assign({
       paddingX: '8px',
       paddingY: '6px',
-      gap: '4px',
       borderRadius: '4px',
       width: '320px',
       height: '32px'
-    }
+    }, textStyles.body3), {
+      fontWeight: fontWeight.medium
+    })
   };
   var getStyles = function () {
     var config = sizeConfig[size];
@@ -311,7 +460,6 @@ var BoxButton = function (_a) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: config.gap,
       padding: "".concat(config.paddingY, " ").concat(config.paddingX),
       borderRadius: config.borderRadius,
       width: config.width,
@@ -417,14 +565,15 @@ var BoxButton = function (_a) {
     if (isLoading) {
       return jsxRuntime.jsx(LoadingIcon, {});
     }
-    return jsxRuntime.jsxs(jsxRuntime.Fragment, {
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && jsxRuntime.jsx("span", {
-        children: icon.left
-      }), children && jsxRuntime.jsx("span", {
+    return jsxRuntime.jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px'
+      },
+      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && icon.left, children && jsxRuntime.jsx("span", {
         children: children
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && jsxRuntime.jsx("span", {
-        children: icon.right
-      })]
+      }), (icon === null || icon === void 0 ? void 0 : icon.right) && icon.right]
     });
   };
   return jsxRuntime.jsx("button", {
@@ -440,5 +589,79 @@ var BoxButton = function (_a) {
   });
 };
 
+var getColorValue = function (colorType) {
+  switch (colorType) {
+    case 'primary':
+      return colors.semantic.text.primary;
+    case 'secondary':
+      return colors.semantic.text.secondary;
+    case 'tertiary':
+      return colors.semantic.text.tertiary;
+    case 'disabled':
+      return colors.semantic.text.disabled;
+    case 'inverse':
+      return colors.semantic.text.inverse;
+    case 'success':
+      return colors.semantic.state.success;
+    case 'warning':
+      return colors.semantic.state.warning;
+    case 'error':
+      return colors.semantic.state.error;
+    case 'info':
+      return colors.semantic.state.info;
+    default:
+      return colors.semantic.text.primary;
+  }
+};
+var Font = function (_a) {
+  var type = _a.type,
+    fontWeight$1 = _a.fontWeight,
+    _b = _a.color,
+    color = _b === void 0 ? 'primary' : _b,
+    hoverColor = _a.hoverColor,
+    _c = _a.align,
+    align = _c === void 0 ? 'left' : _c,
+    whiteSpace = _a.whiteSpace,
+    _d = _a.noWhiteSpace,
+    noWhiteSpace = _d === void 0 ? false : _d,
+    _e = _a.underline,
+    underline = _e === void 0 ? false : _e,
+    className = _a.className,
+    style = _a.style,
+    children = _a.children;
+  var baseStyle = textStyles[type];
+  var fontStyles = __assign(__assign(__assign(__assign({}, baseStyle), fontWeight$1 && {
+    fontWeight: fontWeight[fontWeight$1]
+  }), {
+    color: getColorValue(color),
+    textAlign: align,
+    whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
+    textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
+    overflow: noWhiteSpace ? 'hidden' : undefined,
+    textDecoration: underline ? 'underline' : 'none',
+    margin: 0,
+    padding: 0,
+    transition: 'color 0.2s ease'
+  }), style);
+  var handleMouseEnter = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = getColorValue(hoverColor);
+    }
+  };
+  var handleMouseLeave = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = getColorValue(color);
+    }
+  };
+  return jsxRuntime.jsx("span", {
+    style: fontStyles,
+    className: className,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: children
+  });
+};
+
 exports.BoxButton = BoxButton;
+exports.Font = Font;
 //# sourceMappingURL=index.js.map

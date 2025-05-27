@@ -1,4 +1,4 @@
-import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
+import { jsx, jsxs } from 'react/jsx-runtime';
 import { useState } from 'react';
 
 /**
@@ -552,19 +552,16 @@ var LoadingIcon = function () {
   return jsx("svg", {
     width: "16",
     height: "16",
-    viewBox: "0 0 16 16",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 50 50",
     className: "loading-icon",
     children: jsx("circle", {
-      cx: "8",
-      cy: "8",
-      r: "6",
+      cx: "25",
+      cy: "25",
+      r: "20",
+      fill: "none",
       stroke: "currentColor",
-      strokeWidth: "2",
-      strokeLinecap: "round",
-      strokeDasharray: "37.7",
-      strokeDashoffset: "37.7"
+      strokeWidth: "4",
+      strokeLinecap: "round"
     })
   });
 };
@@ -590,30 +587,33 @@ var BoxButton = function (_a) {
     setIsPressed = _h[1];
   // Size configurations
   var sizeConfig = {
-    l: {
+    l: __assign(__assign({
       paddingX: '16px',
       paddingY: '12px',
-      gap: '4px',
       borderRadius: '12px',
       width: '320px',
       height: '48px'
-    },
-    m: {
+    }, textStyles.body1), {
+      fontWeight: fontWeight.medium
+    }),
+    m: __assign(__assign({
       paddingX: '12px',
       paddingY: '8px',
-      gap: '4px',
       borderRadius: '8px',
       width: '320px',
       height: '40px'
-    },
-    s: {
+    }, textStyles.body2), {
+      fontWeight: fontWeight.medium
+    }),
+    s: __assign(__assign({
       paddingX: '8px',
       paddingY: '6px',
-      gap: '4px',
       borderRadius: '4px',
       width: '320px',
       height: '32px'
-    }
+    }, textStyles.body3), {
+      fontWeight: fontWeight.medium
+    })
   };
   var getStyles = function () {
     var config = sizeConfig[size];
@@ -621,7 +621,6 @@ var BoxButton = function (_a) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: config.gap,
       padding: "".concat(config.paddingY, " ").concat(config.paddingX),
       borderRadius: config.borderRadius,
       width: config.width,
@@ -727,14 +726,15 @@ var BoxButton = function (_a) {
     if (isLoading) {
       return jsx(LoadingIcon, {});
     }
-    return jsxs(Fragment, {
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && jsx("span", {
-        children: icon.left
-      }), children && jsx("span", {
+    return jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px'
+      },
+      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && icon.left, children && jsx("span", {
         children: children
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && jsx("span", {
-        children: icon.right
-      })]
+      }), (icon === null || icon === void 0 ? void 0 : icon.right) && icon.right]
     });
   };
   return jsx("button", {
@@ -750,5 +750,78 @@ var BoxButton = function (_a) {
   });
 };
 
-export { BoxButton, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography };
+var getColorValue = function (colorType) {
+  switch (colorType) {
+    case 'primary':
+      return colors.semantic.text.primary;
+    case 'secondary':
+      return colors.semantic.text.secondary;
+    case 'tertiary':
+      return colors.semantic.text.tertiary;
+    case 'disabled':
+      return colors.semantic.text.disabled;
+    case 'inverse':
+      return colors.semantic.text.inverse;
+    case 'success':
+      return colors.semantic.state.success;
+    case 'warning':
+      return colors.semantic.state.warning;
+    case 'error':
+      return colors.semantic.state.error;
+    case 'info':
+      return colors.semantic.state.info;
+    default:
+      return colors.semantic.text.primary;
+  }
+};
+var Font = function (_a) {
+  var type = _a.type,
+    fontWeight$1 = _a.fontWeight,
+    _b = _a.color,
+    color = _b === void 0 ? 'primary' : _b,
+    hoverColor = _a.hoverColor,
+    _c = _a.align,
+    align = _c === void 0 ? 'left' : _c,
+    whiteSpace = _a.whiteSpace,
+    _d = _a.noWhiteSpace,
+    noWhiteSpace = _d === void 0 ? false : _d,
+    _e = _a.underline,
+    underline = _e === void 0 ? false : _e,
+    className = _a.className,
+    style = _a.style,
+    children = _a.children;
+  var baseStyle = textStyles[type];
+  var fontStyles = __assign(__assign(__assign(__assign({}, baseStyle), fontWeight$1 && {
+    fontWeight: fontWeight[fontWeight$1]
+  }), {
+    color: getColorValue(color),
+    textAlign: align,
+    whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
+    textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
+    overflow: noWhiteSpace ? 'hidden' : undefined,
+    textDecoration: underline ? 'underline' : 'none',
+    margin: 0,
+    padding: 0,
+    transition: 'color 0.2s ease'
+  }), style);
+  var handleMouseEnter = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = getColorValue(hoverColor);
+    }
+  };
+  var handleMouseLeave = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = getColorValue(color);
+    }
+  };
+  return jsx("span", {
+    style: fontStyles,
+    className: className,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: children
+  });
+};
+
+export { BoxButton, Font, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography };
 //# sourceMappingURL=index.esm.js.map
