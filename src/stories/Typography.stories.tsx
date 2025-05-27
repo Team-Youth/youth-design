@@ -1,3 +1,4 @@
+import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import { typography } from '../tokens/typography';
 
@@ -13,45 +14,37 @@ const TypeSample: React.FC<TypeSampleProps> = ({
   style, 
   description,
   sampleText = '청년 의료 플랫폼을 위한 디자인 시스템' 
-}) => (
-  <div style={{ marginBottom: '32px', padding: '16px', border: '1px solid #E8EAED', borderRadius: '8px' }}>
-    <div style={{ 
-      fontFamily: 'Pretendard, sans-serif', 
-      fontSize: '12px', 
-      fontWeight: 600, 
-      color: '#505862',
-      marginBottom: '8px',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px'
-    }}>
-      {label}
-    </div>
-    
-    <div style={style}>
-      {sampleText}
-    </div>
-    
-    <div style={{ marginTop: '12px' }}>
+}) => {
+  return (
+    <div style={{ marginBottom: '32px', padding: '20px', border: '1px solid #E8EAED', borderRadius: '8px' }}>
       <div style={{ 
-        fontFamily: 'Pretendard, sans-serif', 
-        fontSize: '11px', 
-        color: '#8D97A5',
-        marginBottom: '4px'
+        fontSize: '14px', 
+        fontWeight: 600, 
+        color: '#7248D9', 
+        marginBottom: '8px',
+        fontFamily: 'Pretendard, sans-serif'
       }}>
-        Font Size: {style.fontSize} | Font Weight: {style.fontWeight} | Line Height: {style.lineHeight}
+        {label}
       </div>
+      
+      <div style={style}>
+        {sampleText}
+      </div>
+      
       {description && (
         <div style={{ 
-          fontFamily: 'Pretendard, sans-serif', 
-          fontSize: '11px', 
-          color: '#505862'
+          fontSize: '12px', 
+          color: '#8D97A5', 
+          marginTop: '12px',
+          lineHeight: '1.4',
+          fontFamily: 'Pretendard, sans-serif'
         }}>
           {description}
         </div>
       )}
     </div>
-  </div>
-);
+  );
+};
 
 interface FontWeightSampleProps {
   weight: number;
@@ -179,6 +172,13 @@ export const TextStyles: Story = {
       />
       
       <TypeSample
+        label="Body 3"
+        style={typography.textStyles.body3}
+        description="본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장됩니다."
+        sampleText="추가 정보나 세부 사항을 표시할 때 사용하는 작은 크기의 본문 텍스트입니다."
+      />
+      
+      <TypeSample
         label="Caption"
         style={typography.textStyles.caption}
         description="보조 정보나 컴포넌트 레벨에서 사용됩니다."
@@ -233,7 +233,7 @@ export const FontSizes: Story = {
         }}>
           <div style={{ 
             fontFamily: 'Pretendard, sans-serif',
-            fontSize: `${value.px}px`,
+            fontSize: value,
             color: '#25282D',
             minWidth: '300px'
           }}>
@@ -245,7 +245,7 @@ export const FontSizes: Story = {
             color: '#8D97A5',
             marginLeft: '16px'
           }}>
-            {value.px}px / {value.rem}
+            {value} ({Math.round(parseFloat(value) * 16)}px)
           </div>
         </div>
       ))}
@@ -303,6 +303,13 @@ export const MedicalContent: Story = {
             marginTop: '4px'
           }}>
             * 예약 취소는 진료 시간 2시간 전까지만 가능합니다.
+          </div>
+          <div style={{ 
+            ...typography.textStyles.body3,
+            color: '#8D97A5',
+            marginTop: '8px'
+          }}>
+            취소 수수료는 발생하지 않으며, 온라인 또는 전화로 취소 가능합니다.
           </div>
         </div>
       </div>

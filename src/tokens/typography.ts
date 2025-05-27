@@ -9,18 +9,18 @@ export const fontFamily = {
   primary: 'Pretendard',
 } as const;
 
-// Font Sizes
+// Font Sizes (rem 단위로 반응형 지원)
 export const fontSize = {
-  xxxxl: { px: 32, rem: '2rem' },
-  xxxl: { px: 28, rem: '1.75rem' },
-  xxl: { px: 24, rem: '1.5rem' },
-  xl: { px: 20, rem: '1.25rem' },
-  l: { px: 18, rem: '1.125rem' },
-  m: { px: 16, rem: '1rem' },
-  s: { px: 14, rem: '0.875rem' },
-  xs: { px: 12, rem: '0.75rem' },
-  xxs: { px: 10, rem: '0.625rem' },
-  xxxs: { px: 11, rem: '0.688rem' },
+  xxxxl: '2rem',      // 32px
+  xxxl: '1.75rem',    // 28px
+  xxl: '1.5rem',      // 24px
+  xl: '1.25rem',      // 20px
+  l: '1.125rem',      // 18px
+  m: '1rem',          // 16px
+  s: '0.875rem',      // 14px
+  xs: '0.75rem',      // 12px
+  xxs: '0.625rem',    // 10px
+  xxxs: '0.688rem',   // 11px
 } as const;
 
 // Font Weights
@@ -33,16 +33,16 @@ export const fontWeight = {
 
 // Line Heights
 export const lineHeight = {
-  xxxxl: 42,
-  xxxl: 36,
-  xxl: 32,
-  xl: 28,
-  l: 24,
-  m: 24,
-  s: 22,
-  xs: 20,
-  xxs: 18,
-  xxxs: 17,
+  xxxxl: '42px',
+  xxxl: '36px',
+  xxl: '32px',
+  xl: '28px',
+  l: '24px',
+  m: '24px',
+  s: '22px',
+  xs: '20px',
+  xxs: '18px',
+  xxxs: '17px',
 } as const;
 
 // Letter Spacings
@@ -52,7 +52,7 @@ export const letterSpacing = {
   xs: '-2%',
 } as const;
 
-// Text Styles
+// Text Styles (React.CSSProperties 호환)
 export const textStyles = {
   /** 주목도를 높이고 큰 타이틀 영역 강조에 사용 */
   display1: {
@@ -123,6 +123,14 @@ export const textStyles = {
     fontSize: fontSize.s,
     fontWeight: fontWeight.regular,
     lineHeight: lineHeight.s,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary,
+  },
+  /** 본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장 */
+  body3: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.xxs,
     letterSpacing: letterSpacing.m,
     fontFamily: fontFamily.primary,
   },

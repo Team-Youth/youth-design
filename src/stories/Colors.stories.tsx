@@ -102,41 +102,48 @@ const NestedColorPalette = ({ title, colorSet, description }: {
 
 export const Primary: Story = {
   render: () => (
-    <ColorPalette 
-      title="Primary Colors" 
-      colorSet={colors.primary}
-      description="브랜드 아이덴티티를 대표하는 메인 컬러입니다."
-    />
-  ),
-};
-
-export const Gray: Story = {
-  render: () => (
-    <ColorPalette 
-      title="Gray Scale" 
-      colorSet={colors.gray}
-      description="중립적인 컬러입니다. 주로 Typography에 적용하며, 넓은 영역 Fill 시 Cool Gray를 사용합니다."
-    />
-  ),
-};
-
-export const CoolGray: Story = {
-  render: () => (
-    <ColorPalette 
-      title="Cool Gray" 
-      colorSet={colors.coolGray}
-      description="넓은 영역에서 Fill로 사용 가능한 중립 색상 계열입니다."
-    />
-  ),
-};
-
-export const Tint: Story = {
-  render: () => (
-    <NestedColorPalette 
-      title="Tint Colors" 
-      colorSet={colors.tint}
-      description="메인 컬러보다는 덜 강조되지만, 일러스트 및 보조 정보 강조에 사용됩니다."
-    />
+    <div>
+      <h2 style={{ 
+        fontSize: '1.5rem', 
+        fontWeight: '700', 
+        marginBottom: '1.5rem',
+        color: '#25282D'
+      }}>
+        Primary Colors
+      </h2>
+      <p style={{ 
+        marginBottom: '2rem', 
+        color: '#666', 
+        fontSize: '1rem',
+        lineHeight: '1.5'
+      }}>
+        브랜드 아이덴티티를 대표하는 메인 컬러입니다. 버튼, 링크, 강조 텍스트 등 주요 액션에 사용됩니다.
+      </p>
+      
+      <ColorPalette 
+        title="Main Violet" 
+        colorSet={{ mainviolet: colors.primary.mainviolet }}
+        description="브랜드의 핵심 컬러입니다."
+      />
+      
+      <ColorPalette 
+        title="Gray Scale" 
+        colorSet={colors.primary.gray}
+        description="중립적인 컬러입니다. 주로 Typography에 적용하며, 넓은 영역 Fill 시 Cool Gray를 사용합니다."
+      />
+      
+      <ColorPalette 
+        title="Cool Gray" 
+        colorSet={colors.primary.coolGray}
+        description="넓은 영역에서 Fill로 사용 가능한 중립 색상 계열입니다."
+      />
+      
+      <NestedColorPalette 
+        title="Tint Colors" 
+        colorSet={colors.primary.tint}
+        description="메인 컬러보다는 덜 강조되지만, 일러스트 및 보조 정보 강조에 사용됩니다."
+      />
+    </div>
   ),
 };
 
@@ -163,31 +170,55 @@ export const Illustration: Story = {
 export const AllColors: Story = {
   render: () => (
     <div>
-      <ColorPalette 
-        title="Primary Colors" 
-        colorSet={colors.primary}
-        description="브랜드 아이덴티티를 대표하는 메인 컬러입니다."
-      />
-      <ColorPalette 
-        title="Gray Scale" 
-        colorSet={colors.gray}
-        description="중립적인 컬러입니다. 주로 Typography에 적용하며, 넓은 영역 Fill 시 Cool Gray를 사용합니다."
-      />
-      <ColorPalette 
-        title="Cool Gray" 
-        colorSet={colors.coolGray}
-        description="넓은 영역에서 Fill로 사용 가능한 중립 색상 계열입니다."
-      />
-      <NestedColorPalette 
-        title="Tint Colors" 
-        colorSet={colors.tint}
-        description="메인 컬러보다는 덜 강조되지만, 일러스트 및 보조 정보 강조에 사용됩니다."
-      />
+      <div>
+        <h2 style={{ 
+          fontSize: '1.5rem', 
+          fontWeight: '700', 
+          marginBottom: '1.5rem',
+          color: '#25282D'
+        }}>
+          Primary Colors
+        </h2>
+        <p style={{ 
+          marginBottom: '2rem', 
+          color: '#666', 
+          fontSize: '1rem',
+          lineHeight: '1.5'
+        }}>
+          브랜드 아이덴티티를 대표하는 메인 컬러입니다. 버튼, 링크, 강조 텍스트 등 주요 액션에 사용됩니다.
+        </p>
+        
+        <ColorPalette 
+          title="Main Violet" 
+          colorSet={{ mainviolet: colors.primary.mainviolet }}
+          description="브랜드의 핵심 컬러입니다."
+        />
+        
+        <ColorPalette 
+          title="Gray Scale" 
+          colorSet={colors.primary.gray}
+          description="중립적인 컬러입니다. 주로 Typography에 적용하며, 넓은 영역 Fill 시 Cool Gray를 사용합니다."
+        />
+        
+        <ColorPalette 
+          title="Cool Gray" 
+          colorSet={colors.primary.coolGray}
+          description="넓은 영역에서 Fill로 사용 가능한 중립 색상 계열입니다."
+        />
+        
+        <NestedColorPalette 
+          title="Tint Colors" 
+          colorSet={colors.primary.tint}
+          description="메인 컬러보다는 덜 강조되지만, 일러스트 및 보조 정보 강조에 사용됩니다."
+        />
+      </div>
+      
       <NestedColorPalette 
         title="Semantic Colors" 
         colorSet={colors.semantic}
         description="텍스트, 상태, 배경, 보더, 비활성, Dim 등 UI 의미 전달용 컬러셋입니다."
       />
+      
       <NestedColorPalette 
         title="Illustration Colors" 
         colorSet={colors.illustration}
