@@ -4,25 +4,25 @@ import { BoxButton } from '../../components/box-button/BoxButton';
 // 아이콘 예시들
 const HeartIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-    <path d="M8 14.25l-.345-.666C4.8 10.36 2 8.334 2 5.92 2 4.274 3.357 3 5.5 3c1.019 0 1.95.596 2.5 1.5C8.55 3.596 9.481 3 10.5 3 12.643 3 14 4.274 14 5.92c0 2.414-2.8 4.44-5.655 7.664L8 14.25z"/>
+    <path d="M8 14.25l-.345-.666C4.8 10.36 2 8.334 2 5.92 2 4.274 3.357 3 5.5 3c1.019 0 1.95.596 2.5 1.5C8.55 3.596 9.481 3 10.5 3 12.643 3 14 4.274 14 5.92c0 2.414-2.8 4.44-5.655 7.664L8 14.25z" />
   </svg>
 );
 
 const StarIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-    <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/>
+    <path d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.75.75 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z" />
   </svg>
 );
 
 const PlusIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-    <path d="M8 2a.75.75 0 01.75.75v4.5h4.5a.75.75 0 010 1.5h-4.5v4.5a.75.75 0 01-1.5 0v-4.5h-4.5a.75.75 0 010-1.5h4.5v-4.5A.75.75 0 018 2z"/>
+    <path d="M8 2a.75.75 0 01.75.75v4.5h4.5a.75.75 0 010 1.5h-4.5v4.5a.75.75 0 01-1.5 0v-4.5h-4.5a.75.75 0 010-1.5h4.5v-4.5A.75.75 0 018 2z" />
   </svg>
 );
 
 const ArrowRightIcon = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-    <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z"/>
+    <path d="M6.22 3.22a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 010-1.06z" />
   </svg>
 );
 
@@ -33,7 +33,8 @@ const meta: Meta<typeof BoxButton> = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'BoxButton은 다양한 크기와 스타일을 지원하는 버튼 컴포넌트입니다. solid와 ghost 타입을 제공하며, 아이콘과 로딩 상태를 지원합니다.',
+        component:
+          'BoxButton은 다양한 크기와 스타일을 지원하는 버튼 컴포넌트입니다. solid와 ghost 타입을 제공하며, 아이콘과 로딩 상태를 지원합니다.',
       },
     },
   },
@@ -175,16 +176,28 @@ export const AllSizes: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-        <BoxButton size="l" type="solid">Large Solid</BoxButton>
-        <BoxButton size="l" type="ghost">Large Ghost</BoxButton>
+        <BoxButton size="l" type="solid">
+          Large Solid
+        </BoxButton>
+        <BoxButton size="l" type="ghost">
+          Large Ghost
+        </BoxButton>
       </div>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-        <BoxButton size="m" type="solid">Medium Solid</BoxButton>
-        <BoxButton size="m" type="ghost">Medium Ghost</BoxButton>
+        <BoxButton size="m" type="solid">
+          Medium Solid
+        </BoxButton>
+        <BoxButton size="m" type="ghost">
+          Medium Ghost
+        </BoxButton>
       </div>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-        <BoxButton size="s" type="solid">Small Solid</BoxButton>
-        <BoxButton size="s" type="ghost">Small Ghost</BoxButton>
+        <BoxButton size="s" type="solid">
+          Small Solid
+        </BoxButton>
+        <BoxButton size="s" type="ghost">
+          Small Ghost
+        </BoxButton>
       </div>
     </div>
   ),
@@ -194,22 +207,13 @@ export const AllSizes: Story = {
 export const IconAlignment: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-      <BoxButton 
-        size="l" 
-        icon={{ left: <HeartIcon /> }}
-      >
+      <BoxButton size="l" icon={{ left: <HeartIcon /> }}>
         왼쪽 아이콘
       </BoxButton>
-      <BoxButton 
-        size="l" 
-        icon={{ right: <ArrowRightIcon /> }}
-      >
+      <BoxButton size="l" icon={{ right: <ArrowRightIcon /> }}>
         오른쪽 아이콘
       </BoxButton>
-      <BoxButton 
-        size="l" 
-        icon={{ left: <StarIcon />, right: <PlusIcon /> }}
-      >
+      <BoxButton size="l" icon={{ left: <StarIcon />, right: <PlusIcon /> }}>
         양쪽 아이콘
       </BoxButton>
     </div>
@@ -220,9 +224,15 @@ export const IconAlignment: Story = {
 export const LoadingStates: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-      <BoxButton size="l" isLoading>로딩 중...</BoxButton>
-      <BoxButton size="m" isLoading>로딩 중...</BoxButton>
-      <BoxButton size="s" isLoading>로딩 중...</BoxButton>
+      <BoxButton size="l" isLoading>
+        로딩 중...
+      </BoxButton>
+      <BoxButton size="m" isLoading>
+        로딩 중...
+      </BoxButton>
+      <BoxButton size="s" isLoading>
+        로딩 중...
+      </BoxButton>
     </div>
   ),
 };
@@ -232,27 +242,21 @@ export const DisabledStates: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-        <BoxButton size="l" type="solid" disabled>Disabled Solid</BoxButton>
-        <BoxButton size="l" type="ghost" disabled>Disabled Ghost</BoxButton>
+        <BoxButton size="l" type="solid" disabled>
+          Disabled Solid
+        </BoxButton>
+        <BoxButton size="l" type="ghost" disabled>
+          Disabled Ghost
+        </BoxButton>
       </div>
       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-        <BoxButton 
-          size="l" 
-          type="solid" 
-          disabled 
-          icon={{ left: <HeartIcon /> }}
-        >
+        <BoxButton size="l" type="solid" disabled icon={{ left: <HeartIcon /> }}>
           Disabled with Icon
         </BoxButton>
-        <BoxButton 
-          size="l" 
-          type="ghost" 
-          disabled 
-          icon={{ right: <ArrowRightIcon /> }}
-        >
+        <BoxButton size="l" type="ghost" disabled icon={{ right: <ArrowRightIcon /> }}>
           Disabled with Icon
         </BoxButton>
       </div>
     </div>
   ),
-}; 
+};

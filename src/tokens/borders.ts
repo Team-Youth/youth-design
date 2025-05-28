@@ -40,4 +40,4 @@ export const borders = {
   border,
 } as const;
 
-export default borders; 
+export default borders;

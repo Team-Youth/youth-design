@@ -19,12 +19,7 @@ export interface BoxButtonProps {
 }
 
 const LoadingIcon = () => (
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 50 50"
-    className="loading-icon"
-  >
+  <svg width="16" height="16" viewBox="0 0 50 50" className="loading-icon">
     <circle
       cx="25"
       cy="25"
@@ -59,7 +54,7 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
       width: '320px',
       height: '48px',
       ...textStyles.body1,
-      fontWeight: fontWeight.medium
+      fontWeight: fontWeight.medium,
     },
     m: {
       paddingX: '12px',
@@ -67,8 +62,8 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
       borderRadius: '8px',
       width: '320px',
       height: '40px',
-          ...textStyles.body2,
-      fontWeight: fontWeight.medium
+      ...textStyles.body2,
+      fontWeight: fontWeight.medium,
     },
     s: {
       paddingX: '8px',
@@ -76,8 +71,8 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
       borderRadius: '4px',
       width: '320px',
       height: '32px',
-          ...textStyles.body3,
-      fontWeight: fontWeight.medium
+      ...textStyles.body3,
+      fontWeight: fontWeight.medium,
     },
   };
 
@@ -212,14 +207,10 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
     }
 
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap:'4px' }}>
-        {icon?.left && 
-            icon.left
-        }
+      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        {icon?.left && icon.left}
         {children && <span>{children}</span>}
-        {icon?.right && 
-            icon.right
-        }
+        {icon?.right && icon.right}
       </div>
     );
   };
@@ -238,4 +229,4 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
       {renderContent()}
     </button>
   );
-}; 
+};

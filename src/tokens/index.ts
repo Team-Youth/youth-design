@@ -5,7 +5,15 @@
 
 // Individual token exports
 export { colors, primary, gray, coolGray, tint, semantic, illustration } from './colors';
-export { typography, fontFamily, fontSize, fontWeight, lineHeight, letterSpacing, textStyles } from './typography';
+export {
+  typography,
+  fontFamily,
+  fontSize,
+  fontWeight,
+  lineHeight,
+  letterSpacing,
+  textStyles,
+} from './typography';
 export { spacing } from './spacing';
 export { radius } from './radius';
 export { shadows } from './shadows';
@@ -29,4 +37,4 @@ export default {
   radius: () => import('./radius'),
   shadows: () => import('./shadows'),
   borders: () => import('./borders'),
-}; 
+};

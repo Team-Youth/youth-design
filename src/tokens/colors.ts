@@ -8,7 +8,7 @@ export const colors = {
   primary: {
     /** 브랜드 아이덴티티를 대표하는 메인 컬러 */
     mainviolet: '#7248D9',
-    
+
     /** 중립적인 컬러 - Typography 및 넓은 영역 Fill에 사용 */
     gray: {
       900: '#171717',
@@ -23,7 +23,7 @@ export const colors = {
       black: '#000000',
       white: '#FFFFFF',
     },
-    
+
     /** 넓은 영역에서 Fill로 사용 가능한 중립 색상 계열 */
     coolGray: {
       900: '#151719',
@@ -37,7 +37,7 @@ export const colors = {
       100: '#E8EAED',
       50: '#F3F5F6',
     },
-    
+
     /** 메인 컬러보다는 덜 강조되지만, 일러스트 및 보조 정보 강조에 사용 */
     tint: {
       violet: {
@@ -92,7 +92,7 @@ export const colors = {
       },
     },
   },
-  
+
   /** 텍스트, 상태, 배경, 보더, 비활성, Dim 등 UI 의미 전달용 컬러셋 */
   semantic: {
     text: {
@@ -140,7 +140,7 @@ export const colors = {
       overlay: '#000000B3',
     },
   },
-  
+
   /** 의료 플랫폼 특성을 반영해 피부, 머리카락, 장기 표현용 컬러 */
   illustration: {
     skin: {
@@ -197,4 +197,4 @@ export const tint = colors.primary.tint;
 export const semantic = colors.semantic;
 
 /** @deprecated colors.illustration 사용을 권장합니다 */
-export const illustration = colors.illustration; 
+export const illustration = colors.illustration;

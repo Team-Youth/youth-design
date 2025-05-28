@@ -11,16 +11,16 @@ export const fontFamily = {
 
 // Font Sizes (rem 단위로 반응형 지원)
 export const fontSize = {
-  xxxxl: '2rem',      // 32px
-  xxxl: '1.75rem',    // 28px
-  xxl: '1.5rem',      // 24px
-  xl: '1.25rem',      // 20px
-  l: '1.125rem',      // 18px
-  m: '1rem',          // 16px
-  s: '0.875rem',      // 14px
-  xs: '0.75rem',      // 12px
-  xxs: '0.625rem',    // 10px
-  xxxs: '0.688rem',   // 11px
+  xxxxl: '2rem', // 32px
+  xxxl: '1.75rem', // 28px
+  xxl: '1.5rem', // 24px
+  xl: '1.25rem', // 20px
+  l: '1.125rem', // 18px
+  m: '1rem', // 16px
+  s: '0.875rem', // 14px
+  xs: '0.75rem', // 12px
+  xxs: '0.625rem', // 10px
+  xxxs: '0.688rem', // 11px
 } as const;
 
 // Font Weights
@@ -154,4 +154,4 @@ export const typography = {
   textStyles,
 } as const;
 
-export default typography; 
+export default typography;

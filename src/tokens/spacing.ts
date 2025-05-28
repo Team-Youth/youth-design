@@ -27,4 +27,4 @@ export const spacing = {
 
 export type SpacingTokens = typeof spacing;
 
-export default spacing; 
+export default spacing;
