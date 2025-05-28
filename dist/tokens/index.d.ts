@@ -3,7 +3,7 @@
  * 모든 디자인 토큰을 중앙에서 관리합니다
  */
 export { colors, primary, gray, coolGray, tint, semantic, illustration } from './colors';
-export { typography, fontFamily, fontSize, fontWeight, lineHeight, letterSpacing, textStyles } from './typography';
+export { typography, fontFamily, fontSize, fontWeight, lineHeight, letterSpacing, textStyles, } from './typography';
 export { spacing } from './spacing';
 export { radius } from './radius';
 export { shadows } from './shadows';
