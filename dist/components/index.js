@@ -37,38 +37,6 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
 };
 
 /**
- * Border Design Tokens
- * 컴포넌트에 테두리를 추가하여 구분감을 제공하는 속성
- */
-// Border Widths
-var borderWidth = {
-  /** UI 요소의 기본적인 구분감을 제공할 때 사용 */
-  s: '1px',
-  /** 1px보다 더 명확한 구분이 필요할 때 사용 */
-  m: '1.5px',
-  /** 중요한 요소를 강조하거나, 요소 간 강한 대비가 필요할 때 사용 */
-  l: '2px'
-};
-// Border Styles
-var borderStyle = {
-  solid: 'solid',
-  dashed: 'dashed',
-  dotted: 'dotted',
-  none: 'none'
-};
-// Combined Border Tokens
-var border = {
-  /** 기본 보더 - UI 요소의 기본적인 구분감 제공 */
-  s: "".concat(borderWidth.s, " ").concat(borderStyle.solid),
-  /** 중간 보더 - 더 명확한 구분이 필요할 때 */
-  m: "".concat(borderWidth.m, " ").concat(borderStyle.solid),
-  /** 큰 보더 - 중요한 요소 강조나 강한 대비가 필요할 때 */
-  l: "".concat(borderWidth.l, " ").concat(borderStyle.solid),
-  /** 보더 없음 */
-  none: borderStyle.none
-};
-
-/**
  * Color Design Tokens
  * 브랜드 아이덴티티와 UI 의미 전달을 위한 컬러 시스템
  */
@@ -238,23 +206,201 @@ var colors = {
   }
 };
 
+/**
+ * Typography Design Tokens
+ * 서비스와 사용자가 커뮤니케이션하는 주요 요소
+ */
+// Font Family
+var fontFamily = {
+  /** 웹사이트에 사용되는 모든 폰트는 Pretendard를 기반으로 함 */
+  primary: 'Pretendard'
+};
+// Font Sizes (rem 단위로 반응형 지원)
+var fontSize = {
+  xxxxl: '2rem',
+  // 32px
+  xxxl: '1.75rem',
+  // 28px
+  xxl: '1.5rem',
+  // 24px
+  xl: '1.25rem',
+  // 20px
+  l: '1.125rem',
+  // 18px
+  m: '1rem',
+  // 16px
+  s: '0.875rem',
+  // 14px
+  xs: '0.75rem',
+  // 12px
+  xxs: '0.625rem',
+  // 10px
+  xxxs: '0.688rem' // 11px
+};
+// Font Weights
+var fontWeight = {
+  bold: 700,
+  semibold: 600,
+  medium: 500,
+  regular: 400
+};
+// Line Heights
+var lineHeight = {
+  xxxxl: '42px',
+  xxxl: '36px',
+  xxl: '32px',
+  xl: '28px',
+  l: '24px',
+  m: '24px',
+  s: '22px',
+  xs: '20px',
+  xxs: '18px',
+  xxxs: '17px'
+};
+// Letter Spacings
+var letterSpacing = {
+  m: '0',
+  s: '-1%',
+  xs: '-2%'
+};
+// Text Styles (React.CSSProperties 호환)
+var textStyles = {
+  /** 주목도를 높이고 큰 타이틀 영역 강조에 사용 */
+  display1: {
+    fontSize: fontSize.xxxxl,
+    fontWeight: fontWeight.bold,
+    lineHeight: lineHeight.xxxxl,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 중간 크기 타이틀에 사용 */
+  display2: {
+    fontSize: fontSize.xxxl,
+    fontWeight: fontWeight.bold,
+    lineHeight: lineHeight.xxxl,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 정보성 카드 타이틀에 주로 사용 */
+  heading1: {
+    fontSize: fontSize.xxl,
+    fontWeight: fontWeight.bold,
+    lineHeight: lineHeight.xxl,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 섹션 구분 타이틀 등에 사용 */
+  heading2: {
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.xl,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 소제목 등에 사용 */
+  heading3: {
+    fontSize: fontSize.l,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.l,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 리스트 아이템, 버튼 텍스트 등에 사용 */
+  heading4: {
+    fontSize: fontSize.m,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.m,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 부가 정보, 캡션 등에 사용 */
+  heading5: {
+    fontSize: fontSize.s,
+    fontWeight: fontWeight.semibold,
+    lineHeight: lineHeight.s,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 주요 본문 텍스트에 사용 */
+  body1: {
+    fontSize: fontSize.m,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.l,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 보조 본문 텍스트에 사용 */
+  body2: {
+    fontSize: fontSize.s,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.s,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장 */
+  body3: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.xxs,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  },
+  /** 보조 정보나 컴포넌트 레벨에서 사용 */
+  caption: {
+    fontSize: fontSize.xs,
+    fontWeight: fontWeight.regular,
+    lineHeight: lineHeight.xs,
+    letterSpacing: letterSpacing.m,
+    fontFamily: fontFamily.primary
+  }
+};
+
+/**
+ * Border Design Tokens
+ * 컴포넌트에 테두리를 추가하여 구분감을 제공하는 속성
+ */
+// Border Widths
+var borderWidth = {
+  /** UI 요소의 기본적인 구분감을 제공할 때 사용 */
+  s: '1px',
+  /** 1px보다 더 명확한 구분이 필요할 때 사용 */
+  m: '1.5px',
+  /** 중요한 요소를 강조하거나, 요소 간 강한 대비가 필요할 때 사용 */
+  l: '2px'
+};
+// Border Styles
+var borderStyle = {
+  solid: 'solid',
+  dashed: 'dashed',
+  dotted: 'dotted',
+  none: 'none'
+};
+// Combined Border Tokens
+var border = {
+  /** 기본 보더 - UI 요소의 기본적인 구분감 제공 */
+  s: "".concat(borderWidth.s, " ").concat(borderStyle.solid),
+  /** 중간 보더 - 더 명확한 구분이 필요할 때 */
+  m: "".concat(borderWidth.m, " ").concat(borderStyle.solid),
+  /** 큰 보더 - 중요한 요소 강조나 강한 대비가 필요할 때 */
+  l: "".concat(borderWidth.l, " ").concat(borderStyle.solid),
+  /** 보더 없음 */
+  none: borderStyle.none
+};
+
 var LoadingIcon = function () {
   return jsxRuntime.jsx("svg", {
     width: "16",
     height: "16",
-    viewBox: "0 0 16 16",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 50 50",
     className: "loading-icon",
     children: jsxRuntime.jsx("circle", {
-      cx: "8",
-      cy: "8",
-      r: "6",
+      cx: "25",
+      cy: "25",
+      r: "20",
+      fill: "none",
       stroke: "currentColor",
-      strokeWidth: "2",
-      strokeLinecap: "round",
-      strokeDasharray: "37.7",
-      strokeDashoffset: "37.7"
+      strokeWidth: "4",
+      strokeLinecap: "round"
     })
   });
 };
@@ -263,58 +409,69 @@ var BoxButton = function (_a) {
     type = _b === void 0 ? 'solid' : _b,
     _c = _a.size,
     size = _c === void 0 ? 'l' : _c,
-    _d = _a.disabled,
-    disabled = _d === void 0 ? false : _d,
+    _d = _a.width,
+    width = _d === void 0 ? '320px' : _d,
+    _e = _a.disabled,
+    disabled = _e === void 0 ? false : _e,
     icon = _a.icon,
     children = _a.children,
     onClick = _a.onClick,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e,
-    _f = _a.isLoading,
-    isLoading = _f === void 0 ? false : _f;
-  var _g = react.useState(false),
-    isHovered = _g[0],
-    setIsHovered = _g[1];
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f,
+    _g = _a.isLoading,
+    isLoading = _g === void 0 ? false : _g;
   var _h = react.useState(false),
-    isPressed = _h[0],
-    setIsPressed = _h[1];
+    isHovered = _h[0],
+    setIsHovered = _h[1];
+  var _j = react.useState(false),
+    isPressed = _j[0],
+    setIsPressed = _j[1];
   // Size configurations
   var sizeConfig = {
-    l: {
+    l: __assign(__assign({
       paddingX: '16px',
       paddingY: '12px',
-      gap: '4px',
       borderRadius: '12px',
       width: '320px',
       height: '48px'
-    },
-    m: {
+    }, textStyles.body1), {
+      fontWeight: fontWeight.medium
+    }),
+    m: __assign(__assign({
       paddingX: '12px',
       paddingY: '8px',
-      gap: '4px',
       borderRadius: '8px',
       width: '320px',
       height: '40px'
-    },
-    s: {
+    }, textStyles.body2), {
+      fontWeight: fontWeight.medium
+    }),
+    s: __assign(__assign({
       paddingX: '8px',
       paddingY: '6px',
-      gap: '4px',
       borderRadius: '4px',
       width: '320px',
       height: '32px'
-    }
+    }, textStyles.body3), {
+      fontWeight: fontWeight.medium
+    })
   };
   var getStyles = function () {
     var config = sizeConfig[size];
+    // width 동적 설정
+    var getWidth = function () {
+      if (width === 'fill') {
+        return '100%';
+      }
+      return width;
+    };
     var styles = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: config.gap,
       padding: "".concat(config.paddingY, " ").concat(config.paddingX),
       borderRadius: config.borderRadius,
-      width: config.width,
+      width: getWidth(),
       height: config.height,
       border: '1px solid transparent',
       cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
@@ -417,14 +574,15 @@ var BoxButton = function (_a) {
     if (isLoading) {
       return jsxRuntime.jsx(LoadingIcon, {});
     }
-    return jsxRuntime.jsxs(jsxRuntime.Fragment, {
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && jsxRuntime.jsx("span", {
-        children: icon.left
-      }), children && jsxRuntime.jsx("span", {
+    return jsxRuntime.jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px'
+      },
+      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && icon.left, children && jsxRuntime.jsx("span", {
         children: children
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && jsxRuntime.jsx("span", {
-        children: icon.right
-      })]
+      }), (icon === null || icon === void 0 ? void 0 : icon.right) && icon.right]
     });
   };
   return jsxRuntime.jsx("button", {
@@ -440,5 +598,197 @@ var BoxButton = function (_a) {
   });
 };
 
+var Font = function (_a) {
+  var type = _a.type,
+    fontWeight$1 = _a.fontWeight,
+    _b = _a.color,
+    color = _b === void 0 ? colors.semantic.text.primary : _b,
+    hoverColor = _a.hoverColor,
+    _c = _a.align,
+    align = _c === void 0 ? 'left' : _c,
+    whiteSpace = _a.whiteSpace,
+    _d = _a.noWhiteSpace,
+    noWhiteSpace = _d === void 0 ? false : _d,
+    _e = _a.underline,
+    underline = _e === void 0 ? false : _e,
+    className = _a.className,
+    style = _a.style,
+    children = _a.children;
+  var baseStyle = textStyles[type];
+  var fontStyles = __assign(__assign(__assign(__assign({}, baseStyle), fontWeight$1 && {
+    fontWeight: fontWeight[fontWeight$1]
+  }), {
+    color: color,
+    textAlign: align,
+    whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
+    textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
+    overflow: noWhiteSpace ? 'hidden' : undefined,
+    textDecoration: underline ? 'underline' : 'none',
+    margin: 0,
+    padding: 0,
+    transition: 'color 0.2s ease'
+  }), style);
+  var handleMouseEnter = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = hoverColor;
+    }
+  };
+  var handleMouseLeave = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = color;
+    }
+  };
+  return jsxRuntime.jsx("span", {
+    style: fontStyles,
+    className: className,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: children
+  });
+};
+
+var TextInput = react.forwardRef(function (_a, ref) {
+  var _b = _a.placeholder,
+    placeholder = _b === void 0 ? 'Placeholder' : _b,
+    value = _a.value,
+    defaultValue = _a.defaultValue,
+    onChange = _a.onChange,
+    onFocus = _a.onFocus,
+    onBlur = _a.onBlur,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c,
+    _d = _a.error,
+    error = _d === void 0 ? false : _d,
+    errorMessage = _a.errorMessage,
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.type,
+    type = _f === void 0 ? 'text' : _f,
+    _g = _a.size,
+    size = _g === void 0 ? 'l' : _g;
+  var _h = react.useState(false),
+    isFocused = _h[0],
+    setIsFocused = _h[1];
+  var _j = react.useState(defaultValue || ''),
+    internalValue = _j[0],
+    setInternalValue = _j[1];
+  // Size configurations
+  var sizeConfig = {
+    l: __assign(__assign({
+      paddingX: '16px',
+      paddingY: '12px',
+      borderRadius: '12px',
+      height: '48px'
+    }, textStyles.body1), {
+      fontWeight: fontWeight.regular
+    }),
+    m: __assign(__assign({
+      paddingX: '12px',
+      paddingY: '8px',
+      borderRadius: '8px',
+      height: '40px'
+    }, textStyles.body2), {
+      fontWeight: fontWeight.regular
+    }),
+    s: __assign(__assign({
+      paddingX: '8px',
+      paddingY: '6px',
+      borderRadius: '4px',
+      height: '32px'
+    }, textStyles.body3), {
+      fontWeight: fontWeight.regular
+    })
+  };
+  var getStyles = function () {
+    var config = sizeConfig[size];
+    var styles = {
+      width: '100%',
+      height: config.height,
+      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
+      borderRadius: config.borderRadius,
+      fontSize: config.fontSize,
+      fontWeight: config.fontWeight,
+      lineHeight: config.lineHeight,
+      border: "".concat(border.s, " transparent"),
+      outline: 'none',
+      transition: 'all 0.2s ease',
+      fontFamily: 'inherit'
+    };
+    if (disabled) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.disabled.foreground,
+        border: "".concat(border.s, " ").concat(colors.semantic.disabled.background),
+        cursor: 'not-allowed'
+      });
+    } else if (error) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.semantic.state.error)
+      });
+    } else if (isFocused) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.primary.mainviolet),
+        boxShadow: "0 0 0 3px ".concat(colors.primary.tint.violet[100])
+      });
+    } else {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.semantic.border.default)
+      });
+    }
+    return styles;
+  };
+  var handleFocus = function () {
+    if (!disabled) {
+      setIsFocused(true);
+      onFocus === null || onFocus === void 0 ? void 0 : onFocus();
+    }
+  };
+  var handleBlur = function () {
+    setIsFocused(false);
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur();
+  };
+  var handleChange = function (e) {
+    var newValue = e.target.value;
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
+  };
+  var inputValue = value !== undefined ? value : internalValue;
+  return jsxRuntime.jsxs("div", {
+    className: "text-input-container ".concat(className),
+    children: [jsxRuntime.jsx("input", {
+      ref: ref,
+      type: type,
+      value: inputValue,
+      placeholder: placeholder,
+      onChange: handleChange,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      disabled: disabled,
+      style: getStyles(),
+      className: "text-input"
+    }), error && errorMessage && jsxRuntime.jsx("div", {
+      style: {
+        marginTop: '4px',
+        fontSize: '12px',
+        color: colors.semantic.state.error,
+        fontWeight: fontWeight.regular
+      },
+      className: "error-message",
+      children: errorMessage
+    })]
+  });
+});
+TextInput.displayName = 'TextInput';
+
 exports.BoxButton = BoxButton;
+exports.Font = Font;
+exports.TextInput = TextInput;
 //# sourceMappingURL=index.js.map

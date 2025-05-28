@@ -1,5 +1,5 @@
-import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { useState } from 'react';
+import { jsx, jsxs } from 'react/jsx-runtime';
+import { useState, forwardRef } from 'react';
 
 /**
  * Color Design Tokens
@@ -552,19 +552,16 @@ var LoadingIcon = function () {
   return jsx("svg", {
     width: "16",
     height: "16",
-    viewBox: "0 0 16 16",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 50 50",
     className: "loading-icon",
     children: jsx("circle", {
-      cx: "8",
-      cy: "8",
-      r: "6",
+      cx: "25",
+      cy: "25",
+      r: "20",
+      fill: "none",
       stroke: "currentColor",
-      strokeWidth: "2",
-      strokeLinecap: "round",
-      strokeDasharray: "37.7",
-      strokeDashoffset: "37.7"
+      strokeWidth: "4",
+      strokeLinecap: "round"
     })
   });
 };
@@ -573,58 +570,69 @@ var BoxButton = function (_a) {
     type = _b === void 0 ? 'solid' : _b,
     _c = _a.size,
     size = _c === void 0 ? 'l' : _c,
-    _d = _a.disabled,
-    disabled = _d === void 0 ? false : _d,
+    _d = _a.width,
+    width = _d === void 0 ? '320px' : _d,
+    _e = _a.disabled,
+    disabled = _e === void 0 ? false : _e,
     icon = _a.icon,
     children = _a.children,
     onClick = _a.onClick,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e,
-    _f = _a.isLoading,
-    isLoading = _f === void 0 ? false : _f;
-  var _g = useState(false),
-    isHovered = _g[0],
-    setIsHovered = _g[1];
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f,
+    _g = _a.isLoading,
+    isLoading = _g === void 0 ? false : _g;
   var _h = useState(false),
-    isPressed = _h[0],
-    setIsPressed = _h[1];
+    isHovered = _h[0],
+    setIsHovered = _h[1];
+  var _j = useState(false),
+    isPressed = _j[0],
+    setIsPressed = _j[1];
   // Size configurations
   var sizeConfig = {
-    l: {
+    l: __assign(__assign({
       paddingX: '16px',
       paddingY: '12px',
-      gap: '4px',
       borderRadius: '12px',
       width: '320px',
       height: '48px'
-    },
-    m: {
+    }, textStyles.body1), {
+      fontWeight: fontWeight.medium
+    }),
+    m: __assign(__assign({
       paddingX: '12px',
       paddingY: '8px',
-      gap: '4px',
       borderRadius: '8px',
       width: '320px',
       height: '40px'
-    },
-    s: {
+    }, textStyles.body2), {
+      fontWeight: fontWeight.medium
+    }),
+    s: __assign(__assign({
       paddingX: '8px',
       paddingY: '6px',
-      gap: '4px',
       borderRadius: '4px',
       width: '320px',
       height: '32px'
-    }
+    }, textStyles.body3), {
+      fontWeight: fontWeight.medium
+    })
   };
   var getStyles = function () {
     var config = sizeConfig[size];
+    // width 동적 설정
+    var getWidth = function () {
+      if (width === 'fill') {
+        return '100%';
+      }
+      return width;
+    };
     var styles = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: config.gap,
       padding: "".concat(config.paddingY, " ").concat(config.paddingX),
       borderRadius: config.borderRadius,
-      width: config.width,
+      width: getWidth(),
       height: config.height,
       border: '1px solid transparent',
       cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
@@ -727,14 +735,15 @@ var BoxButton = function (_a) {
     if (isLoading) {
       return jsx(LoadingIcon, {});
     }
-    return jsxs(Fragment, {
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && jsx("span", {
-        children: icon.left
-      }), children && jsx("span", {
+    return jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px'
+      },
+      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && icon.left, children && jsx("span", {
         children: children
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && jsx("span", {
-        children: icon.right
-      })]
+      }), (icon === null || icon === void 0 ? void 0 : icon.right) && icon.right]
     });
   };
   return jsx("button", {
@@ -750,5 +759,195 @@ var BoxButton = function (_a) {
   });
 };
 
-export { BoxButton, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography };
+var Font = function (_a) {
+  var type = _a.type,
+    fontWeight$1 = _a.fontWeight,
+    _b = _a.color,
+    color = _b === void 0 ? colors.semantic.text.primary : _b,
+    hoverColor = _a.hoverColor,
+    _c = _a.align,
+    align = _c === void 0 ? 'left' : _c,
+    whiteSpace = _a.whiteSpace,
+    _d = _a.noWhiteSpace,
+    noWhiteSpace = _d === void 0 ? false : _d,
+    _e = _a.underline,
+    underline = _e === void 0 ? false : _e,
+    className = _a.className,
+    style = _a.style,
+    children = _a.children;
+  var baseStyle = textStyles[type];
+  var fontStyles = __assign(__assign(__assign(__assign({}, baseStyle), fontWeight$1 && {
+    fontWeight: fontWeight[fontWeight$1]
+  }), {
+    color: color,
+    textAlign: align,
+    whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
+    textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
+    overflow: noWhiteSpace ? 'hidden' : undefined,
+    textDecoration: underline ? 'underline' : 'none',
+    margin: 0,
+    padding: 0,
+    transition: 'color 0.2s ease'
+  }), style);
+  var handleMouseEnter = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = hoverColor;
+    }
+  };
+  var handleMouseLeave = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = color;
+    }
+  };
+  return jsx("span", {
+    style: fontStyles,
+    className: className,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: children
+  });
+};
+
+var TextInput = forwardRef(function (_a, ref) {
+  var _b = _a.placeholder,
+    placeholder = _b === void 0 ? 'Placeholder' : _b,
+    value = _a.value,
+    defaultValue = _a.defaultValue,
+    onChange = _a.onChange,
+    onFocus = _a.onFocus,
+    onBlur = _a.onBlur,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c,
+    _d = _a.error,
+    error = _d === void 0 ? false : _d,
+    errorMessage = _a.errorMessage,
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.type,
+    type = _f === void 0 ? 'text' : _f,
+    _g = _a.size,
+    size = _g === void 0 ? 'l' : _g;
+  var _h = useState(false),
+    isFocused = _h[0],
+    setIsFocused = _h[1];
+  var _j = useState(defaultValue || ''),
+    internalValue = _j[0],
+    setInternalValue = _j[1];
+  // Size configurations
+  var sizeConfig = {
+    l: __assign(__assign({
+      paddingX: '16px',
+      paddingY: '12px',
+      borderRadius: '12px',
+      height: '48px'
+    }, textStyles.body1), {
+      fontWeight: fontWeight.regular
+    }),
+    m: __assign(__assign({
+      paddingX: '12px',
+      paddingY: '8px',
+      borderRadius: '8px',
+      height: '40px'
+    }, textStyles.body2), {
+      fontWeight: fontWeight.regular
+    }),
+    s: __assign(__assign({
+      paddingX: '8px',
+      paddingY: '6px',
+      borderRadius: '4px',
+      height: '32px'
+    }, textStyles.body3), {
+      fontWeight: fontWeight.regular
+    })
+  };
+  var getStyles = function () {
+    var config = sizeConfig[size];
+    var styles = {
+      width: '100%',
+      height: config.height,
+      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
+      borderRadius: config.borderRadius,
+      fontSize: config.fontSize,
+      fontWeight: config.fontWeight,
+      lineHeight: config.lineHeight,
+      border: "".concat(border.s, " transparent"),
+      outline: 'none',
+      transition: 'all 0.2s ease',
+      fontFamily: 'inherit'
+    };
+    if (disabled) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.disabled.foreground,
+        border: "".concat(border.s, " ").concat(colors.semantic.disabled.background),
+        cursor: 'not-allowed'
+      });
+    } else if (error) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.semantic.state.error)
+      });
+    } else if (isFocused) {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.primary.mainviolet),
+        boxShadow: "0 0 0 3px ".concat(colors.primary.tint.violet[100])
+      });
+    } else {
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "".concat(border.s, " ").concat(colors.semantic.border.default)
+      });
+    }
+    return styles;
+  };
+  var handleFocus = function () {
+    if (!disabled) {
+      setIsFocused(true);
+      onFocus === null || onFocus === void 0 ? void 0 : onFocus();
+    }
+  };
+  var handleBlur = function () {
+    setIsFocused(false);
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur();
+  };
+  var handleChange = function (e) {
+    var newValue = e.target.value;
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
+  };
+  var inputValue = value !== undefined ? value : internalValue;
+  return jsxs("div", {
+    className: "text-input-container ".concat(className),
+    children: [jsx("input", {
+      ref: ref,
+      type: type,
+      value: inputValue,
+      placeholder: placeholder,
+      onChange: handleChange,
+      onFocus: handleFocus,
+      onBlur: handleBlur,
+      disabled: disabled,
+      style: getStyles(),
+      className: "text-input"
+    }), error && errorMessage && jsx("div", {
+      style: {
+        marginTop: '4px',
+        fontSize: '12px',
+        color: colors.semantic.state.error,
+        fontWeight: fontWeight.regular
+      },
+      className: "error-message",
+      children: errorMessage
+    })]
+  });
+});
+TextInput.displayName = 'TextInput';
+
+export { BoxButton, Font, TextInput, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography };
 //# sourceMappingURL=index.esm.js.map

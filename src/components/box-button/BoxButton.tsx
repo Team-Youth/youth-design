@@ -7,6 +7,7 @@ import './BoxButton.css';
 export interface BoxButtonProps {
   type?: 'solid' | 'ghost';
   size?: 'l' | 'm' | 's';
+  width?: string;
   disabled?: boolean;
   icon?: {
     left?: React.ReactNode;
@@ -35,6 +36,7 @@ const LoadingIcon = () => (
 export const BoxButton: React.FC<BoxButtonProps> = ({
   type = 'solid',
   size = 'l',
+  width = '320px',
   disabled = false,
   icon,
   children,
@@ -78,13 +80,22 @@ export const BoxButton: React.FC<BoxButtonProps> = ({
 
   const getStyles = (): React.CSSProperties => {
     const config = sizeConfig[size];
+
+    // width 동적 설정
+    const getWidth = () => {
+      if (width === 'fill') {
+        return '100%';
+      }
+      return width;
+    };
+
     let styles: React.CSSProperties = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: `${config.paddingY} ${config.paddingX}`,
       borderRadius: config.borderRadius,
-      width: config.width,
+      width: getWidth(),
       height: config.height,
       border: '1px solid transparent',
       cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
