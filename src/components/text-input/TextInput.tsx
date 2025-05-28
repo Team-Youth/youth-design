@@ -4,7 +4,7 @@ import { colors } from '../../tokens/colors';
 import { border } from '../../tokens/borders';
 import './TextInput.css';
 
-export interface TextInputProps {
+export interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'> {
   placeholder?: string;
   value?: string;
   defaultValue?: string;
@@ -34,6 +34,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
       className = '',
       type = 'text',
       size = 'l',
+      ...restProps
     },
     ref,
   ) => {
@@ -160,6 +161,7 @@ export const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
           disabled={disabled}
           style={getStyles()}
           className="text-input"
+          {...restProps}
         />
         {error && errorMessage && (
           <div
