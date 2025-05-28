@@ -407,21 +407,23 @@ var BoxButton = function (_a) {
     type = _b === void 0 ? 'solid' : _b,
     _c = _a.size,
     size = _c === void 0 ? 'l' : _c,
-    _d = _a.disabled,
-    disabled = _d === void 0 ? false : _d,
+    _d = _a.width,
+    width = _d === void 0 ? '320px' : _d,
+    _e = _a.disabled,
+    disabled = _e === void 0 ? false : _e,
     icon = _a.icon,
     children = _a.children,
     onClick = _a.onClick,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e,
-    _f = _a.isLoading,
-    isLoading = _f === void 0 ? false : _f;
-  var _g = useState(false),
-    isHovered = _g[0],
-    setIsHovered = _g[1];
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f,
+    _g = _a.isLoading,
+    isLoading = _g === void 0 ? false : _g;
   var _h = useState(false),
-    isPressed = _h[0],
-    setIsPressed = _h[1];
+    isHovered = _h[0],
+    setIsHovered = _h[1];
+  var _j = useState(false),
+    isPressed = _j[0],
+    setIsPressed = _j[1];
   // Size configurations
   var sizeConfig = {
     l: __assign(__assign({
@@ -454,13 +456,20 @@ var BoxButton = function (_a) {
   };
   var getStyles = function () {
     var config = sizeConfig[size];
+    // width 동적 설정
+    var getWidth = function () {
+      if (width === 'fill') {
+        return '100%';
+      }
+      return width;
+    };
     var styles = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: "".concat(config.paddingY, " ").concat(config.paddingX),
       borderRadius: config.borderRadius,
-      width: config.width,
+      width: getWidth(),
       height: config.height,
       border: '1px solid transparent',
       cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
