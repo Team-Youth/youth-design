@@ -6,3 +6,6 @@ export type { FontProps, FontType, FontWeight } from './font';
 
 export { TextInput } from './text-input';
 export type { TextInputProps } from './text-input';
+
+export { TextButton } from './text-button';
+export type { TextButtonProps } from './text-button';
