@@ -1,6 +1,6 @@
 import React from 'react';
 import './TextInput.css';
-export interface TextInputProps {
+export interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'> {
     placeholder?: string;
     value?: string;
     defaultValue?: string;
