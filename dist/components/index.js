@@ -858,6 +858,8 @@ var TextButton = function (_a) {
   var getStyles = function () {
     var config = sizeConfig[size];
     var textColor = getTextColor();
+    // 아이콘이 있는지 확인
+    var hasIcons = (icon === null || icon === void 0 ? void 0 : icon.left) || (icon === null || icon === void 0 ? void 0 : icon.right);
     return {
       display: 'inline-flex',
       alignItems: 'center',
@@ -876,7 +878,7 @@ var TextButton = function (_a) {
       height: height || 'auto',
       minWidth: 'fit-content',
       minHeight: 'fit-content',
-      gap: '4px',
+      gap: hasIcons ? '4px' : '0px',
       transition: 'all 0.2s ease'
     };
   };

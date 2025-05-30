@@ -1,0 +1,114 @@
+/* Youth Design System - Global CSS Reset */
+
+/* Span 태그의 모든 기본 스타일링 제거 */
+span {
+  /* 기본 마진, 패딩 제거 */
+  margin: 0;
+  padding: 0;
+  
+  /* 기본 폰트 스타일 제거 */
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-decoration: inherit;
+  text-transform: inherit;
+  color: inherit;
+  
+  /* 기본 박스 모델 제거 */
+  border: none;
+  outline: none;
+  background: none;
+  box-shadow: none;
+  
+  /* 기본 디스플레이 속성 */
+  display: inline;
+  
+  /* 기본 위치 속성 제거 */
+  position: static;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  z-index: auto;
+  
+  /* 기본 변형 속성 제거 */
+  transform: none;
+  transition: none;
+  
+  /* 기본 오버플로우 속성 */
+  overflow: visible;
+  
+  /* 기본 투명도 */
+  opacity: 1;
+  
+  /* 기본 커서 */
+  cursor: inherit;
+  
+  /* 기본 사용자 선택 */
+  user-select: inherit;
+  
+  /* 기본 포인터 이벤트 */
+  pointer-events: auto;
+  
+  /* 기본 가시성 */
+  visibility: inherit;
+  
+  /* 기본 방향성 */
+  direction: inherit;
+  
+  /* 기본 텍스트 정렬 */
+  text-align: inherit;
+  
+  /* 기본 수직 정렬 */
+  vertical-align: baseline;
+  
+  /* 기본 화이트스페이스 */
+  white-space: inherit;
+  
+  /* 기본 워드 브레이크 */
+  word-break: inherit;
+  word-wrap: inherit;
+  
+  /* 기본 리스트 스타일 (span에는 적용되지 않지만 완전성을 위해) */
+  list-style: none;
+  
+  /* 기본 테이블 속성 (span에는 적용되지 않지만 완전성을 위해) */
+  border-collapse: inherit;
+  border-spacing: inherit;
+  
+  /* 기본 플렉스 속성 */
+  flex: none;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-self: auto;
+  
+  /* 기본 그리드 속성 */
+  grid-area: auto;
+  grid-column: auto;
+  grid-row: auto;
+  
+  /* 기본 애니메이션 */
+  animation: none;
+  
+  /* 기본 필터 */
+  filter: none;
+  
+  /* 기본 백드롭 필터 */
+  backdrop-filter: none;
+  
+  /* 기본 마스크 */
+  mask: none;
+  
+  /* 기본 클립 패스 */
+  clip-path: none;
+  
+  /* 기본 믹스 블렌드 모드 */
+  mix-blend-mode: normal;
+  
+  /* 기본 아이솔레이션 */
+  isolation: auto;
+} 
