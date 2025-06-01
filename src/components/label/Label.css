@@ -1,0 +1,63 @@
+/* Label Component Styles */
+
+.label {
+  box-sizing: border-box;
+  user-select: none;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+.label__leading-icon,
+.label__trailing-icon {
+  line-height: 0;
+}
+
+.label__leading-icon svg,
+.label__trailing-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* BEM 방법론에 따른 modifier 클래스들 */
+.label--m {
+  /* Medium size specific styles */
+}
+
+.label--s {
+  /* Small size specific styles */
+}
+
+.label--square {
+  /* Square type specific styles */
+}
+
+.label--capsule {
+  /* Capsule type specific styles */
+}
+
+.label--grey {
+  /* Grey color specific styles */
+}
+
+.label--dark {
+  /* Dark color specific styles */
+}
+
+.label--violet {
+  /* Violet color specific styles */
+}
+
+.label--accent {
+  /* Accent color specific styles */
+}
+
+.label--red {
+  /* Red color specific styles */
+}
+
+.label--green {
+  /* Green color specific styles */
+}
+
+.label--yellow {
+  /* Yellow color specific styles */
+} 

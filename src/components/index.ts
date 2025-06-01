@@ -7,6 +7,9 @@ export type { FontProps, FontType, FontWeight } from './font';
 export { Icon } from './icon';
 export type { IconProps, IconType } from './icon';
 
+export { Label } from './label';
+export type { LabelProps } from './label';
+
 export { TextInput } from './text-input';
 export type { TextInputProps } from './text-input';
 

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Color Test</title>
+    <style>
+        .container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .icon-test {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .icon-wrapper {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .red { color: #EF4444; }
+        .blue { color: #3B82F6; }
+        .green { color: #10B981; }
+        .purple { color: #8B5CF6; }
+        .gray { color: #6B7280; }
+    </style>
+</head>
+<body>
+    <h1>Icon 색상 테스트</h1>
+    <div class="container">
+        <div class="icon-test">
+            <div class="icon-wrapper red" id="icon1"></div>
+            <span>빨간색</span>
+        </div>
+        <div class="icon-test">
+            <div class="icon-wrapper blue" id="icon2"></div>
+            <span>파란색</span>
+        </div>
+        <div class="icon-test">
+            <div class="icon-wrapper green" id="icon3"></div>
+            <span>초록색</span>
+        </div>
+        <div class="icon-test">
+            <div class="icon-wrapper purple" id="icon4"></div>
+            <span>보라색</span>
+        </div>
+        <div class="icon-test">
+            <div class="icon-wrapper gray" id="icon5"></div>
+            <span>회색</span>
+        </div>
+    </div>
+
+    <script>
+        async function loadIcon(iconPath, elementId) {
+            try {
+                const response = await fetch(iconPath);
+                const svgText = await response.text();
+                document.getElementById(elementId).innerHTML = svgText;
+            } catch (error) {
+                console.error('Failed to load icon:', error);
+            }
+        }
+
+        // 각 아이콘 로드
+        loadIcon('/icons/search.svg', 'icon1');
+        loadIcon('/icons/heart.svg', 'icon2');
+        loadIcon('/icons/check.svg', 'icon3');
+        loadIcon('/icons/add.svg', 'icon4');
+        loadIcon('/icons/home.svg', 'icon5');
+    </script>
+</body>
+</html> 
