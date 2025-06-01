@@ -15,3 +15,6 @@ export type { ChipsProps } from './chips';
 export * from './radio';
 export * from './check-box';
 export * from './toggle';
+
+export { Toast, ToastProvider, useToast } from './toast';
+export type { ToastProps, ToastStatus, ToastItem } from './toast';
