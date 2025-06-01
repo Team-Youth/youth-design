@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { colors, spacing } from '../../tokens';
-import { Icon, IconType } from '../icon/Icon';
+import { IconType, Icon } from '../icon';
 
 export interface DropdownOption {
   value: string;
@@ -31,8 +31,8 @@ export interface DropdownProps {
   width?: 'fill' | (string & {});
   /** 검색 기능 활성화 여부 */
   enableSearch?: boolean;
-  /** 빈 옵션 메시지 숨김 여부 */
-  hideEmptyOption?: boolean;
+  /** 모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음) */
+  hideOption?: boolean;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -47,7 +47,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   leadingIconType,
   width = '320px',
   enableSearch = false,
-  hideEmptyOption = false,
+  hideOption = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -221,10 +221,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
   );
 
   const handleClick = useCallback(() => {
-    if (!disabled) {
+    if (!disabled && !hideOption) {
       setIsOpen(!isOpen);
     }
-  }, [disabled, isOpen]);
+  }, [disabled, hideOption, isOpen]);
 
   const handleOptionClick = useCallback(
     (optionValue: string) => {
@@ -240,10 +240,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
     (event: React.KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
-        handleClick();
+        if (!hideOption) {
+          handleClick();
+        }
       }
     },
-    [handleClick],
+    [handleClick, hideOption],
   );
 
   const handleInputKeyDown = useCallback(
@@ -409,55 +411,55 @@ export const Dropdown: React.FC<DropdownProps> = ({
         </div>
       </div>
 
-      {shouldRender && (
+      {shouldRender && !hideOption && (
         <div style={dropdownOptionsStyle} role="listbox">
-          {filteredOptions.length === 0
-            ? !hideEmptyOption && (
+          {filteredOptions.length === 0 ? (
+            <div
+              style={{
+                padding: '13px 16px',
+                fontSize: '14px',
+                fontWeight: 500,
+                lineHeight: '22px',
+                color: colors.semantic.disabled.foreground,
+                fontFamily: 'Pretendard',
+                textAlign: 'center',
+              }}
+            >
+              {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
+            </div>
+          ) : (
+            filteredOptions.map((option, index) => {
+              const isSelected = value === option.value;
+              return (
                 <div
-                  style={{
-                    padding: '13px 16px',
-                    fontSize: '14px',
-                    fontWeight: 500,
-                    lineHeight: '22px',
-                    color: colors.semantic.disabled.foreground,
-                    fontFamily: 'Pretendard',
-                    textAlign: 'center',
-                  }}
+                  key={option.value}
+                  style={getOptionStyles(option, index, isSelected)}
+                  onClick={() => !option.disabled && handleOptionClick(option.value)}
+                  onMouseEnter={() => setHoveredOptionIndex(index)}
+                  onMouseLeave={() => setHoveredOptionIndex(null)}
+                  role="option"
+                  aria-selected={isSelected}
+                  aria-disabled={option.disabled}
                 >
-                  {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
+                  <span>{option.label}</span>
+                  {isSelected && (
+                    <div
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#7248D9', // Figma 스펙의 체크 아이콘 색상
+                      }}
+                    >
+                      {getCheckIcon()}
+                    </div>
+                  )}
                 </div>
-              )
-            : filteredOptions.map((option, index) => {
-                const isSelected = value === option.value;
-                return (
-                  <div
-                    key={option.value}
-                    style={getOptionStyles(option, index, isSelected)}
-                    onClick={() => !option.disabled && handleOptionClick(option.value)}
-                    onMouseEnter={() => setHoveredOptionIndex(index)}
-                    onMouseLeave={() => setHoveredOptionIndex(null)}
-                    role="option"
-                    aria-selected={isSelected}
-                    aria-disabled={option.disabled}
-                  >
-                    <span>{option.label}</span>
-                    {isSelected && (
-                      <div
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#7248D9', // Figma 스펙의 체크 아이콘 색상
-                        }}
-                      >
-                        {getCheckIcon()}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              );
+            })
+          )}
         </div>
       )}
 
