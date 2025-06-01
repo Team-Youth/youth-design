@@ -870,28 +870,34 @@ var Font = function (_a) {
 
 // 아이콘 SVG 임포트 (동적으로 로드하기 위한 매핑)
 var iconMap = {
-  hamburger: '/icons/hamburger.svg',
-  search: '/icons/search.svg',
-  close: '/icons/close.svg',
-  check: '/icons/check.svg',
-  add: '/icons/add.svg',
-  minus: '/icons/minus.svg',
-  truncation: '/icons/truncation.svg',
-  more: '/icons/more.svg',
-  home: '/icons/home.svg',
-  'home-filled': '/icons/home-filled.svg',
-  heart: '/icons/heart.svg',
-  'heart-filled': '/icons/heart-filled.svg',
-  'my-page': '/icons/my-page.svg',
-  'my-page-filled': '/icons/my-page-filled.svg',
-  download: '/icons/download.svg',
-  modify: '/icons/modify.svg',
-  duplicate: '/icons/duplicate.svg',
-  dialog: '/icons/dialog.svg',
-  'arrow-down': '/icons/arrow-down.svg',
-  'arrow-up': '/icons/arrow-up.svg',
-  'arrow-right': '/icons/arrow-right.svg',
-  'arrow-left': '/icons/arrow-left.svg'
+  hamburger: '/src/components/icon/assets/hamburger.svg',
+  search: '/src/components/icon/assets/search.svg',
+  close: '/src/components/icon/assets/close.svg',
+  check: '/src/components/icon/assets/check.svg',
+  add: '/src/components/icon/assets/add.svg',
+  minus: '/src/components/icon/assets/minus.svg',
+  truncation: '/src/components/icon/assets/truncation.svg',
+  more: '/src/components/icon/assets/more.svg',
+  home: '/src/components/icon/assets/home.svg',
+  'home-filled': '/src/components/icon/assets/home-filled.svg',
+  heart: '/src/components/icon/assets/heart.svg',
+  'heart-filled': '/src/components/icon/assets/heart-filled.svg',
+  'my-page': '/src/components/icon/assets/my-page.svg',
+  'my-page-filled': '/src/components/icon/assets/my-page-filled.svg',
+  download: '/src/components/icon/assets/download.svg',
+  modify: '/src/components/icon/assets/modify.svg',
+  duplicate: '/src/components/icon/assets/duplicate.svg',
+  dialog: '/src/components/icon/assets/dialog.svg',
+  'arrow-down': '/src/components/icon/assets/arrow-down.svg',
+  'arrow-up': '/src/components/icon/assets/arrow-up.svg',
+  'arrow-right': '/src/components/icon/assets/arrow-right.svg',
+  'arrow-left': '/src/components/icon/assets/arrow-left.svg',
+  'chevron-left': '/src/components/icon/assets/chevron-left.svg',
+  'chevron-right': '/src/components/icon/assets/chevron-right.svg',
+  'chevron-up': '/src/components/icon/assets/chevron-up.svg',
+  'chevron-down': '/src/components/icon/assets/chevron-down.svg',
+  calendar: '/src/components/icon/assets/calendar.svg',
+  'calendar-filled': '/src/components/icon/assets/calendar-filled.svg'
 };
 var Icon = function (_a) {
   var type = _a.type,
@@ -921,6 +927,8 @@ var Icon = function (_a) {
               return [4 /*yield*/, response.text()];
             case 2:
               svgText = _a.sent();
+              // SVG 내용에서 fill 색상을 동적으로 변경
+              svgText = svgText.replace(/fill="[^"]*"/g, "fill=\"".concat(color, "\""));
               setSvgContent(svgText);
               return [3 /*break*/, 4];
             case 3:
@@ -934,7 +942,7 @@ var Icon = function (_a) {
       });
     };
     loadSvg();
-  }, [type]);
+  }, [type, color]);
   var iconStyle = __assign({
     width: size,
     height: size,

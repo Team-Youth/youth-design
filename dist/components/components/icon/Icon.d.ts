@@ -1,5 +1,5 @@
 import React from 'react';
-export type IconType = 'hamburger' | 'search' | 'close' | 'check' | 'add' | 'minus' | 'truncation' | 'more' | 'home' | 'home-filled' | 'heart' | 'heart-filled' | 'my-page' | 'my-page-filled' | 'download' | 'modify' | 'duplicate' | 'dialog' | 'arrow-down' | 'arrow-up' | 'arrow-right' | 'arrow-left';
+export type IconType = 'hamburger' | 'search' | 'close' | 'check' | 'add' | 'minus' | 'truncation' | 'more' | 'home' | 'home-filled' | 'heart' | 'heart-filled' | 'my-page' | 'my-page-filled' | 'download' | 'modify' | 'duplicate' | 'dialog' | 'arrow-down' | 'arrow-up' | 'arrow-right' | 'arrow-left' | 'chevron-left' | 'chevron-right' | 'chevron-up' | 'chevron-down' | 'calendar' | 'calendar-filled';
 export interface IconProps {
     /** 아이콘 타입 */
     type: IconType;
