@@ -45,13 +45,25 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
+  const [searchText, setSearchText] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const selectedOption = useMemo(
     () => options.find((option) => option.value === value),
     [options, value],
   );
   const hasSelectedOption = !!selectedOption;
+
+  // 검색 텍스트에 따른 옵션 필터링
+  const filteredOptions = useMemo(() => {
+    if (!searchText.trim()) {
+      return options;
+    }
+    return options.filter((option) =>
+      option.label.toLowerCase().includes(searchText.toLowerCase()),
+    );
+  }, [options, searchText]);
 
   // 드롭다운 열기/닫기 애니메이션 관리
   useEffect(() => {
@@ -62,11 +74,17 @@ export const Dropdown: React.FC<DropdownProps> = ({
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setIsAnimating(true);
+          // 드롭다운이 열리면 input에 포커스
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
         });
       });
     } else {
       // 닫기: 애니메이션 시작하고 완료 후 DOM에서 제거
       setIsAnimating(false);
+      // 검색 텍스트 초기화
+      setSearchText('');
       const timer = setTimeout(() => {
         setShouldRender(false);
       }, 200); // 애니메이션 duration과 맞춤
@@ -161,6 +179,22 @@ export const Dropdown: React.FC<DropdownProps> = ({
     };
   }, [disabled, error, hasSelectedOption]);
 
+  const getInputStyles = useCallback((): React.CSSProperties => {
+    return {
+      flex: 1,
+      fontSize: '14px',
+      fontWeight: 500,
+      lineHeight: '22px',
+      letterSpacing: '-0.28px',
+      fontFamily: 'Pretendard',
+      color: colors.semantic.text.primary,
+      backgroundColor: 'transparent',
+      border: 'none',
+      outline: 'none',
+      width: '100%',
+    };
+  }, []);
+
   const getIconColor = useCallback(() => {
     if (disabled) {
       return colors.semantic.disabled.foreground; // #D1D5DB
@@ -201,6 +235,33 @@ export const Dropdown: React.FC<DropdownProps> = ({
     },
     [handleClick],
   );
+
+  const handleInputKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        // 첫 번째 필터링된 옵션 선택
+        if (filteredOptions.length > 0 && !filteredOptions[0].disabled) {
+          handleOptionClick(filteredOptions[0].value);
+        }
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        // 첫 번째 옵션에 호버 효과
+        if (filteredOptions.length > 0) {
+          setHoveredOptionIndex(0);
+        }
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        setIsOpen(false);
+      }
+    },
+    [filteredOptions, handleOptionClick],
+  );
+
+  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(event.target.value);
+    setHoveredOptionIndex(null);
+  }, []);
 
   const getOptionStyles = useCallback(
     (option: DropdownOption, index: number, isSelected: boolean) => {
@@ -260,6 +321,22 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   const getCheckIcon = () => <Icon type="check" size={20} color="currentColor" />;
 
+  // 표시할 텍스트 결정
+  const getDisplayText = () => {
+    if (isOpen) {
+      return searchText;
+    }
+    return hasSelectedOption ? selectedOption.label : placeholder;
+  };
+
+  // 플레이스홀더 텍스트 결정
+  const getPlaceholderText = () => {
+    if (isOpen) {
+      return hasSelectedOption ? selectedOption.label : placeholder;
+    }
+    return '';
+  };
+
   return (
     <div
       className={`dropdown-wrapper ${className}`}
@@ -268,9 +345,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
     >
       <div
         style={getContainerStyles()}
-        onClick={handleClick}
-        onKeyDown={handleKeyDown}
-        tabIndex={disabled ? -1 : 0}
+        onClick={!isOpen ? handleClick : undefined}
+        onKeyDown={!isOpen ? handleKeyDown : undefined}
+        tabIndex={disabled || isOpen ? -1 : 0}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -291,7 +368,20 @@ export const Dropdown: React.FC<DropdownProps> = ({
           </div>
         )}
 
-        <div style={getTextStyles()}>{hasSelectedOption ? selectedOption.label : placeholder}</div>
+        {isOpen ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={searchText}
+            onChange={handleInputChange}
+            onKeyDown={handleInputKeyDown}
+            placeholder={getPlaceholderText()}
+            style={getInputStyles()}
+            disabled={disabled}
+          />
+        ) : (
+          <div style={getTextStyles()}>{getDisplayText()}</div>
+        )}
 
         <div
           style={{
@@ -304,6 +394,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease',
           }}
+          onClick={isOpen ? handleClick : undefined}
         >
           {getChevronIcon()}
         </div>
@@ -311,37 +402,53 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
       {shouldRender && (
         <div style={dropdownOptionsStyle} role="listbox">
-          {options.map((option, index) => {
-            const isSelected = value === option.value;
-            return (
-              <div
-                key={option.value}
-                style={getOptionStyles(option, index, isSelected)}
-                onClick={() => !option.disabled && handleOptionClick(option.value)}
-                onMouseEnter={() => setHoveredOptionIndex(index)}
-                onMouseLeave={() => setHoveredOptionIndex(null)}
-                role="option"
-                aria-selected={isSelected}
-                aria-disabled={option.disabled}
-              >
-                <span>{option.label}</span>
-                {isSelected && (
-                  <div
-                    style={{
-                      width: '20px',
-                      height: '20px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#7248D9', // Figma 스펙의 체크 아이콘 색상
-                    }}
-                  >
-                    {getCheckIcon()}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+          {filteredOptions.length === 0 ? (
+            <div
+              style={{
+                padding: '13px 16px',
+                fontSize: '14px',
+                fontWeight: 500,
+                lineHeight: '22px',
+                color: colors.semantic.disabled.foreground,
+                fontFamily: 'Pretendard',
+                textAlign: 'center',
+              }}
+            >
+              검색 결과가 없습니다
+            </div>
+          ) : (
+            filteredOptions.map((option, index) => {
+              const isSelected = value === option.value;
+              return (
+                <div
+                  key={option.value}
+                  style={getOptionStyles(option, index, isSelected)}
+                  onClick={() => !option.disabled && handleOptionClick(option.value)}
+                  onMouseEnter={() => setHoveredOptionIndex(index)}
+                  onMouseLeave={() => setHoveredOptionIndex(null)}
+                  role="option"
+                  aria-selected={isSelected}
+                  aria-disabled={option.disabled}
+                >
+                  <span>{option.label}</span>
+                  {isSelected && (
+                    <div
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#7248D9', // Figma 스펙의 체크 아이콘 색상
+                      }}
+                    >
+                      {getCheckIcon()}
+                    </div>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
       )}
 
