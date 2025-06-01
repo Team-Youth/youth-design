@@ -72,6 +72,9 @@ export const TextButton: React.FC<TextButtonProps> = ({
     const config = sizeConfig[size];
     const textColor = getTextColor();
 
+    // 아이콘이 있는지 확인
+    const hasIcons = icon?.left || icon?.right;
+
     return {
       display: 'inline-flex',
       alignItems: 'center',
@@ -90,7 +93,7 @@ export const TextButton: React.FC<TextButtonProps> = ({
       height: height || 'auto',
       minWidth: 'fit-content',
       minHeight: 'fit-content',
-      gap: '4px',
+      gap: hasIcons ? '4px' : '0px',
       transition: 'all 0.2s ease',
     };
   };
