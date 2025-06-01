@@ -1,0 +1,14 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { Toggle } from '../../components';
+declare const meta: Meta<typeof Toggle>;
+export default meta;
+type Story = StoryObj<typeof Toggle>;
+export declare const Default: Story;
+export declare const WithLabel: Story;
+export declare const On: Story;
+export declare const Disabled: Story;
+export declare const DisabledOn: Story;
+export declare const Sizes: Story;
+export declare const LabelPositions: Story;
+export declare const InteractiveGroup: Story;
+export declare const AllStates: Story;

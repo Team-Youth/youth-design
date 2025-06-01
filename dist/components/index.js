@@ -912,8 +912,613 @@ var TextButton = function (_a) {
   });
 };
 
+var Radio = function (_a) {
+  var _b = _a.checked,
+    checked = _b === void 0 ? false : _b,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c,
+    name = _a.name,
+    value = _a.value,
+    label = _a.label,
+    description = _a.description,
+    _d = _a.labelPosition,
+    labelPosition = _d === void 0 ? 'right' : _d,
+    _e = _a.size,
+    size = _e === void 0 ? 'medium' : _e,
+    onChange = _a.onChange,
+    onClick = _a.onClick,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f;
+  var _g = react.useState(false),
+    isHovered = _g[0],
+    setIsHovered = _g[1];
+  var getSizeConfig = function () {
+    switch (size) {
+      case 'small':
+        return {
+          radioSize: '16px',
+          dotSize: '8px',
+          gap: '8px',
+          fontSize: '12px',
+          descriptionFontSize: '11px'
+        };
+      case 'large':
+        return {
+          radioSize: '24px',
+          dotSize: '12px',
+          gap: '12px',
+          fontSize: '16px',
+          descriptionFontSize: '14px'
+        };
+      default:
+        // medium
+        return {
+          radioSize: '20px',
+          dotSize: '10px',
+          gap: '10px',
+          fontSize: '14px',
+          descriptionFontSize: '12px'
+        };
+    }
+  };
+  var sizeConfig = getSizeConfig();
+  var getRadioStyles = function () {
+    if (disabled) {
+      return {
+        width: sizeConfig.radioSize,
+        height: sizeConfig.radioSize,
+        borderRadius: '50%',
+        border: "2px solid ".concat(colors.semantic.disabled.foreground),
+        backgroundColor: colors.semantic.disabled.background,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'not-allowed',
+        transition: 'all 0.2s ease',
+        position: 'relative'
+      };
+    } else if (checked) {
+      return {
+        width: sizeConfig.radioSize,
+        height: sizeConfig.radioSize,
+        borderRadius: '50%',
+        border: "2px solid ".concat(colors.primary.mainviolet),
+        backgroundColor: colors.primary.mainviolet,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        position: 'relative'
+      };
+    } else if (isHovered) {
+      return {
+        width: sizeConfig.radioSize,
+        height: sizeConfig.radioSize,
+        borderRadius: '50%',
+        border: "2px solid ".concat(colors.primary.mainviolet),
+        backgroundColor: colors.semantic.background.primary,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        position: 'relative'
+      };
+    } else {
+      return {
+        width: sizeConfig.radioSize,
+        height: sizeConfig.radioSize,
+        borderRadius: '50%',
+        border: "2px solid ".concat(colors.semantic.border.strong),
+        backgroundColor: colors.semantic.background.primary,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        position: 'relative'
+      };
+    }
+  };
+  var getDotStyles = function () {
+    return {
+      width: sizeConfig.dotSize,
+      height: sizeConfig.dotSize,
+      borderRadius: '50%',
+      backgroundColor: checked ? disabled ? colors.semantic.disabled.foreground : colors.semantic.background.primary : 'transparent',
+      transition: 'all 0.2s ease'
+    };
+  };
+  var getLabelStyles = function () {
+    return {
+      fontSize: sizeConfig.fontSize,
+      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
+      fontWeight: '500',
+      lineHeight: '1.4',
+      cursor: disabled ? 'not-allowed' : 'pointer'
+    };
+  };
+  var getDescriptionStyles = function () {
+    return {
+      fontSize: sizeConfig.descriptionFontSize,
+      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.tertiary,
+      lineHeight: '1.3',
+      marginTop: '2px',
+      cursor: disabled ? 'not-allowed' : 'pointer'
+    };
+  };
+  var handleChange = function () {
+    if (!disabled) {
+      onChange === null || onChange === void 0 ? void 0 : onChange(true, value);
+      onClick === null || onClick === void 0 ? void 0 : onClick();
+    }
+  };
+  var handleMouseEnter = function () {
+    if (!disabled) {
+      setIsHovered(true);
+    }
+  };
+  var handleMouseLeave = function () {
+    if (!disabled) {
+      setIsHovered(false);
+    }
+  };
+  var containerStyles = {
+    display: 'flex',
+    alignItems: labelPosition === 'right' ? 'flex-start' : 'flex-start',
+    gap: sizeConfig.gap,
+    flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
+    cursor: disabled ? 'not-allowed' : 'pointer'
+  };
+  var labelContainerStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1
+  };
+  return jsxRuntime.jsxs("div", {
+    className: "youth-radio-button ".concat(className),
+    style: containerStyles,
+    onClick: handleChange,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: [jsxRuntime.jsx("input", {
+      type: "radio",
+      name: name,
+      value: value,
+      checked: checked,
+      disabled: disabled,
+      onChange: function () {},
+      style: {
+        display: 'none'
+      }
+    }), jsxRuntime.jsx("div", {
+      style: getRadioStyles(),
+      children: jsxRuntime.jsx("div", {
+        style: getDotStyles()
+      })
+    }), (label || description) && jsxRuntime.jsxs("div", {
+      style: labelContainerStyles,
+      children: [label && jsxRuntime.jsx("span", {
+        style: getLabelStyles(),
+        children: label
+      }), description && jsxRuntime.jsx("span", {
+        style: getDescriptionStyles(),
+        children: description
+      })]
+    })]
+  });
+};
+
+var Checkbox = function (_a) {
+  var _b = _a.checked,
+    checked = _b === void 0 ? false : _b,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c,
+    label = _a.label,
+    description = _a.description,
+    _d = _a.labelPosition,
+    labelPosition = _d === void 0 ? 'right' : _d,
+    _e = _a.size,
+    size = _e === void 0 ? 'medium' : _e,
+    onChange = _a.onChange,
+    onClick = _a.onClick,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f;
+  var _g = react.useState(false),
+    isHovered = _g[0],
+    setIsHovered = _g[1];
+  var getSizeConfig = function () {
+    switch (size) {
+      case 'small':
+        return {
+          checkboxSize: '16px',
+          iconSize: '10px',
+          gap: '8px',
+          fontSize: '12px',
+          descriptionFontSize: '11px'
+        };
+      case 'large':
+        return {
+          checkboxSize: '24px',
+          iconSize: '16px',
+          gap: '12px',
+          fontSize: '16px',
+          descriptionFontSize: '14px'
+        };
+      default:
+        // medium
+        return {
+          checkboxSize: '20px',
+          iconSize: '14px',
+          gap: '10px',
+          fontSize: '14px',
+          descriptionFontSize: '12px'
+        };
+    }
+  };
+  var sizeConfig = getSizeConfig();
+  var getCheckboxStyles = function () {
+    if (disabled) {
+      return {
+        width: sizeConfig.checkboxSize,
+        height: sizeConfig.checkboxSize,
+        borderRadius: '4px',
+        border: "2px solid ".concat(colors.semantic.disabled.foreground),
+        backgroundColor: checked ? colors.semantic.disabled.background : colors.semantic.disabled.background,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'not-allowed',
+        transition: 'all 0.2s ease',
+        position: 'relative'
+      };
+    } else if (checked) {
+      return {
+        width: sizeConfig.checkboxSize,
+        height: sizeConfig.checkboxSize,
+        borderRadius: '4px',
+        border: "2px solid ".concat(colors.primary.mainviolet),
+        backgroundColor: colors.primary.mainviolet,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        position: 'relative'
+      };
+    } else if (isHovered) {
+      return {
+        width: sizeConfig.checkboxSize,
+        height: sizeConfig.checkboxSize,
+        borderRadius: '4px',
+        border: "2px solid ".concat(colors.primary.mainviolet),
+        backgroundColor: colors.semantic.background.primary,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        position: 'relative'
+      };
+    } else {
+      return {
+        width: sizeConfig.checkboxSize,
+        height: sizeConfig.checkboxSize,
+        borderRadius: '4px',
+        border: "2px solid ".concat(colors.semantic.border.strong),
+        backgroundColor: colors.semantic.background.primary,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        position: 'relative'
+      };
+    }
+  };
+  var getLabelStyles = function () {
+    return {
+      fontSize: sizeConfig.fontSize,
+      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
+      fontWeight: '500',
+      lineHeight: '1.4',
+      cursor: disabled ? 'not-allowed' : 'pointer'
+    };
+  };
+  var getDescriptionStyles = function () {
+    return {
+      fontSize: sizeConfig.descriptionFontSize,
+      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.tertiary,
+      lineHeight: '1.3',
+      marginTop: '2px',
+      cursor: disabled ? 'not-allowed' : 'pointer'
+    };
+  };
+  var handleChange = function () {
+    if (!disabled) {
+      onChange === null || onChange === void 0 ? void 0 : onChange(!checked);
+      onClick === null || onClick === void 0 ? void 0 : onClick();
+    }
+  };
+  var handleMouseEnter = function () {
+    if (!disabled) {
+      setIsHovered(true);
+    }
+  };
+  var handleMouseLeave = function () {
+    if (!disabled) {
+      setIsHovered(false);
+    }
+  };
+  var containerStyles = {
+    display: 'flex',
+    alignItems: labelPosition === 'right' ? 'flex-start' : 'flex-start',
+    gap: sizeConfig.gap,
+    flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
+    cursor: disabled ? 'not-allowed' : 'pointer'
+  };
+  var labelContainerStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1
+  };
+  // Check icon SVG
+  var CheckIcon = function () {
+    return jsxRuntime.jsx("svg", {
+      width: sizeConfig.iconSize,
+      height: sizeConfig.iconSize,
+      viewBox: "0 0 14 14",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      children: jsxRuntime.jsx("path", {
+        d: "M11.6667 3.5L5.25 9.91667L2.33333 7",
+        stroke: disabled ? colors.semantic.disabled.foreground : colors.semantic.background.primary,
+        strokeWidth: "2",
+        strokeLinecap: "round",
+        strokeLinejoin: "round"
+      })
+    });
+  };
+  return jsxRuntime.jsxs("div", {
+    className: "youth-checkbox ".concat(className),
+    style: containerStyles,
+    onClick: handleChange,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: [jsxRuntime.jsx("input", {
+      type: "checkbox",
+      checked: checked,
+      disabled: disabled,
+      onChange: function () {},
+      style: {
+        display: 'none'
+      }
+    }), jsxRuntime.jsx("div", {
+      style: getCheckboxStyles(),
+      children: checked && jsxRuntime.jsx(CheckIcon, {})
+    }), (label || description) && jsxRuntime.jsxs("div", {
+      style: labelContainerStyles,
+      children: [label && jsxRuntime.jsx("span", {
+        style: getLabelStyles(),
+        children: label
+      }), description && jsxRuntime.jsx("span", {
+        style: getDescriptionStyles(),
+        children: description
+      })]
+    })]
+  });
+};
+
+var Toggle = function (_a) {
+  var _b = _a.checked,
+    checked = _b === void 0 ? false : _b,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c,
+    label = _a.label,
+    description = _a.description,
+    _d = _a.labelPosition,
+    labelPosition = _d === void 0 ? 'right' : _d,
+    _e = _a.size,
+    size = _e === void 0 ? 'medium' : _e,
+    onChange = _a.onChange,
+    onClick = _a.onClick,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f;
+  var _g = react.useState(false),
+    isHovered = _g[0],
+    setIsHovered = _g[1];
+  var getSizeConfig = function () {
+    switch (size) {
+      case 'small':
+        return {
+          toggleWidth: '32px',
+          toggleHeight: '18px',
+          thumbSize: '14px',
+          thumbOffset: '2px',
+          gap: '8px',
+          fontSize: '12px',
+          descriptionFontSize: '11px'
+        };
+      case 'large':
+        return {
+          toggleWidth: '52px',
+          toggleHeight: '28px',
+          thumbSize: '24px',
+          thumbOffset: '2px',
+          gap: '12px',
+          fontSize: '16px',
+          descriptionFontSize: '14px'
+        };
+      default:
+        // medium
+        return {
+          toggleWidth: '44px',
+          toggleHeight: '24px',
+          thumbSize: '20px',
+          thumbOffset: '2px',
+          gap: '10px',
+          fontSize: '14px',
+          descriptionFontSize: '12px'
+        };
+    }
+  };
+  var sizeConfig = getSizeConfig();
+  var getToggleStyles = function () {
+    if (disabled) {
+      return {
+        width: sizeConfig.toggleWidth,
+        height: sizeConfig.toggleHeight,
+        borderRadius: sizeConfig.toggleHeight,
+        backgroundColor: colors.semantic.disabled.background,
+        border: "1px solid ".concat(colors.semantic.disabled.foreground),
+        cursor: 'not-allowed',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        padding: sizeConfig.thumbOffset
+      };
+    } else if (checked) {
+      return {
+        width: sizeConfig.toggleWidth,
+        height: sizeConfig.toggleHeight,
+        borderRadius: sizeConfig.toggleHeight,
+        backgroundColor: colors.primary.mainviolet,
+        border: "1px solid ".concat(colors.primary.mainviolet),
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        padding: sizeConfig.thumbOffset
+      };
+    } else if (isHovered) {
+      return {
+        width: sizeConfig.toggleWidth,
+        height: sizeConfig.toggleHeight,
+        borderRadius: sizeConfig.toggleHeight,
+        backgroundColor: colors.primary.coolGray[200],
+        border: "1px solid ".concat(colors.semantic.border.strong),
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        padding: sizeConfig.thumbOffset
+      };
+    } else {
+      return {
+        width: sizeConfig.toggleWidth,
+        height: sizeConfig.toggleHeight,
+        borderRadius: sizeConfig.toggleHeight,
+        backgroundColor: colors.primary.coolGray[300],
+        border: "1px solid ".concat(colors.semantic.border.strong),
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        padding: sizeConfig.thumbOffset
+      };
+    }
+  };
+  var getThumbStyles = function () {
+    var thumbPosition = checked ? "calc(".concat(sizeConfig.toggleWidth, " - ").concat(sizeConfig.thumbSize, " - ").concat(parseInt(sizeConfig.thumbOffset) * 2, "px)") : '0px';
+    return {
+      width: sizeConfig.thumbSize,
+      height: sizeConfig.thumbSize,
+      borderRadius: '50%',
+      backgroundColor: disabled ? colors.semantic.disabled.foreground : colors.semantic.background.primary,
+      boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.1)',
+      transition: 'all 0.3s ease',
+      transform: "translateX(".concat(thumbPosition, ")"),
+      position: 'absolute'
+    };
+  };
+  var getLabelStyles = function () {
+    return {
+      fontSize: sizeConfig.fontSize,
+      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
+      fontWeight: '500',
+      lineHeight: '1.4',
+      cursor: disabled ? 'not-allowed' : 'pointer'
+    };
+  };
+  var getDescriptionStyles = function () {
+    return {
+      fontSize: sizeConfig.descriptionFontSize,
+      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.tertiary,
+      lineHeight: '1.3',
+      marginTop: '2px',
+      cursor: disabled ? 'not-allowed' : 'pointer'
+    };
+  };
+  var handleChange = function () {
+    if (!disabled) {
+      onChange === null || onChange === void 0 ? void 0 : onChange(!checked);
+      onClick === null || onClick === void 0 ? void 0 : onClick();
+    }
+  };
+  var handleMouseEnter = function () {
+    if (!disabled) {
+      setIsHovered(true);
+    }
+  };
+  var handleMouseLeave = function () {
+    if (!disabled) {
+      setIsHovered(false);
+    }
+  };
+  var containerStyles = {
+    display: 'flex',
+    alignItems: labelPosition === 'right' ? 'center' : 'center',
+    gap: sizeConfig.gap,
+    flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
+    cursor: disabled ? 'not-allowed' : 'pointer'
+  };
+  var labelContainerStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1
+  };
+  return jsxRuntime.jsxs("div", {
+    className: "youth-toggle ".concat(className),
+    style: containerStyles,
+    onClick: handleChange,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: [jsxRuntime.jsx("input", {
+      type: "checkbox",
+      checked: checked,
+      disabled: disabled,
+      onChange: function () {},
+      style: {
+        display: 'none'
+      }
+    }), jsxRuntime.jsx("div", {
+      style: getToggleStyles(),
+      children: jsxRuntime.jsx("div", {
+        style: getThumbStyles()
+      })
+    }), (label || description) && jsxRuntime.jsxs("div", {
+      style: labelContainerStyles,
+      children: [label && jsxRuntime.jsx("span", {
+        style: getLabelStyles(),
+        children: label
+      }), description && jsxRuntime.jsx("span", {
+        style: getDescriptionStyles(),
+        children: description
+      })]
+    })]
+  });
+};
+
 exports.BoxButton = BoxButton;
+exports.Checkbox = Checkbox;
 exports.Font = Font;
+exports.Radio = Radio;
 exports.TextButton = TextButton;
 exports.TextInput = TextInput;
+exports.Toggle = Toggle;
 //# sourceMappingURL=index.js.map
