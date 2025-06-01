@@ -13,6 +13,7 @@
 6. [디자인 토큰 수정하기](#디자인-토큰-수정하기)
 7. [문제 해결 가이드](#문제-해결-가이드)
 8. [협업 가이드](#협업-가이드)
+9. [Vercel 배포 가이드](#vercel-배포-가이드)
 
 ---
 
@@ -628,3 +629,152 @@ git merge feature/new-colors
 
 **🎉 축하합니다!** 이제 Youth Design System을 관리할 준비가 되었습니다.  
 천천히, 하나씩 익혀가면서 멋진 디자인 시스템을 만들어가세요! 💪 
+
+## 🚀 Vercel 배포 가이드
+
+### 자동 배포 설정
+
+이 프로젝트는 Vercel에 배포하여 Storybook 문서 사이트로 사용할 수 있습니다.
+
+#### 1. Vercel 프로젝트 생성
+
+1. [Vercel 대시보드](https://vercel.com/dashboard)에 접속
+2. "New Project" 클릭
+3. GitHub 리포지토리 연결
+4. 프로젝트 설정:
+   - **Framework Preset**: Other
+   - **Build Command**: `yarn build:storybook`
+   - **Output Directory**: `storybook-static`
+   - **Install Command**: `yarn install`
+
+#### 2. 환경 변수 설정 (필요 시)
+
+현재는 환경 변수가 필요하지 않지만, 향후 API 키 등이 필요한 경우:
+
+```bash
+# Vercel 환경 변수 설정
+vercel env add VARIABLE_NAME
+```
+
+#### 3. 배포 실행
+
+```bash
+# 로컬에서 배포 (선택사항)
+vercel
+
+# 또는 GitHub에 push하면 자동 배포
+git push origin main
+```
+
+### 수동 배포
+
+```bash
+# 1. Storybook 빌드
+yarn build:storybook
+
+# 2. Vercel CLI로 배포
+npx vercel --prod
+```
+
+### 배포 URL
+
+배포 완료 후 다음과 같은 URL로 접근 가능:
+- **Production**: `https://your-project-name.vercel.app`
+- **Preview**: 각 브랜치별 미리보기 URL 자동 생성
+
+### 도메인 연결 (선택사항)
+
+커스텀 도메인을 사용하려면:
+
+1. Vercel 프로젝트 설정 → Domains
+2. 원하는 도메인 추가
+3. DNS 설정에 CNAME 레코드 추가
+
+## 개발 환경 설정
+
+### 필수 요구사항
+- Node.js 16.x 이상
+- Yarn 1.22.x 이상
+
+### 설치 및 실행
+
+```bash
+# 의존성 설치
+yarn install
+
+# 개발 서버 시작 (Storybook)
+yarn storybook
+
+# 라이브러리 빌드
+yarn build
+
+# Storybook 빌드
+yarn build:storybook
+```
+
+## 🎨 디자인 시스템 사용법
+
+### 패키지 설치
+
+```bash
+# NPM
+npm install @team-youth/youth-design
+
+# Yarn
+yarn add @team-youth/youth-design
+```
+
+### 기본 사용법
+
+```tsx
+import React from 'react';
+import { Label, colors, typography } from '@team-youth/youth-design';
+
+function App() {
+  return (
+    <div style={{ 
+      fontFamily: typography.fontFamily.primary,
+      color: colors.semantic.text.primary 
+    }}>
+      <Label size="m" color="accent" leadingIcon={<IconPlus />}>
+        새로운 라벨
+      </Label>
+    </div>
+  );
+}
+```
+
+## 📚 컴포넌트 문서
+
+배포된 Storybook에서 모든 컴포넌트의 상세한 문서와 예시를 확인할 수 있습니다:
+
+- **라이브 문서**: [https://your-project-name.vercel.app](https://your-project-name.vercel.app)
+- **로컬 개발**: `yarn storybook` 실행 후 `http://localhost:6006`
+
+## 🛠 트러블슈팅
+
+### 빌드 오류 해결
+
+```bash
+# 캐시 클리어
+yarn clean
+rm -rf node_modules yarn.lock
+yarn install
+
+# Storybook 재빌드
+yarn build:storybook
+```
+
+### Vercel 배포 오류
+
+1. **빌드 명령어 확인**: `yarn build:storybook`
+2. **출력 디렉토리 확인**: `storybook-static`
+3. **Node.js 버전 확인**: 18.x 사용 권장
+
+## 📝 라이센스
+
+MIT License
+
+---
+
+**Youth Design System** - 청년 의료 플랫폼을 위한 전문 디자인 시스템 

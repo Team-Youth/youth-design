@@ -557,6 +557,44 @@ function __rest(s, e) {
     return t;
 }
 
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
 function __spreadArray(to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -834,28 +872,28 @@ var Font = function (_a) {
 
 // 아이콘 SVG 임포트 (동적으로 로드하기 위한 매핑)
 var iconMap = {
-  hamburger: '/src/components/icon/assets/hamburger.svg',
-  search: '/src/components/icon/assets/search.svg',
-  close: '/src/components/icon/assets/close.svg',
-  check: '/src/components/icon/assets/check.svg',
-  add: '/src/components/icon/assets/add.svg',
-  minus: '/src/components/icon/assets/minus.svg',
-  truncation: '/src/components/icon/assets/truncation.svg',
-  more: '/src/components/icon/assets/more.svg',
-  home: '/src/components/icon/assets/home.svg',
-  'home-filled': '/src/components/icon/assets/home-filled.svg',
-  heart: '/src/components/icon/assets/heart.svg',
-  'heart-filled': '/src/components/icon/assets/heart-filled.svg',
-  'my-page': '/src/components/icon/assets/my-page.svg',
-  'my-page-filled': '/src/components/icon/assets/my-page-filled.svg',
-  download: '/src/components/icon/assets/download.svg',
-  modify: '/src/components/icon/assets/modify.svg',
-  duplicate: '/src/components/icon/assets/duplicate.svg',
-  dialog: '/src/components/icon/assets/dialog.svg',
-  'arrow-down': '/src/components/icon/assets/arrow-down.svg',
-  'arrow-up': '/src/components/icon/assets/arrow-up.svg',
-  'arrow-right': '/src/components/icon/assets/arrow-right.svg',
-  'arrow-left': '/src/components/icon/assets/arrow-left.svg'
+  hamburger: '/icons/hamburger.svg',
+  search: '/icons/search.svg',
+  close: '/icons/close.svg',
+  check: '/icons/check.svg',
+  add: '/icons/add.svg',
+  minus: '/icons/minus.svg',
+  truncation: '/icons/truncation.svg',
+  more: '/icons/more.svg',
+  home: '/icons/home.svg',
+  'home-filled': '/icons/home-filled.svg',
+  heart: '/icons/heart.svg',
+  'heart-filled': '/icons/heart-filled.svg',
+  'my-page': '/icons/my-page.svg',
+  'my-page-filled': '/icons/my-page-filled.svg',
+  download: '/icons/download.svg',
+  modify: '/icons/modify.svg',
+  duplicate: '/icons/duplicate.svg',
+  dialog: '/icons/dialog.svg',
+  'arrow-down': '/icons/arrow-down.svg',
+  'arrow-up': '/icons/arrow-up.svg',
+  'arrow-right': '/icons/arrow-right.svg',
+  'arrow-left': '/icons/arrow-left.svg'
 };
 var Icon = function (_a) {
   var type = _a.type,
@@ -868,63 +906,201 @@ var Icon = function (_a) {
     className = _d === void 0 ? '' : _d,
     _e = _a.style,
     style = _e === void 0 ? {} : _e;
+  var _f = react.useState(''),
+    svgContent = _f[0],
+    setSvgContent = _f[1];
+  react.useEffect(function () {
+    var loadSvg = function () {
+      return __awaiter(void 0, void 0, void 0, function () {
+        var response, svgText, error_1;
+        return __generator(this, function (_a) {
+          switch (_a.label) {
+            case 0:
+              _a.trys.push([0, 3,, 4]);
+              return [4 /*yield*/, fetch(iconMap[type])];
+            case 1:
+              response = _a.sent();
+              return [4 /*yield*/, response.text()];
+            case 2:
+              svgText = _a.sent();
+              setSvgContent(svgText);
+              return [3 /*break*/, 4];
+            case 3:
+              error_1 = _a.sent();
+              console.error("Failed to load icon: ".concat(type), error_1);
+              return [3 /*break*/, 4];
+            case 4:
+              return [2 /*return*/];
+          }
+        });
+      });
+    };
+    loadSvg();
+  }, [type]);
   var iconStyle = __assign({
     width: size,
     height: size,
-    fill: color,
+    color: color,
     cursor: onClick ? 'pointer' : 'default',
-    transition: 'all 0.2s ease'
+    transition: 'all 0.2s ease',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   }, style);
   var handleClick = function () {
     if (onClick) {
       onClick();
     }
   };
-  // SVG를 인라인으로 렌더링하는 컴포넌트
-  var SvgIcon = function () {
-    var iconPath = iconMap[type];
-    return jsxRuntime.jsx("div", {
-      className: "icon icon--".concat(type, " ").concat(className),
-      style: iconStyle,
-      onClick: handleClick,
-      role: onClick ? 'button' : 'img',
-      tabIndex: onClick ? 0 : undefined,
-      onKeyDown: onClick ? function (e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onClick();
-        }
-      } : undefined,
-      children: jsxRuntime.jsx("img", {
-        src: iconPath,
-        alt: "".concat(type, " icon"),
-        style: {
-          width: '100%',
-          height: '100%',
-          filter: color !== colors.primary.coolGray[800] ? "\n              brightness(0) \n              saturate(100%) \n              hue-rotate(".concat(getHueRotation(color), "deg) \n              saturate(").concat(getSaturation(color), "%) \n              brightness(").concat(getBrightness(color), "%)\n            ") : undefined
-        }
-      })
-    });
+  var handleKeyDown = function (e) {
+    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick();
+    }
   };
-  return jsxRuntime.jsx(SvgIcon, {});
+  return jsxRuntime.jsx("div", {
+    className: "icon icon--".concat(type, " ").concat(className),
+    style: iconStyle,
+    onClick: handleClick,
+    role: onClick ? 'button' : 'img',
+    tabIndex: onClick ? 0 : undefined,
+    onKeyDown: handleKeyDown,
+    dangerouslySetInnerHTML: {
+      __html: svgContent
+    }
+  });
 };
-// 색상 변환을 위한 유틸리티 함수들
-function getHueRotation(color) {
-  var _a;
-  // 간단한 색상 매핑 (실제 프로젝트에서는 더 정교한 로직 필요)
-  var colorMap = (_a = {}, _a[colors.primary.mainviolet] = 270, _a[colors.primary.gray.white] = 0, _a[colors.semantic.state.error] = 0, _a[colors.semantic.state.success] = 120, _a[colors.semantic.state.warning] = 45, _a);
-  return colorMap[color] || 0;
-}
-function getSaturation(color) {
-  if (color === colors.primary.gray.white) return 0;
-  if (color === colors.primary.mainviolet) return 100;
-  return 100;
-}
-function getBrightness(color) {
-  if (color === colors.primary.gray.white) return 100;
-  if (color === colors.primary.mainviolet) return 50;
-  return 100;
-}
+
+var Label = function (_a) {
+  var _b = _a.size,
+    size = _b === void 0 ? 'm' : _b,
+    _c = _a.type,
+    type = _c === void 0 ? 'square' : _c,
+    _d = _a.color,
+    color = _d === void 0 ? 'grey' : _d,
+    leadingIcon = _a.leadingIcon,
+    trailingIcon = _a.trailingIcon,
+    children = _a.children,
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e;
+  // Size configurations
+  var sizeConfig = {
+    m: {
+      padding: type === 'square' ? '3px 8px' : '3px 10px',
+      paddingWithLeadingIcon: type === 'square' ? '3px 8px 3px 6px' : '3px 10px 3px 8px',
+      paddingWithTrailingIcon: type === 'square' ? '3px 6px 3px 8px' : '3px 8px 3px 10px',
+      borderRadius: type === 'square' ? '4px' : '16px',
+      height: '24px',
+      iconSize: '14px',
+      gap: '2px',
+      fontSize: 'body2'
+    },
+    s: {
+      padding: type === 'square' ? '2px 6px' : '2px 8px',
+      paddingWithLeadingIcon: type === 'square' ? '2px 6px 2px 4px' : '2px 8px 2px 6px',
+      paddingWithTrailingIcon: type === 'square' ? '2px 4px 2px 6px' : '2px 6px 2px 8px',
+      borderRadius: type === 'square' ? '4px' : '12px',
+      height: '22px',
+      iconSize: '12px',
+      gap: '2px',
+      fontSize: 'caption'
+    }
+  };
+  // Color configurations
+  var colorConfig = {
+    grey: {
+      backgroundColor: colors.primary.coolGray[100],
+      textColor: colors.primary.coolGray[600],
+      iconColor: colors.primary.coolGray[700]
+    },
+    dark: {
+      backgroundColor: colors.primary.coolGray[600],
+      textColor: colors.primary.gray.white,
+      iconColor: colors.primary.gray.white
+    },
+    violet: {
+      backgroundColor: colors.primary.tint.violet[50],
+      textColor: colors.primary.tint.violet[500],
+      iconColor: colors.primary.tint.violet[500]
+    },
+    accent: {
+      backgroundColor: colors.primary.tint.violet[500],
+      textColor: colors.primary.gray.white,
+      iconColor: colors.primary.gray.white
+    },
+    red: {
+      backgroundColor: colors.primary.tint.red[500],
+      textColor: colors.primary.gray.white,
+      iconColor: colors.primary.gray.white
+    },
+    green: {
+      backgroundColor: colors.primary.tint.green[500],
+      textColor: colors.primary.gray.white,
+      iconColor: colors.primary.gray.white
+    },
+    yellow: {
+      backgroundColor: colors.primary.tint.yellow[500],
+      textColor: colors.primary.gray.white,
+      iconColor: colors.primary.gray.white
+    }
+  };
+  var config = sizeConfig[size];
+  var colorStyle = colorConfig[color];
+  // Determine padding based on icon presence
+  var getPadding = function () {
+    if (leadingIcon && trailingIcon) {
+      return config.paddingWithLeadingIcon; // Use leading icon padding style
+    } else if (leadingIcon) {
+      return config.paddingWithLeadingIcon;
+    } else if (trailingIcon) {
+      return config.paddingWithTrailingIcon;
+    }
+    return config.padding;
+  };
+  var getStyles = function () {
+    return {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: getPadding(),
+      borderRadius: config.borderRadius,
+      backgroundColor: colorStyle.backgroundColor,
+      height: config.height,
+      gap: config.gap,
+      whiteSpace: 'nowrap',
+      boxSizing: 'border-box'
+    };
+  };
+  var getIconStyles = function () {
+    return {
+      width: config.iconSize,
+      height: config.iconSize,
+      color: colorStyle.iconColor,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexShrink: 0
+    };
+  };
+  return jsxRuntime.jsxs("div", {
+    className: "label label--".concat(size, " label--").concat(type, " label--").concat(color, " ").concat(className),
+    style: getStyles(),
+    children: [leadingIcon && jsxRuntime.jsx("span", {
+      className: "label__leading-icon",
+      style: getIconStyles(),
+      children: leadingIcon
+    }), children && jsxRuntime.jsx(Font, {
+      type: config.fontSize,
+      fontWeight: "medium",
+      color: colorStyle.textColor,
+      children: children
+    }), trailingIcon && jsxRuntime.jsx("span", {
+      className: "label__trailing-icon",
+      style: getIconStyles(),
+      children: trailingIcon
+    })]
+  });
+};
 
 var TextInput = react.forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
@@ -2401,6 +2577,7 @@ exports.Checkbox = Checkbox;
 exports.Chips = Chips;
 exports.Font = Font;
 exports.Icon = Icon;
+exports.Label = Label;
 exports.Radio = Radio;
 exports.TextButton = TextButton;
 exports.TextInput = TextInput;
