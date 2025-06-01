@@ -2570,5 +2570,273 @@ var useToast = function () {
   return toast;
 };
 
-export { BoxButton, Checkbox, Chips, Font, Icon, Label, Radio, TextButton, TextInput, Toast, ToastProvider, Toggle, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
+var Popup = function (_a) {
+  var title = _a.title,
+    description = _a.description,
+    primaryButton = _a.primaryButton,
+    secondaryButton = _a.secondaryButton,
+    isOpen = _a.isOpen,
+    onClose = _a.onClose,
+    _b = _a.className,
+    className = _b === void 0 ? '' : _b,
+    _c = _a.style,
+    style = _c === void 0 ? {} : _c;
+  if (!isOpen) return null;
+  var overlayStyle = __assign({
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: colors.semantic.dim.overlay,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000
+  }, style);
+  var popupStyle = {
+    backgroundColor: colors.semantic.background.primary,
+    borderRadius: '16px',
+    padding: '32px',
+    minWidth: '480px',
+    maxWidth: '90vw',
+    maxHeight: '90vh',
+    boxShadow: shadows.s,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '24px'
+  };
+  var contentStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px'
+  };
+  var titleStyle = __assign(__assign({}, textStyles.heading1), {
+    color: colors.semantic.text.primary,
+    margin: 0
+  });
+  var descriptionStyle = __assign(__assign({}, textStyles.body1), {
+    color: colors.semantic.text.secondary,
+    margin: 0
+  });
+  var buttonContainerStyle = {
+    display: 'flex',
+    gap: '12px',
+    flexDirection: secondaryButton ? 'row' : 'column'
+  };
+  var handleOverlayClick = function (e) {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+  return jsx("div", {
+    className: "popup-overlay ".concat(className),
+    style: overlayStyle,
+    onClick: handleOverlayClick,
+    children: jsxs("div", {
+      className: "popup",
+      style: popupStyle,
+      children: [jsxs("div", {
+        className: "popup-content",
+        style: contentStyle,
+        children: [jsx("h1", {
+          style: titleStyle,
+          children: title
+        }), description && jsx("p", {
+          style: descriptionStyle,
+          children: description
+        })]
+      }), jsxs("div", {
+        className: "popup-buttons",
+        style: buttonContainerStyle,
+        children: [secondaryButton && jsx(BoxButton, __assign({
+          type: "ghost",
+          size: "l",
+          width: "fill",
+          onClick: secondaryButton.onClick
+        }, function (_a) {
+          _a.text;
+            _a.onClick;
+            var rest = __rest(_a, ["text", "onClick"]);
+          return rest;
+        }(secondaryButton), {
+          children: secondaryButton.text
+        })), jsx(BoxButton, __assign({
+          type: "solid",
+          size: "l",
+          width: "fill",
+          onClick: primaryButton.onClick
+        }, function (_a) {
+          _a.text;
+            _a.onClick;
+            var rest = __rest(_a, ["text", "onClick"]);
+          return rest;
+        }(primaryButton), {
+          children: primaryButton.text
+        }))]
+      })]
+    })
+  });
+};
+
+var Modal = function (_a) {
+  var title = _a.title,
+    description = _a.description,
+    image = _a.image,
+    _b = _a.showCloseButton,
+    showCloseButton = _b === void 0 ? true : _b,
+    primaryButton = _a.primaryButton,
+    secondaryButton = _a.secondaryButton,
+    isOpen = _a.isOpen,
+    onClose = _a.onClose,
+    _c = _a.className,
+    className = _c === void 0 ? '' : _c,
+    _d = _a.style,
+    style = _d === void 0 ? {} : _d;
+  if (!isOpen) return null;
+  var overlayStyle = __assign({
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: colors.semantic.dim.overlay,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000
+  }, style);
+  var modalStyle = {
+    backgroundColor: colors.semantic.background.primary,
+    borderRadius: '16px',
+    padding: '32px',
+    minWidth: '480px',
+    maxWidth: '90vw',
+    maxHeight: '90vh',
+    boxShadow: shadows.m,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: secondaryButton ? '20px' : '24px'
+  };
+  var headerStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: '20px'
+  };
+  var titleStyle = __assign(__assign({}, textStyles.heading1), {
+    color: colors.semantic.text.primary,
+    margin: 0,
+    flex: 1
+  });
+  var closeButtonStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '24px',
+    height: '24px',
+    cursor: 'pointer',
+    flexShrink: 0
+  };
+  var contentStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px'
+  };
+  var descriptionStyle = __assign(__assign({}, textStyles.body1), {
+    color: colors.semantic.text.secondary,
+    margin: 0
+  });
+  var imageStyle = {
+    width: '100%',
+    height: '240px',
+    borderRadius: '8px',
+    backgroundColor: colors.primary.coolGray[100],
+    objectFit: 'cover'
+  };
+  var buttonContainerStyle = {
+    display: 'flex',
+    gap: '12px',
+    flexDirection: secondaryButton ? 'row' : 'column'
+  };
+  var handleOverlayClick = function (e) {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+  var handleCloseClick = function () {
+    onClose();
+  };
+  return jsx("div", {
+    className: "modal-overlay ".concat(className),
+    style: overlayStyle,
+    onClick: handleOverlayClick,
+    children: jsxs("div", {
+      className: "modal",
+      style: modalStyle,
+      children: [jsxs("div", {
+        className: "modal-content",
+        style: contentStyle,
+        children: [jsxs("div", {
+          className: "modal-header",
+          style: headerStyle,
+          children: [jsx("h1", {
+            style: titleStyle,
+            children: title
+          }), showCloseButton && jsx("div", {
+            style: closeButtonStyle,
+            onClick: handleCloseClick,
+            children: jsx(Icon, {
+              type: "close",
+              size: 24,
+              color: colors.semantic.text.secondary
+            })
+          })]
+        }), description && jsx("p", {
+          style: descriptionStyle,
+          children: description
+        }), image && jsx("img", {
+          src: image,
+          alt: "",
+          style: imageStyle,
+          onError: function (e) {
+            // 이미지 로드 실패 시 placeholder 스타일로 변경
+            e.target.style.backgroundImage = 'none';
+            e.target.style.backgroundColor = colors.primary.coolGray[100];
+          }
+        })]
+      }), jsxs("div", {
+        className: "modal-buttons",
+        style: buttonContainerStyle,
+        children: [secondaryButton && jsx(BoxButton, __assign({
+          type: "ghost",
+          size: "l",
+          width: "fill",
+          onClick: secondaryButton.onClick
+        }, function (_a) {
+          _a.text;
+            _a.onClick;
+            var rest = __rest(_a, ["text", "onClick"]);
+          return rest;
+        }(secondaryButton), {
+          children: secondaryButton.text
+        })), jsx(BoxButton, __assign({
+          type: "solid",
+          size: "l",
+          width: "fill",
+          onClick: primaryButton.onClick
+        }, function (_a) {
+          _a.text;
+            _a.onClick;
+            var rest = __rest(_a, ["text", "onClick"]);
+          return rest;
+        }(primaryButton), {
+          children: primaryButton.text
+        }))]
+      })]
+    })
+  });
+};
+
+export { BoxButton, Checkbox, Chips, Font, Icon, Label, Modal, Popup, Radio, TextButton, TextInput, Toast, ToastProvider, Toggle, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
 //# sourceMappingURL=index.esm.js.map
