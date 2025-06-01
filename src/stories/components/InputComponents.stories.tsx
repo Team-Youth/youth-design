@@ -434,7 +434,7 @@ const UserProfileForm = () => {
 };
 
 const meta: Meta = {
-  title: 'Components/Inputs/Complete Examples',
+  title: 'Components/Complete Examples',
   parameters: {
     layout: 'centered',
     docs: {

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { colors, spacing } from '../../tokens';
-import { Icon } from '../icon/Icon';
+import { Icon, IconType } from '../icon/Icon';
 
 export interface DropdownOption {
   value: string;
@@ -27,6 +27,8 @@ export interface DropdownProps {
   className?: string;
   /** Leading 아이콘 */
   leadingIcon?: React.ReactNode;
+  /** Leading 아이콘 타입 (Icon 컴포넌트 사용) */
+  leadingIconType?: IconType;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -39,6 +41,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   errorMessage,
   className = '',
   leadingIcon,
+  leadingIconType,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -336,6 +339,30 @@ export const Dropdown: React.FC<DropdownProps> = ({
     return '';
   };
 
+  // Leading 아이콘 렌더링
+  const renderLeadingIcon = () => {
+    if (leadingIconType) {
+      return <Icon type={leadingIconType} size={20} color={getIconColor()} />;
+    }
+    if (leadingIcon) {
+      return (
+        <div
+          style={{
+            width: '20px',
+            height: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: getIconColor(),
+          }}
+        >
+          {leadingIcon}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div
       className={`dropdown-wrapper ${className}`}
@@ -352,20 +379,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         aria-haspopup="listbox"
         aria-disabled={disabled}
       >
-        {leadingIcon && (
-          <div
-            style={{
-              width: '20px',
-              height: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: getIconColor(),
-            }}
-          >
-            {leadingIcon}
-          </div>
-        )}
+        {renderLeadingIcon()}
 
         {isOpen ? (
           <input

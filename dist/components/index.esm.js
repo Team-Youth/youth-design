@@ -771,28 +771,109 @@ var iconMap = {
   check: '/src/components/icon/assets/check.svg',
   add: '/src/components/icon/assets/add.svg',
   minus: '/src/components/icon/assets/minus.svg',
-  truncation: '/src/components/icon/assets/truncation.svg',
+  truncation: '/src/components/icon/assets/Truncation.svg',
   more: '/src/components/icon/assets/more.svg',
-  home: '/src/components/icon/assets/home.svg',
-  'home-filled': '/src/components/icon/assets/home-filled.svg',
-  heart: '/src/components/icon/assets/heart.svg',
-  'heart-filled': '/src/components/icon/assets/heart-filled.svg',
-  'my-page': '/src/components/icon/assets/my-page.svg',
-  'my-page-filled': '/src/components/icon/assets/my-page-filled.svg',
+  home: '/src/components/icon/assets/homeStroke.svg',
+  'home-filled': '/src/components/icon/assets/homeFilled.svg',
+  heart: '/src/components/icon/assets/heartStroke.svg',
+  'heart-filled': '/src/components/icon/assets/heartFilled.svg',
+  'my-page': '/src/components/icon/assets/profileStroke.svg',
+  'my-page-filled': '/src/components/icon/assets/profileFilled.svg',
   download: '/src/components/icon/assets/download.svg',
   modify: '/src/components/icon/assets/modify.svg',
   duplicate: '/src/components/icon/assets/duplicate.svg',
   dialog: '/src/components/icon/assets/dialog.svg',
-  'arrow-down': '/src/components/icon/assets/arrow-down.svg',
-  'arrow-up': '/src/components/icon/assets/arrow-up.svg',
-  'arrow-right': '/src/components/icon/assets/arrow-right.svg',
-  'arrow-left': '/src/components/icon/assets/arrow-left.svg',
-  'chevron-left': '/src/components/icon/assets/chevron-left.svg',
-  'chevron-right': '/src/components/icon/assets/chevron-right.svg',
-  'chevron-up': '/src/components/icon/assets/chevron-up.svg',
-  'chevron-down': '/src/components/icon/assets/chevron-down.svg',
-  calendar: '/src/components/icon/assets/calendar.svg',
-  'calendar-filled': '/src/components/icon/assets/calendar-filled.svg'
+  'arrow-down': '/src/components/icon/assets/chevronDown.svg',
+  'arrow-up': '/src/components/icon/assets/arrowUp.svg',
+  'arrow-right': '/src/components/icon/assets/chevronRight.svg',
+  'arrow-left': '/src/components/icon/assets/chevronLeft.svg',
+  'chevron-left': '/src/components/icon/assets/chevronLeft.svg',
+  'chevron-right': '/src/components/icon/assets/chevronRight.svg',
+  'chevron-up': '/src/components/icon/assets/chevronUp.svg',
+  'chevron-down': '/src/components/icon/assets/chevronDown.svg',
+  calendar: '/src/components/icon/assets/calendarStroke.svg',
+  'calendar-filled': '/src/components/icon/assets/calendarFilled.svg',
+  'time-stroke': '/src/components/icon/assets/timeStroke.svg',
+  'time-filled': '/src/components/icon/assets/timeFilled.svg',
+  'switch-circle-stroke': '/src/components/icon/assets/switchCircleStroke.svg',
+  'switch-circle-filled': '/src/components/icon/assets/switchCircleFilled.svg',
+  sound: '/src/components/icon/assets/sound.svg',
+  'share-ios': '/src/components/icon/assets/shareIos.svg',
+  'settings-stroke': '/src/components/icon/assets/settingsStroke.svg',
+  'settings-filled': '/src/components/icon/assets/settingsFilled.svg',
+  reset: '/src/components/icon/assets/reset.svg',
+  reload: '/src/components/icon/assets/reload.svg',
+  receipt: '/src/components/icon/assets/receipt.svg',
+  'radio-selected': '/src/components/icon/assets/radioSelected.svg',
+  'radio-resting': '/src/components/icon/assets/radioResting.svg',
+  'question-stroke': '/src/components/icon/assets/questionStroke.svg',
+  'question-filled': '/src/components/icon/assets/questionFilled.svg',
+  qr: '/src/components/icon/assets/qr.svg',
+  'profile-stroke': '/src/components/icon/assets/profileStroke.svg',
+  'profile-filled': '/src/components/icon/assets/profileFilled.svg',
+  print: '/src/components/icon/assets/print.svg',
+  'person-stroke': '/src/components/icon/assets/personStroke.svg',
+  'person-filled': '/src/components/icon/assets/personFilled.svg',
+  'payment-stroke': '/src/components/icon/assets/paymentStroke.svg',
+  'payment-filled': '/src/components/icon/assets/paymenrFilled.svg',
+  parcel: '/src/components/icon/assets/parcel.svg',
+  'number-0': '/src/components/icon/assets/number=0.svg',
+  'number-1': '/src/components/icon/assets/number=1.svg',
+  'number-2': '/src/components/icon/assets/number=2.svg',
+  'number-3': '/src/components/icon/assets/number=3.svg',
+  'number-4': '/src/components/icon/assets/number=4.svg',
+  'number-5': '/src/components/icon/assets/number=5.svg',
+  'number-6': '/src/components/icon/assets/number=6.svg',
+  'number-7': '/src/components/icon/assets/number=7.svg',
+  'number-8': '/src/components/icon/assets/number=8.svg',
+  'number-9': '/src/components/icon/assets/number=9.svg',
+  new: '/src/components/icon/assets/New.svg',
+  'minus-circle-stroke': '/src/components/icon/assets/minusCircleStroke.svg',
+  'minus-circle-filled': '/src/components/icon/assets/minusCircleFilled.svg',
+  microphone: '/src/components/icon/assets/microphone.svg',
+  'mail-stroke': '/src/components/icon/assets/mailStroke.svg',
+  'mail-filled': '/src/components/icon/assets/mailFilled.svg',
+  'logo-naver': '/src/components/icon/assets/logoNaver.svg',
+  'logo-kakao': '/src/components/icon/assets/logoKakao.svg',
+  'logo-google': '/src/components/icon/assets/logoGoogle.svg',
+  'logo-apple': '/src/components/icon/assets/logoApple.svg',
+  lock: '/src/components/icon/assets/Lock.svg',
+  'location-stroke': '/src/components/icon/assets/locationStroke.svg',
+  'location-filled': '/src/components/icon/assets/locationFilled.svg',
+  'info-stroke': '/src/components/icon/assets/infoStroke.svg',
+  'info-filled': '/src/components/icon/assets/infoFilled.svg',
+  image: '/src/components/icon/assets/image.svg',
+  'id-card-stroke': '/src/components/icon/assets/idCardStroke.svg',
+  'id-card-filled': '/src/components/icon/assets/idCardFilled.svg',
+  'home-stroke': '/src/components/icon/assets/homeStroke.svg',
+  'history-stroke': '/src/components/icon/assets/historyStroke.svg',
+  'history-filled': '/src/components/icon/assets/historyFilled.svg',
+  'heart-stroke': '/src/components/icon/assets/heartStroke.svg',
+  gym: '/src/components/icon/assets/gym.svg',
+  guide: '/src/components/icon/assets/guide.svg',
+  'delete-stroke': '/src/components/icon/assets/deleteStroke.svg',
+  'delete-filled': '/src/components/icon/assets/deleteFilled.svg',
+  'dashboard-stroke': '/src/components/icon/assets/dashboardStroke.svg',
+  'dashboard-filled': '/src/components/icon/assets/dashboardFilled.svg',
+  'customer-service': '/src/components/icon/assets/customerService.svg',
+  'check-circle-stroke': '/src/components/icon/assets/checkCircleStroke.svg',
+  'check-circle-filled': '/src/components/icon/assets/checkCircleFilled.svg',
+  'checkbox-selected-stroke': '/src/components/icon/assets/checkboxSelectedStroke.svg',
+  'checkbox-selected-filled': '/src/components/icon/assets/checkboxSelectedFilled.svg',
+  'checkbox-resting': '/src/components/icon/assets/checkboxResting.svg',
+  'caution-stroke': '/src/components/icon/assets/cautionStroke.svg',
+  'caution-filled': '/src/components/icon/assets/cautionFilled.svg',
+  'cancel-stroke': '/src/components/icon/assets/cancelStroke.svg',
+  'cancel-filled': '/src/components/icon/assets/cancelFilled.svg',
+  'camera-stroke': '/src/components/icon/assets/cameraStorke.svg',
+  'camera-filled': '/src/components/icon/assets/cameraFilled.svg',
+  'call-stroke': '/src/components/icon/assets/callStroke.svg',
+  'call-filled': '/src/components/icon/assets/callFilled.svg',
+  'calendar-stroke': '/src/components/icon/assets/calendarStroke.svg',
+  'bookmark-stroke': '/src/components/icon/assets/bookmarkStroke.svg',
+  'bookmark-filled': '/src/components/icon/assets/bookmarkFilled.svg',
+  'bell-stroke': '/src/components/icon/assets/bellStroke.svg',
+  'bell-filled': '/src/components/icon/assets/bellFilled.svg'
 };
 var Icon = function (_a) {
   var type = _a.type,
@@ -2730,7 +2811,8 @@ var Dropdown = function (_a) {
     errorMessage = _a.errorMessage,
     _f = _a.className,
     className = _f === void 0 ? '' : _f,
-    leadingIcon = _a.leadingIcon;
+    leadingIcon = _a.leadingIcon,
+    leadingIconType = _a.leadingIconType;
   var _g = useState(false),
     isOpen = _g[0],
     setIsOpen = _g[1];
@@ -3014,6 +3096,30 @@ var Dropdown = function (_a) {
     }
     return '';
   };
+  // Leading 아이콘 렌더링
+  var renderLeadingIcon = function () {
+    if (leadingIconType) {
+      return jsx(Icon, {
+        type: leadingIconType,
+        size: 20,
+        color: getIconColor()
+      });
+    }
+    if (leadingIcon) {
+      return jsx("div", {
+        style: {
+          width: '20px',
+          height: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: getIconColor()
+        },
+        children: leadingIcon
+      });
+    }
+    return null;
+  };
   return jsxs("div", {
     className: "dropdown-wrapper ".concat(className),
     ref: dropdownRef,
@@ -3030,17 +3136,7 @@ var Dropdown = function (_a) {
       "aria-expanded": isOpen,
       "aria-haspopup": "listbox",
       "aria-disabled": disabled,
-      children: [leadingIcon && jsx("div", {
-        style: {
-          width: '20px',
-          height: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: getIconColor()
-        },
-        children: leadingIcon
-      }), isOpen ? jsx("input", {
+      children: [renderLeadingIcon(), isOpen ? jsx("input", {
         ref: inputRef,
         type: "text",
         value: searchText,

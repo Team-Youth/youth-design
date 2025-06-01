@@ -74,7 +74,7 @@ const ControlledTextField = (props: any) => {
 };
 
 const meta: Meta<typeof TextField> = {
-  title: 'Components/Inputs/TextField',
+  title: 'Components/TextField',
   component: TextField,
   parameters: {
     layout: 'centered',

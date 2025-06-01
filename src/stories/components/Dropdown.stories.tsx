@@ -129,7 +129,7 @@ const ControlledDropdown = (props: any) => {
 };
 
 const meta: Meta<typeof Dropdown> = {
-  title: 'Components/Inputs/Dropdown',
+  title: 'Components/Dropdown',
   component: Dropdown,
   parameters: {
     layout: 'centered',

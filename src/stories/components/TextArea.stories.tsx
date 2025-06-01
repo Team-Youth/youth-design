@@ -9,7 +9,7 @@ const ControlledTextArea = (props: any) => {
 };
 
 const meta: Meta<typeof TextArea> = {
-  title: 'Components/Inputs/TextArea',
+  title: 'Components/TextArea',
   component: TextArea,
   parameters: {
     layout: 'centered',

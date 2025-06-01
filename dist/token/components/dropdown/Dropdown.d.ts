@@ -1,4 +1,5 @@
 import React from 'react';
+import { IconType } from '../icon/Icon';
 export interface DropdownOption {
     value: string;
     label: string;
@@ -23,5 +24,7 @@ export interface DropdownProps {
     className?: string;
     /** Leading 아이콘 */
     leadingIcon?: React.ReactNode;
+    /** Leading 아이콘 타입 (Icon 컴포넌트 사용) */
+    leadingIconType?: IconType;
 }
 export declare const Dropdown: React.FC<DropdownProps>;
