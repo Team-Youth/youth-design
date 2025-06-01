@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconType } from '../icon/Icon';
+import { IconType } from '../icon';
 export interface DropdownOption {
     value: string;
     label: string;
@@ -28,7 +28,7 @@ export interface DropdownProps {
     width?: 'fill' | (string & {});
     /** 검색 기능 활성화 여부 */
     enableSearch?: boolean;
-    /** 빈 옵션 메시지 숨김 여부 */
-    hideEmptyOption?: boolean;
+    /** 모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음) */
+    hideOption?: boolean;
 }
 export declare const Dropdown: React.FC<DropdownProps>;
