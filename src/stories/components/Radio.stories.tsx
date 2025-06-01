@@ -90,18 +90,27 @@ export const DisabledChecked: Story = {
 };
 
 export const Sizes: Story = {
+  args: {
+    checked: false,
+    disabled: false,
+    size: 'medium',
+    label: 'Radio Size Demo',
+    description: 'Size can be controlled from Controls panel',
+    onChange: action('radio-changed'),
+  },
+};
+
+export const AllSizes: Story = {
   render: () => {
     const [sizeStates, setSizeStates] = useState({
       small1: false,
       medium1: false,
       large1: false,
-      small2: false,
-      medium2: false,
-      large2: false,
     });
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>모든 크기</h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <Radio
             size="small"
@@ -144,6 +153,11 @@ export const Sizes: Story = {
           <Radio size="small" label="Small Disabled" disabled />
           <Radio size="medium" label="Medium Disabled" disabled />
           <Radio size="large" label="Large Disabled" disabled />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Radio size="small" label="Small Disabled Checked" disabled checked />
+          <Radio size="medium" label="Medium Disabled Checked" disabled checked />
+          <Radio size="large" label="Large Disabled Checked" disabled checked />
         </div>
       </div>
     );

@@ -90,6 +90,17 @@ export const DisabledChecked: Story = {
 };
 
 export const Sizes: Story = {
+  args: {
+    checked: false,
+    disabled: false,
+    size: 'medium',
+    label: 'Checkbox Size Demo',
+    description: 'Size can be controlled from Controls panel',
+    onChange: action('checkbox-changed'),
+  },
+};
+
+export const AllSizes: Story = {
   render: () => {
     const [sizeStates, setSizeStates] = useState({
       small: false,
@@ -99,6 +110,7 @@ export const Sizes: Story = {
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>모든 크기</h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <Checkbox
             size="small"
@@ -118,6 +130,16 @@ export const Sizes: Story = {
             checked={sizeStates.large}
             onChange={(checked) => setSizeStates((prev) => ({ ...prev, large: checked }))}
           />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Checkbox size="small" label="Small Disabled" disabled />
+          <Checkbox size="medium" label="Medium Disabled" disabled />
+          <Checkbox size="large" label="Large Disabled" disabled />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Checkbox size="small" label="Small Disabled Checked" disabled checked />
+          <Checkbox size="medium" label="Medium Disabled Checked" disabled checked />
+          <Checkbox size="large" label="Large Disabled Checked" disabled checked />
         </div>
       </div>
     );
