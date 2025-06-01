@@ -1073,7 +1073,165 @@ var TextButton = function (_a) {
   });
 };
 
+var Chips = function (_a) {
+  var _b = _a.size,
+    size = _b === void 0 ? 'medium' : _b,
+    _c = _a.type,
+    type = _c === void 0 ? 'capsule' : _c,
+    _d = _a.state,
+    state = _d === void 0 ? 'resting' : _d,
+    _e = _a.iconPosition,
+    iconPosition = _e === void 0 ? 'leading' : _e,
+    icon = _a.icon,
+    children = _a.children,
+    onClick = _a.onClick,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f;
+  var _g = react.useState(false),
+    isHovered = _g[0],
+    setIsHovered = _g[1];
+  // Size configurations
+  var sizeConfig = {
+    large: {
+      paddingX: '16px',
+      paddingY: '9px',
+      borderRadius: type === 'capsule' ? '100px' : '8px',
+      height: '40px',
+      gap: '4px'
+    },
+    medium: {
+      paddingX: '12px',
+      paddingY: '6px',
+      borderRadius: type === 'capsule' ? '100px' : '6px',
+      height: '32px',
+      gap: '4px'
+    }
+  };
+  var getStyles = function () {
+    var config = sizeConfig[size];
+    var styles = {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
+      borderRadius: config.borderRadius,
+      height: config.height,
+      border: '1px solid transparent',
+      cursor: state === 'disabled' ? 'not-allowed' : 'pointer',
+      transition: 'all 0.2s ease',
+      gap: config.gap,
+      whiteSpace: 'nowrap'
+    };
+    // State에 따른 스타일링
+    switch (state) {
+      case 'selected':
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.primary.mainviolet,
+          border: "1px solid ".concat(colors.primary.mainviolet)
+        });
+        break;
+      case 'hover':
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.primary.coolGray[50],
+          border: "1px solid ".concat(colors.primary.coolGray[200])
+        });
+        break;
+      case 'disabled':
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.semantic.disabled.background,
+          border: "1px solid ".concat(colors.semantic.disabled.background),
+          cursor: 'not-allowed'
+        });
+        break;
+      case 'resting':
+      default:
+        if (isHovered) {
+          styles = __assign(__assign({}, styles), {
+            backgroundColor: colors.primary.coolGray[50],
+            border: "1px solid ".concat(colors.primary.coolGray[200])
+          });
+        } else {
+          styles = __assign(__assign({}, styles), {
+            backgroundColor: colors.primary.gray.white,
+            border: "1px solid ".concat(colors.semantic.border.default)
+          });
+        }
+        break;
+    }
+    return styles;
+  };
+  var getTextColor = function () {
+    switch (state) {
+      case 'selected':
+        return colors.primary.gray.white;
+      case 'disabled':
+        return colors.semantic.disabled.foreground;
+      default:
+        return colors.primary.coolGray[800];
+    }
+  };
+  var handleClick = function () {
+    if (state !== 'disabled' && onClick) {
+      onClick();
+    }
+  };
+  var handleMouseEnter = function () {
+    if (state === 'resting') {
+      setIsHovered(true);
+    }
+  };
+  var handleMouseLeave = function () {
+    setIsHovered(false);
+  };
+  var renderContent = function () {
+    if (!icon) {
+      return jsxRuntime.jsx(Font, {
+        type: "body2",
+        fontWeight: "medium",
+        color: getTextColor(),
+        children: children
+      });
+    }
+    if (iconPosition === 'leading') {
+      return jsxRuntime.jsxs(jsxRuntime.Fragment, {
+        children: [jsxRuntime.jsx("span", {
+          className: "chips-icon",
+          children: icon
+        }), children && jsxRuntime.jsx(Font, {
+          type: "body2",
+          fontWeight: "medium",
+          color: getTextColor(),
+          children: children
+        })]
+      });
+    } else {
+      return jsxRuntime.jsxs(jsxRuntime.Fragment, {
+        children: [children && jsxRuntime.jsx(Font, {
+          type: "body2",
+          fontWeight: "medium",
+          color: getTextColor(),
+          children: children
+        }), jsxRuntime.jsx("span", {
+          className: "chips-icon",
+          children: icon
+        })]
+      });
+    }
+  };
+  return jsxRuntime.jsx("button", {
+    className: "chips chips--".concat(size, " chips--").concat(type, " chips--").concat(state, " ").concat(className),
+    style: getStyles(),
+    onClick: handleClick,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    disabled: state === 'disabled',
+    type: "button",
+    children: renderContent()
+  });
+};
+
 exports.BoxButton = BoxButton;
+exports.Chips = Chips;
 exports.Font = Font;
 exports.TextButton = TextButton;
 exports.TextInput = TextInput;

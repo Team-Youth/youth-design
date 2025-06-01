@@ -6,3 +6,5 @@ export { TextInput } from './text-input';
 export type { TextInputProps } from './text-input';
 export { TextButton } from './text-button';
 export type { TextButtonProps } from './text-button';
+export { Chips } from './chips';
+export type { ChipsProps } from './chips';
