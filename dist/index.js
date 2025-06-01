@@ -2918,27 +2918,28 @@ var Dropdown = function (_a) {
     errorMessage = _a.errorMessage,
     _f = _a.className,
     className = _f === void 0 ? '' : _f,
-    leadingIcon = _a.leadingIcon,
     leadingIconType = _a.leadingIconType,
     _g = _a.width,
     width = _g === void 0 ? '320px' : _g,
     _h = _a.enableSearch,
-    enableSearch = _h === void 0 ? false : _h;
-  var _j = react.useState(false),
-    isOpen = _j[0],
-    setIsOpen = _j[1];
+    enableSearch = _h === void 0 ? false : _h,
+    _j = _a.hideEmptyOption,
+    hideEmptyOption = _j === void 0 ? false : _j;
   var _k = react.useState(false),
-    isAnimating = _k[0],
-    setIsAnimating = _k[1];
+    isOpen = _k[0],
+    setIsOpen = _k[1];
   var _l = react.useState(false),
-    shouldRender = _l[0],
-    setShouldRender = _l[1];
-  var _m = react.useState(null),
-    hoveredOptionIndex = _m[0],
-    setHoveredOptionIndex = _m[1];
-  var _o = react.useState(''),
-    searchText = _o[0],
-    setSearchText = _o[1];
+    isAnimating = _l[0],
+    setIsAnimating = _l[1];
+  var _m = react.useState(false),
+    shouldRender = _m[0],
+    setShouldRender = _m[1];
+  var _o = react.useState(null),
+    hoveredOptionIndex = _o[0],
+    setHoveredOptionIndex = _o[1];
+  var _p = react.useState(''),
+    searchText = _p[0],
+    setSearchText = _p[1];
   var dropdownRef = react.useRef(null);
   var inputRef = react.useRef(null);
   var selectedOption = react.useMemo(function () {
@@ -3213,34 +3214,18 @@ var Dropdown = function (_a) {
   };
   // Leading 아이콘 렌더링
   var renderLeadingIcon = function () {
-    if (leadingIconType) {
-      return jsxRuntime.jsx(Icon, {
-        type: leadingIconType,
-        size: 20,
-        color: getIconColor()
-      });
-    }
-    if (leadingIcon) {
-      return jsxRuntime.jsx("div", {
-        style: {
-          width: '20px',
-          height: '20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: getIconColor()
-        },
-        children: leadingIcon
-      });
-    }
-    return null;
+    if (!leadingIconType) return null;
+    return jsxRuntime.jsx(Icon, {
+      type: leadingIconType,
+      size: 20,
+      color: getIconColor()
+    });
   };
   return jsxRuntime.jsxs("div", {
     className: "dropdown-wrapper ".concat(className),
     ref: dropdownRef,
     style: {
-      position: 'relative',
-      width: '335px'
+      position: 'relative'
     },
     children: [jsxRuntime.jsxs("div", {
       style: getContainerStyles(),
@@ -3280,7 +3265,7 @@ var Dropdown = function (_a) {
     }), shouldRender && jsxRuntime.jsx("div", {
       style: dropdownOptionsStyle,
       role: "listbox",
-      children: filteredOptions.length === 0 ? jsxRuntime.jsx("div", {
+      children: filteredOptions.length === 0 ? !hideEmptyOption && jsxRuntime.jsx("div", {
         style: {
           padding: '13px 16px',
           fontSize: '14px',

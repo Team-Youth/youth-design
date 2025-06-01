@@ -2,94 +2,6 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { DropdownOption, Dropdown } from '../../components';
 
-// Icon components for demonstration
-const LocationIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path
-      d="M17.5 8.33333C17.5 14.1667 10 19.1667 10 19.1667S2.5 14.1667 2.5 8.33333C2.5 6.34419 3.29018 4.43655 4.6967 3.03007C6.10322 1.62359 8.01088 0.833333 10 0.833333C11.9891 0.833333 13.8968 1.62359 15.3033 3.03007C16.7098 4.43655 17.5 6.34419 17.5 8.33333Z"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <circle
-      cx="10"
-      cy="8.33333"
-      r="2.5"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const UserIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path
-      d="M16.6667 17.5v-1.6667a3.3333 3.3333 0 0 0-3.3334-3.3333H6.66667a3.3333 3.3333 0 0 0-3.3333 3.3333V17.5"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <circle
-      cx="10"
-      cy="6.66667"
-      r="3.33333"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const CategoryIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <rect
-      x="2.5"
-      y="2.5"
-      width="6.66667"
-      height="6.66667"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <rect
-      x="10.8333"
-      y="2.5"
-      width="6.66667"
-      height="6.66667"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <rect
-      x="2.5"
-      y="10.8333"
-      width="6.66667"
-      height="6.66667"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <rect
-      x="10.8333"
-      y="10.8333"
-      width="6.66667"
-      height="6.66667"
-      stroke="currentColor"
-      strokeWidth="1.67"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 // Sample options
 const cityOptions: DropdownOption[] = [
   { value: 'seoul', label: '서울' },
@@ -186,12 +98,44 @@ const meta: Meta<typeof Dropdown> = {
       description: '드롭다운의 너비를 설정합니다. "fill"을 사용하면 부모 요소의 100%가 됩니다.',
       defaultValue: '320px',
     },
-    leadingIcon: {
-      control: { type: 'boolean' },
-      description: '앞쪽에 표시되는 아이콘입니다.',
+    leadingIconType: {
+      control: { type: 'select' },
+      options: [
+        'none',
+        'search',
+        'location-stroke',
+        'location-filled',
+        'person-stroke',
+        'person-filled',
+        'home',
+        'home-filled',
+        'calendar',
+        'calendar-filled',
+        'mail-stroke',
+        'mail-filled',
+        'settings-stroke',
+        'settings-filled',
+        'heart',
+        'heart-filled',
+      ],
+      description: 'Leading 아이콘 타입을 설정합니다. Icon 컴포넌트를 사용합니다.',
       mapping: {
-        true: <LocationIcon />,
-        false: undefined,
+        none: undefined,
+        search: 'search',
+        'location-stroke': 'location-stroke',
+        'location-filled': 'location-filled',
+        'person-stroke': 'person-stroke',
+        'person-filled': 'person-filled',
+        home: 'home',
+        'home-filled': 'home-filled',
+        calendar: 'calendar',
+        'calendar-filled': 'calendar-filled',
+        'mail-stroke': 'mail-stroke',
+        'mail-filled': 'mail-filled',
+        'settings-stroke': 'settings-stroke',
+        'settings-filled': 'settings-filled',
+        heart: 'heart',
+        'heart-filled': 'heart-filled',
       },
     },
     enableSearch: {
@@ -206,90 +150,96 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="Placeholder"
-      options={[
-        { value: 'option1', label: 'Option1' },
-        { value: 'option2', label: 'Option2' },
-        { value: 'option3', label: 'Option3' },
-        { value: 'option4', label: 'Option4' },
-      ]}
-    />
-  ),
+  args: {
+    placeholder: 'Placeholder',
+    options: [
+      { value: 'option1', label: 'Option1' },
+      { value: 'option2', label: 'Option2' },
+      { value: 'option3', label: 'Option3' },
+      { value: 'option4', label: 'Option4' },
+    ],
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 export const Selected: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="Placeholder"
-      value="option1"
-      options={[
-        { value: 'option1', label: 'Option1' },
-        { value: 'option2', label: 'Option2' },
-        { value: 'option3', label: 'Option3' },
-        { value: 'option4', label: 'Option4' },
-      ]}
-    />
-  ),
+  args: {
+    placeholder: 'Placeholder',
+    value: 'option1',
+    options: [
+      { value: 'option1', label: 'Option1' },
+      { value: 'option2', label: 'Option2' },
+      { value: 'option3', label: 'Option3' },
+      { value: 'option4', label: 'Option4' },
+    ],
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 export const WithLeadingIcon: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="위치를 선택해주세요..."
-      options={cityOptions}
-      leadingIcon={<LocationIcon />}
-    />
-  ),
+  args: {
+    placeholder: '위치를 선택해주세요...',
+    options: cityOptions,
+    leadingIconType: 'location-stroke',
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 export const WithDisabledOptions: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="역할을 선택해주세요..."
-      options={roleOptions}
-      leadingIcon={<UserIcon />}
-    />
-  ),
+  args: {
+    placeholder: '역할을 선택해주세요...',
+    options: roleOptions,
+    leadingIconType: 'person-stroke',
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 export const ErrorState: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="카테고리를 선택해주세요..."
-      options={categoryOptions}
-      error={true}
-      errorMessage="카테고리를 선택해야 합니다."
-      leadingIcon={<CategoryIcon />}
-    />
-  ),
+  args: {
+    placeholder: '카테고리를 선택해주세요...',
+    options: categoryOptions,
+    error: true,
+    errorMessage: '카테고리를 선택해야 합니다.',
+    leadingIconType: 'settings-stroke',
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 export const Disabled: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="비활성화된 드롭다운"
-      options={cityOptions}
-      disabled={true}
-      value="seoul"
-    />
-  ),
+  args: {
+    placeholder: '비활성화된 드롭다운',
+    options: cityOptions,
+    disabled: true,
+    value: 'seoul',
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 // Interactive controlled examples
 export const Interactive: Story = {
-  render: () => <ControlledDropdown placeholder="도시를 선택해주세요..." options={cityOptions} />,
+  args: {
+    placeholder: '도시를 선택해주세요...',
+    options: cityOptions,
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 export const InteractiveWithIcon: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="위치를 선택해주세요..."
-      options={cityOptions}
-      leadingIcon={<LocationIcon />}
-    />
-  ),
+  args: {
+    placeholder: '위치를 선택해주세요...',
+    options: cityOptions,
+    leadingIconType: 'location-stroke',
+  },
+  render: (args) => <ControlledDropdown {...args} />,
+};
+
+export const WithLeadingIconType: Story = {
+  args: {
+    placeholder: '위치를 선택해주세요...',
+    options: cityOptions,
+    leadingIconType: 'location-stroke',
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 // Figma 디자인 스펙 시연을 위한 새로운 스토리
@@ -366,7 +316,7 @@ export const AllStates: Story = {
         <ControlledDropdown
           placeholder="위치를 선택해주세요..."
           options={cityOptions}
-          leadingIcon={<LocationIcon />}
+          leadingIconType="location-stroke"
         />
       </div>
 
@@ -377,7 +327,7 @@ export const AllStates: Story = {
         <ControlledDropdown
           placeholder="역할을 선택해주세요..."
           options={roleOptions}
-          leadingIcon={<UserIcon />}
+          leadingIconType="person-stroke"
         />
       </div>
 
@@ -388,7 +338,7 @@ export const AllStates: Story = {
           options={categoryOptions}
           error={true}
           errorMessage="카테고리를 선택해야 합니다."
-          leadingIcon={<CategoryIcon />}
+          leadingIconType="settings-stroke"
         />
       </div>
 
@@ -427,7 +377,7 @@ export const LongOptionList: Story = {
         { value: 'ru', label: '러시아' },
         { value: 'mx', label: '멕시코' },
       ]}
-      leadingIcon={<LocationIcon />}
+      leadingIconType="location-stroke"
     />
   ),
 };
@@ -513,25 +463,23 @@ export const WidthShowcase: Story = {
 
 // Search functionality examples
 export const WithSearch: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="검색하여 선택해주세요..."
-      options={cityOptions}
-      enableSearch={true}
-      leadingIcon={<LocationIcon />}
-    />
-  ),
+  args: {
+    placeholder: '검색하여 선택해주세요...',
+    options: cityOptions,
+    enableSearch: true,
+    leadingIconType: 'search',
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 export const WithoutSearch: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="일반 드롭다운"
-      options={cityOptions}
-      enableSearch={false}
-      leadingIcon={<LocationIcon />}
-    />
-  ),
+  args: {
+    placeholder: '일반 드롭다운',
+    options: cityOptions,
+    enableSearch: false,
+    leadingIconType: 'location-stroke',
+  },
+  render: (args) => <ControlledDropdown {...args} />,
 };
 
 export const SearchLongList: Story = {
@@ -561,7 +509,7 @@ export const SearchLongList: Story = {
         { value: 'ph', label: '필리핀' },
         { value: 'my', label: '말레이시아' },
       ]}
-      leadingIcon={<LocationIcon />}
+      leadingIconType="search"
     />
   ),
 };
@@ -589,7 +537,7 @@ export const SearchComparison: Story = {
             placeholder="검색하여 선택해주세요..."
             options={cityOptions}
             enableSearch={true}
-            leadingIcon={<LocationIcon />}
+            leadingIconType="search"
           />
         </div>
 
@@ -603,7 +551,147 @@ export const SearchComparison: Story = {
             placeholder="선택해주세요..."
             options={cityOptions}
             enableSearch={false}
-            leadingIcon={<LocationIcon />}
+            leadingIconType="location-stroke"
+          />
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+export const LeadingIconComparison: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
+      <div>
+        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
+          🎨 다양한 Leading Icon 타입
+        </h2>
+        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
+          leadingIconType을 사용해서 다양한 아이콘을 적용할 수 있습니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', gap: '24px' }}>
+        <div>
+          <h3
+            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
+          >
+            Stroke 타입 (location-stroke)
+          </h3>
+          <ControlledDropdown
+            placeholder="위치를 선택해주세요..."
+            options={cityOptions}
+            leadingIconType="location-stroke"
+          />
+        </div>
+
+        <div>
+          <h3
+            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
+          >
+            Filled 타입 (location-filled)
+          </h3>
+          <ControlledDropdown
+            placeholder="위치를 선택해주세요..."
+            options={cityOptions}
+            leadingIconType="location-filled"
+          />
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+export const IconTypeShowcase: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px' }}>
+      <div>
+        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
+          🎯 다양한 leadingIconType 예시
+        </h2>
+        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
+          다양한 상황에 맞는 아이콘 타입들을 활용할 수 있습니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            검색 (search)
+          </h3>
+          <ControlledDropdown
+            placeholder="검색어를 입력해주세요..."
+            options={categoryOptions}
+            leadingIconType="search"
+            enableSearch={true}
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            사용자 (person-stroke)
+          </h3>
+          <ControlledDropdown
+            placeholder="사용자를 선택해주세요..."
+            options={roleOptions}
+            leadingIconType="person-stroke"
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>홈 (home)</h3>
+          <ControlledDropdown
+            placeholder="홈 옵션을 선택해주세요..."
+            options={cityOptions}
+            leadingIconType="home"
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            캘린더 (calendar)
+          </h3>
+          <ControlledDropdown
+            placeholder="날짜를 선택해주세요..."
+            options={[
+              { value: 'today', label: '오늘' },
+              { value: 'tomorrow', label: '내일' },
+              { value: 'week', label: '이번 주' },
+              { value: 'month', label: '이번 달' },
+            ]}
+            leadingIconType="calendar"
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            메일 (mail-stroke)
+          </h3>
+          <ControlledDropdown
+            placeholder="메일 유형을 선택해주세요..."
+            options={[
+              { value: 'inbox', label: '받은편지함' },
+              { value: 'sent', label: '보낸편지함' },
+              { value: 'draft', label: '임시보관함' },
+              { value: 'spam', label: '스팸' },
+            ]}
+            leadingIconType="mail-stroke"
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            설정 (settings-stroke)
+          </h3>
+          <ControlledDropdown
+            placeholder="설정을 선택해주세요..."
+            options={[
+              { value: 'general', label: '일반 설정' },
+              { value: 'privacy', label: '개인정보 설정' },
+              { value: 'notification', label: '알림 설정' },
+              { value: 'account', label: '계정 설정' },
+            ]}
+            leadingIconType="settings-stroke"
           />
         </div>
       </div>

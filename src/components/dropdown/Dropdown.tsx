@@ -25,14 +25,14 @@ export interface DropdownProps {
   errorMessage?: string;
   /** 커스텀 클래스명 */
   className?: string;
-  /** Leading 아이콘 */
-  leadingIcon?: React.ReactNode;
   /** Leading 아이콘 타입 (Icon 컴포넌트 사용) */
   leadingIconType?: IconType;
   /** 너비 설정 */
   width?: 'fill' | (string & {});
   /** 검색 기능 활성화 여부 */
   enableSearch?: boolean;
+  /** 빈 옵션 메시지 숨김 여부 */
+  hideEmptyOption?: boolean;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -44,10 +44,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
   error = false,
   errorMessage,
   className = '',
-  leadingIcon,
   leadingIconType,
   width = '320px',
   enableSearch = false,
+  hideEmptyOption = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -355,33 +355,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   // Leading 아이콘 렌더링
   const renderLeadingIcon = () => {
-    if (leadingIconType) {
-      return <Icon type={leadingIconType} size={20} color={getIconColor()} />;
-    }
-    if (leadingIcon) {
-      return (
-        <div
-          style={{
-            width: '20px',
-            height: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: getIconColor(),
-          }}
-        >
-          {leadingIcon}
-        </div>
-      );
-    }
-    return null;
+    if (!leadingIconType) return null;
+
+    return <Icon type={leadingIconType} size={20} color={getIconColor()} />;
   };
 
   return (
     <div
       className={`dropdown-wrapper ${className}`}
       ref={dropdownRef}
-      style={{ position: 'relative', width: '335px' }} // Figma 스펙의 고정 너비
+      style={{ position: 'relative' }} // Figma 스펙의 고정 너비
     >
       <div
         style={getContainerStyles()}
@@ -394,7 +377,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
         aria-disabled={disabled}
       >
         {renderLeadingIcon()}
-
         {isOpen && enableSearch ? (
           <input
             ref={inputRef}
@@ -429,53 +411,53 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
       {shouldRender && (
         <div style={dropdownOptionsStyle} role="listbox">
-          {filteredOptions.length === 0 ? (
-            <div
-              style={{
-                padding: '13px 16px',
-                fontSize: '14px',
-                fontWeight: 500,
-                lineHeight: '22px',
-                color: colors.semantic.disabled.foreground,
-                fontFamily: 'Pretendard',
-                textAlign: 'center',
-              }}
-            >
-              {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
-            </div>
-          ) : (
-            filteredOptions.map((option, index) => {
-              const isSelected = value === option.value;
-              return (
+          {filteredOptions.length === 0
+            ? !hideEmptyOption && (
                 <div
-                  key={option.value}
-                  style={getOptionStyles(option, index, isSelected)}
-                  onClick={() => !option.disabled && handleOptionClick(option.value)}
-                  onMouseEnter={() => setHoveredOptionIndex(index)}
-                  onMouseLeave={() => setHoveredOptionIndex(null)}
-                  role="option"
-                  aria-selected={isSelected}
-                  aria-disabled={option.disabled}
+                  style={{
+                    padding: '13px 16px',
+                    fontSize: '14px',
+                    fontWeight: 500,
+                    lineHeight: '22px',
+                    color: colors.semantic.disabled.foreground,
+                    fontFamily: 'Pretendard',
+                    textAlign: 'center',
+                  }}
                 >
-                  <span>{option.label}</span>
-                  {isSelected && (
-                    <div
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#7248D9', // Figma 스펙의 체크 아이콘 색상
-                      }}
-                    >
-                      {getCheckIcon()}
-                    </div>
-                  )}
+                  {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
                 </div>
-              );
-            })
-          )}
+              )
+            : filteredOptions.map((option, index) => {
+                const isSelected = value === option.value;
+                return (
+                  <div
+                    key={option.value}
+                    style={getOptionStyles(option, index, isSelected)}
+                    onClick={() => !option.disabled && handleOptionClick(option.value)}
+                    onMouseEnter={() => setHoveredOptionIndex(index)}
+                    onMouseLeave={() => setHoveredOptionIndex(null)}
+                    role="option"
+                    aria-selected={isSelected}
+                    aria-disabled={option.disabled}
+                  >
+                    <span>{option.label}</span>
+                    {isSelected && (
+                      <div
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#7248D9', // Figma 스펙의 체크 아이콘 색상
+                        }}
+                      >
+                        {getCheckIcon()}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
         </div>
       )}
 

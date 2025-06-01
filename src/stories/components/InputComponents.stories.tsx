@@ -260,7 +260,7 @@ const ContactForm = () => {
               options={cityOptions}
               value={formData.city}
               onChange={(value) => setFormData({ ...formData, city: value })}
-              leadingIcon={<LocationIcon />}
+              leadingIconType="location-stroke"
             />
           </div>
         </div>
@@ -277,7 +277,7 @@ const ContactForm = () => {
               options={categoryOptions}
               value={formData.category}
               onChange={(value) => setFormData({ ...formData, category: value })}
-              leadingIcon={<CategoryIcon />}
+              leadingIconType="settings-stroke"
               error={!!errors.category}
               errorMessage={errors.category}
             />
@@ -393,7 +393,7 @@ const UserProfileForm = () => {
             options={cityOptions}
             value={profile.location}
             onChange={(value) => setProfile({ ...profile, location: value })}
-            leadingIcon={<LocationIcon />}
+            leadingIconType="location-stroke"
           />
         </div>
 
@@ -483,7 +483,7 @@ export const ComponentOverview: Story = {
           <Dropdown
             placeholder="아이콘이 있는 드롭다운"
             options={categoryOptions}
-            leadingIcon={<CategoryIcon />}
+            leadingIconType="settings-stroke"
           />
           <Dropdown
             placeholder="에러 상태"
@@ -555,7 +555,7 @@ export const SideBySideComparison: Story = {
           <Dropdown
             placeholder="지역을 선택해주세요"
             options={cityOptions}
-            leadingIcon={<LocationIcon />}
+            leadingIconType="location-stroke"
           />
           <TextArea
             placeholder="메시지를 입력해주세요"
@@ -578,7 +578,7 @@ export const SideBySideComparison: Story = {
           <Dropdown
             placeholder="지역을 선택해주세요"
             options={cityOptions}
-            leadingIcon={<LocationIcon />}
+            leadingIconType="location-stroke"
             error={true}
             errorMessage="지역을 선택해주세요."
           />

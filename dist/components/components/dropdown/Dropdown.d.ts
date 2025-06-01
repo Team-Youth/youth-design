@@ -22,13 +22,13 @@ export interface DropdownProps {
     errorMessage?: string;
     /** 커스텀 클래스명 */
     className?: string;
-    /** Leading 아이콘 */
-    leadingIcon?: React.ReactNode;
     /** Leading 아이콘 타입 (Icon 컴포넌트 사용) */
     leadingIconType?: IconType;
     /** 너비 설정 */
     width?: 'fill' | (string & {});
     /** 검색 기능 활성화 여부 */
     enableSearch?: boolean;
+    /** 빈 옵션 메시지 숨김 여부 */
+    hideEmptyOption?: boolean;
 }
 export declare const Dropdown: React.FC<DropdownProps>;
