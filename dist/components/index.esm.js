@@ -1,5 +1,5 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { useState, useEffect, forwardRef, createContext, useCallback, useContext } from 'react';
+import { useState, useEffect, forwardRef, createContext, useCallback, useContext, useRef, useMemo } from 'react';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -2716,5 +2716,830 @@ var Modal = function (_a) {
   });
 };
 
-export { BoxButton, Checkbox, Chips, Font, Icon, Label, Modal, Popup, Radio, TextButton, TextInput, Toast, ToastProvider, Toggle, useToast };
+var Dropdown = function (_a) {
+  var _b = _a.placeholder,
+    placeholder = _b === void 0 ? 'Placeholder' : _b,
+    value = _a.value,
+    _c = _a.options,
+    options = _c === void 0 ? [] : _c,
+    onChange = _a.onChange,
+    _d = _a.disabled,
+    disabled = _d === void 0 ? false : _d,
+    _e = _a.error,
+    error = _e === void 0 ? false : _e,
+    errorMessage = _a.errorMessage,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f,
+    leadingIcon = _a.leadingIcon;
+  var _g = useState(false),
+    isOpen = _g[0],
+    setIsOpen = _g[1];
+  var _h = useState(false),
+    isAnimating = _h[0],
+    setIsAnimating = _h[1];
+  var _j = useState(false),
+    shouldRender = _j[0],
+    setShouldRender = _j[1];
+  var _k = useState(null),
+    hoveredOptionIndex = _k[0],
+    setHoveredOptionIndex = _k[1];
+  var _l = useState(''),
+    searchText = _l[0],
+    setSearchText = _l[1];
+  var dropdownRef = useRef(null);
+  var inputRef = useRef(null);
+  var selectedOption = useMemo(function () {
+    return options.find(function (option) {
+      return option.value === value;
+    });
+  }, [options, value]);
+  var hasSelectedOption = !!selectedOption;
+  // 검색 텍스트에 따른 옵션 필터링
+  var filteredOptions = useMemo(function () {
+    if (!searchText.trim()) {
+      return options;
+    }
+    return options.filter(function (option) {
+      return option.label.toLowerCase().includes(searchText.toLowerCase());
+    });
+  }, [options, searchText]);
+  // 드롭다운 열기/닫기 애니메이션 관리
+  useEffect(function () {
+    if (isOpen) {
+      // 열기: 먼저 DOM에 마운트하고 애니메이션 시작
+      setShouldRender(true);
+      // 두 번의 requestAnimationFrame으로 확실히 DOM 렌더링 후 애니메이션 시작
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          setIsAnimating(true);
+          // 드롭다운이 열리면 input에 포커스
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+        });
+      });
+    } else {
+      // 닫기: 애니메이션 시작하고 완료 후 DOM에서 제거
+      setIsAnimating(false);
+      // 검색 텍스트 초기화
+      setSearchText('');
+      var timer_1 = setTimeout(function () {
+        setShouldRender(false);
+      }, 200); // 애니메이션 duration과 맞춤
+      return function () {
+        return clearTimeout(timer_1);
+      };
+    }
+  }, [isOpen]);
+  // 외부 클릭 시 드롭다운 닫기
+  useEffect(function () {
+    var handleClickOutside = function (event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return function () {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+  // ESC 키로 드롭다운 닫기
+  useEffect(function () {
+    var handleKeyDown = function (event) {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return function () {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+  var getContainerStyles = useCallback(function () {
+    var borderColor = colors.semantic.border.strong; // #D6D6D6
+    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
+    if (disabled) {
+      borderColor = colors.semantic.border.strong;
+      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+    } else if (error) {
+      borderColor = colors.semantic.state.error; // #FF2E2E
+    } else if (isOpen) {
+      borderColor = colors.semantic.text.primary; // #25282D
+    }
+    return {
+      display: 'flex',
+      alignItems: 'center',
+      gap: spacing.xs,
+      // 8px
+      padding: '13px 16px',
+      // Figma 스펙에 맞춤
+      backgroundColor: backgroundColor,
+      border: "1px solid ".concat(borderColor),
+      borderRadius: '8px',
+      // Figma 스펙에 맞춤
+      transition: 'all 0.2s ease',
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      width: '100%',
+      boxSizing: 'border-box'
+    };
+  }, [disabled, error, isOpen]);
+  var getTextStyles = useCallback(function () {
+    var textColor;
+    if (disabled) {
+      textColor = colors.semantic.disabled.foreground; // #D1D5DB
+    } else if (error) {
+      textColor = colors.semantic.state.error; // #FF2E2E
+    } else if (hasSelectedOption) {
+      textColor = colors.semantic.text.primary; // #25282D
+    } else {
+      textColor = '#AFB6C0'; // Figma 스펙의 placeholder 색상
+    }
+    return {
+      flex: 1,
+      fontSize: '14px',
+      fontWeight: 500,
+      lineHeight: '22px',
+      // 1.5714285714285714em = 22px
+      letterSpacing: '-0.28px',
+      // -2%
+      fontFamily: 'Pretendard',
+      color: textColor
+    };
+  }, [disabled, error, hasSelectedOption]);
+  var getInputStyles = useCallback(function () {
+    return {
+      flex: 1,
+      fontSize: '14px',
+      fontWeight: 500,
+      lineHeight: '22px',
+      letterSpacing: '-0.28px',
+      fontFamily: 'Pretendard',
+      color: colors.semantic.text.primary,
+      backgroundColor: 'transparent',
+      border: 'none',
+      outline: 'none',
+      width: '100%'
+    };
+  }, []);
+  var getIconColor = useCallback(function () {
+    if (disabled) {
+      return colors.semantic.disabled.foreground; // #D1D5DB
+    } else if (error) {
+      return colors.semantic.state.error; // #FF2E2E
+    } else {
+      return colors.semantic.text.primary; // #25282D
+    }
+  }, [disabled, error]);
+  var getChevronIcon = useCallback(function () {
+    return jsx(Icon, {
+      type: isOpen ? 'arrow-up' : 'arrow-down',
+      size: 20,
+      color: "currentColor"
+    });
+  }, [isOpen]);
+  var handleClick = useCallback(function () {
+    if (!disabled) {
+      setIsOpen(!isOpen);
+    }
+  }, [disabled, isOpen]);
+  var handleOptionClick = useCallback(function (optionValue) {
+    if (!disabled) {
+      onChange === null || onChange === void 0 ? void 0 : onChange(optionValue);
+      setIsOpen(false);
+    }
+  }, [disabled, onChange]);
+  var handleKeyDown = useCallback(function (event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleClick();
+    }
+  }, [handleClick]);
+  var handleInputKeyDown = useCallback(function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      // 첫 번째 필터링된 옵션 선택
+      if (filteredOptions.length > 0 && !filteredOptions[0].disabled) {
+        handleOptionClick(filteredOptions[0].value);
+      }
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      // 첫 번째 옵션에 호버 효과
+      if (filteredOptions.length > 0) {
+        setHoveredOptionIndex(0);
+      }
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      setIsOpen(false);
+    }
+  }, [filteredOptions, handleOptionClick]);
+  var handleInputChange = useCallback(function (event) {
+    setSearchText(event.target.value);
+    setHoveredOptionIndex(null);
+  }, []);
+  var getOptionStyles = useCallback(function (option, index, isSelected) {
+    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
+    var textColor = colors.semantic.text.primary; // #25282D
+    if (option.disabled) {
+      textColor = colors.semantic.disabled.foreground; // #D1D5DB
+    } else if (isSelected) {
+      backgroundColor = '#F8F4FE'; // Figma 스펙의 선택된 옵션 배경색
+      textColor = '#7248D9'; // Figma 스펙의 선택된 옵션 텍스트 색상
+    } else if (hoveredOptionIndex === index) {
+      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+    }
+    return {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '13px 16px',
+      // Figma 스펙에 맞춘 패딩
+      fontSize: '14px',
+      fontWeight: 500,
+      lineHeight: '22px',
+      letterSpacing: '-0.28px',
+      // -2%
+      fontFamily: 'Pretendard',
+      color: textColor,
+      backgroundColor: backgroundColor,
+      cursor: option.disabled ? 'not-allowed' : 'pointer',
+      transition: 'background-color 0.2s ease'
+    };
+  }, [hoveredOptionIndex]);
+  var dropdownOptionsStyle = useMemo(function () {
+    return {
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      right: 0,
+      backgroundColor: colors.semantic.background.primary,
+      border: "1px solid ".concat(colors.semantic.border.strong),
+      borderRadius: '8px',
+      // Figma 스펙에 맞춤
+      boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
+      // Figma 스펙의 그림자
+      zIndex: 1000,
+      marginTop: '8px',
+      // Figma 스펙에 맞춘 간격
+      maxHeight: '200px',
+      overflowY: 'auto',
+      // 애니메이션 스타일
+      opacity: isAnimating ? 1 : 0,
+      transform: isAnimating ? 'translateY(0) scaleY(1)' : 'translateY(-8px) scaleY(0.95)',
+      transformOrigin: 'top center',
+      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)' // 자연스러운 easing
+    };
+  }, [isAnimating]);
+  var getCheckIcon = function () {
+    return jsx(Icon, {
+      type: "check",
+      size: 20,
+      color: "currentColor"
+    });
+  };
+  // 표시할 텍스트 결정
+  var getDisplayText = function () {
+    if (isOpen) {
+      return searchText;
+    }
+    return hasSelectedOption ? selectedOption.label : placeholder;
+  };
+  // 플레이스홀더 텍스트 결정
+  var getPlaceholderText = function () {
+    if (isOpen) {
+      return hasSelectedOption ? selectedOption.label : placeholder;
+    }
+    return '';
+  };
+  return jsxs("div", {
+    className: "dropdown-wrapper ".concat(className),
+    ref: dropdownRef,
+    style: {
+      position: 'relative',
+      width: '335px'
+    },
+    children: [jsxs("div", {
+      style: getContainerStyles(),
+      onClick: !isOpen ? handleClick : undefined,
+      onKeyDown: !isOpen ? handleKeyDown : undefined,
+      tabIndex: disabled || isOpen ? -1 : 0,
+      role: "combobox",
+      "aria-expanded": isOpen,
+      "aria-haspopup": "listbox",
+      "aria-disabled": disabled,
+      children: [leadingIcon && jsx("div", {
+        style: {
+          width: '20px',
+          height: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: getIconColor()
+        },
+        children: leadingIcon
+      }), isOpen ? jsx("input", {
+        ref: inputRef,
+        type: "text",
+        value: searchText,
+        onChange: handleInputChange,
+        onKeyDown: handleInputKeyDown,
+        placeholder: getPlaceholderText(),
+        style: getInputStyles(),
+        disabled: disabled
+      }) : jsx("div", {
+        style: getTextStyles(),
+        children: getDisplayText()
+      }), jsx("div", {
+        style: {
+          width: '20px',
+          height: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: getIconColor(),
+          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+          transition: 'transform 0.2s ease'
+        },
+        onClick: isOpen ? handleClick : undefined,
+        children: getChevronIcon()
+      })]
+    }), shouldRender && jsx("div", {
+      style: dropdownOptionsStyle,
+      role: "listbox",
+      children: filteredOptions.length === 0 ? jsx("div", {
+        style: {
+          padding: '13px 16px',
+          fontSize: '14px',
+          fontWeight: 500,
+          lineHeight: '22px',
+          color: colors.semantic.disabled.foreground,
+          fontFamily: 'Pretendard',
+          textAlign: 'center'
+        },
+        children: "\uAC80\uC0C9 \uACB0\uACFC\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4"
+      }) : filteredOptions.map(function (option, index) {
+        var isSelected = value === option.value;
+        return jsxs("div", {
+          style: getOptionStyles(option, index, isSelected),
+          onClick: function () {
+            return !option.disabled && handleOptionClick(option.value);
+          },
+          onMouseEnter: function () {
+            return setHoveredOptionIndex(index);
+          },
+          onMouseLeave: function () {
+            return setHoveredOptionIndex(null);
+          },
+          role: "option",
+          "aria-selected": isSelected,
+          "aria-disabled": option.disabled,
+          children: [jsx("span", {
+            children: option.label
+          }), isSelected && jsx("div", {
+            style: {
+              width: '20px',
+              height: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#7248D9' // Figma 스펙의 체크 아이콘 색상
+            },
+            children: getCheckIcon()
+          })]
+        }, option.value);
+      })
+    }), error && errorMessage && jsx("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: spacing.xxs,
+        // 4px
+        marginTop: spacing.xxs // 4px
+      },
+      children: jsx("span", {
+        style: {
+          fontSize: '14px',
+          fontWeight: 500,
+          lineHeight: '22px',
+          color: colors.semantic.state.error,
+          fontFamily: 'Pretendard'
+        },
+        children: errorMessage
+      })
+    })]
+  });
+};
+Dropdown.displayName = 'Dropdown';
+
+var TextArea = forwardRef(function (_a, ref) {
+  var _b = _a.placeholder,
+    placeholder = _b === void 0 ? 'Placeholder' : _b,
+    value = _a.value,
+    defaultValue = _a.defaultValue,
+    onChange = _a.onChange,
+    onFocus = _a.onFocus,
+    onBlur = _a.onBlur,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c,
+    _d = _a.error,
+    error = _d === void 0 ? false : _d,
+    errorMessage = _a.errorMessage,
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.showCharacterCounter,
+    showCharacterCounter = _f === void 0 ? false : _f,
+    _g = _a.maxLength,
+    maxLength = _g === void 0 ? 1000 : _g,
+    status = _a.status,
+    _h = _a.width,
+    width = _h === void 0 ? '100%' : _h,
+    _j = _a.rows,
+    rows = _j === void 0 ? 4 : _j,
+    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "showCharacterCounter", "maxLength", "status", "width", "rows"]);
+  var _k = useState(false),
+    isFocused = _k[0],
+    setIsFocused = _k[1];
+  var _l = useState(false),
+    isHovered = _l[0],
+    setIsHovered = _l[1];
+  var _m = useState(defaultValue || ''),
+    internalValue = _m[0],
+    setInternalValue = _m[1];
+  var currentValue = value !== undefined ? value : internalValue;
+  var isEmpty = !currentValue || currentValue.length === 0;
+  var actualStatus = status || (isEmpty ? 'empty' : 'filled');
+  var characterCount = currentValue.length;
+  var getContainerStyles = function () {
+    var borderColor = colors.semantic.border.strong; // #D6D6D6
+    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
+    if (disabled) {
+      borderColor = colors.semantic.border.strong;
+      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+    } else if (error) {
+      borderColor = colors.semantic.state.error; // #FF2E2E
+    } else if (isFocused) {
+      borderColor = colors.semantic.text.primary; // #25282D
+    } else if (isHovered) {
+      borderColor = colors.semantic.text.primary; // #25282D
+    }
+    return {
+      display: 'flex',
+      flexDirection: 'column',
+      width: typeof width === 'number' ? "".concat(width, "px") : width,
+      border: "1px solid ".concat(borderColor),
+      borderRadius: radius.s,
+      // 8px
+      backgroundColor: backgroundColor,
+      transition: 'all 0.2s ease',
+      position: 'relative'
+    };
+  };
+  var getTextAreaStyles = function () {
+    var textColor = colors.semantic.text.tertiary; // #8D97A5 for placeholder
+    if (disabled) {
+      textColor = colors.semantic.text.tertiary;
+    } else if (error) {
+      textColor = colors.semantic.state.error; // #FF2E2E
+    } else if (actualStatus === 'filled') {
+      textColor = colors.primary.coolGray[700]; // #393F46
+    }
+    return {
+      width: '100%',
+      minHeight: '160px',
+      padding: "14px ".concat(spacing.m),
+      // 14px 16px
+      border: 'none',
+      outline: 'none',
+      backgroundColor: 'transparent',
+      color: textColor,
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '24px',
+      letterSpacing: '-2%',
+      fontFamily: 'Pretendard',
+      resize: 'none',
+      wordWrap: 'break-word',
+      whiteSpace: 'pre-wrap',
+      overflowWrap: 'break-word',
+      boxSizing: 'border-box'
+    };
+  };
+  var handleFocus = function () {
+    if (!disabled) {
+      setIsFocused(true);
+      onFocus === null || onFocus === void 0 ? void 0 : onFocus();
+    }
+  };
+  var handleBlur = function () {
+    setIsFocused(false);
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur();
+  };
+  var handleChange = function (e) {
+    var newValue = e.target.value;
+    // 최대 길이 체크
+    if (maxLength && newValue.length > maxLength) {
+      return;
+    }
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
+  };
+  var handleMouseEnter = function () {
+    if (!disabled && !isFocused) {
+      setIsHovered(true);
+    }
+  };
+  var handleMouseLeave = function () {
+    setIsHovered(false);
+  };
+  return jsxs("div", {
+    className: "text-area-wrapper ".concat(className),
+    children: [jsx("div", {
+      style: getContainerStyles(),
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      children: jsx("textarea", __assign({
+        ref: ref,
+        value: currentValue,
+        placeholder: placeholder,
+        onChange: handleChange,
+        onFocus: handleFocus,
+        onBlur: handleBlur,
+        disabled: disabled,
+        style: getTextAreaStyles(),
+        rows: rows,
+        maxLength: maxLength
+      }, restProps))
+    }), (showCharacterCounter || error) && jsxs("div", {
+      style: {
+        display: 'flex',
+        justifyContent: error && errorMessage ? 'space-between' : 'flex-end',
+        alignItems: 'center',
+        marginTop: spacing.xxs,
+        // 4px
+        gap: spacing.s // 12px
+      },
+      children: [error && errorMessage && jsxs("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          gap: spacing.xxs // 4px
+        },
+        children: [jsx(Icon, {
+          type: "dialog",
+          size: 16,
+          color: colors.semantic.state.error
+        }), jsx("span", {
+          style: {
+            fontSize: '14px',
+            fontWeight: 400,
+            lineHeight: '22px',
+            color: colors.semantic.state.error,
+            fontFamily: 'Pretendard'
+          },
+          children: errorMessage
+        })]
+      }), showCharacterCounter && jsxs("span", {
+        style: {
+          fontSize: '14px',
+          fontWeight: 400,
+          lineHeight: '22px',
+          color: colors.semantic.text.tertiary,
+          fontFamily: 'Pretendard',
+          textAlign: 'right'
+        },
+        children: [characterCount, "/", maxLength]
+      })]
+    }), jsx("style", {
+      children: "\n            @keyframes blink {\n              0%, 50% { opacity: 1; }\n              51%, 100% { opacity: 0; }\n            }\n            \n            .text-area-wrapper textarea::placeholder {\n              color: ".concat(colors.semantic.text.tertiary, ";\n            }\n          ")
+    })]
+  });
+});
+TextArea.displayName = 'TextArea';
+
+var TextField = forwardRef(function (_a, ref) {
+  var _b = _a.placeholder,
+    placeholder = _b === void 0 ? 'Placeholder' : _b,
+    value = _a.value,
+    defaultValue = _a.defaultValue,
+    onChange = _a.onChange,
+    onFocus = _a.onFocus,
+    onBlur = _a.onBlur,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c,
+    _d = _a.error,
+    error = _d === void 0 ? false : _d,
+    errorMessage = _a.errorMessage,
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.type,
+    type = _f === void 0 ? 'text' : _f,
+    leadingIcon = _a.leadingIcon,
+    trailingIcon = _a.trailingIcon,
+    leadingIconType = _a.leadingIconType,
+    trailingIconType = _a.trailingIconType,
+    onLeadingIconClick = _a.onLeadingIconClick,
+    onTrailingIconClick = _a.onTrailingIconClick,
+    status = _a.status,
+    _g = _a.width,
+    width = _g === void 0 ? '100%' : _g,
+    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "type", "leadingIcon", "trailingIcon", "leadingIconType", "trailingIconType", "onLeadingIconClick", "onTrailingIconClick", "status", "width"]);
+  var _h = useState(false),
+    isFocused = _h[0],
+    setIsFocused = _h[1];
+  var _j = useState(false),
+    isHovered = _j[0],
+    setIsHovered = _j[1];
+  var _k = useState(defaultValue || ''),
+    internalValue = _k[0],
+    setInternalValue = _k[1];
+  var currentValue = value !== undefined ? value : internalValue;
+  var isEmpty = !currentValue || currentValue.length === 0;
+  var actualStatus = status || (isEmpty ? 'empty' : 'filled');
+  var getContainerStyles = useCallback(function () {
+    var borderColor = colors.semantic.border.strong; // #D6D6D6
+    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
+    if (disabled) {
+      borderColor = colors.semantic.border.strong;
+      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+    } else if (error) {
+      borderColor = colors.semantic.state.error; // #FF2E2E
+    } else if (isFocused) {
+      borderColor = colors.semantic.text.primary; // #25282D
+    } else if (isHovered) {
+      borderColor = colors.semantic.text.primary; // #25282D
+    }
+    return {
+      display: 'flex',
+      alignItems: 'center',
+      gap: spacing.xs,
+      // 8px
+      padding: "13px ".concat(spacing.m),
+      // 13px 16px
+      backgroundColor: backgroundColor,
+      border: "1px solid ".concat(borderColor),
+      borderRadius: radius.s,
+      // 8px
+      transition: 'all 0.2s ease',
+      width: typeof width === 'number' ? "".concat(width, "px") : width
+    };
+  }, [disabled, error, isFocused, isHovered, width]);
+  var getInputStyles = useCallback(function () {
+    var textColor = colors.semantic.text.tertiary; // #8D97A5 for placeholder
+    if (disabled) {
+      textColor = colors.semantic.text.tertiary;
+    } else if (error) {
+      textColor = colors.semantic.state.error; // #FF2E2E
+    } else if (actualStatus === 'filled') {
+      textColor = colors.semantic.text.primary; // #25282D
+    }
+    return {
+      flex: 1,
+      border: 'none',
+      outline: 'none',
+      backgroundColor: 'transparent',
+      color: textColor,
+      fontSize: '16px',
+      fontWeight: 400,
+      lineHeight: '24px',
+      letterSpacing: '-2%',
+      fontFamily: 'Pretendard'
+    };
+  }, [disabled, error, actualStatus]);
+  var getIconColor = useCallback(function () {
+    if (disabled) {
+      return colors.semantic.disabled.foreground; // #D1D5DB
+    } else if (error) {
+      return colors.semantic.state.error; // #FF2E2E
+    } else {
+      return colors.semantic.text.primary; // #25282D
+    }
+  }, [disabled, error]);
+  var handleFocus = useCallback(function () {
+    if (!disabled) {
+      setIsFocused(true);
+      onFocus === null || onFocus === void 0 ? void 0 : onFocus();
+    }
+  }, [disabled, onFocus]);
+  var handleBlur = useCallback(function () {
+    setIsFocused(false);
+    onBlur === null || onBlur === void 0 ? void 0 : onBlur();
+  }, [onBlur]);
+  var handleChange = useCallback(function (e) {
+    var newValue = e.target.value;
+    if (value === undefined) {
+      setInternalValue(newValue);
+    }
+    onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
+  }, [value, onChange]);
+  var handleMouseEnter = useCallback(function () {
+    if (!disabled && !isFocused) {
+      setIsHovered(true);
+    }
+  }, [disabled, isFocused]);
+  var handleMouseLeave = useCallback(function () {
+    setIsHovered(false);
+  }, []);
+  var iconColor = getIconColor();
+  // Leading 아이콘 렌더링
+  var renderLeadingIcon = function () {
+    if (leadingIconType) {
+      return jsx(Icon, {
+        type: leadingIconType,
+        size: 20,
+        color: iconColor,
+        onClick: onLeadingIconClick
+      });
+    }
+    if (leadingIcon) {
+      return jsx("div", {
+        style: {
+          width: '20px',
+          height: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: iconColor
+        },
+        children: leadingIcon
+      });
+    }
+    return null;
+  };
+  // Trailing 아이콘 렌더링
+  var renderTrailingIcon = function () {
+    if (trailingIconType) {
+      return jsx(Icon, {
+        type: trailingIconType,
+        size: 20,
+        color: iconColor,
+        onClick: onTrailingIconClick
+      });
+    }
+    if (trailingIcon) {
+      return jsx("div", {
+        style: {
+          width: '20px',
+          height: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: iconColor
+        },
+        children: trailingIcon
+      });
+    }
+    return null;
+  };
+  return jsxs("div", {
+    className: "text-field-wrapper ".concat(className),
+    children: [jsxs("div", {
+      style: getContainerStyles(),
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      children: [renderLeadingIcon(), jsx("input", __assign({
+        ref: ref,
+        type: type,
+        value: currentValue,
+        placeholder: placeholder,
+        onChange: handleChange,
+        onFocus: handleFocus,
+        onBlur: handleBlur,
+        disabled: disabled,
+        style: getInputStyles()
+      }, restProps)), renderTrailingIcon()]
+    }), error && errorMessage && jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: spacing.xxs,
+        // 4px
+        marginTop: spacing.xs // 8px
+      },
+      children: [jsx(Icon, {
+        type: "dialog",
+        size: 16,
+        color: colors.semantic.state.error
+      }), jsx("span", {
+        style: {
+          fontSize: '12px',
+          fontWeight: 500,
+          lineHeight: '18px',
+          color: colors.semantic.state.error,
+          fontFamily: 'Pretendard'
+        },
+        children: errorMessage
+      })]
+    }), jsx("style", {
+      children: "\n            .text-field-wrapper input::placeholder {\n              color: ".concat(colors.semantic.text.tertiary, ";\n            }\n          ")
+    })]
+  });
+});
+TextField.displayName = 'TextField';
+
+export { BoxButton, Checkbox, Chips, Dropdown, Font, Icon, Label, Modal, Popup, Radio, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, useToast };
 //# sourceMappingURL=index.esm.js.map

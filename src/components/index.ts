@@ -27,3 +27,6 @@ export type { ToastProps, ToastStatus, ToastItem } from './toast';
 
 export * from './popup';
 export * from './modal';
+export * from './dropdown';
+export * from './text-area';
+export * from './text-field';
