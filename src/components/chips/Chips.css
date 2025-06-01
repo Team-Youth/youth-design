@@ -1,0 +1,30 @@
+.chips {
+  box-sizing: border-box;
+  outline: none;
+  user-select: none;
+  font-family: inherit;
+}
+
+.chips-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.chips-text {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Focus 스타일 */
+.chips:focus-visible {
+  outline: 2px solid #7248D9;
+  outline-offset: 2px;
+}
+
+/* 활성화된 상태 */
+.chips:active:not(:disabled) {
+  transform: scale(0.98);
+} 
