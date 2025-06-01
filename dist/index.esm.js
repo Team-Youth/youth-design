@@ -1096,30 +1096,46 @@ var Radio = function (_a) {
   var getSizeConfig = function () {
     switch (size) {
       case 'small':
-        return {
+        return __assign(__assign({}, textStyles.body3), {
+          fontWeight: fontWeight.medium,
           radioSize: '16px',
           dotSize: '8px',
-          gap: '8px',
-          fontSize: '12px',
-          descriptionFontSize: '11px'
-        };
-      case 'large':
-        return {
-          radioSize: '24px',
-          dotSize: '12px',
-          gap: '12px',
-          fontSize: '16px',
-          descriptionFontSize: '14px'
-        };
-      default:
-        // medium
-        return {
-          radioSize: '20px',
+          gap: '4px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body3), {
+            fontWeight: fontWeight.regular
+          })
+        });
+      case 'medium':
+        return __assign(__assign({}, textStyles.body2), {
+          fontWeight: fontWeight.medium,
+          radioSize: '18px',
           dotSize: '10px',
-          gap: '10px',
-          fontSize: '14px',
-          descriptionFontSize: '12px'
-        };
+          gap: '6px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body3), {
+            fontWeight: fontWeight.regular
+          })
+        });
+      case 'large':
+        return __assign(__assign({}, textStyles.body1), {
+          fontWeight: fontWeight.medium,
+          radioSize: '22px',
+          dotSize: '14px',
+          gap: '8px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body2), {
+            fontWeight: fontWeight.regular
+          })
+        });
+      default:
+        // large
+        return __assign(__assign({}, textStyles.body1), {
+          fontWeight: fontWeight.medium,
+          radioSize: '22px',
+          dotSize: '14px',
+          gap: '8px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body2), {
+            fontWeight: fontWeight.regular
+          })
+        });
     }
   };
   var sizeConfig = getSizeConfig();
@@ -1130,7 +1146,7 @@ var Radio = function (_a) {
         height: sizeConfig.radioSize,
         borderRadius: '50%',
         border: "2px solid ".concat(colors.semantic.disabled.foreground),
-        backgroundColor: colors.semantic.disabled.background,
+        backgroundColor: !checked ? colors.semantic.disabled.background : 'transparent',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1144,7 +1160,7 @@ var Radio = function (_a) {
         height: sizeConfig.radioSize,
         borderRadius: '50%',
         border: "2px solid ".concat(colors.primary.mainviolet),
-        backgroundColor: colors.primary.mainviolet,
+        backgroundColor: 'transparent',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1172,7 +1188,6 @@ var Radio = function (_a) {
         height: sizeConfig.radioSize,
         borderRadius: '50%',
         border: "2px solid ".concat(colors.semantic.border.strong),
-        backgroundColor: colors.semantic.background.primary,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -1187,30 +1202,25 @@ var Radio = function (_a) {
       width: sizeConfig.dotSize,
       height: sizeConfig.dotSize,
       borderRadius: '50%',
-      backgroundColor: checked ? disabled ? colors.semantic.disabled.foreground : colors.semantic.background.primary : 'transparent',
+      backgroundColor: checked ? disabled ? colors.semantic.disabled.foreground : colors.primary.mainviolet : 'transparent',
       transition: 'all 0.2s ease'
     };
   };
   var getLabelStyles = function () {
-    return {
-      fontSize: sizeConfig.fontSize,
+    return __assign(__assign({}, sizeConfig), {
       color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
-      fontWeight: '500',
-      lineHeight: '1.4',
       cursor: disabled ? 'not-allowed' : 'pointer'
-    };
+    });
   };
   var getDescriptionStyles = function () {
-    return {
-      fontSize: sizeConfig.descriptionFontSize,
-      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.tertiary,
-      lineHeight: '1.3',
+    return __assign(__assign({}, sizeConfig.descriptionFontStyle), {
+      color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[300],
       marginTop: '2px',
       cursor: disabled ? 'not-allowed' : 'pointer'
-    };
+    });
   };
   var handleChange = function () {
-    if (!disabled) {
+    if (!disabled && !checked) {
       onChange === null || onChange === void 0 ? void 0 : onChange(true, value);
       onClick === null || onClick === void 0 ? void 0 : onClick();
     }
@@ -1227,7 +1237,7 @@ var Radio = function (_a) {
   };
   var containerStyles = {
     display: 'flex',
-    alignItems: labelPosition === 'right' ? 'flex-start' : 'flex-start',
+    alignItems: description ? 'flex-start' : 'center',
     gap: sizeConfig.gap,
     flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
     cursor: disabled ? 'not-allowed' : 'pointer'
@@ -1292,109 +1302,125 @@ var Checkbox = function (_a) {
   var getSizeConfig = function () {
     switch (size) {
       case 'small':
-        return {
+        return __assign(__assign({}, textStyles.body2), {
+          fontWeight: fontWeight.medium,
           checkboxSize: '16px',
           iconSize: '10px',
-          gap: '8px',
-          fontSize: '12px',
-          descriptionFontSize: '11px'
-        };
+          gap: '6px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body3), {
+            fontWeight: fontWeight.regular
+          })
+        });
       case 'large':
-        return {
+        return __assign(__assign({}, textStyles.heading3), {
+          fontWeight: fontWeight.medium,
           checkboxSize: '24px',
-          iconSize: '16px',
-          gap: '12px',
-          fontSize: '16px',
-          descriptionFontSize: '14px'
-        };
+          iconSize: '18px',
+          gap: '10px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body1), {
+            fontWeight: fontWeight.regular
+          })
+        });
       default:
         // medium
-        return {
+        return __assign(__assign({}, textStyles.body1), {
+          fontWeight: fontWeight.medium,
           checkboxSize: '20px',
           iconSize: '14px',
-          gap: '10px',
-          fontSize: '14px',
-          descriptionFontSize: '12px'
-        };
+          gap: '8px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body2), {
+            fontWeight: fontWeight.regular
+          })
+        });
     }
   };
   var sizeConfig = getSizeConfig();
   var getCheckboxStyles = function () {
-    if (disabled) {
-      return {
-        width: sizeConfig.checkboxSize,
-        height: sizeConfig.checkboxSize,
-        borderRadius: '4px',
+    var baseStyles = {
+      width: sizeConfig.checkboxSize,
+      height: sizeConfig.checkboxSize,
+      borderRadius: '4px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      transition: 'all 0.2s ease',
+      position: 'relative'
+    };
+    if (disabled && checked) {
+      // 5. checked + disabled 상태: 내부 배경은 disabled.foreground, 아이콘은 white
+      return __assign(__assign({}, baseStyles), {
         border: "2px solid ".concat(colors.semantic.disabled.foreground),
-        backgroundColor: checked ? colors.semantic.disabled.background : colors.semantic.disabled.background,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'not-allowed',
-        transition: 'all 0.2s ease',
-        position: 'relative'
-      };
+        backgroundColor: colors.semantic.disabled.foreground,
+        cursor: 'not-allowed'
+      });
+    } else if (disabled) {
+      // disabled이지만 checked가 아닌 상태
+      return __assign(__assign({}, baseStyles), {
+        border: "2px solid ".concat(colors.semantic.disabled.foreground),
+        backgroundColor: colors.semantic.disabled.background,
+        cursor: 'not-allowed'
+      });
+    } else if (checked && isHovered) {
+      // 4. checked + hover 상태: violet600
+      return __assign(__assign({}, baseStyles), {
+        border: "2px solid ".concat(colors.primary.tint.violet[600]),
+        backgroundColor: colors.primary.tint.violet[600],
+        cursor: 'pointer'
+      });
     } else if (checked) {
-      return {
-        width: sizeConfig.checkboxSize,
-        height: sizeConfig.checkboxSize,
-        borderRadius: '4px',
+      // 4. checked 상태: mainviolet
+      return __assign(__assign({}, baseStyles), {
         border: "2px solid ".concat(colors.primary.mainviolet),
         backgroundColor: colors.primary.mainviolet,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        position: 'relative'
-      };
+        cursor: 'pointer'
+      });
     } else if (isHovered) {
-      return {
-        width: sizeConfig.checkboxSize,
-        height: sizeConfig.checkboxSize,
-        borderRadius: '4px',
-        border: "2px solid ".concat(colors.primary.mainviolet),
+      // 2. hover 상태: coolgray 200
+      return __assign(__assign({}, baseStyles), {
+        border: "2px solid ".concat(colors.primary.coolGray[200]),
         backgroundColor: colors.semantic.background.primary,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        position: 'relative'
-      };
+        cursor: 'pointer'
+      });
     } else {
-      return {
-        width: sizeConfig.checkboxSize,
-        height: sizeConfig.checkboxSize,
-        borderRadius: '4px',
-        border: "2px solid ".concat(colors.semantic.border.strong),
+      // 1. 기본 상태: coolgray 100
+      return __assign(__assign({}, baseStyles), {
+        border: "2px solid ".concat(colors.primary.coolGray[100]),
         backgroundColor: colors.semantic.background.primary,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        position: 'relative'
-      };
+        cursor: 'pointer'
+      });
+    }
+  };
+  var getIconColor = function () {
+    if (disabled && checked) {
+      // 5. checked + disabled: white
+      return 'white';
+    } else if (disabled) {
+      // disabled이지만 checked가 아닌 상태 (아이콘이 보이지 않음)
+      return colors.semantic.disabled.foreground;
+    } else if (checked) {
+      // 4. checked 상태: white
+      return 'white';
+    } else if (isHovered) {
+      // 2. hover 상태: coolgray 200
+      return colors.primary.coolGray[200];
+    } else {
+      // 1. 기본 상태: coolgray 100
+      return colors.primary.coolGray[100];
     }
   };
   var getLabelStyles = function () {
-    return {
-      fontSize: sizeConfig.fontSize,
+    return __assign(__assign({}, sizeConfig), {
       color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
-      fontWeight: '500',
-      lineHeight: '1.4',
       cursor: disabled ? 'not-allowed' : 'pointer'
-    };
+    });
   };
   var getDescriptionStyles = function () {
-    return {
-      fontSize: sizeConfig.descriptionFontSize,
-      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.tertiary,
+    return __assign(__assign({}, sizeConfig.descriptionFontStyle), {
+      color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[300],
       lineHeight: '1.3',
       marginTop: '2px',
       cursor: disabled ? 'not-allowed' : 'pointer'
-    };
+    });
   };
   var handleChange = function () {
     if (!disabled) {
@@ -1414,7 +1440,7 @@ var Checkbox = function (_a) {
   };
   var containerStyles = {
     display: 'flex',
-    alignItems: labelPosition === 'right' ? 'flex-start' : 'flex-start',
+    alignItems: description ? 'flex-start' : 'center',
     gap: sizeConfig.gap,
     flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
     cursor: disabled ? 'not-allowed' : 'pointer'
@@ -1429,15 +1455,14 @@ var Checkbox = function (_a) {
     return jsx("svg", {
       width: sizeConfig.iconSize,
       height: sizeConfig.iconSize,
-      viewBox: "0 0 14 14",
+      viewBox: "0 0 14 12",
       fill: "none",
       xmlns: "http://www.w3.org/2000/svg",
       children: jsx("path", {
-        d: "M11.6667 3.5L5.25 9.91667L2.33333 7",
-        stroke: disabled ? colors.semantic.disabled.foreground : colors.semantic.background.primary,
-        strokeWidth: "2",
-        strokeLinecap: "round",
-        strokeLinejoin: "round"
+        fill: getIconColor(),
+        fillRule: "evenodd",
+        clipRule: "evenodd",
+        d: "M13.3821 0.997823C13.7285 1.30089 13.7636 1.82736 13.4605 2.17372L5.80428 10.9237C5.64699 11.1035 5.42012 11.2071 5.18127 11.2083C4.94241 11.2095 4.71453 11.1081 4.55546 10.9299L0.545044 6.43733C0.238554 6.09399 0.268427 5.56719 0.611766 5.2607C0.955106 4.95421 1.4819 4.98409 1.78839 5.32743L5.17089 9.11661L12.2062 1.07622C12.5093 0.729853 13.0358 0.694755 13.3821 0.997823Z"
       })
     });
   };
@@ -1492,36 +1517,42 @@ var Toggle = function (_a) {
   var getSizeConfig = function () {
     switch (size) {
       case 'small':
-        return {
+        return __assign(__assign({}, textStyles.body2), {
+          fontWeight: fontWeight.medium,
           toggleWidth: '32px',
           toggleHeight: '18px',
           thumbSize: '14px',
           thumbOffset: '2px',
-          gap: '8px',
-          fontSize: '12px',
-          descriptionFontSize: '11px'
-        };
+          gap: '6px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body3), {
+            fontWeight: fontWeight.regular
+          })
+        });
       case 'large':
-        return {
+        return __assign(__assign({}, textStyles.heading3), {
+          fontWeight: fontWeight.medium,
           toggleWidth: '52px',
           toggleHeight: '28px',
           thumbSize: '24px',
           thumbOffset: '2px',
-          gap: '12px',
-          fontSize: '16px',
-          descriptionFontSize: '14px'
-        };
+          gap: '10px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body2), {
+            fontWeight: fontWeight.regular
+          })
+        });
       default:
         // medium
-        return {
-          toggleWidth: '44px',
+        return __assign(__assign({}, textStyles.body1), {
+          fontWeight: fontWeight.medium,
+          toggleWidth: '48px',
           toggleHeight: '24px',
           thumbSize: '20px',
           thumbOffset: '2px',
-          gap: '10px',
-          fontSize: '14px',
-          descriptionFontSize: '12px'
-        };
+          gap: '8px',
+          descriptionFontStyle: __assign(__assign({}, textStyles.body2), {
+            fontWeight: fontWeight.regular
+          })
+        });
     }
   };
   var sizeConfig = getSizeConfig();
@@ -1531,23 +1562,8 @@ var Toggle = function (_a) {
         width: sizeConfig.toggleWidth,
         height: sizeConfig.toggleHeight,
         borderRadius: sizeConfig.toggleHeight,
-        backgroundColor: colors.semantic.disabled.background,
-        border: "1px solid ".concat(colors.semantic.disabled.foreground),
+        backgroundColor: colors.primary.coolGray[50],
         cursor: 'not-allowed',
-        transition: 'all 0.3s ease',
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        padding: sizeConfig.thumbOffset
-      };
-    } else if (checked) {
-      return {
-        width: sizeConfig.toggleWidth,
-        height: sizeConfig.toggleHeight,
-        borderRadius: sizeConfig.toggleHeight,
-        backgroundColor: colors.primary.mainviolet,
-        border: "1px solid ".concat(colors.primary.mainviolet),
-        cursor: 'pointer',
         transition: 'all 0.3s ease',
         position: 'relative',
         display: 'flex',
@@ -1559,8 +1575,20 @@ var Toggle = function (_a) {
         width: sizeConfig.toggleWidth,
         height: sizeConfig.toggleHeight,
         borderRadius: sizeConfig.toggleHeight,
-        backgroundColor: colors.primary.coolGray[200],
-        border: "1px solid ".concat(colors.semantic.border.strong),
+        backgroundColor: !checked ? colors.primary.coolGray[200] : colors.primary.tint.green[600],
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        padding: sizeConfig.thumbOffset
+      };
+    } else if (checked) {
+      return {
+        width: sizeConfig.toggleWidth,
+        height: sizeConfig.toggleHeight,
+        borderRadius: sizeConfig.toggleHeight,
+        backgroundColor: colors.primary.tint.green[500],
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         position: 'relative',
@@ -1573,8 +1601,7 @@ var Toggle = function (_a) {
         width: sizeConfig.toggleWidth,
         height: sizeConfig.toggleHeight,
         borderRadius: sizeConfig.toggleHeight,
-        backgroundColor: colors.primary.coolGray[300],
-        border: "1px solid ".concat(colors.semantic.border.strong),
+        backgroundColor: colors.primary.coolGray[100],
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         position: 'relative',
@@ -1590,7 +1617,7 @@ var Toggle = function (_a) {
       width: sizeConfig.thumbSize,
       height: sizeConfig.thumbSize,
       borderRadius: '50%',
-      backgroundColor: disabled ? colors.semantic.disabled.foreground : colors.semantic.background.primary,
+      backgroundColor: 'white',
       boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.1)',
       transition: 'all 0.3s ease',
       transform: "translateX(".concat(thumbPosition, ")"),
@@ -1598,22 +1625,18 @@ var Toggle = function (_a) {
     };
   };
   var getLabelStyles = function () {
-    return {
-      fontSize: sizeConfig.fontSize,
-      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
-      fontWeight: '500',
-      lineHeight: '1.4',
+    return __assign(__assign({}, sizeConfig), {
+      color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[800],
       cursor: disabled ? 'not-allowed' : 'pointer'
-    };
+    });
   };
   var getDescriptionStyles = function () {
-    return {
-      fontSize: sizeConfig.descriptionFontSize,
-      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.tertiary,
+    return __assign(__assign({}, sizeConfig.descriptionFontStyle), {
+      color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[300],
       lineHeight: '1.3',
       marginTop: '2px',
       cursor: disabled ? 'not-allowed' : 'pointer'
-    };
+    });
   };
   var handleChange = function () {
     if (!disabled) {
@@ -1633,7 +1656,7 @@ var Toggle = function (_a) {
   };
   var containerStyles = {
     display: 'flex',
-    alignItems: labelPosition === 'right' ? 'center' : 'center',
+    alignItems: !description ? 'center' : 'flex-start',
     gap: sizeConfig.gap,
     flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
     cursor: disabled ? 'not-allowed' : 'pointer'

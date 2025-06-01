@@ -9,6 +9,7 @@ export declare const On: Story;
 export declare const Disabled: Story;
 export declare const DisabledOn: Story;
 export declare const Sizes: Story;
+export declare const AllSizes: Story;
 export declare const LabelPositions: Story;
 export declare const InteractiveGroup: Story;
 export declare const AllStates: Story;
