@@ -1,5 +1,5 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { useState, forwardRef } from 'react';
+import { useState, forwardRef, createContext, useCallback, useContext } from 'react';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -39,6 +39,16 @@ function __rest(s, e) {
                 t[p[i]] = s[p[i]];
         }
     return t;
+}
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 }
 
 typeof SuppressedError === "function" ? SuppressedError : function (error, suppressed, message) {
@@ -366,6 +376,64 @@ var textStyles = {
 };
 
 /**
+ * Spacing Design Tokens
+ * 균일한 요소와 간격을 사용하여 UI의 체계적인 배열을 도와줌
+ * 4와 8의 배수에 기반한 스페이싱 시스템
+ */
+var spacing = {
+  /** 2px - 최소 간격 */
+  xxxs: '2px',
+  /** 4px - 매우 작은 간격 */
+  xxs: '4px',
+  /** 8px - 작은 간격 */
+  xs: '8px',
+  /** 12px - 작은-중간 간격 */
+  s: '12px',
+  /** 16px - 기본 간격 */
+  m: '16px',
+  /** 20px - 중간-큰 간격 */
+  l: '20px',
+  /** 24px - 큰 간격 */
+  xl: '24px',
+  /** 32px - 매우 큰 간격 */
+  xxl: '32px',
+  /** 40px - 최대 간격 */
+  xxxl: '40px'
+};
+
+/**
+ * Radius Design Tokens
+ * UI 요소의 모서리를 둥글게 하여 부드러운 사용자 경험을 제공
+ */
+var radius = {
+  /** 작은 버튼, 입력 필드, 체크박스에 최소한의 둥근 효과를 줄 때 사용 */
+  xs: '4px',
+  /** 카드, 드롭다운, 배너, 일반 버튼에 기본적인 둥근 스타일을 적용할 때 사용 */
+  s: '8px',
+  /** 중간 크기의 카드, 팝업, 모달에 부드러운 곡률을 적용할 때 사용 */
+  m: '12px',
+  /** 큰 모달, 프로필 이미지, 강조 영역에 둥근 효과를 줄 때 사용 */
+  l: '16px',
+  /** Hero Section과 같은 대형 UI 요소에 강한 둥근 효과를 적용할 때 사용 */
+  xl: '20px',
+  /** 아바타, 토글 버튼과 같은 완전한 원형 요소에 적용할 때 사용 */
+  full: '50%'
+};
+
+/**
+ * Shadow Design Tokens
+ * 그림자는 적용된 UI의 높이(elevation)와 이동 방향, 가장자리 등에 대한 단서를 제공
+ */
+var shadows = {
+  /** 높이 48px 이하의 작은 요소에 가벼운 깊이감을 줄 때 사용 - 아이콘, 버튼, 배지, 입력 필드, 체크박스 등 */
+  s: '0px 1px 8px rgba(0, 0, 0, 0.1)',
+  /** 너비 또는 높이가 48px ~ 200px 사이의 중간 크기 요소를 명확히 구분할 때 사용 - 카드, 모달, 드롭다운, 중간 크기 버튼 등 */
+  m: '0px 1px 16px rgba(0, 0, 0, 0.1)',
+  /** 너비 200px 이상 또는 화면 너비의 50% 이상을 초과하는 큰 요소, 또는 강조가 필요한 구성 요소에 사용 - 다이얼로그, 대형 카드 등 */
+  l: '0px 1px 24px rgba(0, 0, 0, 0.12)'
+};
+
+/**
  * Border Design Tokens
  * 컴포넌트에 테두리를 추가하여 구분감을 제공하는 속성
  */
@@ -657,6 +725,100 @@ var Font = function (_a) {
   });
 };
 
+// 아이콘 SVG 임포트 (동적으로 로드하기 위한 매핑)
+var iconMap = {
+  hamburger: '/src/components/icon/assets/hamburger.svg',
+  search: '/src/components/icon/assets/search.svg',
+  close: '/src/components/icon/assets/close.svg',
+  check: '/src/components/icon/assets/check.svg',
+  add: '/src/components/icon/assets/add.svg',
+  minus: '/src/components/icon/assets/minus.svg',
+  truncation: '/src/components/icon/assets/truncation.svg',
+  more: '/src/components/icon/assets/more.svg',
+  home: '/src/components/icon/assets/home.svg',
+  'home-filled': '/src/components/icon/assets/home-filled.svg',
+  heart: '/src/components/icon/assets/heart.svg',
+  'heart-filled': '/src/components/icon/assets/heart-filled.svg',
+  'my-page': '/src/components/icon/assets/my-page.svg',
+  'my-page-filled': '/src/components/icon/assets/my-page-filled.svg',
+  download: '/src/components/icon/assets/download.svg',
+  modify: '/src/components/icon/assets/modify.svg',
+  duplicate: '/src/components/icon/assets/duplicate.svg',
+  dialog: '/src/components/icon/assets/dialog.svg',
+  'arrow-down': '/src/components/icon/assets/arrow-down.svg',
+  'arrow-up': '/src/components/icon/assets/arrow-up.svg',
+  'arrow-right': '/src/components/icon/assets/arrow-right.svg',
+  'arrow-left': '/src/components/icon/assets/arrow-left.svg'
+};
+var Icon = function (_a) {
+  var type = _a.type,
+    _b = _a.size,
+    size = _b === void 0 ? 24 : _b,
+    _c = _a.color,
+    color = _c === void 0 ? colors.primary.coolGray[800] : _c,
+    onClick = _a.onClick,
+    _d = _a.className,
+    className = _d === void 0 ? '' : _d,
+    _e = _a.style,
+    style = _e === void 0 ? {} : _e;
+  var iconStyle = __assign({
+    width: size,
+    height: size,
+    fill: color,
+    cursor: onClick ? 'pointer' : 'default',
+    transition: 'all 0.2s ease'
+  }, style);
+  var handleClick = function () {
+    if (onClick) {
+      onClick();
+    }
+  };
+  // SVG를 인라인으로 렌더링하는 컴포넌트
+  var SvgIcon = function () {
+    var iconPath = iconMap[type];
+    return jsx("div", {
+      className: "icon icon--".concat(type, " ").concat(className),
+      style: iconStyle,
+      onClick: handleClick,
+      role: onClick ? 'button' : 'img',
+      tabIndex: onClick ? 0 : undefined,
+      onKeyDown: onClick ? function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      } : undefined,
+      children: jsx("img", {
+        src: iconPath,
+        alt: "".concat(type, " icon"),
+        style: {
+          width: '100%',
+          height: '100%',
+          filter: color !== colors.primary.coolGray[800] ? "\n              brightness(0) \n              saturate(100%) \n              hue-rotate(".concat(getHueRotation(color), "deg) \n              saturate(").concat(getSaturation(color), "%) \n              brightness(").concat(getBrightness(color), "%)\n            ") : undefined
+        }
+      })
+    });
+  };
+  return jsx(SvgIcon, {});
+};
+// 색상 변환을 위한 유틸리티 함수들
+function getHueRotation(color) {
+  var _a;
+  // 간단한 색상 매핑 (실제 프로젝트에서는 더 정교한 로직 필요)
+  var colorMap = (_a = {}, _a[colors.primary.mainviolet] = 270, _a[colors.primary.gray.white] = 0, _a[colors.semantic.state.error] = 0, _a[colors.semantic.state.success] = 120, _a[colors.semantic.state.warning] = 45, _a);
+  return colorMap[color] || 0;
+}
+function getSaturation(color) {
+  if (color === colors.primary.gray.white) return 0;
+  if (color === colors.primary.mainviolet) return 100;
+  return 100;
+}
+function getBrightness(color) {
+  if (color === colors.primary.gray.white) return 100;
+  if (color === colors.primary.mainviolet) return 50;
+  return 100;
+}
+
 var TextInput = forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
@@ -920,6 +1082,7 @@ var Chips = function (_a) {
     _e = _a.iconPosition,
     iconPosition = _e === void 0 ? 'leading' : _e,
     icon = _a.icon,
+    iconColor = _a.iconColor,
     children = _a.children,
     onClick = _a.onClick,
     _f = _a.className,
@@ -962,10 +1125,17 @@ var Chips = function (_a) {
     // State에 따른 스타일링
     switch (state) {
       case 'selected':
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.mainviolet,
-          border: "1px solid ".concat(colors.primary.mainviolet)
-        });
+        if (type === 'square') {
+          styles = __assign(__assign({}, styles), {
+            backgroundColor: colors.primary.gray.white,
+            border: "1px solid ".concat(colors.primary.mainviolet)
+          });
+        } else {
+          styles = __assign(__assign({}, styles), {
+            backgroundColor: colors.primary.mainviolet,
+            border: "1px solid ".concat(colors.primary.mainviolet)
+          });
+        }
         break;
       case 'hover':
         styles = __assign(__assign({}, styles), {
@@ -1000,6 +1170,25 @@ var Chips = function (_a) {
   var getTextColor = function () {
     switch (state) {
       case 'selected':
+        if (type === 'square') {
+          return colors.primary.coolGray[800];
+        }
+        return colors.primary.gray.white;
+      case 'disabled':
+        return colors.semantic.disabled.foreground;
+      default:
+        return colors.primary.coolGray[800];
+    }
+  };
+  var getIconColor = function () {
+    if (iconColor) {
+      return iconColor;
+    }
+    switch (state) {
+      case 'selected':
+        if (type === 'square') {
+          return colors.primary.mainviolet;
+        }
         return colors.primary.gray.white;
       case 'disabled':
         return colors.semantic.disabled.foreground;
@@ -1033,6 +1222,9 @@ var Chips = function (_a) {
       return jsxs(Fragment, {
         children: [jsx("span", {
           className: "chips-icon",
+          style: {
+            color: getIconColor()
+          },
           children: icon
         }), children && jsx(Font, {
           type: "body2",
@@ -1050,6 +1242,9 @@ var Chips = function (_a) {
           children: children
         }), jsx("span", {
           className: "chips-icon",
+          style: {
+            color: getIconColor()
+          },
           children: icon
         })]
       });
@@ -1692,5 +1887,407 @@ var Toggle = function (_a) {
   });
 };
 
-export { BoxButton, Checkbox, Chips, Font, Radio, TextButton, TextInput, Toggle };
+// 아이콘 컴포넌트들
+var CheckCircleIcon = function (_a) {
+  var color = _a.color;
+  return jsxs("svg", {
+    width: "24",
+    height: "24",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    children: [jsx("circle", {
+      cx: "12",
+      cy: "12",
+      r: "11",
+      fill: color
+    }), jsx("path", {
+      d: "M8.5 12L10.5 14L15.5 9",
+      stroke: "white",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    })]
+  });
+};
+var CloseCircleIcon = function (_a) {
+  var color = _a.color;
+  return jsxs("svg", {
+    width: "24",
+    height: "24",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    children: [jsx("circle", {
+      cx: "12",
+      cy: "12",
+      r: "11",
+      fill: color
+    }), jsx("path", {
+      d: "M8 8L16 16M16 8L8 16",
+      stroke: "white",
+      strokeWidth: "2",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    })]
+  });
+};
+var CautionIcon = function (_a) {
+  var color = _a.color;
+  return jsxs("svg", {
+    width: "24",
+    height: "24",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    children: [jsx("circle", {
+      cx: "12",
+      cy: "12",
+      r: "11",
+      fill: color
+    }), jsx("rect", {
+      x: "11",
+      y: "7",
+      width: "2",
+      height: "6",
+      fill: "white",
+      rx: "1"
+    }), jsx("circle", {
+      cx: "12",
+      cy: "16",
+      r: "1",
+      fill: "white"
+    })]
+  });
+};
+var InfoIcon = function (_a) {
+  var color = _a.color;
+  return jsxs("svg", {
+    width: "24",
+    height: "24",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    children: [jsx("circle", {
+      cx: "12",
+      cy: "12",
+      r: "11",
+      fill: color
+    }), jsx("circle", {
+      cx: "12",
+      cy: "8",
+      r: "1",
+      fill: "white"
+    }), jsx("rect", {
+      x: "11",
+      y: "11",
+      width: "2",
+      height: "6",
+      fill: "white",
+      rx: "1"
+    })]
+  });
+};
+var CloseIcon = function () {
+  return jsx("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 16 16",
+    fill: "none",
+    children: jsx("path", {
+      d: "M4 4L12 12M12 4L4 12",
+      stroke: colors.semantic.text.tertiary,
+      strokeWidth: "1.5",
+      strokeLinecap: "round",
+      strokeLinejoin: "round"
+    })
+  });
+};
+// 상태별 설정
+var statusConfig = {
+  success: {
+    icon: CheckCircleIcon,
+    color: colors.semantic.state.success
+  },
+  error: {
+    icon: CloseCircleIcon,
+    color: colors.semantic.state.error
+  },
+  warning: {
+    icon: CautionIcon,
+    color: colors.semantic.state.warning
+  },
+  info: {
+    icon: InfoIcon,
+    color: colors.semantic.state.info
+  }
+};
+/**
+ * 토스트 오버레이 컴포넌트
+ *
+ * 사용자가 어떤 작업을 완료했을 때, 시스템이 잘 처리됐다는 걸 알려주는 알림입니다.
+ * 현재 하고 있는 일을 방해하지 않고, 잠깐 나타났다 사라지는 방식으로 보여집니다.
+ */
+var Toast = function (_a) {
+  var status = _a.status,
+    title = _a.title,
+    description = _a.description,
+    _b = _a.showLeadingIcon,
+    showLeadingIcon = _b === void 0 ? true : _b,
+    _c = _a.showCloseButton,
+    showCloseButton = _c === void 0 ? false : _c,
+    onClose = _a.onClose,
+    _d = _a.className,
+    className = _d === void 0 ? '' : _d;
+  var config = statusConfig[status];
+  var IconComponent = config.icon;
+  var handleCloseClick = function () {
+    onClose === null || onClose === void 0 ? void 0 : onClose();
+  };
+  var toastStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: spacing.m,
+    padding: spacing.l,
+    backgroundColor: colors.semantic.background.primary,
+    borderRadius: radius.l,
+    boxShadow: shadows.s,
+    width: '360px',
+    minHeight: 'fit-content'
+  };
+  var contentStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: spacing.xxs,
+    flex: 1
+  };
+  var titleStyle = __assign(__assign({}, textStyles.heading3), {
+    color: colors.semantic.text.primary,
+    margin: 0
+  });
+  var descriptionStyle = __assign(__assign({}, textStyles.body2), {
+    color: colors.semantic.text.secondary,
+    margin: 0
+  });
+  var closeButtonStyle = {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: spacing.xxs,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: radius.xs,
+    transition: 'background-color 0.2s ease'
+  };
+  return jsxs("div", {
+    className: "toast toast--".concat(status, " ").concat(className),
+    style: toastStyle,
+    role: "alert",
+    "aria-live": "polite",
+    children: [showLeadingIcon && jsx("div", {
+      className: "toast__icon",
+      children: jsx(IconComponent, {
+        color: config.color
+      })
+    }), jsxs("div", {
+      className: "toast__content",
+      style: contentStyle,
+      children: [jsx("h3", {
+        className: "toast__title",
+        style: titleStyle,
+        children: title
+      }), description && jsx("p", {
+        className: "toast__description",
+        style: descriptionStyle,
+        children: description
+      })]
+    }), showCloseButton && onClose && jsx("button", {
+      className: "toast__close",
+      style: closeButtonStyle,
+      onClick: handleCloseClick,
+      "aria-label": "\uC54C\uB9BC \uB2EB\uAE30",
+      onMouseEnter: function (e) {
+        e.target.style.backgroundColor = colors.primary.coolGray[100];
+      },
+      onMouseLeave: function (e) {
+        e.target.style.backgroundColor = 'transparent';
+      },
+      children: jsx(CloseIcon, {})
+    })]
+  });
+};
+
+// Context 생성
+var ToastContext = createContext(undefined);
+/**
+ * Toast Provider 컴포넌트
+ *
+ * 앱 전체에서 Toast를 관리할 수 있는 Context를 제공합니다.
+ */
+var ToastProvider = function (_a) {
+  var children = _a.children,
+    _b = _a.position,
+    position = _b === void 0 ? 'top-right' : _b,
+    _c = _a.defaultDuration,
+    defaultDuration = _c === void 0 ? 4000 : _c;
+  var _d = useState([]),
+    toasts = _d[0],
+    setToasts = _d[1];
+  // Toast 추가
+  var addToast = useCallback(function (toast) {
+    var _a;
+    var id = "toast-".concat(Date.now(), "-").concat(Math.random());
+    var duration = (_a = toast.duration) !== null && _a !== void 0 ? _a : defaultDuration;
+    var newToast = __assign(__assign({}, toast), {
+      id: id,
+      duration: duration
+    });
+    setToasts(function (prev) {
+      return __spreadArray(__spreadArray([], prev, true), [newToast], false);
+    });
+    // 자동 제거
+    if (duration > 0) {
+      setTimeout(function () {
+        removeToast(id);
+      }, duration);
+    }
+    return id;
+  }, [defaultDuration]);
+  // Toast 제거
+  var removeToast = useCallback(function (id) {
+    setToasts(function (prev) {
+      return prev.filter(function (toast) {
+        return toast.id !== id;
+      });
+    });
+  }, []);
+  // 모든 Toast 제거
+  var removeAllToasts = useCallback(function () {
+    setToasts([]);
+  }, []);
+  // 위치별 스타일
+  var getContainerStyle = function (position) {
+    var baseStyle = {
+      position: 'fixed',
+      zIndex: 9999,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: spacing.s,
+      pointerEvents: 'none'
+    };
+    switch (position) {
+      case 'top-right':
+        return __assign(__assign({}, baseStyle), {
+          top: spacing.xl,
+          right: spacing.xl
+        });
+      case 'top-left':
+        return __assign(__assign({}, baseStyle), {
+          top: spacing.xl,
+          left: spacing.xl
+        });
+      case 'bottom-right':
+        return __assign(__assign({}, baseStyle), {
+          bottom: spacing.xl,
+          right: spacing.xl,
+          flexDirection: 'column-reverse'
+        });
+      case 'bottom-left':
+        return __assign(__assign({}, baseStyle), {
+          bottom: spacing.xl,
+          left: spacing.xl,
+          flexDirection: 'column-reverse'
+        });
+      case 'top-center':
+        return __assign(__assign({}, baseStyle), {
+          top: spacing.xl,
+          left: '50%',
+          transform: 'translateX(-50%)'
+        });
+      case 'bottom-center':
+        return __assign(__assign({}, baseStyle), {
+          bottom: spacing.xl,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          flexDirection: 'column-reverse'
+        });
+      default:
+        return __assign(__assign({}, baseStyle), {
+          top: spacing.xl,
+          right: spacing.xl
+        });
+    }
+  };
+  var contextValue = {
+    addToast: addToast,
+    removeToast: removeToast,
+    removeAllToasts: removeAllToasts
+  };
+  return jsxs(ToastContext.Provider, {
+    value: contextValue,
+    children: [children, toasts.length > 0 && jsx("div", {
+      style: getContainerStyle(position),
+      children: toasts.map(function (toast) {
+        return jsx("div", {
+          style: {
+            pointerEvents: 'auto'
+          },
+          children: jsx(Toast, __assign({}, toast, {
+            onClose: function () {
+              return removeToast(toast.id);
+            },
+            showCloseButton: true
+          }))
+        }, toast.id);
+      })
+    })]
+  });
+};
+/**
+ * useToast 훅
+ *
+ * Toast를 간편하게 사용할 수 있는 훅입니다.
+ */
+var useToast = function () {
+  var context = useContext(ToastContext);
+  if (!context) {
+    throw new Error('useToast must be used within a ToastProvider');
+  }
+  // 편의 메서드들
+  var toast = {
+    success: function (title, description, options) {
+      return context.addToast(__assign({
+        status: 'success',
+        title: title,
+        description: description
+      }, options));
+    },
+    error: function (title, description, options) {
+      return context.addToast(__assign({
+        status: 'error',
+        title: title,
+        description: description
+      }, options));
+    },
+    warning: function (title, description, options) {
+      return context.addToast(__assign({
+        status: 'warning',
+        title: title,
+        description: description
+      }, options));
+    },
+    info: function (title, description, options) {
+      return context.addToast(__assign({
+        status: 'info',
+        title: title,
+        description: description
+      }, options));
+    },
+    custom: function (options) {
+      return context.addToast(options);
+    },
+    remove: context.removeToast,
+    removeAll: context.removeAllToasts
+  };
+  return toast;
+};
+
+export { BoxButton, Checkbox, Chips, Font, Icon, Radio, TextButton, TextInput, Toast, ToastProvider, Toggle, useToast };
 //# sourceMappingURL=index.esm.js.map

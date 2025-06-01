@@ -244,6 +244,203 @@ export const typography = {
 
 ---
 
+## 🎨 Icon 컴포넌트 사용하기
+
+### Icon 컴포넌트란?
+Figma에서 가져온 시스템 아이콘들을 React 컴포넌트로 사용할 수 있게 해주는 컴포넌트입니다.
+**모든 아이콘은 `currentColor`를 지원하여 동적으로 색상을 변경할 수 있습니다!** 🎨
+
+### 🔧 기술적 특징
+- **동적 색상 변경**: SVG의 `currentColor` 속성을 활용하여 CSS `color` 속성으로 아이콘 색상 제어
+- **인라인 SVG 렌더링**: `fetch`를 통해 SVG 파일을 로드하고 `dangerouslySetInnerHTML`로 인라인 렌더링
+- **접근성 지원**: 키보드 탐색 및 스크린 리더 지원
+- **성능 최적화**: 각 아이콘은 한 번만 로드되고 캐시됨
+
+### 사용 가능한 아이콘들
+```typescript
+// 기본 액션 아이콘
+'hamburger', 'search', 'close', 'check', 'add', 'minus'
+
+// 탐색 아이콘  
+'home', 'home-filled', 'heart', 'heart-filled', 'my-page', 'my-page-filled'
+
+// 유틸리티 아이콘
+'download', 'modify', 'duplicate', 'dialog', 'truncation', 'more'
+
+// 방향 아이콘
+'arrow-down', 'arrow-up', 'arrow-right', 'arrow-left'
+```
+
+### 기본 사용법
+
+```tsx
+import { Icon } from './src/components/icon';
+
+// 기본 사용
+<Icon type="search" />
+
+// 크기 조절
+<Icon type="heart" size={32} />
+
+// 색상 변경 (이제 제대로 작동합니다! ✅)
+<Icon type="check" color="#00C785" />
+
+// 클릭 이벤트
+<Icon 
+  type="close" 
+  onClick={() => console.log('클릭됨!')} 
+/>
+```
+
+### 🎨 색상 변경 예시
+
+```tsx
+// 시스템 색상 사용
+<Icon type="heart" color={colors.semantic.state.error} />
+<Icon type="check" color={colors.semantic.state.success} />
+<Icon type="add" color={colors.primary.mainviolet} />
+
+// 커스텀 색상 사용
+<Icon type="search" color="#FF6B6B" />
+<Icon type="heart" color="rgb(59, 130, 246)" />
+
+// CSS 변수 사용
+<Icon type="home" color="var(--primary-color)" />
+```
+
+### 🧪 색상 테스트
+개발 서버 실행 시 `http://localhost:6006/test-icon.html`에서 
+아이콘 색상 변경이 제대로 작동하는지 테스트할 수 있습니다.
+
+### Chips와 Icon 연동하기
+
+#### 기본 연동 예시
+```tsx
+import { Chips } from './src/components/chips';
+import { Icon } from './src/components/icon';
+
+// 앞쪽에 아이콘
+<Chips 
+  icon={<Icon type="search" size={16} />}
+  iconPosition="leading"
+>
+  검색
+</Chips>
+
+// 뒤쪽에 아이콘
+<Chips 
+  icon={<Icon type="close" size={16} />}
+  iconPosition="trailing"
+>
+  삭제
+</Chips>
+```
+
+#### 상태별 아이콘 변경
+```tsx
+// 선택되지 않은 상태
+<Chips 
+  icon={<Icon type="heart" size={16} />}
+  state="resting"
+>
+  좋아요
+</Chips>
+
+// 선택된 상태 (filled 아이콘 사용)
+<Chips 
+  icon={<Icon type="heart-filled" size={16} />}
+  state="selected"
+>
+  좋아요
+</Chips>
+```
+
+#### 카테고리 칩 만들기
+```tsx
+const categories = [
+  { label: '홈', icon: 'home', selected: true },
+  { label: '검색', icon: 'search', selected: false },
+  { label: '다운로드', icon: 'download', selected: false },
+];
+
+return (
+  <div style={{ display: 'flex', gap: '12px' }}>
+    {categories.map((category) => (
+      <Chips
+        key={category.label}
+        state={category.selected ? 'selected' : 'resting'}
+        icon={<Icon 
+          type={category.selected && category.icon === 'home' 
+            ? 'home-filled' 
+            : category.icon
+          } 
+          size={16} 
+        />}
+        iconPosition="leading"
+      >
+        {category.label}
+      </Chips>
+    ))}
+  </div>
+);
+```
+
+### 새로운 아이콘 추가하기
+
+1. **Figma에서 아이콘 내보내기**
+   - Figma에서 원하는 아이콘 선택
+   - Export → SVG 형식으로 다운로드
+
+2. **아이콘 파일 추가**
+   ```bash
+   # 아이콘을 assets 폴더에 추가
+   src/components/icon/assets/new-icon.svg
+   ```
+
+3. **Icon 컴포넌트 업데이트**
+   ```typescript
+   // src/components/icon/Icon.tsx
+   export type IconType = 
+     | 'hamburger'
+     | 'search'
+     // ... 기존 아이콘들
+     | 'new-icon'; // 새로운 아이콘 타입 추가
+
+   const iconMap: Record<IconType, string> = {
+     // ... 기존 매핑들
+     'new-icon': '/src/components/icon/assets/new-icon.svg', // 새로운 매핑 추가
+   };
+   ```
+
+4. **Storybook에서 확인**
+   ```bash
+   yarn storybook
+   # Components/Icon에서 새로운 아이콘 확인
+   ```
+
+### 아이콘 디자인 가이드라인
+
+#### 크기 규칙
+- **16px**: Chips, 작은 버튼용
+- **20px**: 중간 크기 버튼용  
+- **24px**: 기본 크기 (권장)
+- **32px**: 큰 버튼이나 강조용
+- **40px 이상**: 특별한 경우에만 사용
+
+#### 색상 규칙
+```typescript
+// 기본 색상
+color={colors.primary.coolGray[800]}
+
+// 상태별 색상
+color={colors.semantic.state.error}    // 에러/삭제
+color={colors.semantic.state.success}  // 성공/완료
+color={colors.semantic.state.warning}  // 경고/주의
+color={colors.primary.mainviolet}      // 브랜드/강조
+```
+
+---
+
 ## 🎨 디자인 토큰 수정하기
 
 ### 색상 추가/수정하기

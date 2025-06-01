@@ -11,6 +11,8 @@ export interface ChipsProps {
     iconPosition?: 'leading' | 'trailing';
     /** 아이콘 요소 */
     icon?: React.ReactNode;
+    /** 아이콘 색상 */
+    iconColor?: string;
     /** 텍스트 내용 */
     children?: React.ReactNode;
     /** 클릭 이벤트 핸들러 */
