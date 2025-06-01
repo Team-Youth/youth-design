@@ -1,5 +1,6 @@
 import { fontWeight, textStyles } from '../../tokens';
 import { colors } from '../../tokens/colors';
+import { Icon } from '../icon/Icon';
 
 export interface TextButtonProps {
   size?: 'm' | 's' | 'xs';
@@ -17,17 +18,6 @@ export interface TextButtonProps {
   chevron?: boolean;
   color?: string;
 }
-
-const ChevronRightIcon = ({ color }: { color?: string }) => (
-  <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M8.24408 4.4107C8.56951 4.08527 9.09715 4.08527 9.42259 4.4107L8.83333 4.99996L8.24408 5.58922C7.91864 5.26378 7.91864 4.73614 8.24408 4.4107ZM12.6548 9.99996L8.24408 5.58922C8.24405 5.58919 8.24408 5.58922 8.83333 4.99996C9.42259 4.4107 9.42256 4.41068 9.42259 4.4107L14.4226 9.4107C14.748 9.73614 14.748 10.2638 14.4226 10.5892L9.42259 15.5892C9.09715 15.9147 8.56951 15.9147 8.24408 15.5892C7.91864 15.2638 7.91864 14.7361 8.24408 14.4107L12.6548 9.99996Z"
-      fill={color || 'currentColor'}
-    />
-  </svg>
-);
 
 export const TextButton: React.FC<TextButtonProps> = ({
   size = 'm',
@@ -112,7 +102,7 @@ export const TextButton: React.FC<TextButtonProps> = ({
         {icon?.left && icon.left}
         <div style={{ display: 'flex', alignItems: 'center' }}>
           {children && <span>{children}</span>}
-          {chevron && <ChevronRightIcon color={textColor} />}
+          {chevron && <Icon type="arrow-right" size={20} color={textColor} />}
         </div>
         {icon?.right && !chevron && icon.right}
       </>

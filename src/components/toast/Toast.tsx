@@ -4,6 +4,7 @@ import { radius } from '../../tokens/radius';
 import { shadows } from '../../tokens/shadows';
 import { spacing } from '../../tokens/spacing';
 import { textStyles } from '../../tokens/typography';
+import { Icon } from '../icon/Icon';
 
 // 토스트 상태 타입 정의
 export type ToastStatus = 'success' | 'error' | 'warning' | 'info';
@@ -48,18 +49,6 @@ const InfoIcon: React.FC<{ color: string }> = ({ color }) => (
     <circle cx="12" cy="12" r="11" fill={color} />
     <circle cx="12" cy="8" r="1" fill="white" />
     <rect x="11" y="11" width="2" height="6" fill="white" rx="1" />
-  </svg>
-);
-
-const CloseIcon: React.FC = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path
-      d="M4 4L12 12M12 4L4 12"
-      stroke={colors.semantic.text.tertiary}
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
   </svg>
 );
 
@@ -202,7 +191,7 @@ export const Toast: React.FC<ToastProps> = ({
             (e.target as HTMLElement).style.backgroundColor = 'transparent';
           }}
         >
-          <CloseIcon />
+          <Icon type="close" size={16} color={colors.semantic.text.tertiary} />
         </button>
       )}
     </div>

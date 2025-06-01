@@ -1139,22 +1139,6 @@ var TextInput = react.forwardRef(function (_a, ref) {
 });
 TextInput.displayName = 'TextInput';
 
-var ChevronRightIcon = function (_a) {
-  var color = _a.color;
-  return jsxRuntime.jsx("svg", {
-    width: "21",
-    height: "20",
-    viewBox: "0 0 21 20",
-    fill: "none",
-    xmlns: "http://www.w3.org/2000/svg",
-    children: jsxRuntime.jsx("path", {
-      fillRule: "evenodd",
-      clipRule: "evenodd",
-      d: "M8.24408 4.4107C8.56951 4.08527 9.09715 4.08527 9.42259 4.4107L8.83333 4.99996L8.24408 5.58922C7.91864 5.26378 7.91864 4.73614 8.24408 4.4107ZM12.6548 9.99996L8.24408 5.58922C8.24405 5.58919 8.24408 5.58922 8.83333 4.99996C9.42259 4.4107 9.42256 4.41068 9.42259 4.4107L14.4226 9.4107C14.748 9.73614 14.748 10.2638 14.4226 10.5892L9.42259 15.5892C9.09715 15.9147 8.56951 15.9147 8.24408 15.5892C7.91864 15.2638 7.91864 14.7361 8.24408 14.4107L12.6548 9.99996Z",
-      fill: color || 'currentColor'
-    })
-  });
-};
 var TextButton = function (_a) {
   var _b = _a.size,
     size = _b === void 0 ? 'm' : _b,
@@ -1235,7 +1219,9 @@ var TextButton = function (_a) {
         },
         children: [children && jsxRuntime.jsx("span", {
           children: children
-        }), chevron && jsxRuntime.jsx(ChevronRightIcon, {
+        }), chevron && jsxRuntime.jsx(Icon, {
+          type: "arrow-right",
+          size: 20,
           color: textColor
         })]
       }), (icon === null || icon === void 0 ? void 0 : icon.right) && !chevron && icon.right]
@@ -2162,21 +2148,6 @@ var InfoIcon = function (_a) {
     })]
   });
 };
-var CloseIcon = function () {
-  return jsxRuntime.jsx("svg", {
-    width: "16",
-    height: "16",
-    viewBox: "0 0 16 16",
-    fill: "none",
-    children: jsxRuntime.jsx("path", {
-      d: "M4 4L12 12M12 4L4 12",
-      stroke: colors.semantic.text.tertiary,
-      strokeWidth: "1.5",
-      strokeLinecap: "round",
-      strokeLinejoin: "round"
-    })
-  });
-};
 // 상태별 설정
 var statusConfig = {
   success: {
@@ -2287,7 +2258,11 @@ var Toast = function (_a) {
       onMouseLeave: function (e) {
         e.target.style.backgroundColor = 'transparent';
       },
-      children: jsxRuntime.jsx(CloseIcon, {})
+      children: jsxRuntime.jsx(Icon, {
+        type: "close",
+        size: 16,
+        color: colors.semantic.text.tertiary
+      })
     })]
   });
 };
