@@ -2,8 +2,6 @@
   "buildCommand": "yarn build:storybook",
   "outputDirectory": "storybook-static",
   "installCommand": "yarn install",
-  "framework": null,
-  "functions": {},
   "headers": [
     {
       "source": "/(.*)",
@@ -21,12 +19,6 @@
           "value": "1; mode=block"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 } 
