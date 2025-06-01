@@ -14,6 +14,8 @@ export interface ChipsProps {
   iconPosition?: 'leading' | 'trailing';
   /** 아이콘 요소 */
   icon?: React.ReactNode;
+  /** 아이콘 색상 */
+  iconColor?: string;
   /** 텍스트 내용 */
   children?: React.ReactNode;
   /** 클릭 이벤트 핸들러 */
@@ -28,6 +30,7 @@ export const Chips: React.FC<ChipsProps> = ({
   state = 'resting',
   iconPosition = 'leading',
   icon,
+  iconColor,
   children,
   onClick,
   className = '',
@@ -72,11 +75,19 @@ export const Chips: React.FC<ChipsProps> = ({
     // State에 따른 스타일링
     switch (state) {
       case 'selected':
-        styles = {
-          ...styles,
-          backgroundColor: colors.primary.mainviolet,
-          border: `1px solid ${colors.primary.mainviolet}`,
-        };
+        if (type === 'square') {
+          styles = {
+            ...styles,
+            backgroundColor: colors.primary.gray.white,
+            border: `1px solid ${colors.primary.mainviolet}`,
+          };
+        } else {
+          styles = {
+            ...styles,
+            backgroundColor: colors.primary.mainviolet,
+            border: `1px solid ${colors.primary.mainviolet}`,
+          };
+        }
         break;
 
       case 'hover':
@@ -120,6 +131,27 @@ export const Chips: React.FC<ChipsProps> = ({
   const getTextColor = () => {
     switch (state) {
       case 'selected':
+        if (type === 'square') {
+          return colors.primary.coolGray[800];
+        }
+        return colors.primary.gray.white;
+      case 'disabled':
+        return colors.semantic.disabled.foreground;
+      default:
+        return colors.primary.coolGray[800];
+    }
+  };
+
+  const getIconColor = () => {
+    if (iconColor) {
+      return iconColor;
+    }
+
+    switch (state) {
+      case 'selected':
+        if (type === 'square') {
+          return colors.primary.mainviolet;
+        }
         return colors.primary.gray.white;
       case 'disabled':
         return colors.semantic.disabled.foreground;
@@ -156,7 +188,9 @@ export const Chips: React.FC<ChipsProps> = ({
     if (iconPosition === 'leading') {
       return (
         <>
-          <span className="chips-icon">{icon}</span>
+          <span className="chips-icon" style={{ color: getIconColor() }}>
+            {icon}
+          </span>
           {children && (
             <Font type="body2" fontWeight="medium" color={getTextColor()}>
               {children}
@@ -172,7 +206,9 @@ export const Chips: React.FC<ChipsProps> = ({
               {children}
             </Font>
           )}
-          <span className="chips-icon">{icon}</span>
+          <span className="chips-icon" style={{ color: getIconColor() }}>
+            {icon}
+          </span>
         </>
       );
     }
