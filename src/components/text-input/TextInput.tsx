@@ -4,7 +4,8 @@ import { colors } from '../../tokens/colors';
 import { border } from '../../tokens/borders';
 import './TextInput.css';
 
-export interface TextInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'> {
+export interface TextInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'> {
   placeholder?: string;
   value?: string;
   defaultValue?: string;

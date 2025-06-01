@@ -41,6 +41,12 @@ const meta: Meta<typeof Icon> = {
         'arrow-up',
         'arrow-right',
         'arrow-left',
+        'chevron-left',
+        'chevron-right',
+        'chevron-up',
+        'chevron-down',
+        'calendar',
+        'calendar-filled',
       ] as IconType[],
       description: '표시할 아이콘의 타입',
     },
@@ -97,6 +103,12 @@ export const AllIcons: Story = {
       'arrow-up',
       'arrow-right',
       'arrow-left',
+      'chevron-left',
+      'chevron-right',
+      'chevron-up',
+      'chevron-down',
+      'calendar',
+      'calendar-filled',
     ];
 
     return (
