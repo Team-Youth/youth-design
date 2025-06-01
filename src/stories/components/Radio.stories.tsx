@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+import { action } from '@storybook/addon-actions';
 import { Radio } from '../../components';
 
 const meta: Meta<typeof Radio> = {
@@ -30,6 +31,7 @@ const meta: Meta<typeof Radio> = {
     description: {
       control: 'text',
     },
+    onChange: { action: 'changed' },
   },
 };
 
@@ -42,6 +44,7 @@ export const Default: Story = {
     checked: false,
     disabled: false,
     size: 'medium',
+    onChange: action('radio-changed'),
   },
 };
 
@@ -52,6 +55,7 @@ export const WithLabel: Story = {
     size: 'medium',
     label: 'Text Label',
     description: 'Description',
+    onChange: action('radio-changed'),
   },
 };
 
@@ -61,6 +65,7 @@ export const Checked: Story = {
     disabled: false,
     size: 'medium',
     label: 'Checked Radio',
+    onChange: action('radio-changed'),
   },
 };
 
@@ -70,6 +75,7 @@ export const Disabled: Story = {
     disabled: true,
     size: 'medium',
     label: 'Disabled Radio',
+    onChange: action('radio-changed'),
   },
 };
 
@@ -79,43 +85,109 @@ export const DisabledChecked: Story = {
     disabled: true,
     size: 'medium',
     label: 'Disabled Checked Radio',
+    onChange: action('radio-changed'),
   },
 };
 
 export const Sizes: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Radio size="small" label="Small" />
-        <Radio size="medium" label="Medium" />
-        <Radio size="large" label="Large" />
+  render: () => {
+    const [sizeStates, setSizeStates] = useState({
+      small1: false,
+      medium1: false,
+      large1: false,
+      small2: false,
+      medium2: false,
+      large2: false,
+    });
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Radio
+            size="small"
+            label="Small"
+            name="size-group-1"
+            value="small"
+            checked={sizeStates.small1}
+            onChange={(checked) => {
+              if (checked) {
+                setSizeStates((prev) => ({ ...prev, small1: true, medium1: false, large1: false }));
+              }
+            }}
+          />
+          <Radio
+            size="medium"
+            label="Medium"
+            name="size-group-1"
+            value="medium"
+            checked={sizeStates.medium1}
+            onChange={(checked) => {
+              if (checked) {
+                setSizeStates((prev) => ({ ...prev, small1: false, medium1: true, large1: false }));
+              }
+            }}
+          />
+          <Radio
+            size="large"
+            label="Large"
+            name="size-group-1"
+            value="large"
+            checked={sizeStates.large1}
+            onChange={(checked) => {
+              if (checked) {
+                setSizeStates((prev) => ({ ...prev, small1: false, medium1: false, large1: true }));
+              }
+            }}
+          />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Radio size="small" label="Small Disabled" disabled />
+          <Radio size="medium" label="Medium Disabled" disabled />
+          <Radio size="large" label="Large Disabled" disabled />
+        </div>
       </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Radio size="small" label="Small Checked" checked />
-        <Radio size="medium" label="Medium Checked" checked />
-        <Radio size="large" label="Large Checked" checked />
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Radio size="small" label="Small Disabled" disabled />
-        <Radio size="medium" label="Medium Disabled" disabled />
-        <Radio size="large" label="Large Disabled" disabled />
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Radio size="small" label="Small Disabled Checked" disabled checked />
-        <Radio size="medium" label="Medium Disabled Checked" disabled checked />
-        <Radio size="large" label="Large Disabled Checked" disabled checked />
-      </div>
-    </div>
-  ),
+    );
+  },
 };
 
 export const LabelPositions: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Radio labelPosition="right" label="Label on Right" description="Description text" />
-      <Radio labelPosition="left" label="Label on Left" description="Description text" />
-    </div>
-  ),
+  render: () => {
+    const [labelStates, setLabelStates] = useState({
+      right: false,
+      left: false,
+    });
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <Radio
+          labelPosition="right"
+          label="Label on Right"
+          description="Description text"
+          name="label-group"
+          value="right"
+          checked={labelStates.right}
+          onChange={(checked) => {
+            if (checked) {
+              setLabelStates({ right: true, left: false });
+            }
+          }}
+        />
+        <Radio
+          labelPosition="left"
+          label="Label on Left"
+          description="Description text"
+          name="label-group"
+          value="left"
+          checked={labelStates.left}
+          onChange={(checked) => {
+            if (checked) {
+              setLabelStates({ right: false, left: true });
+            }
+          }}
+        />
+      </div>
+    );
+  },
 };
 
 export const RadioGroup: Story = {

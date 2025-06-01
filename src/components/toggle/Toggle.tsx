@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { colors } from '../../tokens';
+import { colors, fontWeight, textStyles } from '../../tokens';
 import './Toggle.css';
 
 export interface ToggleProps {
@@ -40,33 +40,36 @@ export const Toggle: React.FC<ToggleProps> = ({
     switch (size) {
       case 'small':
         return {
+          ...textStyles.body2,
+          fontWeight: fontWeight.medium,
           toggleWidth: '32px',
           toggleHeight: '18px',
           thumbSize: '14px',
           thumbOffset: '2px',
-          gap: '8px',
-          fontSize: '12px',
-          descriptionFontSize: '11px',
+          gap: '6px',
+          descriptionFontStyle: { ...textStyles.body3, fontWeight: fontWeight.regular },
         };
       case 'large':
         return {
+          ...textStyles.heading3,
+          fontWeight: fontWeight.medium,
           toggleWidth: '52px',
           toggleHeight: '28px',
           thumbSize: '24px',
           thumbOffset: '2px',
-          gap: '12px',
-          fontSize: '16px',
-          descriptionFontSize: '14px',
+          gap: '10px',
+          descriptionFontStyle: { ...textStyles.body2, fontWeight: fontWeight.regular },
         };
       default: // medium
         return {
-          toggleWidth: '44px',
+          ...textStyles.body1,
+          fontWeight: fontWeight.medium,
+          toggleWidth: '48px',
           toggleHeight: '24px',
           thumbSize: '20px',
           thumbOffset: '2px',
-          gap: '10px',
-          fontSize: '14px',
-          descriptionFontSize: '12px',
+          gap: '8px',
+          descriptionFontStyle: { ...textStyles.body2, fontWeight: fontWeight.regular },
         };
     }
   };
@@ -79,23 +82,8 @@ export const Toggle: React.FC<ToggleProps> = ({
         width: sizeConfig.toggleWidth,
         height: sizeConfig.toggleHeight,
         borderRadius: sizeConfig.toggleHeight,
-        backgroundColor: colors.semantic.disabled.background,
-        border: `1px solid ${colors.semantic.disabled.foreground}`,
+        backgroundColor: colors.primary.coolGray[50],
         cursor: 'not-allowed',
-        transition: 'all 0.3s ease',
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        padding: sizeConfig.thumbOffset,
-      };
-    } else if (checked) {
-      return {
-        width: sizeConfig.toggleWidth,
-        height: sizeConfig.toggleHeight,
-        borderRadius: sizeConfig.toggleHeight,
-        backgroundColor: colors.primary.mainviolet,
-        border: `1px solid ${colors.primary.mainviolet}`,
-        cursor: 'pointer',
         transition: 'all 0.3s ease',
         position: 'relative',
         display: 'flex',
@@ -107,8 +95,20 @@ export const Toggle: React.FC<ToggleProps> = ({
         width: sizeConfig.toggleWidth,
         height: sizeConfig.toggleHeight,
         borderRadius: sizeConfig.toggleHeight,
-        backgroundColor: colors.primary.coolGray[200],
-        border: `1px solid ${colors.semantic.border.strong}`,
+        backgroundColor: !checked ? colors.primary.coolGray[200] : colors.primary.tint.green[600],
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        padding: sizeConfig.thumbOffset,
+      };
+    } else if (checked) {
+      return {
+        width: sizeConfig.toggleWidth,
+        height: sizeConfig.toggleHeight,
+        borderRadius: sizeConfig.toggleHeight,
+        backgroundColor: colors.primary.tint.green[500],
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         position: 'relative',
@@ -121,8 +121,7 @@ export const Toggle: React.FC<ToggleProps> = ({
         width: sizeConfig.toggleWidth,
         height: sizeConfig.toggleHeight,
         borderRadius: sizeConfig.toggleHeight,
-        backgroundColor: colors.primary.coolGray[300],
-        border: `1px solid ${colors.semantic.border.strong}`,
+        backgroundColor: colors.primary.coolGray[100],
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         position: 'relative',
@@ -142,9 +141,7 @@ export const Toggle: React.FC<ToggleProps> = ({
       width: sizeConfig.thumbSize,
       height: sizeConfig.thumbSize,
       borderRadius: '50%',
-      backgroundColor: disabled
-        ? colors.semantic.disabled.foreground
-        : colors.semantic.background.primary,
+      backgroundColor: 'white',
       boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.1)',
       transition: 'all 0.3s ease',
       transform: `translateX(${thumbPosition})`,
@@ -154,18 +151,16 @@ export const Toggle: React.FC<ToggleProps> = ({
 
   const getLabelStyles = (): React.CSSProperties => {
     return {
-      fontSize: sizeConfig.fontSize,
-      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
-      fontWeight: '500',
-      lineHeight: '1.4',
+      ...sizeConfig,
+      color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[800],
       cursor: disabled ? 'not-allowed' : 'pointer',
     };
   };
 
   const getDescriptionStyles = (): React.CSSProperties => {
     return {
-      fontSize: sizeConfig.descriptionFontSize,
-      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.tertiary,
+      ...sizeConfig.descriptionFontStyle,
+      color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[300],
       lineHeight: '1.3',
       marginTop: '2px',
       cursor: disabled ? 'not-allowed' : 'pointer',
@@ -193,7 +188,7 @@ export const Toggle: React.FC<ToggleProps> = ({
 
   const containerStyles: React.CSSProperties = {
     display: 'flex',
-    alignItems: labelPosition === 'right' ? 'center' : 'center',
+    alignItems: !description ? 'center' : 'flex-start',
     gap: sizeConfig.gap,
     flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
     cursor: disabled ? 'not-allowed' : 'pointer',

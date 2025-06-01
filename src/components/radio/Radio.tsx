@@ -51,7 +51,7 @@ export const Radio: React.FC<RadioProps> = ({
           radioSize: '16px',
           dotSize: '8px',
           gap: '4px',
-          descriptionFontSize: { ...textStyles.body3, fontWeight: fontWeight.regular },
+          descriptionFontStyle: { ...textStyles.body3, fontWeight: fontWeight.regular },
         };
 
       case 'medium':
@@ -61,7 +61,7 @@ export const Radio: React.FC<RadioProps> = ({
           radioSize: '18px',
           dotSize: '10px',
           gap: '6px',
-          descriptionFontSize: { ...textStyles.body3, fontWeight: fontWeight.regular },
+          descriptionFontStyle: { ...textStyles.body3, fontWeight: fontWeight.regular },
         };
       case 'large':
         return {
@@ -70,7 +70,7 @@ export const Radio: React.FC<RadioProps> = ({
           radioSize: '22px',
           dotSize: '14px',
           gap: '8px',
-          descriptionFontSize: { ...textStyles.body2, fontWeight: fontWeight.regular },
+          descriptionFontStyle: { ...textStyles.body2, fontWeight: fontWeight.regular },
         };
       default: // large
         return {
@@ -79,7 +79,7 @@ export const Radio: React.FC<RadioProps> = ({
           radioSize: '22px',
           dotSize: '14px',
           gap: '8px',
-          descriptionFontSize: { ...textStyles.body2, fontWeight: fontWeight.regular },
+          descriptionFontStyle: { ...textStyles.body2, fontWeight: fontWeight.regular },
         };
     }
   };
@@ -169,7 +169,7 @@ export const Radio: React.FC<RadioProps> = ({
 
   const getDescriptionStyles = (): React.CSSProperties => {
     return {
-      ...sizeConfig.descriptionFontSize,
+      ...sizeConfig.descriptionFontStyle,
       color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[300],
       marginTop: '2px',
       cursor: disabled ? 'not-allowed' : 'pointer',

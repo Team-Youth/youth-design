@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+import { action } from '@storybook/addon-actions';
 import { Toggle } from '../../components';
 
 const meta: Meta<typeof Toggle> = {
@@ -30,6 +31,7 @@ const meta: Meta<typeof Toggle> = {
     description: {
       control: 'text',
     },
+    onChange: { action: 'changed' },
   },
 };
 
@@ -42,6 +44,7 @@ export const Default: Story = {
     checked: false,
     disabled: false,
     size: 'medium',
+    onChange: action('toggle-changed'),
   },
 };
 
@@ -52,6 +55,7 @@ export const WithLabel: Story = {
     size: 'medium',
     label: 'Text Label',
     description: 'Description',
+    onChange: action('toggle-changed'),
   },
 };
 
@@ -61,6 +65,7 @@ export const On: Story = {
     disabled: false,
     size: 'medium',
     label: 'Toggle On',
+    onChange: action('toggle-changed'),
   },
 };
 
@@ -70,6 +75,7 @@ export const Disabled: Story = {
     disabled: true,
     size: 'medium',
     label: 'Disabled Toggle',
+    onChange: action('toggle-changed'),
   },
 };
 
@@ -79,28 +85,71 @@ export const DisabledOn: Story = {
     disabled: true,
     size: 'medium',
     label: 'Disabled Toggle On',
+    onChange: action('toggle-changed'),
   },
 };
 
 export const Sizes: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Toggle size="small" label="Small" />
-        <Toggle size="medium" label="Medium" />
-        <Toggle size="large" label="Large" />
+  render: () => {
+    const [sizeStates, setSizeStates] = useState({
+      small: false,
+      medium: false,
+      large: false,
+    });
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Toggle
+            size="small"
+            label="Small"
+            checked={sizeStates.small}
+            onChange={(checked) => setSizeStates((prev) => ({ ...prev, small: checked }))}
+          />
+          <Toggle
+            size="medium"
+            label="Medium"
+            checked={sizeStates.medium}
+            onChange={(checked) => setSizeStates((prev) => ({ ...prev, medium: checked }))}
+          />
+          <Toggle
+            size="large"
+            label="Large"
+            checked={sizeStates.large}
+            onChange={(checked) => setSizeStates((prev) => ({ ...prev, large: checked }))}
+          />
+        </div>
       </div>
-    </div>
-  ),
+    );
+  },
 };
 
 export const LabelPositions: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Toggle labelPosition="right" label="Label on Right" description="Description text" />
-      <Toggle labelPosition="left" label="Label on Left" description="Description text" />
-    </div>
-  ),
+  render: () => {
+    const [toggleStates, setToggleStates] = useState({
+      right: false,
+      left: false,
+    });
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <Toggle
+          labelPosition="right"
+          label="Label on Right"
+          description="Description text"
+          checked={toggleStates.right}
+          onChange={(checked) => setToggleStates((prev) => ({ ...prev, right: checked }))}
+        />
+        <Toggle
+          labelPosition="left"
+          label="Label on Left"
+          description="Description text"
+          checked={toggleStates.left}
+          onChange={(checked) => setToggleStates((prev) => ({ ...prev, left: checked }))}
+        />
+      </div>
+    );
+  },
 };
 
 export const InteractiveGroup: Story = {

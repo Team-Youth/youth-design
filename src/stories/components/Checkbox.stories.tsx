@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+import { action } from '@storybook/addon-actions';
 import { Checkbox } from '../../components';
 
 const meta: Meta<typeof Checkbox> = {
@@ -30,6 +31,7 @@ const meta: Meta<typeof Checkbox> = {
     description: {
       control: 'text',
     },
+    onChange: { action: 'changed' },
   },
 };
 
@@ -42,6 +44,7 @@ export const Default: Story = {
     checked: false,
     disabled: false,
     size: 'medium',
+    onChange: action('checkbox-changed'),
   },
 };
 
@@ -52,6 +55,7 @@ export const WithLabel: Story = {
     size: 'medium',
     label: 'Text Label',
     description: 'Description',
+    onChange: action('checkbox-changed'),
   },
 };
 
@@ -61,6 +65,7 @@ export const Checked: Story = {
     disabled: false,
     size: 'medium',
     label: 'Checked Checkbox',
+    onChange: action('checkbox-changed'),
   },
 };
 
@@ -70,6 +75,7 @@ export const Disabled: Story = {
     disabled: true,
     size: 'medium',
     label: 'Disabled Checkbox',
+    onChange: action('checkbox-changed'),
   },
 };
 
@@ -79,28 +85,71 @@ export const DisabledChecked: Story = {
     disabled: true,
     size: 'medium',
     label: 'Disabled Checked Checkbox',
+    onChange: action('checkbox-changed'),
   },
 };
 
 export const Sizes: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Checkbox size="small" label="Small" />
-        <Checkbox size="medium" label="Medium" />
-        <Checkbox size="large" label="Large" />
+  render: () => {
+    const [sizeStates, setSizeStates] = useState({
+      small: false,
+      medium: false,
+      large: false,
+    });
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <Checkbox
+            size="small"
+            label="Small"
+            checked={sizeStates.small}
+            onChange={(checked) => setSizeStates((prev) => ({ ...prev, small: checked }))}
+          />
+          <Checkbox
+            size="medium"
+            label="Medium"
+            checked={sizeStates.medium}
+            onChange={(checked) => setSizeStates((prev) => ({ ...prev, medium: checked }))}
+          />
+          <Checkbox
+            size="large"
+            label="Large"
+            checked={sizeStates.large}
+            onChange={(checked) => setSizeStates((prev) => ({ ...prev, large: checked }))}
+          />
+        </div>
       </div>
-    </div>
-  ),
+    );
+  },
 };
 
 export const LabelPositions: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <Checkbox labelPosition="right" label="Label on Right" description="Description text" />
-      <Checkbox labelPosition="left" label="Label on Left" description="Description text" />
-    </div>
-  ),
+  render: () => {
+    const [checkboxStates, setCheckboxStates] = useState({
+      right: false,
+      left: false,
+    });
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <Checkbox
+          labelPosition="right"
+          label="Label on Right"
+          description="Description text"
+          checked={checkboxStates.right}
+          onChange={(checked) => setCheckboxStates((prev) => ({ ...prev, right: checked }))}
+        />
+        <Checkbox
+          labelPosition="left"
+          label="Label on Left"
+          description="Description text"
+          checked={checkboxStates.left}
+          onChange={(checked) => setCheckboxStates((prev) => ({ ...prev, left: checked }))}
+        />
+      </div>
+    );
+  },
 };
 
 export const InteractiveGroup: Story = {

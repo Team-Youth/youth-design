@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { colors } from '../../tokens';
+import { colors, fontWeight, textStyles } from '../../tokens';
 import './Checkbox.css';
 
 export interface CheckboxProps {
@@ -40,27 +40,30 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     switch (size) {
       case 'small':
         return {
+          ...textStyles.body3,
+          fontWeight: fontWeight.medium,
           checkboxSize: '16px',
           iconSize: '10px',
           gap: '8px',
-          fontSize: '12px',
-          descriptionFontSize: '11px',
+          descriptionFontStyle: { ...textStyles.body3, fontWeight: fontWeight.regular },
         };
       case 'large':
         return {
+          ...textStyles.body1,
+          fontWeight: fontWeight.medium,
           checkboxSize: '24px',
           iconSize: '16px',
           gap: '12px',
-          fontSize: '16px',
-          descriptionFontSize: '14px',
+          descriptionFontStyle: { ...textStyles.body2, fontWeight: fontWeight.regular },
         };
       default: // medium
         return {
+          ...textStyles.body2,
+          fontWeight: fontWeight.medium,
           checkboxSize: '20px',
           iconSize: '14px',
           gap: '10px',
-          fontSize: '14px',
-          descriptionFontSize: '12px',
+          descriptionFontStyle: { ...textStyles.body3, fontWeight: fontWeight.regular },
         };
     }
   };
@@ -131,18 +134,16 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
   const getLabelStyles = (): React.CSSProperties => {
     return {
-      fontSize: sizeConfig.fontSize,
+      ...sizeConfig,
       color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
-      fontWeight: '500',
-      lineHeight: '1.4',
       cursor: disabled ? 'not-allowed' : 'pointer',
     };
   };
 
   const getDescriptionStyles = (): React.CSSProperties => {
     return {
-      fontSize: sizeConfig.descriptionFontSize,
-      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.tertiary,
+      ...sizeConfig.descriptionFontStyle,
+      color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[300],
       lineHeight: '1.3',
       marginTop: '2px',
       cursor: disabled ? 'not-allowed' : 'pointer',
@@ -170,7 +171,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 
   const containerStyles: React.CSSProperties = {
     display: 'flex',
-    alignItems: labelPosition === 'right' ? 'flex-start' : 'flex-start',
+    alignItems: description ? 'flex-start' : 'center',
     gap: sizeConfig.gap,
     flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
     cursor: disabled ? 'not-allowed' : 'pointer',
