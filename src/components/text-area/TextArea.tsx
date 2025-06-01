@@ -30,8 +30,8 @@ export interface TextAreaProps
   maxLength?: number;
   /** 상태 (filled/empty) */
   status?: 'filled' | 'empty';
-  /** 너비 설정 (기본값: '100%') */
-  width?: string | number;
+  /** 너비 설정 (기본값: '320px') */
+  width?: 'fill' | (string & {}) | number;
 }
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
@@ -50,7 +50,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       showCharacterCounter = false,
       maxLength = 1000,
       status,
-      width = '100%',
+      width = '320px',
       rows = 4,
       ...restProps
     },
@@ -80,10 +80,17 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         borderColor = colors.semantic.text.primary; // #25282D
       }
 
+      const getWidth = () => {
+        if (width === 'fill') {
+          return '100%';
+        }
+        return typeof width === 'number' ? `${width}px` : width;
+      };
+
       return {
         display: 'flex',
         flexDirection: 'column',
-        width: typeof width === 'number' ? `${width}px` : width,
+        width: getWidth(),
         border: `1px solid ${borderColor}`,
         borderRadius: radius.s, // 8px
         backgroundColor,

@@ -29,6 +29,10 @@ export interface DropdownProps {
   leadingIcon?: React.ReactNode;
   /** Leading 아이콘 타입 (Icon 컴포넌트 사용) */
   leadingIconType?: IconType;
+  /** 너비 설정 */
+  width?: 'fill' | (string & {});
+  /** 검색 기능 활성화 여부 */
+  enableSearch?: boolean;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -42,6 +46,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
   className = '',
   leadingIcon,
   leadingIconType,
+  width = '320px',
+  enableSearch = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -59,13 +65,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   // 검색 텍스트에 따른 옵션 필터링
   const filteredOptions = useMemo(() => {
-    if (!searchText.trim()) {
+    if (!enableSearch || !searchText.trim()) {
       return options;
     }
     return options.filter((option) =>
       option.label.toLowerCase().includes(searchText.toLowerCase()),
     );
-  }, [options, searchText]);
+  }, [options, searchText, enableSearch]);
 
   // 드롭다운 열기/닫기 애니메이션 관리
   useEffect(() => {
@@ -76,8 +82,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setIsAnimating(true);
-          // 드롭다운이 열리면 input에 포커스
-          if (inputRef.current) {
+          // 드롭다운이 열리고 검색이 활성화된 경우 input에 포커스
+          if (enableSearch && inputRef.current) {
             inputRef.current.focus();
           }
         });
@@ -85,15 +91,17 @@ export const Dropdown: React.FC<DropdownProps> = ({
     } else {
       // 닫기: 애니메이션 시작하고 완료 후 DOM에서 제거
       setIsAnimating(false);
-      // 검색 텍스트 초기화
-      setSearchText('');
+      // 검색 텍스트 초기화 (검색이 활성화된 경우에만)
+      if (enableSearch) {
+        setSearchText('');
+      }
       const timer = setTimeout(() => {
         setShouldRender(false);
       }, 200); // 애니메이션 duration과 맞춤
 
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, enableSearch]);
 
   // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
@@ -152,10 +160,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
       borderRadius: '8px', // Figma 스펙에 맞춤
       transition: 'all 0.2s ease',
       cursor: disabled ? 'not-allowed' : 'pointer',
-      width: '100%',
+      width: width === 'fill' ? '100%' : width,
       boxSizing: 'border-box',
     };
-  }, [disabled, error, isOpen]);
+  }, [disabled, error, isOpen, width]);
 
   const getTextStyles = useCallback((): React.CSSProperties => {
     let textColor: string;
@@ -208,7 +216,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   }, [disabled, error]);
 
   const getChevronIcon = useCallback(
-    () => <Icon type={isOpen ? 'arrow-up' : 'arrow-down'} size={20} color="currentColor" />,
+    () => <Icon type={isOpen ? 'chevron-up' : 'chevron-down'} size={20} color="currentColor" />,
     [isOpen],
   );
 
@@ -240,6 +248,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   const handleInputKeyDown = useCallback(
     (event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (!enableSearch) return;
+
       if (event.key === 'Enter') {
         event.preventDefault();
         // 첫 번째 필터링된 옵션 선택
@@ -257,13 +267,17 @@ export const Dropdown: React.FC<DropdownProps> = ({
         setIsOpen(false);
       }
     },
-    [filteredOptions, handleOptionClick],
+    [enableSearch, filteredOptions, handleOptionClick],
   );
 
-  const handleInputChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(event.target.value);
-    setHoveredOptionIndex(null);
-  }, []);
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!enableSearch) return;
+      setSearchText(event.target.value);
+      setHoveredOptionIndex(null);
+    },
+    [enableSearch],
+  );
 
   const getOptionStyles = useCallback(
     (option: DropdownOption, index: number, isSelected: boolean) => {
@@ -325,7 +339,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   // 표시할 텍스트 결정
   const getDisplayText = () => {
-    if (isOpen) {
+    if (isOpen && enableSearch) {
       return searchText;
     }
     return hasSelectedOption ? selectedOption.label : placeholder;
@@ -333,7 +347,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   // 플레이스홀더 텍스트 결정
   const getPlaceholderText = () => {
-    if (isOpen) {
+    if (isOpen && enableSearch) {
       return hasSelectedOption ? selectedOption.label : placeholder;
     }
     return '';
@@ -371,9 +385,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
     >
       <div
         style={getContainerStyles()}
-        onClick={!isOpen ? handleClick : undefined}
-        onKeyDown={!isOpen ? handleKeyDown : undefined}
-        tabIndex={disabled || isOpen ? -1 : 0}
+        onClick={!isOpen || !enableSearch ? handleClick : undefined}
+        onKeyDown={!isOpen || !enableSearch ? handleKeyDown : undefined}
+        tabIndex={disabled || (isOpen && enableSearch) ? -1 : 0}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
@@ -381,7 +395,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       >
         {renderLeadingIcon()}
 
-        {isOpen ? (
+        {isOpen && enableSearch ? (
           <input
             ref={inputRef}
             type="text"
@@ -407,7 +421,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease',
           }}
-          onClick={isOpen ? handleClick : undefined}
+          onClick={isOpen && enableSearch ? handleClick : undefined}
         >
           {getChevronIcon()}
         </div>
@@ -427,7 +441,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 textAlign: 'center',
               }}
             >
-              검색 결과가 없습니다
+              {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
             </div>
           ) : (
             filteredOptions.map((option, index) => {

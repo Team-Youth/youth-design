@@ -26,7 +26,7 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
     maxLength?: number;
     /** 상태 (filled/empty) */
     status?: 'filled' | 'empty';
-    /** 너비 설정 (기본값: '100%') */
-    width?: string | number;
+    /** 너비 설정 (기본값: '320px') */
+    width?: 'fill' | (string & {}) | number;
 }
 export declare const TextArea: React.ForwardRefExoticComponent<TextAreaProps & React.RefAttributes<HTMLTextAreaElement>>;

@@ -147,6 +147,7 @@ const meta: Meta<typeof Dropdown> = {
 - **Leading Icon 지원**: 아이콘과 함께 사용 가능
 - **에러 상태**: 빨간색 테두리와 에러 메시지 표시
 - **비활성화 상태**: disabled 옵션 및 전체 컴포넌트 비활성화
+- **검색 기능**: enableSearch=true로 옵션 검색 가능
         `,
       },
     },
@@ -179,6 +180,12 @@ const meta: Meta<typeof Dropdown> = {
       control: { type: 'text' },
       description: '에러 메시지를 설정합니다.',
     },
+    width: {
+      control: { type: 'select' },
+      options: ['320px', 'fill', '400px', '50%'],
+      description: '드롭다운의 너비를 설정합니다. "fill"을 사용하면 부모 요소의 100%가 됩니다.',
+      defaultValue: '320px',
+    },
     leadingIcon: {
       control: { type: 'boolean' },
       description: '앞쪽에 표시되는 아이콘입니다.',
@@ -186,6 +193,11 @@ const meta: Meta<typeof Dropdown> = {
         true: <LocationIcon />,
         false: undefined,
       },
+    },
+    enableSearch: {
+      control: { type: 'boolean' },
+      description: '검색 기능을 활성화합니다. true일 때 드롭다운 내에서 옵션을 검색할 수 있습니다.',
+      defaultValue: false,
     },
   },
 };
@@ -417,5 +429,184 @@ export const LongOptionList: Story = {
       ]}
       leadingIcon={<LocationIcon />}
     />
+  ),
+};
+
+// Width examples
+export const WidthDefault: Story = {
+  render: () => (
+    <div style={{ padding: '20px' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        기본 너비 (320px)
+      </h3>
+      <ControlledDropdown placeholder="기본 너비" options={cityOptions} />
+    </div>
+  ),
+};
+
+export const WidthFill: Story = {
+  render: () => (
+    <div style={{ padding: '20px', width: '500px', border: '1px dashed #ccc' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        부모 컨테이너 100% (width="fill")
+      </h3>
+      <ControlledDropdown width="fill" placeholder="부모의 100% 너비" options={cityOptions} />
+    </div>
+  ),
+};
+
+export const WidthCustom: Story = {
+  render: () => (
+    <div style={{ padding: '20px' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        커스텀 너비 (400px)
+      </h3>
+      <ControlledDropdown width="400px" placeholder="커스텀 너비" options={cityOptions} />
+    </div>
+  ),
+};
+
+export const WidthShowcase: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
+      <div>
+        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
+          💎 Width 옵션 비교
+        </h2>
+        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
+          다양한 너비 설정으로 레이아웃에 맞게 조정할 수 있습니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            기본값 (320px)
+          </h3>
+          <ControlledDropdown placeholder="기본 너비" options={cityOptions} />
+        </div>
+
+        <div style={{ width: '600px', border: '1px dashed #ddd', padding: '16px' }}>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            부모 컨테이너 100% (width="fill")
+          </h3>
+          <ControlledDropdown width="fill" placeholder="부모의 100% 너비" options={cityOptions} />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            커스텀 너비 (500px)
+          </h3>
+          <ControlledDropdown width="500px" placeholder="커스텀 너비" options={cityOptions} />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            상대적 너비 (50%)
+          </h3>
+          <ControlledDropdown width="50%" placeholder="상대적 너비" options={cityOptions} />
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+// Search functionality examples
+export const WithSearch: Story = {
+  render: () => (
+    <ControlledDropdown
+      placeholder="검색하여 선택해주세요..."
+      options={cityOptions}
+      enableSearch={true}
+      leadingIcon={<LocationIcon />}
+    />
+  ),
+};
+
+export const WithoutSearch: Story = {
+  render: () => (
+    <ControlledDropdown
+      placeholder="일반 드롭다운"
+      options={cityOptions}
+      enableSearch={false}
+      leadingIcon={<LocationIcon />}
+    />
+  ),
+};
+
+export const SearchLongList: Story = {
+  render: () => (
+    <ControlledDropdown
+      placeholder="국가를 검색해주세요..."
+      enableSearch={true}
+      options={[
+        { value: 'kr', label: '대한민국' },
+        { value: 'us', label: '미국' },
+        { value: 'jp', label: '일본' },
+        { value: 'cn', label: '중국' },
+        { value: 'uk', label: '영국' },
+        { value: 'fr', label: '프랑스' },
+        { value: 'de', label: '독일' },
+        { value: 'it', label: '이탈리아' },
+        { value: 'es', label: '스페인' },
+        { value: 'ca', label: '캐나다' },
+        { value: 'au', label: '호주' },
+        { value: 'br', label: '브라질' },
+        { value: 'in', label: '인도' },
+        { value: 'ru', label: '러시아' },
+        { value: 'mx', label: '멕시코' },
+        { value: 'sg', label: '싱가포르' },
+        { value: 'th', label: '태국' },
+        { value: 'vn', label: '베트남' },
+        { value: 'ph', label: '필리핀' },
+        { value: 'my', label: '말레이시아' },
+      ]}
+      leadingIcon={<LocationIcon />}
+    />
+  ),
+};
+
+export const SearchComparison: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
+      <div>
+        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
+          🔍 검색 기능 비교
+        </h2>
+        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
+          enableSearch props로 검색 기능을 활성화/비활성화할 수 있습니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', gap: '24px' }}>
+        <div>
+          <h3
+            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
+          >
+            검색 활성화 (enableSearch=true)
+          </h3>
+          <ControlledDropdown
+            placeholder="검색하여 선택해주세요..."
+            options={cityOptions}
+            enableSearch={true}
+            leadingIcon={<LocationIcon />}
+          />
+        </div>
+
+        <div>
+          <h3
+            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
+          >
+            일반 드롭다운 (enableSearch=false)
+          </h3>
+          <ControlledDropdown
+            placeholder="선택해주세요..."
+            options={cityOptions}
+            enableSearch={false}
+            leadingIcon={<LocationIcon />}
+          />
+        </div>
+      </div>
+    </div>
   ),
 };

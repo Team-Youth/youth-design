@@ -26,5 +26,9 @@ export interface DropdownProps {
     leadingIcon?: React.ReactNode;
     /** Leading 아이콘 타입 (Icon 컴포넌트 사용) */
     leadingIconType?: IconType;
+    /** 너비 설정 */
+    width?: 'fill' | (string & {});
+    /** 검색 기능 활성화 여부 */
+    enableSearch?: boolean;
 }
 export declare const Dropdown: React.FC<DropdownProps>;

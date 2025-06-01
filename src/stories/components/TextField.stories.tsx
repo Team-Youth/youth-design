@@ -84,7 +84,7 @@ const meta: Meta<typeof TextField> = {
 텍스트 필드(TextField)는 사용자가 텍스트를 입력할 수 있는 기본적인 입력 컴포넌트입니다.
 
 ## 특징
-- **상태**: rest, hover, selected, error, disabled 상태 지원
+- **상태**: rest, hover, selected, error, disabled, readOnly 상태 지원
 - **아이콘**: Leading Icon, Trailing Icon 지원
 - **에러 처리**: 에러 상태 및 에러 메시지 표시
 - **커서 애니메이션**: 포커스 시 깜빡이는 커서 효과
@@ -108,6 +108,11 @@ const meta: Meta<typeof TextField> = {
       description: '비활성화 상태를 설정합니다.',
       defaultValue: false,
     },
+    readOnly: {
+      control: { type: 'boolean' },
+      description: '읽기 전용 상태를 설정합니다.',
+      defaultValue: false,
+    },
     error: {
       control: { type: 'boolean' },
       description: '에러 상태를 설정합니다.',
@@ -122,6 +127,12 @@ const meta: Meta<typeof TextField> = {
       options: ['text', 'password', 'email', 'number', 'tel'],
       description: '입력 타입을 설정합니다.',
       defaultValue: 'text',
+    },
+    width: {
+      control: { type: 'select' },
+      options: ['320px', 'fill', '400px', '50%'],
+      description: '텍스트 필드의 너비를 설정합니다. "fill"을 사용하면 부모 요소의 100%가 됩니다.',
+      defaultValue: '320px',
     },
     leadingIcon: {
       control: { type: 'boolean' },
@@ -198,6 +209,14 @@ export const Disabled: Story = {
   },
 };
 
+export const ReadOnly: Story = {
+  args: {
+    placeholder: 'Read only field',
+    value: 'This is read only text',
+    readOnly: true,
+  },
+};
+
 // Interactive controlled examples
 export const Interactive: Story = {
   render: () => <ControlledTextField placeholder="Type something..." />,
@@ -249,6 +268,11 @@ export const AllStates: Story = {
         <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Disabled</h3>
         <TextField placeholder="Disabled field" value="Cannot edit this" disabled={true} />
       </div>
+
+      <div>
+        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Read Only</h3>
+        <TextField placeholder="Read only field" value="This is read only text" readOnly={true} />
+      </div>
     </div>
   ),
 };
@@ -262,6 +286,106 @@ export const InputTypes: Story = {
       <TextField type="email" placeholder="Email input" />
       <TextField type="number" placeholder="Number input" />
       <TextField type="tel" placeholder="Phone input" />
+    </div>
+  ),
+};
+
+// Width examples
+export const WidthDefault: Story = {
+  render: () => (
+    <div style={{ padding: '20px' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        기본 너비 (320px)
+      </h3>
+      <ControlledTextField placeholder="기본 너비 텍스트 필드" />
+    </div>
+  ),
+};
+
+export const WidthFill: Story = {
+  render: () => (
+    <div style={{ padding: '20px', width: '500px', border: '1px dashed #ccc' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        부모 컨테이너 100% (width="fill")
+      </h3>
+      <ControlledTextField width="fill" placeholder="부모의 100% 너비" />
+    </div>
+  ),
+};
+
+export const WidthCustom: Story = {
+  render: () => (
+    <div style={{ padding: '20px' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        커스텀 너비 (400px)
+      </h3>
+      <ControlledTextField width="400px" placeholder="커스텀 너비 텍스트 필드" />
+    </div>
+  ),
+};
+
+export const WidthShowcase: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
+      <div>
+        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
+          💎 Width 옵션 비교
+        </h2>
+        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
+          다양한 너비 설정으로 레이아웃에 맞게 조정할 수 있습니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            기본값 (320px)
+          </h3>
+          <ControlledTextField placeholder="기본 너비" />
+        </div>
+
+        <div style={{ width: '600px', border: '1px dashed #ddd', padding: '16px' }}>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            부모 컨테이너 100% (width="fill")
+          </h3>
+          <ControlledTextField width="fill" placeholder="부모의 100% 너비" />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            커스텀 너비 (500px)
+          </h3>
+          <ControlledTextField width="500px" placeholder="커스텀 너비" />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            상대적 너비 (50%)
+          </h3>
+          <ControlledTextField width="50%" placeholder="상대적 너비" />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            숫자로 설정 (400)
+          </h3>
+          <ControlledTextField width={400} placeholder="숫자 값 너비" />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            아이콘과 함께 (fill)
+          </h3>
+          <div style={{ width: '500px', border: '1px dashed #ddd', padding: '16px' }}>
+            <ControlledTextField
+              width="fill"
+              placeholder="아이콘이 있는 필드"
+              leadingIcon={<SearchIcon />}
+              trailingIcon={<EyeIcon />}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   ),
 };

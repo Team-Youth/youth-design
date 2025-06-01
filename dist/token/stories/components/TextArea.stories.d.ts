@@ -16,3 +16,7 @@ export declare const InteractiveWithLongLimit: Story;
 export declare const AllStates: Story;
 export declare const DifferentSizes: Story;
 export declare const UsageExamples: Story;
+export declare const WidthDefault: Story;
+export declare const WidthFill: Story;
+export declare const WidthCustom: Story;
+export declare const WidthShowcase: Story;

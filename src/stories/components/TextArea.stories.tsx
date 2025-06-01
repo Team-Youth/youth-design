@@ -63,6 +63,13 @@ const meta: Meta<typeof TextArea> = {
       description: '최대 입력 가능한 문자 수를 설정합니다.',
       defaultValue: 1000,
     },
+    width: {
+      control: { type: 'select' },
+      options: ['320px', 'fill', '400px', '50%'],
+      description:
+        '텍스트 에어리어의 너비를 설정합니다. "fill"을 사용하면 부모 요소의 100%가 됩니다.',
+      defaultValue: '320px',
+    },
     rows: {
       control: { type: 'number' },
       description: '텍스트 에어리어의 기본 행 수를 설정합니다.',
@@ -294,6 +301,130 @@ export const UsageExamples: Story = {
           Quick Note
         </h4>
         <ControlledTextArea placeholder="간단한 메모..." maxLength={200} rows={3} />
+      </div>
+    </div>
+  ),
+};
+
+// Width examples
+export const WidthDefault: Story = {
+  render: () => (
+    <div style={{ padding: '20px' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        기본 너비 (320px)
+      </h3>
+      <ControlledTextArea
+        placeholder="기본 너비로 설정된 텍스트 에어리어입니다..."
+        showCharacterCounter={true}
+        maxLength={200}
+      />
+    </div>
+  ),
+};
+
+export const WidthFill: Story = {
+  render: () => (
+    <div style={{ padding: '20px', width: '600px', border: '1px dashed #ccc' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        부모 컨테이너 100% (width="fill")
+      </h3>
+      <ControlledTextArea
+        width="fill"
+        placeholder="부모 컨테이너의 전체 너비를 사용하는 텍스트 에어리어입니다..."
+        showCharacterCounter={true}
+        maxLength={300}
+      />
+    </div>
+  ),
+};
+
+export const WidthCustom: Story = {
+  render: () => (
+    <div style={{ padding: '20px' }}>
+      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
+        커스텀 너비 (500px)
+      </h3>
+      <ControlledTextArea
+        width="500px"
+        placeholder="커스텀 너비로 설정된 텍스트 에어리어입니다..."
+        showCharacterCounter={true}
+        maxLength={400}
+      />
+    </div>
+  ),
+};
+
+export const WidthShowcase: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
+      <div>
+        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
+          💎 Width 옵션 비교
+        </h2>
+        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
+          다양한 너비 설정으로 레이아웃에 맞게 조정할 수 있습니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            기본값 (320px)
+          </h3>
+          <ControlledTextArea
+            placeholder="기본 너비 텍스트 에어리어..."
+            showCharacterCounter={true}
+            maxLength={150}
+          />
+        </div>
+
+        <div style={{ width: '700px', border: '1px dashed #ddd', padding: '16px' }}>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            부모 컨테이너 100% (width="fill")
+          </h3>
+          <ControlledTextArea
+            width="fill"
+            placeholder="부모의 100% 너비를 사용하는 텍스트 에어리어..."
+            showCharacterCounter={true}
+            maxLength={200}
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            커스텀 너비 (500px)
+          </h3>
+          <ControlledTextArea
+            width="500px"
+            placeholder="커스텀 너비로 설정된 텍스트 에어리어..."
+            showCharacterCounter={true}
+            maxLength={250}
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            상대적 너비 (60%)
+          </h3>
+          <ControlledTextArea
+            width="60%"
+            placeholder="상대적 너비로 설정된 텍스트 에어리어..."
+            showCharacterCounter={true}
+            maxLength={180}
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            숫자로 설정 (400)
+          </h3>
+          <ControlledTextArea
+            width={400}
+            placeholder="숫자 값으로 설정된 텍스트 에어리어..."
+            showCharacterCounter={true}
+            maxLength={220}
+          />
+        </div>
       </div>
     </div>
   ),

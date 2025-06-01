@@ -2814,22 +2814,26 @@ var Dropdown = function (_a) {
     _f = _a.className,
     className = _f === void 0 ? '' : _f,
     leadingIcon = _a.leadingIcon,
-    leadingIconType = _a.leadingIconType;
-  var _g = react.useState(false),
-    isOpen = _g[0],
-    setIsOpen = _g[1];
-  var _h = react.useState(false),
-    isAnimating = _h[0],
-    setIsAnimating = _h[1];
+    leadingIconType = _a.leadingIconType,
+    _g = _a.width,
+    width = _g === void 0 ? '320px' : _g,
+    _h = _a.enableSearch,
+    enableSearch = _h === void 0 ? false : _h;
   var _j = react.useState(false),
-    shouldRender = _j[0],
-    setShouldRender = _j[1];
-  var _k = react.useState(null),
-    hoveredOptionIndex = _k[0],
-    setHoveredOptionIndex = _k[1];
-  var _l = react.useState(''),
-    searchText = _l[0],
-    setSearchText = _l[1];
+    isOpen = _j[0],
+    setIsOpen = _j[1];
+  var _k = react.useState(false),
+    isAnimating = _k[0],
+    setIsAnimating = _k[1];
+  var _l = react.useState(false),
+    shouldRender = _l[0],
+    setShouldRender = _l[1];
+  var _m = react.useState(null),
+    hoveredOptionIndex = _m[0],
+    setHoveredOptionIndex = _m[1];
+  var _o = react.useState(''),
+    searchText = _o[0],
+    setSearchText = _o[1];
   var dropdownRef = react.useRef(null);
   var inputRef = react.useRef(null);
   var selectedOption = react.useMemo(function () {
@@ -2840,13 +2844,13 @@ var Dropdown = function (_a) {
   var hasSelectedOption = !!selectedOption;
   // 검색 텍스트에 따른 옵션 필터링
   var filteredOptions = react.useMemo(function () {
-    if (!searchText.trim()) {
+    if (!enableSearch || !searchText.trim()) {
       return options;
     }
     return options.filter(function (option) {
       return option.label.toLowerCase().includes(searchText.toLowerCase());
     });
-  }, [options, searchText]);
+  }, [options, searchText, enableSearch]);
   // 드롭다운 열기/닫기 애니메이션 관리
   react.useEffect(function () {
     if (isOpen) {
@@ -2856,8 +2860,8 @@ var Dropdown = function (_a) {
       requestAnimationFrame(function () {
         requestAnimationFrame(function () {
           setIsAnimating(true);
-          // 드롭다운이 열리면 input에 포커스
-          if (inputRef.current) {
+          // 드롭다운이 열리고 검색이 활성화된 경우 input에 포커스
+          if (enableSearch && inputRef.current) {
             inputRef.current.focus();
           }
         });
@@ -2865,8 +2869,10 @@ var Dropdown = function (_a) {
     } else {
       // 닫기: 애니메이션 시작하고 완료 후 DOM에서 제거
       setIsAnimating(false);
-      // 검색 텍스트 초기화
-      setSearchText('');
+      // 검색 텍스트 초기화 (검색이 활성화된 경우에만)
+      if (enableSearch) {
+        setSearchText('');
+      }
       var timer_1 = setTimeout(function () {
         setShouldRender(false);
       }, 200); // 애니메이션 duration과 맞춤
@@ -2874,7 +2880,7 @@ var Dropdown = function (_a) {
         return clearTimeout(timer_1);
       };
     }
-  }, [isOpen]);
+  }, [isOpen, enableSearch]);
   // 외부 클릭 시 드롭다운 닫기
   react.useEffect(function () {
     var handleClickOutside = function (event) {
@@ -2927,10 +2933,10 @@ var Dropdown = function (_a) {
       // Figma 스펙에 맞춤
       transition: 'all 0.2s ease',
       cursor: disabled ? 'not-allowed' : 'pointer',
-      width: '100%',
+      width: width === 'fill' ? '100%' : width,
       boxSizing: 'border-box'
     };
-  }, [disabled, error, isOpen]);
+  }, [disabled, error, isOpen, width]);
   var getTextStyles = react.useCallback(function () {
     var textColor;
     if (disabled) {
@@ -2980,7 +2986,7 @@ var Dropdown = function (_a) {
   }, [disabled, error]);
   var getChevronIcon = react.useCallback(function () {
     return jsxRuntime.jsx(Icon, {
-      type: isOpen ? 'arrow-up' : 'arrow-down',
+      type: isOpen ? 'chevron-up' : 'chevron-down',
       size: 20,
       color: "currentColor"
     });
@@ -3003,6 +3009,7 @@ var Dropdown = function (_a) {
     }
   }, [handleClick]);
   var handleInputKeyDown = react.useCallback(function (event) {
+    if (!enableSearch) return;
     if (event.key === 'Enter') {
       event.preventDefault();
       // 첫 번째 필터링된 옵션 선택
@@ -3019,11 +3026,12 @@ var Dropdown = function (_a) {
       event.preventDefault();
       setIsOpen(false);
     }
-  }, [filteredOptions, handleOptionClick]);
+  }, [enableSearch, filteredOptions, handleOptionClick]);
   var handleInputChange = react.useCallback(function (event) {
+    if (!enableSearch) return;
     setSearchText(event.target.value);
     setHoveredOptionIndex(null);
-  }, []);
+  }, [enableSearch]);
   var getOptionStyles = react.useCallback(function (option, index, isSelected) {
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
     var textColor = colors.semantic.text.primary; // #25282D
@@ -3086,14 +3094,14 @@ var Dropdown = function (_a) {
   };
   // 표시할 텍스트 결정
   var getDisplayText = function () {
-    if (isOpen) {
+    if (isOpen && enableSearch) {
       return searchText;
     }
     return hasSelectedOption ? selectedOption.label : placeholder;
   };
   // 플레이스홀더 텍스트 결정
   var getPlaceholderText = function () {
-    if (isOpen) {
+    if (isOpen && enableSearch) {
       return hasSelectedOption ? selectedOption.label : placeholder;
     }
     return '';
@@ -3131,14 +3139,14 @@ var Dropdown = function (_a) {
     },
     children: [jsxRuntime.jsxs("div", {
       style: getContainerStyles(),
-      onClick: !isOpen ? handleClick : undefined,
-      onKeyDown: !isOpen ? handleKeyDown : undefined,
-      tabIndex: disabled || isOpen ? -1 : 0,
+      onClick: !isOpen || !enableSearch ? handleClick : undefined,
+      onKeyDown: !isOpen || !enableSearch ? handleKeyDown : undefined,
+      tabIndex: disabled || isOpen && enableSearch ? -1 : 0,
       role: "combobox",
       "aria-expanded": isOpen,
       "aria-haspopup": "listbox",
       "aria-disabled": disabled,
-      children: [renderLeadingIcon(), isOpen ? jsxRuntime.jsx("input", {
+      children: [renderLeadingIcon(), isOpen && enableSearch ? jsxRuntime.jsx("input", {
         ref: inputRef,
         type: "text",
         value: searchText,
@@ -3161,7 +3169,7 @@ var Dropdown = function (_a) {
           transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
           transition: 'transform 0.2s ease'
         },
-        onClick: isOpen ? handleClick : undefined,
+        onClick: isOpen && enableSearch ? handleClick : undefined,
         children: getChevronIcon()
       })]
     }), shouldRender && jsxRuntime.jsx("div", {
@@ -3177,7 +3185,7 @@ var Dropdown = function (_a) {
           fontFamily: 'Pretendard',
           textAlign: 'center'
         },
-        children: "\uAC80\uC0C9 \uACB0\uACFC\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4"
+        children: enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'
       }) : filteredOptions.map(function (option, index) {
         var isSelected = value === option.value;
         return jsxRuntime.jsxs("div", {
@@ -3253,7 +3261,7 @@ var TextArea = react.forwardRef(function (_a, ref) {
     maxLength = _g === void 0 ? 1000 : _g,
     status = _a.status,
     _h = _a.width,
-    width = _h === void 0 ? '100%' : _h,
+    width = _h === void 0 ? '320px' : _h,
     _j = _a.rows,
     rows = _j === void 0 ? 4 : _j,
     restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "showCharacterCounter", "maxLength", "status", "width", "rows"]);
@@ -3283,10 +3291,16 @@ var TextArea = react.forwardRef(function (_a, ref) {
     } else if (isHovered) {
       borderColor = colors.semantic.text.primary; // #25282D
     }
+    var getWidth = function () {
+      if (width === 'fill') {
+        return '100%';
+      }
+      return typeof width === 'number' ? "".concat(width, "px") : width;
+    };
     return {
       display: 'flex',
       flexDirection: 'column',
-      width: typeof width === 'number' ? "".concat(width, "px") : width,
+      width: getWidth(),
       border: "1px solid ".concat(borderColor),
       borderRadius: radius.s,
       // 8px
@@ -3429,13 +3443,15 @@ var TextField = react.forwardRef(function (_a, ref) {
     onBlur = _a.onBlur,
     _c = _a.disabled,
     disabled = _c === void 0 ? false : _c,
-    _d = _a.error,
-    error = _d === void 0 ? false : _d,
+    _d = _a.readOnly,
+    readOnly = _d === void 0 ? false : _d,
+    _e = _a.error,
+    error = _e === void 0 ? false : _e,
     errorMessage = _a.errorMessage,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e,
-    _f = _a.type,
-    type = _f === void 0 ? 'text' : _f,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f,
+    _g = _a.type,
+    type = _g === void 0 ? 'text' : _g,
     leadingIcon = _a.leadingIcon,
     trailingIcon = _a.trailingIcon,
     leadingIconType = _a.leadingIconType,
@@ -3443,18 +3459,18 @@ var TextField = react.forwardRef(function (_a, ref) {
     onLeadingIconClick = _a.onLeadingIconClick,
     onTrailingIconClick = _a.onTrailingIconClick,
     status = _a.status,
-    _g = _a.width,
-    width = _g === void 0 ? '100%' : _g,
-    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "type", "leadingIcon", "trailingIcon", "leadingIconType", "trailingIconType", "onLeadingIconClick", "onTrailingIconClick", "status", "width"]);
-  var _h = react.useState(false),
-    isFocused = _h[0],
-    setIsFocused = _h[1];
+    _h = _a.width,
+    width = _h === void 0 ? '320px' : _h,
+    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "readOnly", "error", "errorMessage", "className", "type", "leadingIcon", "trailingIcon", "leadingIconType", "trailingIconType", "onLeadingIconClick", "onTrailingIconClick", "status", "width"]);
   var _j = react.useState(false),
-    isHovered = _j[0],
-    setIsHovered = _j[1];
-  var _k = react.useState(defaultValue || ''),
-    internalValue = _k[0],
-    setInternalValue = _k[1];
+    isFocused = _j[0],
+    setIsFocused = _j[1];
+  var _k = react.useState(false),
+    isHovered = _k[0],
+    setIsHovered = _k[1];
+  var _l = react.useState(defaultValue || ''),
+    internalValue = _l[0],
+    setInternalValue = _l[1];
   var currentValue = value !== undefined ? value : internalValue;
   var isEmpty = !currentValue || currentValue.length === 0;
   var actualStatus = status || (isEmpty ? 'empty' : 'filled');
@@ -3464,6 +3480,9 @@ var TextField = react.forwardRef(function (_a, ref) {
     if (disabled) {
       borderColor = colors.semantic.border.strong;
       backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+    } else if (readOnly) {
+      borderColor = colors.semantic.border.strong;
+      backgroundColor = colors.semantic.background.primary;
     } else if (error) {
       borderColor = colors.semantic.state.error; // #FF2E2E
     } else if (isFocused) {
@@ -3471,6 +3490,12 @@ var TextField = react.forwardRef(function (_a, ref) {
     } else if (isHovered) {
       borderColor = colors.semantic.text.primary; // #25282D
     }
+    var getWidth = function () {
+      if (width === 'fill') {
+        return '100%';
+      }
+      return typeof width === 'number' ? "".concat(width, "px") : width;
+    };
     return {
       display: 'flex',
       alignItems: 'center',
@@ -3483,9 +3508,9 @@ var TextField = react.forwardRef(function (_a, ref) {
       borderRadius: radius.s,
       // 8px
       transition: 'all 0.2s ease',
-      width: typeof width === 'number' ? "".concat(width, "px") : width
+      width: getWidth()
     };
-  }, [disabled, error, isFocused, isHovered, width]);
+  }, [disabled, readOnly, error, isFocused, isHovered, width]);
   var getInputStyles = react.useCallback(function () {
     var textColor = colors.semantic.text.tertiary; // #8D97A5 for placeholder
     if (disabled) {
@@ -3495,19 +3520,17 @@ var TextField = react.forwardRef(function (_a, ref) {
     } else if (actualStatus === 'filled') {
       textColor = colors.semantic.text.primary; // #25282D
     }
-    return {
+    // readOnly일 때 커서 스타일 변경
+    var cursorStyle = readOnly ? 'default' : 'text';
+    return __assign({
       flex: 1,
       border: 'none',
       outline: 'none',
       backgroundColor: 'transparent',
       color: textColor,
-      fontSize: '16px',
-      fontWeight: 400,
-      lineHeight: '24px',
-      letterSpacing: '-2%',
-      fontFamily: 'Pretendard'
-    };
-  }, [disabled, error, actualStatus]);
+      cursor: cursorStyle
+    }, textStyles.body1);
+  }, [disabled, error, actualStatus, readOnly]);
   var getIconColor = react.useCallback(function () {
     if (disabled) {
       return colors.semantic.disabled.foreground; // #D1D5DB
@@ -3518,27 +3541,28 @@ var TextField = react.forwardRef(function (_a, ref) {
     }
   }, [disabled, error]);
   var handleFocus = react.useCallback(function () {
-    if (!disabled) {
+    if (!disabled && !readOnly) {
       setIsFocused(true);
       onFocus === null || onFocus === void 0 ? void 0 : onFocus();
     }
-  }, [disabled, onFocus]);
+  }, [disabled, readOnly, onFocus]);
   var handleBlur = react.useCallback(function () {
     setIsFocused(false);
     onBlur === null || onBlur === void 0 ? void 0 : onBlur();
   }, [onBlur]);
   var handleChange = react.useCallback(function (e) {
+    if (readOnly) return; // readOnly일 때 값 변경 방지
     var newValue = e.target.value;
     if (value === undefined) {
       setInternalValue(newValue);
     }
     onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
-  }, [value, onChange]);
+  }, [value, onChange, readOnly]);
   var handleMouseEnter = react.useCallback(function () {
-    if (!disabled && !isFocused) {
+    if (!disabled && !readOnly && !isFocused) {
       setIsHovered(true);
     }
-  }, [disabled, isFocused]);
+  }, [disabled, readOnly, isFocused]);
   var handleMouseLeave = react.useCallback(function () {
     setIsHovered(false);
   }, []);
@@ -3608,6 +3632,7 @@ var TextField = react.forwardRef(function (_a, ref) {
         onFocus: handleFocus,
         onBlur: handleBlur,
         disabled: disabled,
+        readOnly: readOnly,
         style: getInputStyles()
       }, restProps)), renderTrailingIcon()]
     }), error && errorMessage && jsxRuntime.jsxs("div", {

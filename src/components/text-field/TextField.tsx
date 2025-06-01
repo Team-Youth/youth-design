@@ -1,7 +1,7 @@
 import React, { useState, forwardRef, useCallback } from 'react';
 
 import { Icon, IconType } from '../icon/Icon';
-import { colors, spacing, radius } from '../../tokens';
+import { colors, spacing, radius, textStyles } from '../../tokens';
 
 export interface TextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'> {
@@ -19,6 +19,8 @@ export interface TextFieldProps
   onBlur?: () => void;
   /** 비활성화 상태 */
   disabled?: boolean;
+  /** 읽기 전용 상태 */
+  readOnly?: boolean;
   /** 에러 상태 */
   error?: boolean;
   /** 에러 메시지 */
@@ -42,7 +44,7 @@ export interface TextFieldProps
   /** 상태 (filled/empty) */
   status?: 'filled' | 'empty';
   /** 너비 */
-  width?: string | number;
+  width?: 'fill' | (string & {}) | number;
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
@@ -55,6 +57,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       onFocus,
       onBlur,
       disabled = false,
+      readOnly = false,
       error = false,
       errorMessage,
       className = '',
@@ -66,7 +69,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       onLeadingIconClick,
       onTrailingIconClick,
       status,
-      width = '100%',
+      width = '320px',
       ...restProps
     },
     ref,
@@ -86,6 +89,9 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       if (disabled) {
         borderColor = colors.semantic.border.strong;
         backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+      } else if (readOnly) {
+        borderColor = colors.semantic.border.strong;
+        backgroundColor = colors.semantic.background.primary;
       } else if (error) {
         borderColor = colors.semantic.state.error; // #FF2E2E
       } else if (isFocused) {
@@ -93,6 +99,13 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       } else if (isHovered) {
         borderColor = colors.semantic.text.primary; // #25282D
       }
+
+      const getWidth = () => {
+        if (width === 'fill') {
+          return '100%';
+        }
+        return typeof width === 'number' ? `${width}px` : width;
+      };
 
       return {
         display: 'flex',
@@ -103,9 +116,9 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         border: `1px solid ${borderColor}`,
         borderRadius: radius.s, // 8px
         transition: 'all 0.2s ease',
-        width: typeof width === 'number' ? `${width}px` : width,
+        width: getWidth(),
       };
-    }, [disabled, error, isFocused, isHovered, width]);
+    }, [disabled, readOnly, error, isFocused, isHovered, width]);
 
     const getInputStyles = useCallback((): React.CSSProperties => {
       let textColor: string = colors.semantic.text.tertiary; // #8D97A5 for placeholder
@@ -118,19 +131,20 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         textColor = colors.semantic.text.primary; // #25282D
       }
 
+      // readOnly일 때 커서 스타일 변경
+      const cursorStyle = readOnly ? 'default' : 'text';
+
       return {
         flex: 1,
         border: 'none',
         outline: 'none',
         backgroundColor: 'transparent',
         color: textColor,
-        fontSize: '16px',
-        fontWeight: 400,
-        lineHeight: '24px',
-        letterSpacing: '-2%',
-        fontFamily: 'Pretendard',
+        cursor: cursorStyle,
+        // body1 regular 스타일 적용
+        ...textStyles.body1,
       };
-    }, [disabled, error, actualStatus]);
+    }, [disabled, error, actualStatus, readOnly]);
 
     const getIconColor = useCallback(() => {
       if (disabled) {
@@ -143,11 +157,11 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     }, [disabled, error]);
 
     const handleFocus = useCallback(() => {
-      if (!disabled) {
+      if (!disabled && !readOnly) {
         setIsFocused(true);
         onFocus?.();
       }
-    }, [disabled, onFocus]);
+    }, [disabled, readOnly, onFocus]);
 
     const handleBlur = useCallback(() => {
       setIsFocused(false);
@@ -156,20 +170,22 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
     const handleChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (readOnly) return; // readOnly일 때 값 변경 방지
+
         const newValue = e.target.value;
         if (value === undefined) {
           setInternalValue(newValue);
         }
         onChange?.(newValue);
       },
-      [value, onChange],
+      [value, onChange, readOnly],
     );
 
     const handleMouseEnter = useCallback(() => {
-      if (!disabled && !isFocused) {
+      if (!disabled && !readOnly && !isFocused) {
         setIsHovered(true);
       }
-    }, [disabled, isFocused]);
+    }, [disabled, readOnly, isFocused]);
 
     const handleMouseLeave = useCallback(() => {
       setIsHovered(false);
@@ -247,6 +263,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             onFocus={handleFocus}
             onBlur={handleBlur}
             disabled={disabled}
+            readOnly={readOnly}
             style={getInputStyles()}
             {...restProps}
           />

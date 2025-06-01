@@ -15,6 +15,8 @@ export interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInput
     onBlur?: () => void;
     /** 비활성화 상태 */
     disabled?: boolean;
+    /** 읽기 전용 상태 */
+    readOnly?: boolean;
     /** 에러 상태 */
     error?: boolean;
     /** 에러 메시지 */
@@ -38,6 +40,6 @@ export interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInput
     /** 상태 (filled/empty) */
     status?: 'filled' | 'empty';
     /** 너비 */
-    width?: string | number;
+    width?: 'fill' | (string & {}) | number;
 }
 export declare const TextField: React.ForwardRefExoticComponent<TextFieldProps & React.RefAttributes<HTMLInputElement>>;
