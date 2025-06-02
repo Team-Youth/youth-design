@@ -1,26 +1,8 @@
 'use strict';
 
 var jsxRuntime = require('react/jsx-runtime');
-var g$1 = require('react');
-
-function _interopNamespaceDefault(e) {
-    var n = Object.create(null);
-    if (e) {
-        Object.keys(e).forEach(function (k) {
-            if (k !== 'default') {
-                var d = Object.getOwnPropertyDescriptor(e, k);
-                Object.defineProperty(n, k, d.get ? d : {
-                    enumerable: true,
-                    get: function () { return e[k]; }
-                });
-            }
-        });
-    }
-    n.default = e;
-    return Object.freeze(n);
-}
-
-var g__namespace = /*#__PURE__*/_interopNamespaceDefault(g$1);
+var React = require('react');
+var toast = require('react-hot-toast');
 
 /**
  * Color Design Tokens
@@ -614,10 +596,10 @@ var BoxButton = function (_a) {
     className = _f === void 0 ? '' : _f,
     _g = _a.isLoading,
     isLoading = _g === void 0 ? false : _g;
-  var _h = g$1.useState(false),
+  var _h = React.useState(false),
     isHovered = _h[0],
     setIsHovered = _h[1];
-  var _j = g$1.useState(false),
+  var _j = React.useState(false),
     isPressed = _j[0],
     setIsPressed = _j[1];
   // Size configurations
@@ -1268,7 +1250,7 @@ var Label = function (_a) {
   });
 };
 
-var TextInput = g$1.forwardRef(function (_a, ref) {
+var TextInput = React.forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
     value = _a.value,
@@ -1288,10 +1270,10 @@ var TextInput = g$1.forwardRef(function (_a, ref) {
     _g = _a.size,
     size = _g === void 0 ? 'l' : _g,
     restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "type", "size"]);
-  var _h = g$1.useState(false),
+  var _h = React.useState(false),
     isFocused = _h[0],
     setIsFocused = _h[1];
-  var _j = g$1.useState(defaultValue || ''),
+  var _j = React.useState(defaultValue || ''),
     internalValue = _j[0],
     setInternalValue = _j[1];
   // Size configurations
@@ -1522,7 +1504,7 @@ var Chips = function (_a) {
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
-  var _g = g$1.useState(false),
+  var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
   // Size configurations
@@ -1714,7 +1696,7 @@ var Radio = function (_a) {
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
-  var _g = g$1.useState(false),
+  var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
   var getSizeConfig = function () {
@@ -1920,7 +1902,7 @@ var Checkbox = function (_a) {
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
-  var _g = g$1.useState(false),
+  var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
   var getSizeConfig = function () {
@@ -2135,7 +2117,7 @@ var Toggle = function (_a) {
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
-  var _g = g$1.useState(false),
+  var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
   var getSizeConfig = function () {
@@ -2538,186 +2520,6 @@ var Toast = function (_a) {
   });
 };
 
-let e={data:""},t=t=>"object"==typeof window?((t?t.querySelector("#_goober"):window._goober)||Object.assign((t||document.head).appendChild(document.createElement("style")),{innerHTML:" ",id:"_goober"})).firstChild:t||e,l=/(?:([\u0080-\uFFFF\w-%@]+) *:? *([^{;]+?);|([^;}{]*?) *{)|(}\s*)/g,a=/\/\*[^]*?\*\/|  +/g,n=/\n+/g,o=(e,t)=>{let r="",l="",a="";for(let n in e){let c=e[n];"@"==n[0]?"i"==n[1]?r=n+" "+c+";":l+="f"==n[1]?o(c,n):n+"{"+o(c,"k"==n[1]?"":t)+"}":"object"==typeof c?l+=o(c,t?t.replace(/([^,])+/g,e=>n.replace(/([^,]*:\S+\([^)]*\))|([^,])+/g,t=>/&/.test(t)?t.replace(/&/g,e):e?e+" "+t:t)):n):null!=c&&(n=/^--/.test(n)?n:n.replace(/[A-Z]/g,"-$&").toLowerCase(),a+=o.p?o.p(n,c):n+":"+c+";");}return r+(t&&a?t+"{"+a+"}":a)+l},c$1={},s=e=>{if("object"==typeof e){let t="";for(let r in e)t+=r+s(e[r]);return t}return e},i=(e,t,r,i,p)=>{let u=s(e),d=c$1[u]||(c$1[u]=(e=>{let t=0,r=11;for(;t<e.length;)r=101*r+e.charCodeAt(t++)>>>0;return "go"+r})(u));if(!c$1[d]){let t=u!==e?e:(e=>{let t,r,o=[{}];for(;t=l.exec(e.replace(a,""));)t[4]?o.shift():t[3]?(r=t[3].replace(n," ").trim(),o.unshift(o[0][r]=o[0][r]||{})):o[0][t[1]]=t[2].replace(n," ").trim();return o[0]})(e);c$1[d]=o(p?{["@keyframes "+d]:t}:t,r?"":"."+d);}let f=r&&c$1.g?c$1.g:null;return r&&(c$1.g=c$1[d]),((e,t,r,l)=>{l?t.data=t.data.replace(l,e):-1===t.data.indexOf(e)&&(t.data=r?e+t.data:t.data+e);})(c$1[d],t,i,f),d},p=(e,t,r)=>e.reduce((e,l,a)=>{let n=t[a];if(n&&n.call){let e=n(r),t=e&&e.props&&e.props.className||/^go/.test(e)&&e;n=t?"."+t:e&&"object"==typeof e?e.props?"":o(e,""):!1===e?"":e;}return e+l+(null==n?"":n)},"");function u$1(e){let r=this||{},l=e.call?e(r.p):e;return i(l.unshift?l.raw?p(l,[].slice.call(arguments,1),r.p):l.reduce((e,t)=>Object.assign(e,t&&t.call?t(r.p):t),{}):l,t(r.target),r.g,r.o,r.k)}let d,f$1,g;u$1.bind({g:1});let h=u$1.bind({k:1});function m(e,t,r,l){o.p=t,d=e,f$1=r,g=l;}function j(e,t){let r=this||{};return function(){let l=arguments;function a(n,o){let c=Object.assign({},n),s=c.className||a.className;r.p=Object.assign({theme:f$1&&f$1()},c),r.o=/ *go\d+/.test(s),c.className=u$1.apply(r,l)+(s?" "+s:""),t&&(c.ref=o);let i=e;return e[0]&&(i=c.as||e,delete c.as),g&&i[0]&&g(c),d(i,c)}return t?t(a):a}}
-
-var W=e=>typeof e=="function",f=(e,t)=>W(e)?e(t):e;var F=(()=>{let e=0;return ()=>(++e).toString()})(),A=(()=>{let e;return ()=>{if(e===void 0&&typeof window<"u"){let t=matchMedia("(prefers-reduced-motion: reduce)");e=!t||t.matches;}return e}})();var Y=20;var U=(e,t)=>{switch(t.type){case 0:return {...e,toasts:[t.toast,...e.toasts].slice(0,Y)};case 1:return {...e,toasts:e.toasts.map(o=>o.id===t.toast.id?{...o,...t.toast}:o)};case 2:let{toast:r}=t;return U(e,{type:e.toasts.find(o=>o.id===r.id)?1:0,toast:r});case 3:let{toastId:s}=t;return {...e,toasts:e.toasts.map(o=>o.id===s||s===void 0?{...o,dismissed:!0,visible:!1}:o)};case 4:return t.toastId===void 0?{...e,toasts:[]}:{...e,toasts:e.toasts.filter(o=>o.id!==t.toastId)};case 5:return {...e,pausedAt:t.time};case 6:let a=t.time-(e.pausedAt||0);return {...e,pausedAt:void 0,toasts:e.toasts.map(o=>({...o,pauseDuration:o.pauseDuration+a}))}}},P=[],y={toasts:[],pausedAt:void 0},u=e=>{y=U(y,e),P.forEach(t=>{t(y);});},q={blank:4e3,error:4e3,success:2e3,loading:1/0,custom:4e3},D=(e={})=>{let[t,r]=g$1.useState(y),s=g$1.useRef(y);g$1.useEffect(()=>(s.current!==y&&r(y),P.push(r),()=>{let o=P.indexOf(r);o>-1&&P.splice(o,1);}),[]);let a=t.toasts.map(o=>{var n,i,p;return {...e,...e[o.type],...o,removeDelay:o.removeDelay||((n=e[o.type])==null?void 0:n.removeDelay)||(e==null?void 0:e.removeDelay),duration:o.duration||((i=e[o.type])==null?void 0:i.duration)||(e==null?void 0:e.duration)||q[o.type],style:{...e.style,...(p=e[o.type])==null?void 0:p.style,...o.style}}});return {...t,toasts:a}};var J=(e,t="blank",r)=>({createdAt:Date.now(),visible:!0,dismissed:!1,type:t,ariaProps:{role:"status","aria-live":"polite"},message:e,pauseDuration:0,...r,id:(r==null?void 0:r.id)||F()}),x=e=>(t,r)=>{let s=J(t,e,r);return u({type:2,toast:s}),s.id},c=(e,t)=>x("blank")(e,t);c.error=x("error");c.success=x("success");c.loading=x("loading");c.custom=x("custom");c.dismiss=e=>{u({type:3,toastId:e});};c.remove=e=>u({type:4,toastId:e});c.promise=(e,t,r)=>{let s=c.loading(t.loading,{...r,...r==null?void 0:r.loading});return typeof e=="function"&&(e=e()),e.then(a=>{let o=t.success?f(t.success,a):void 0;return o?c.success(o,{id:s,...r,...r==null?void 0:r.success}):c.dismiss(s),a}).catch(a=>{let o=t.error?f(t.error,a):void 0;o?c.error(o,{id:s,...r,...r==null?void 0:r.error}):c.dismiss(s);}),e};var K=(e,t)=>{u({type:1,toast:{id:e,height:t}});},X=()=>{u({type:5,time:Date.now()});},b=new Map,Z=1e3,ee=(e,t=Z)=>{if(b.has(e))return;let r=setTimeout(()=>{b.delete(e),u({type:4,toastId:e});},t);b.set(e,r);},O=e=>{let{toasts:t,pausedAt:r}=D(e);g$1.useEffect(()=>{if(r)return;let o=Date.now(),n=t.map(i=>{if(i.duration===1/0)return;let p=(i.duration||0)+i.pauseDuration-(o-i.createdAt);if(p<0){i.visible&&c.dismiss(i.id);return}return setTimeout(()=>c.dismiss(i.id),p)});return ()=>{n.forEach(i=>i&&clearTimeout(i));}},[t,r]);let s=g$1.useCallback(()=>{r&&u({type:6,time:Date.now()});},[r]),a=g$1.useCallback((o,n)=>{let{reverseOrder:i=!1,gutter:p=8,defaultPosition:d}=n||{},h=t.filter(m=>(m.position||d)===(o.position||d)&&m.height),v=h.findIndex(m=>m.id===o.id),S=h.filter((m,E)=>E<v&&m.visible).length;return h.filter(m=>m.visible).slice(...i?[S+1]:[0,S]).reduce((m,E)=>m+(E.height||0)+p,0)},[t]);return g$1.useEffect(()=>{t.forEach(o=>{if(o.dismissed)ee(o.id,o.removeDelay);else {let n=b.get(o.id);n&&(clearTimeout(n),b.delete(o.id));}});},[t]),{toasts:t,handlers:{updateHeight:K,startPause:X,endPause:s,calculateOffset:a}}};var oe=h`
-from {
-  transform: scale(0) rotate(45deg);
-	opacity: 0;
-}
-to {
- transform: scale(1) rotate(45deg);
-  opacity: 1;
-}`,re=h`
-from {
-  transform: scale(0);
-  opacity: 0;
-}
-to {
-  transform: scale(1);
-  opacity: 1;
-}`,se=h`
-from {
-  transform: scale(0) rotate(90deg);
-	opacity: 0;
-}
-to {
-  transform: scale(1) rotate(90deg);
-	opacity: 1;
-}`,k=j("div")`
-  width: 20px;
-  opacity: 0;
-  height: 20px;
-  border-radius: 10px;
-  background: ${e=>e.primary||"#ff4b4b"};
-  position: relative;
-  transform: rotate(45deg);
-
-  animation: ${oe} 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-    forwards;
-  animation-delay: 100ms;
-
-  &:after,
-  &:before {
-    content: '';
-    animation: ${re} 0.15s ease-out forwards;
-    animation-delay: 150ms;
-    position: absolute;
-    border-radius: 3px;
-    opacity: 0;
-    background: ${e=>e.secondary||"#fff"};
-    bottom: 9px;
-    left: 4px;
-    height: 2px;
-    width: 12px;
-  }
-
-  &:before {
-    animation: ${se} 0.15s ease-out forwards;
-    animation-delay: 180ms;
-    transform: rotate(90deg);
-  }
-`;var ne=h`
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-`,V=j("div")`
-  width: 12px;
-  height: 12px;
-  box-sizing: border-box;
-  border: 2px solid;
-  border-radius: 100%;
-  border-color: ${e=>e.secondary||"#e0e0e0"};
-  border-right-color: ${e=>e.primary||"#616161"};
-  animation: ${ne} 1s linear infinite;
-`;var pe=h`
-from {
-  transform: scale(0) rotate(45deg);
-	opacity: 0;
-}
-to {
-  transform: scale(1) rotate(45deg);
-	opacity: 1;
-}`,de=h`
-0% {
-	height: 0;
-	width: 0;
-	opacity: 0;
-}
-40% {
-  height: 0;
-	width: 6px;
-	opacity: 1;
-}
-100% {
-  opacity: 1;
-  height: 10px;
-}`,_=j("div")`
-  width: 20px;
-  opacity: 0;
-  height: 20px;
-  border-radius: 10px;
-  background: ${e=>e.primary||"#61d345"};
-  position: relative;
-  transform: rotate(45deg);
-
-  animation: ${pe} 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-    forwards;
-  animation-delay: 100ms;
-  &:after {
-    content: '';
-    box-sizing: border-box;
-    animation: ${de} 0.2s ease-out forwards;
-    opacity: 0;
-    animation-delay: 200ms;
-    position: absolute;
-    border-right: 2px solid;
-    border-bottom: 2px solid;
-    border-color: ${e=>e.secondary||"#fff"};
-    bottom: 6px;
-    left: 6px;
-    height: 10px;
-    width: 6px;
-  }
-`;var ue=j("div")`
-  position: absolute;
-`,le=j("div")`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 20px;
-  min-height: 20px;
-`,fe=h`
-from {
-  transform: scale(0.6);
-  opacity: 0.4;
-}
-to {
-  transform: scale(1);
-  opacity: 1;
-}`,Te=j("div")`
-  position: relative;
-  transform: scale(0.6);
-  opacity: 0.4;
-  min-width: 20px;
-  animation: ${fe} 0.3s 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-    forwards;
-`,M=({toast:e})=>{let{icon:t,type:r,iconTheme:s}=e;return t!==void 0?typeof t=="string"?g__namespace.createElement(Te,null,t):t:r==="blank"?null:g__namespace.createElement(le,null,g__namespace.createElement(V,{...s}),r!=="loading"&&g__namespace.createElement(ue,null,r==="error"?g__namespace.createElement(k,{...s}):g__namespace.createElement(_,{...s})))};var ye=e=>`
-0% {transform: translate3d(0,${e*-200}%,0) scale(.6); opacity:.5;}
-100% {transform: translate3d(0,0,0) scale(1); opacity:1;}
-`,ge=e=>`
-0% {transform: translate3d(0,0,-1px) scale(1); opacity:1;}
-100% {transform: translate3d(0,${e*-150}%,-1px) scale(.6); opacity:0;}
-`,he="0%{opacity:0;} 100%{opacity:1;}",xe="0%{opacity:1;} 100%{opacity:0;}",be=j("div")`
-  display: flex;
-  align-items: center;
-  background: #fff;
-  color: #363636;
-  line-height: 1.3;
-  will-change: transform;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1), 0 3px 3px rgba(0, 0, 0, 0.05);
-  max-width: 350px;
-  pointer-events: auto;
-  padding: 8px 10px;
-  border-radius: 8px;
-`,Se=j("div")`
-  display: flex;
-  justify-content: center;
-  margin: 4px 10px;
-  color: inherit;
-  flex: 1 1 auto;
-  white-space: pre-line;
-`,Ae=(e,t)=>{let s=e.includes("top")?1:-1,[a,o]=A()?[he,xe]:[ye(s),ge(s)];return {animation:t?`${h(a)} 0.35s cubic-bezier(.21,1.02,.73,1) forwards`:`${h(o)} 0.4s forwards cubic-bezier(.06,.71,.55,1)`}},C=g__namespace.memo(({toast:e,position:t,style:r,children:s})=>{let a=e.height?Ae(e.position||t||"top-center",e.visible):{opacity:0},o=g__namespace.createElement(M,{toast:e}),n=g__namespace.createElement(Se,{...e.ariaProps},f(e.message,e));return g__namespace.createElement(be,{className:e.className,style:{...a,...r,...e.style}},typeof s=="function"?s({icon:o,message:n}):g__namespace.createElement(g__namespace.Fragment,null,o,n))});m(g__namespace.createElement);var ve=({id:e,className:t,style:r,onHeightUpdate:s,children:a})=>{let o=g__namespace.useCallback(n=>{if(n){let i=()=>{let p=n.getBoundingClientRect().height;s(e,p);};i(),new MutationObserver(i).observe(n,{subtree:!0,childList:!0,characterData:!0});}},[e,s]);return g__namespace.createElement("div",{ref:o,className:t,style:r},a)},Ee=(e,t)=>{let r=e.includes("top"),s=r?{top:0}:{bottom:0},a=e.includes("center")?{justifyContent:"center"}:e.includes("right")?{justifyContent:"flex-end"}:{};return {left:0,right:0,display:"flex",position:"absolute",transition:A()?void 0:"all 230ms cubic-bezier(.21,1.02,.73,1)",transform:`translateY(${t*(r?1:-1)}px)`,...s,...a}},De=u$1`
-  z-index: 9999;
-  > * {
-    pointer-events: auto;
-  }
-`,R=16,Oe=({reverseOrder:e,position:t="top-center",toastOptions:r,gutter:s,children:a,containerStyle:o,containerClassName:n})=>{let{toasts:i,handlers:p}=O(r);return g__namespace.createElement("div",{id:"_rht_toaster",style:{position:"fixed",zIndex:9999,top:R,left:R,right:R,bottom:R,pointerEvents:"none",...o},className:n,onMouseEnter:p.startPause,onMouseLeave:p.endPause},i.map(d=>{let h=d.position||t,v=p.calculateOffset(d,{reverseOrder:e,gutter:s,defaultPosition:t}),S=Ee(h,v);return g__namespace.createElement(ve,{id:d.id,key:d.id,onHeightUpdate:p.updateHeight,className:d.visible?De:"",style:S},d.type==="custom"?f(d.message,d):a?a(d):g__namespace.createElement(C,{toast:d,position:h}))}))};var Vt=c;
-
 /**
  * Toast Provider 컴포넌트
  *
@@ -2749,7 +2551,7 @@ var ToastProvider = function (_a) {
     }
   };
   return jsxRuntime.jsxs(jsxRuntime.Fragment, {
-    children: [children, jsxRuntime.jsx(Oe, {
+    children: [children, jsxRuntime.jsx(toast.Toaster, {
       position: getToasterPosition(position),
       toastOptions: {
         duration: defaultDuration,
@@ -2777,10 +2579,10 @@ var useToast = function () {
         title: title,
         description: description
       }, options);
-      return Vt.custom(function (t) {
+      return toast.custom(function (t) {
         return jsxRuntime.jsx(Toast, __assign({}, toastData, {
           onClose: function () {
-            return Vt.dismiss(t.id);
+            return toast.dismiss(t.id);
           },
           showCloseButton: true
         }));
@@ -2795,10 +2597,10 @@ var useToast = function () {
         title: title,
         description: description
       }, options);
-      return Vt.custom(function (t) {
+      return toast.custom(function (t) {
         return jsxRuntime.jsx(Toast, __assign({}, toastData, {
           onClose: function () {
-            return Vt.dismiss(t.id);
+            return toast.dismiss(t.id);
           },
           showCloseButton: true
         }));
@@ -2813,10 +2615,10 @@ var useToast = function () {
         title: title,
         description: description
       }, options);
-      return Vt.custom(function (t) {
+      return toast.custom(function (t) {
         return jsxRuntime.jsx(Toast, __assign({}, toastData, {
           onClose: function () {
-            return Vt.dismiss(t.id);
+            return toast.dismiss(t.id);
           },
           showCloseButton: true
         }));
@@ -2831,10 +2633,10 @@ var useToast = function () {
         title: title,
         description: description
       }, options);
-      return Vt.custom(function (t) {
+      return toast.custom(function (t) {
         return jsxRuntime.jsx(Toast, __assign({}, toastData, {
           onClose: function () {
-            return Vt.dismiss(t.id);
+            return toast.dismiss(t.id);
           },
           showCloseButton: true
         }));
@@ -2844,10 +2646,10 @@ var useToast = function () {
       });
     },
     custom: function (options) {
-      return Vt.custom(function (t) {
+      return toast.custom(function (t) {
         return jsxRuntime.jsx(Toast, __assign({}, options, {
           onClose: function () {
-            return Vt.dismiss(t.id);
+            return toast.dismiss(t.id);
           },
           showCloseButton: true
         }));
@@ -2856,10 +2658,10 @@ var useToast = function () {
       });
     },
     remove: function (id) {
-      return Vt.dismiss(id);
+      return toast.dismiss(id);
     },
     removeAll: function () {
-      return Vt.dismiss();
+      return toast.dismiss();
     }
   };
   return toastMethods;
@@ -2992,11 +2794,11 @@ var Modal = function (_a) {
     className = _e === void 0 ? '' : _e,
     _f = _a.style,
     style = _f === void 0 ? {} : _f;
-  var _g = g$1.useState(false),
+  var _g = React.useState(false),
     isContentOverflowing = _g[0],
     setIsContentOverflowing = _g[1];
-  var contentRef = g$1.useRef(null);
-  g$1.useEffect(function () {
+  var contentRef = React.useRef(null);
+  React.useEffect(function () {
     if (contentComponent && contentRef.current) {
       var _a = contentRef.current,
         scrollHeight = _a.scrollHeight,
@@ -3186,32 +2988,32 @@ var Dropdown = function (_a) {
     enableSearch = _h === void 0 ? false : _h,
     _j = _a.hideOption,
     hideOption = _j === void 0 ? false : _j;
-  var _k = g$1.useState(false),
+  var _k = React.useState(false),
     isOpen = _k[0],
     setIsOpen = _k[1];
-  var _l = g$1.useState(false),
+  var _l = React.useState(false),
     isAnimating = _l[0],
     setIsAnimating = _l[1];
-  var _m = g$1.useState(false),
+  var _m = React.useState(false),
     shouldRender = _m[0],
     setShouldRender = _m[1];
-  var _o = g$1.useState(null),
+  var _o = React.useState(null),
     hoveredOptionIndex = _o[0],
     setHoveredOptionIndex = _o[1];
-  var _p = g$1.useState(''),
+  var _p = React.useState(''),
     searchText = _p[0],
     setSearchText = _p[1];
-  var dropdownRef = g$1.useRef(null);
-  var optionsContainerRef = g$1.useRef(null);
-  var inputRef = g$1.useRef(null);
-  var selectedOption = g$1.useMemo(function () {
+  var dropdownRef = React.useRef(null);
+  var optionsContainerRef = React.useRef(null);
+  var inputRef = React.useRef(null);
+  var selectedOption = React.useMemo(function () {
     return options.find(function (option) {
       return option.value === value;
     });
   }, [options, value]);
   var hasSelectedOption = !!selectedOption;
   // 검색 텍스트에 따른 옵션 필터링
-  var filteredOptions = g$1.useMemo(function () {
+  var filteredOptions = React.useMemo(function () {
     if (!enableSearch || !searchText.trim()) {
       return options;
     }
@@ -3220,14 +3022,14 @@ var Dropdown = function (_a) {
     });
   }, [options, searchText, enableSearch]);
   // 선택된 옵션의 인덱스를 찾기 위한 함수
-  var getSelectedOptionIndex = g$1.useCallback(function () {
+  var getSelectedOptionIndex = React.useCallback(function () {
     if (!hasSelectedOption) return -1;
     return filteredOptions.findIndex(function (option) {
       return option.value === value;
     });
   }, [filteredOptions, value, hasSelectedOption]);
   // 선택된 옵션으로 스크롤 이동
-  var scrollToSelectedOption = g$1.useCallback(function () {
+  var scrollToSelectedOption = React.useCallback(function () {
     if (!hasSelectedOption) return;
     // 스크롤 실행 함수
     var performScroll = function () {
@@ -3262,7 +3064,7 @@ var Dropdown = function (_a) {
     setTimeout(retryScroll, 0);
   }, [hasSelectedOption, getSelectedOptionIndex]);
   // 드롭다운 열기/닫기 애니메이션 관리
-  g$1.useEffect(function () {
+  React.useEffect(function () {
     if (isOpen) {
       // 열기: 먼저 DOM에 마운트하고 애니메이션 시작
       setShouldRender(true);
@@ -3299,7 +3101,7 @@ var Dropdown = function (_a) {
     }
   }, [isOpen, enableSearch, scrollToSelectedOption]);
   // 외부 클릭 시 드롭다운 닫기
-  g$1.useEffect(function () {
+  React.useEffect(function () {
     var handleClickOutside = function (event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
@@ -3313,7 +3115,7 @@ var Dropdown = function (_a) {
     };
   }, [isOpen]);
   // ESC 키로 드롭다운 닫기
-  g$1.useEffect(function () {
+  React.useEffect(function () {
     var handleKeyDown = function (event) {
       if (event.key === 'Escape' && isOpen) {
         setIsOpen(false);
@@ -3326,7 +3128,7 @@ var Dropdown = function (_a) {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
-  var getContainerStyles = g$1.useCallback(function () {
+  var getContainerStyles = React.useCallback(function () {
     var borderColor = colors.semantic.border.strong; // #D6D6D6
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
     if (disabled) {
@@ -3355,7 +3157,7 @@ var Dropdown = function (_a) {
       userSelect: 'none'
     });
   }, [disabled, error, isOpen, width, hideOption, enableSearch]);
-  var getTextStyles = g$1.useCallback(function () {
+  var getTextStyles = React.useCallback(function () {
     var textColor;
     if (disabled) {
       textColor = colors.semantic.disabled.foreground; // #D1D5DB
@@ -3379,7 +3181,7 @@ var Dropdown = function (_a) {
       userSelect: !enableSearch || hideOption ? 'none' : 'auto' // hideOption도 고려하여 user-select 설정
     };
   }, [disabled, error, hasSelectedOption, enableSearch, hideOption]);
-  var getInputStyles = g$1.useCallback(function () {
+  var getInputStyles = React.useCallback(function () {
     return {
       flex: 1,
       fontSize: '14px',
@@ -3394,7 +3196,7 @@ var Dropdown = function (_a) {
       width: '100%'
     };
   }, []);
-  var getIconColor = g$1.useCallback(function () {
+  var getIconColor = React.useCallback(function () {
     if (disabled) {
       return colors.semantic.disabled.foreground; // #D1D5DB
     } else if (error) {
@@ -3403,25 +3205,25 @@ var Dropdown = function (_a) {
       return colors.semantic.text.primary; // #25282D
     }
   }, [disabled, error]);
-  var getChevronIcon = g$1.useCallback(function () {
+  var getChevronIcon = React.useCallback(function () {
     return jsxRuntime.jsx(Icon, {
       type: isOpen ? 'chevron-up' : 'chevron-down',
       size: 20,
       color: "currentColor"
     });
   }, [isOpen]);
-  var handleClick = g$1.useCallback(function () {
+  var handleClick = React.useCallback(function () {
     if (!disabled && !hideOption) {
       setIsOpen(!isOpen);
     }
   }, [disabled, hideOption, isOpen]);
-  var handleOptionClick = g$1.useCallback(function (optionValue) {
+  var handleOptionClick = React.useCallback(function (optionValue) {
     if (!disabled) {
       onChange === null || onChange === void 0 ? void 0 : onChange(optionValue);
       setIsOpen(false);
     }
   }, [disabled, onChange]);
-  var handleKeyDown = g$1.useCallback(function (event) {
+  var handleKeyDown = React.useCallback(function (event) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       if (!hideOption) {
@@ -3429,7 +3231,7 @@ var Dropdown = function (_a) {
       }
     }
   }, [handleClick, hideOption]);
-  var handleInputKeyDown = g$1.useCallback(function (event) {
+  var handleInputKeyDown = React.useCallback(function (event) {
     if (!enableSearch) return;
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -3448,12 +3250,12 @@ var Dropdown = function (_a) {
       setIsOpen(false);
     }
   }, [enableSearch, filteredOptions, handleOptionClick]);
-  var handleInputChange = g$1.useCallback(function (event) {
+  var handleInputChange = React.useCallback(function (event) {
     if (!enableSearch) return;
     setSearchText(event.target.value);
     setHoveredOptionIndex(null);
   }, [enableSearch]);
-  var getOptionStyles = g$1.useCallback(function (option, index, isSelected) {
+  var getOptionStyles = React.useCallback(function (option, index, isSelected) {
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
     var textColor = colors.semantic.text.primary; // #25282D
     if (option.disabled) {
@@ -3482,7 +3284,7 @@ var Dropdown = function (_a) {
       transition: 'background-color 0.2s ease'
     };
   }, [hoveredOptionIndex]);
-  var dropdownOptionsStyle = g$1.useMemo(function () {
+  var dropdownOptionsStyle = React.useMemo(function () {
     return {
       position: 'absolute',
       top: '100%',
@@ -3651,7 +3453,7 @@ var Dropdown = function (_a) {
 };
 Dropdown.displayName = 'Dropdown';
 
-var TextArea = g$1.forwardRef(function (_a, ref) {
+var TextArea = React.forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
     value = _a.value,
@@ -3676,13 +3478,13 @@ var TextArea = g$1.forwardRef(function (_a, ref) {
     _j = _a.rows,
     rows = _j === void 0 ? 4 : _j,
     restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "showCharacterCounter", "maxLength", "status", "width", "rows"]);
-  var _k = g$1.useState(false),
+  var _k = React.useState(false),
     isFocused = _k[0],
     setIsFocused = _k[1];
-  var _l = g$1.useState(false),
+  var _l = React.useState(false),
     isHovered = _l[0],
     setIsHovered = _l[1];
-  var _m = g$1.useState(defaultValue || ''),
+  var _m = React.useState(defaultValue || ''),
     internalValue = _m[0],
     setInternalValue = _m[1];
   var currentValue = value !== undefined ? value : internalValue;
@@ -3844,7 +3646,7 @@ var TextArea = g$1.forwardRef(function (_a, ref) {
 });
 TextArea.displayName = 'TextArea';
 
-var TextField = g$1.forwardRef(function (_a, ref) {
+var TextField = React.forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
     value = _a.value,
@@ -3873,19 +3675,19 @@ var TextField = g$1.forwardRef(function (_a, ref) {
     _h = _a.width,
     width = _h === void 0 ? '320px' : _h,
     restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "readOnly", "error", "errorMessage", "className", "type", "leadingIcon", "trailingIcon", "leadingIconType", "trailingIconType", "onLeadingIconClick", "onTrailingIconClick", "status", "width"]);
-  var _j = g$1.useState(false),
+  var _j = React.useState(false),
     isFocused = _j[0],
     setIsFocused = _j[1];
-  var _k = g$1.useState(false),
+  var _k = React.useState(false),
     isHovered = _k[0],
     setIsHovered = _k[1];
-  var _l = g$1.useState(defaultValue || ''),
+  var _l = React.useState(defaultValue || ''),
     internalValue = _l[0],
     setInternalValue = _l[1];
   var currentValue = value !== undefined ? value : internalValue;
   var isEmpty = !currentValue || currentValue.length === 0;
   var actualStatus = status || (isEmpty ? 'empty' : 'filled');
-  var getContainerStyles = g$1.useCallback(function () {
+  var getContainerStyles = React.useCallback(function () {
     var borderColor = colors.semantic.border.strong; // #D6D6D6
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
     if (disabled) {
@@ -3922,7 +3724,7 @@ var TextField = g$1.forwardRef(function (_a, ref) {
       width: getWidth()
     };
   }, [disabled, readOnly, error, isFocused, isHovered, width]);
-  var getInputStyles = g$1.useCallback(function () {
+  var getInputStyles = React.useCallback(function () {
     var textColor = colors.semantic.text.tertiary; // #8D97A5 for placeholder
     if (disabled) {
       textColor = colors.semantic.text.tertiary;
@@ -3942,7 +3744,7 @@ var TextField = g$1.forwardRef(function (_a, ref) {
       cursor: cursorStyle
     }, textStyles.body1);
   }, [disabled, error, actualStatus, readOnly]);
-  var getIconColor = g$1.useCallback(function () {
+  var getIconColor = React.useCallback(function () {
     if (disabled) {
       return colors.semantic.disabled.foreground; // #D1D5DB
     } else if (error) {
@@ -3951,17 +3753,17 @@ var TextField = g$1.forwardRef(function (_a, ref) {
       return colors.semantic.text.primary; // #25282D
     }
   }, [disabled, error]);
-  var handleFocus = g$1.useCallback(function () {
+  var handleFocus = React.useCallback(function () {
     if (!disabled && !readOnly) {
       setIsFocused(true);
       onFocus === null || onFocus === void 0 ? void 0 : onFocus();
     }
   }, [disabled, readOnly, onFocus]);
-  var handleBlur = g$1.useCallback(function () {
+  var handleBlur = React.useCallback(function () {
     setIsFocused(false);
     onBlur === null || onBlur === void 0 ? void 0 : onBlur();
   }, [onBlur]);
-  var handleChange = g$1.useCallback(function (e) {
+  var handleChange = React.useCallback(function (e) {
     if (readOnly) return; // readOnly일 때 값 변경 방지
     var newValue = e.target.value;
     if (value === undefined) {
@@ -3969,12 +3771,12 @@ var TextField = g$1.forwardRef(function (_a, ref) {
     }
     onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
   }, [value, onChange, readOnly]);
-  var handleMouseEnter = g$1.useCallback(function () {
+  var handleMouseEnter = React.useCallback(function () {
     if (!disabled && !readOnly && !isFocused) {
       setIsHovered(true);
     }
   }, [disabled, readOnly, isFocused]);
-  var handleMouseLeave = g$1.useCallback(function () {
+  var handleMouseLeave = React.useCallback(function () {
     setIsHovered(false);
   }, []);
   var iconColor = getIconColor();
