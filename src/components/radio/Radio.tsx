@@ -203,6 +203,10 @@ export const Radio: React.FC<RadioProps> = ({
     cursor: disabled ? 'not-allowed' : 'pointer',
   };
 
+  const radioContainerStyles: React.CSSProperties = {
+    paddingTop: description ? '2px' : '0', // label의 라인하이트와 맞추기 위한 조정
+  };
+
   const labelContainerStyles: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
@@ -227,8 +231,10 @@ export const Radio: React.FC<RadioProps> = ({
         style={{ display: 'none' }}
       />
 
-      <div style={getRadioStyles()}>
-        <div style={getDotStyles()} />
+      <div style={radioContainerStyles}>
+        <div style={getRadioStyles()}>
+          <div style={getDotStyles()} />
+        </div>
       </div>
 
       {(label || description) && (

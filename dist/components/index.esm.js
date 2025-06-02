@@ -1741,6 +1741,9 @@ var Radio = function (_a) {
     flexDirection: labelPosition === 'left' ? 'row-reverse' : 'row',
     cursor: disabled ? 'not-allowed' : 'pointer'
   };
+  var radioContainerStyles = {
+    paddingTop: description ? '2px' : '0' // label의 라인하이트와 맞추기 위한 조정
+  };
   var labelContainerStyles = {
     display: 'flex',
     flexDirection: 'column',
@@ -1763,9 +1766,12 @@ var Radio = function (_a) {
         display: 'none'
       }
     }), jsx("div", {
-      style: getRadioStyles(),
+      style: radioContainerStyles,
       children: jsx("div", {
-        style: getDotStyles()
+        style: getRadioStyles(),
+        children: jsx("div", {
+          style: getDotStyles()
+        })
       })
     }), (label || description) && jsxs("div", {
       style: labelContainerStyles,
