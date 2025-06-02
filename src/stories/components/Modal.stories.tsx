@@ -9,7 +9,8 @@ const meta = {
     layout: 'centered',
     docs: {
       description: {
-        component: 'Figma 디자인을 기반으로 구현된 모달 컴포넌트입니다.',
+        component:
+          'Figma 디자인을 기반으로 구현된 모달 컴포넌트입니다. contentComponent를 통해 다양한 React 컴포넌트를 주입할 수 있습니다.',
       },
     },
   },
@@ -19,7 +20,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// CloseButton=True, Button=1, Description=True, Image=False
+// CloseButton=True, Button=1, Description=True, Content=False
 export const SingleButtonWithDescription = {
   render: () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -55,7 +56,7 @@ export const SingleButtonWithDescription = {
   args: {},
 } as any;
 
-// CloseButton=True, Button=2, Description=True, Image=False
+// CloseButton=True, Button=2, Description=True, Content=False
 export const TwoButtonsWithDescription = {
   render: () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -95,7 +96,7 @@ export const TwoButtonsWithDescription = {
   args: {},
 } as any;
 
-// CloseButton=True, Button=1, Description=False, Image=True
+// CloseButton=True, Button=1, Description=False, Content=Image
 export const SingleButtonWithImage = {
   render: () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -117,7 +118,18 @@ export const SingleButtonWithImage = {
         </button>
         <Modal
           title="Modal Title h1"
-          image="https://via.placeholder.com/400x240"
+          contentComponent={
+            <img
+              src="https://via.placeholder.com/400x240"
+              alt="예시 이미지"
+              style={{
+                width: '100%',
+                height: '240px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+              }}
+            />
+          }
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
@@ -131,7 +143,7 @@ export const SingleButtonWithImage = {
   args: {},
 } as any;
 
-// CloseButton=True, Button=1, Description=True, Image=True
+// CloseButton=True, Button=1, Description=True, Content=Image
 export const SingleButtonWithDescriptionAndImage = {
   render: () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -154,7 +166,18 @@ export const SingleButtonWithDescriptionAndImage = {
         <Modal
           title="Modal Title h1"
           description="Popup Contents Text body1 Area"
-          image="https://via.placeholder.com/400x240"
+          contentComponent={
+            <img
+              src="https://via.placeholder.com/400x240"
+              alt="예시 이미지"
+              style={{
+                width: '100%',
+                height: '240px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+              }}
+            />
+          }
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
@@ -168,7 +191,7 @@ export const SingleButtonWithDescriptionAndImage = {
   args: {},
 } as any;
 
-// CloseButton=True, Button=2, Description=True, Image=True
+// CloseButton=True, Button=2, Description=True, Content=Image
 export const TwoButtonsWithDescriptionAndImage = {
   render: () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -191,7 +214,18 @@ export const TwoButtonsWithDescriptionAndImage = {
         <Modal
           title="Modal Title h1"
           description="Popup Contents Text body1 Area"
-          image="https://via.placeholder.com/400x240"
+          contentComponent={
+            <img
+              src="https://via.placeholder.com/400x240"
+              alt="예시 이미지"
+              style={{
+                width: '100%',
+                height: '240px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+              }}
+            />
+          }
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
@@ -241,6 +275,209 @@ export const WithoutCloseButton = {
           }}
           secondaryButton={{
             text: '취소',
+            onClick: () => setIsOpen(false),
+          }}
+        />
+      </div>
+    );
+  },
+  args: {},
+} as any;
+
+// 커스텀 컴포넌트 예시
+export const WithCustomComponent = {
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const CustomComponent = () => (
+      <div
+        style={{
+          padding: '20px',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '8px',
+          border: '1px solid #e9ecef',
+        }}
+      >
+        <h3 style={{ margin: '0 0 12px 0', color: '#495057' }}>커스텀 컴포넌트</h3>
+        <p style={{ margin: '0 0 16px 0', color: '#6c757d' }}>
+          이곳에는 어떤 React 컴포넌트든 올 수 있습니다.
+        </p>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <span
+            style={{
+              padding: '4px 8px',
+              backgroundColor: '#007bff',
+              color: 'white',
+              borderRadius: '4px',
+              fontSize: '12px',
+            }}
+          >
+            태그1
+          </span>
+          <span
+            style={{
+              padding: '4px 8px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              borderRadius: '4px',
+              fontSize: '12px',
+            }}
+          >
+            태그2
+          </span>
+        </div>
+      </div>
+    );
+
+    return (
+      <div>
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            padding: '12px 16px',
+            backgroundColor: '#7248D9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          커스텀 컴포넌트 모달
+        </button>
+        <Modal
+          title="커스텀 컴포넌트 모달"
+          description="contentComponent에 커스텀 컴포넌트를 주입한 예시입니다."
+          contentComponent={<CustomComponent />}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          primaryButton={{
+            text: '확인',
+            onClick: () => setIsOpen(false),
+          }}
+        />
+      </div>
+    );
+  },
+  args: {},
+} as any;
+
+// 폼 컴포넌트 예시
+export const WithFormComponent = {
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [formData, setFormData] = useState({ name: '', email: '' });
+
+    const FormComponent = () => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '500' }}>이름</label>
+          <input
+            type="text"
+            value={formData.name}
+            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              border: '1px solid #e9ecef',
+              borderRadius: '4px',
+              fontSize: '14px',
+            }}
+            placeholder="이름을 입력하세요"
+          />
+        </div>
+        <div>
+          <label style={{ display: 'block', marginBottom: '4px', fontWeight: '500' }}>이메일</label>
+          <input
+            type="email"
+            value={formData.email}
+            onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              border: '1px solid #e9ecef',
+              borderRadius: '4px',
+              fontSize: '14px',
+            }}
+            placeholder="이메일을 입력하세요"
+          />
+        </div>
+      </div>
+    );
+
+    return (
+      <div>
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            padding: '12px 16px',
+            backgroundColor: '#7248D9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          폼 모달 열기
+        </button>
+        <Modal
+          title="사용자 정보 입력"
+          description="아래 폼을 작성해주세요."
+          contentComponent={<FormComponent />}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          primaryButton={{
+            text: '저장',
+            onClick: () => {
+              console.log('저장된 데이터:', formData);
+              setIsOpen(false);
+            },
+          }}
+          secondaryButton={{
+            text: '취소',
+            onClick: () => setIsOpen(false),
+          }}
+        />
+      </div>
+    );
+  },
+  args: {},
+} as any;
+
+// 비디오 컴포넌트 예시
+export const WithVideoComponent = {
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const VideoComponent = () => (
+      <video width="100%" height="240" controls style={{ borderRadius: '8px' }}>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    );
+
+    return (
+      <div>
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            padding: '12px 16px',
+            backgroundColor: '#7248D9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          비디오 모달 열기
+        </button>
+        <Modal
+          title="비디오 플레이어"
+          description="contentComponent에 비디오를 주입한 예시입니다."
+          contentComponent={<VideoComponent />}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          primaryButton={{
+            text: '닫기',
             onClick: () => setIsOpen(false),
           }}
         />

@@ -5,8 +5,8 @@ export interface ModalProps {
     title: string;
     /** 모달 설명 (선택사항) */
     description?: string;
-    /** 이미지 URL (선택사항) */
-    image?: string;
+    /** 이미지 컴포넌트 (선택사항) */
+    contentComponent?: React.ReactNode;
     /** 닫기 버튼 표시 여부 */
     showCloseButton?: boolean;
     /** 메인 버튼 props */

@@ -10,8 +10,8 @@ export interface ModalProps {
   title: string;
   /** 모달 설명 (선택사항) */
   description?: string;
-  /** 이미지 URL (선택사항) */
-  image?: string;
+  /** 이미지 컴포넌트 (선택사항) */
+  contentComponent?: React.ReactNode;
   /** 닫기 버튼 표시 여부 */
   showCloseButton?: boolean;
   /** 메인 버튼 props */
@@ -37,7 +37,7 @@ export interface ModalProps {
 export const Modal: React.FC<ModalProps> = ({
   title,
   description,
-  image,
+  contentComponent,
   showCloseButton = true,
   primaryButton,
   secondaryButton,
@@ -119,6 +119,12 @@ export const Modal: React.FC<ModalProps> = ({
     objectFit: 'cover',
   };
 
+  const imageContainerStyle: React.CSSProperties = {
+    width: '100%',
+    borderRadius: '8px',
+    overflow: 'hidden',
+  };
+
   const buttonContainerStyle: React.CSSProperties = {
     display: 'flex',
     gap: '12px',
@@ -150,18 +156,7 @@ export const Modal: React.FC<ModalProps> = ({
 
           {description && <p style={descriptionStyle}>{description}</p>}
 
-          {image && (
-            <img
-              src={image}
-              alt=""
-              style={imageStyle}
-              onError={(e) => {
-                // 이미지 로드 실패 시 placeholder 스타일로 변경
-                (e.target as HTMLImageElement).style.backgroundImage = 'none';
-                (e.target as HTMLImageElement).style.backgroundColor = colors.primary.coolGray[100];
-              }}
-            />
-          )}
+          {contentComponent && <div style={imageContainerStyle}>{contentComponent}</div>}
         </div>
 
         <div className="modal-buttons" style={buttonContainerStyle}>

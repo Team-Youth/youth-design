@@ -18,3 +18,6 @@ export declare const SingleButtonWithImage: any;
 export declare const SingleButtonWithDescriptionAndImage: any;
 export declare const TwoButtonsWithDescriptionAndImage: any;
 export declare const WithoutCloseButton: any;
+export declare const WithCustomComponent: any;
+export declare const WithFormComponent: any;
+export declare const WithVideoComponent: any;

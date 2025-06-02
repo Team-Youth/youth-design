@@ -2816,7 +2816,7 @@ var Popup = function (_a) {
 var Modal = function (_a) {
   var title = _a.title,
     description = _a.description,
-    image = _a.image,
+    contentComponent = _a.contentComponent,
     _b = _a.showCloseButton,
     showCloseButton = _b === void 0 ? true : _b,
     primaryButton = _a.primaryButton,
@@ -2881,12 +2881,17 @@ var Modal = function (_a) {
     color: colors.semantic.text.secondary,
     margin: 0
   });
-  var imageStyle = {
+  ({
     width: '100%',
     height: '240px',
     borderRadius: '8px',
     backgroundColor: colors.primary.coolGray[100],
     objectFit: 'cover'
+  });
+  var imageContainerStyle = {
+    width: '100%',
+    borderRadius: '8px',
+    overflow: 'hidden'
   };
   var buttonContainerStyle = {
     display: 'flex',
@@ -2929,15 +2934,9 @@ var Modal = function (_a) {
         }), description && jsxRuntime.jsx("p", {
           style: descriptionStyle,
           children: description
-        }), image && jsxRuntime.jsx("img", {
-          src: image,
-          alt: "",
-          style: imageStyle,
-          onError: function (e) {
-            // 이미지 로드 실패 시 placeholder 스타일로 변경
-            e.target.style.backgroundImage = 'none';
-            e.target.style.backgroundColor = colors.primary.coolGray[100];
-          }
+        }), contentComponent && jsxRuntime.jsx("div", {
+          style: imageContainerStyle,
+          children: contentComponent
         })]
       }), jsxRuntime.jsxs("div", {
         className: "modal-buttons",
