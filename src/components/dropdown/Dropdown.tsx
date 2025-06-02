@@ -221,9 +221,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
       letterSpacing: '-0.28px', // -2%
       fontFamily: 'Pretendard',
       color: textColor,
-      userSelect: !enableSearch ? 'none' : 'auto', // 검색 기능이 비활성화된 경우 user-select none
+      userSelect: !enableSearch || hideOption ? 'none' : 'auto', // hideOption도 고려하여 user-select 설정
     };
-  }, [disabled, error, hasSelectedOption, enableSearch]);
+  }, [disabled, error, hasSelectedOption, enableSearch, hideOption]);
 
   const getInputStyles = useCallback((): React.CSSProperties => {
     return {
