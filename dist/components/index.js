@@ -2930,43 +2930,64 @@ var Dropdown = function (_a) {
   }, [filteredOptions, value, hasSelectedOption]);
   // 선택된 옵션으로 스크롤 이동
   var scrollToSelectedOption = react.useCallback(function () {
-    if (!optionsContainerRef.current || !hasSelectedOption) return;
-    var selectedIndex = getSelectedOptionIndex();
-    if (selectedIndex === -1) return;
-    var container = optionsContainerRef.current;
-    var optionElements = container.children;
-    var selectedElement = optionElements[selectedIndex];
-    if (selectedElement) {
-      var containerHeight = container.clientHeight;
-      var optionHeight = selectedElement.offsetHeight;
-      var optionTop = selectedElement.offsetTop;
-      // 선택된 옵션이 중앙에 오도록 스크롤 위치 계산
-      var scrollTop = optionTop - containerHeight / 2 + optionHeight / 2;
-      container.scrollTop = Math.max(0, scrollTop);
-    }
+    if (!hasSelectedOption) return;
+    // 스크롤 실행 함수
+    var performScroll = function () {
+      if (!optionsContainerRef.current) return false;
+      var selectedIndex = getSelectedOptionIndex();
+      if (selectedIndex === -1) return false;
+      var container = optionsContainerRef.current;
+      var optionElements = container.children;
+      var selectedElement = optionElements[selectedIndex];
+      if (selectedElement && container.clientHeight > 0) {
+        var containerHeight = container.clientHeight;
+        var optionHeight = selectedElement.offsetHeight;
+        var optionTop = selectedElement.offsetTop;
+        // 선택된 옵션이 중앙에 오도록 스크롤 위치 계산
+        var scrollTop = optionTop - containerHeight / 2 + optionHeight / 2;
+        container.scrollTop = Math.max(0, scrollTop);
+        return true;
+      }
+      return false;
+    };
+    // 즉시 실행 시도
+    if (performScroll()) return;
+    // 재시도 로직 (최대 3번)
+    var retryCount = 0;
+    var maxRetries = 3;
+    var retryScroll = function () {
+      if (retryCount >= maxRetries) return;
+      if (performScroll()) return;
+      retryCount++;
+      setTimeout(retryScroll, 10); // 10ms씩 지연하여 재시도
+    };
+    setTimeout(retryScroll, 0);
   }, [hasSelectedOption, getSelectedOptionIndex]);
   // 드롭다운 열기/닫기 애니메이션 관리
   react.useEffect(function () {
     if (isOpen) {
       // 열기: 먼저 DOM에 마운트하고 애니메이션 시작
       setShouldRender(true);
-      // 두 번의 requestAnimationFrame으로 확실히 DOM 렌더링 후 애니메이션 시작
+      // hover 상태 초기화
+      setHoveredOptionIndex(null);
+      // 첫 번째 requestAnimationFrame으로 DOM 렌더링 대기
       requestAnimationFrame(function () {
+        // 두 번째 requestAnimationFrame으로 스크롤 설정 후 애니메이션 시작
         requestAnimationFrame(function () {
+          // 스크롤 위치를 애니메이션 시작 직전에 설정
+          scrollToSelectedOption();
           setIsAnimating(true);
           // 드롭다운이 열리고 검색이 활성화된 경우 input에 포커스
           if (enableSearch && inputRef.current) {
             inputRef.current.focus();
           }
-          // 선택된 옵션으로 스크롤 이동
-          setTimeout(function () {
-            scrollToSelectedOption();
-          }, 50); // 애니메이션이 시작된 후 스크롤 이동
         });
       });
     } else {
       // 닫기: 애니메이션 시작하고 완료 후 DOM에서 제거
       setIsAnimating(false);
+      // hover 상태 초기화
+      setHoveredOptionIndex(null);
       // 검색 텍스트 초기화 (검색이 활성화된 경우에만)
       if (enableSearch) {
         setSearchText('');
