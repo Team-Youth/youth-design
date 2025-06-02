@@ -49,7 +49,8 @@
   "license": "MIT",
   "peerDependencies": {
     "react": ">=16.8.0",
-    "react-dom": ">=16.8.0"
+    "react-dom": ">=16.8.0",
+    "react-hot-toast": ">=2.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
@@ -105,5 +106,8 @@
   "bugs": {
     "url": "https://github.com/Team-Youth/youth-design/issues"
   },
-  "homepage": "https://github.com/Team-Youth/youth-design#readme"
+  "homepage": "https://github.com/Team-Youth/youth-design#readme",
+  "dependencies": {
+    "react-hot-toast": "^2.5.2"
+  }
 }

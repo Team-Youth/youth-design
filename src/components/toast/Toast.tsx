@@ -4,7 +4,7 @@ import { radius } from '../../tokens/radius';
 import { shadows } from '../../tokens/shadows';
 import { spacing } from '../../tokens/spacing';
 import { textStyles } from '../../tokens/typography';
-import { Icon } from '../icon/Icon';
+import { Icon } from '../icon';
 
 // 토스트 상태 타입 정의
 export type ToastStatus = 'success' | 'error' | 'warning' | 'info';

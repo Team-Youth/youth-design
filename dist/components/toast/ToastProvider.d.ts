@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { ToastProps } from './Toast';
 export interface ToastItem extends Omit<ToastProps, 'onClose'> {
-    id: string;
+    id?: string;
     duration?: number;
 }
 interface ToastProviderProps {
@@ -14,13 +14,13 @@ interface ToastProviderProps {
 /**
  * Toast Provider 컴포넌트
  *
- * 앱 전체에서 Toast를 관리할 수 있는 Context를 제공합니다.
+ * react-hot-toast를 래핑하여 기존 Toast 컴포넌트와 함께 사용할 수 있는 Provider입니다.
  */
 export declare const ToastProvider: React.FC<ToastProviderProps>;
 /**
  * useToast 훅
  *
- * Toast를 간편하게 사용할 수 있는 훅입니다.
+ * react-hot-toast를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 export declare const useToast: () => {
     success: (title: string, description?: string, options?: Partial<ToastItem>) => string;
