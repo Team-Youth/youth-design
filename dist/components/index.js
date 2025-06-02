@@ -2733,7 +2733,7 @@ var Modal = function (_a) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1000
+    zIndex: 9999
   }, style);
   var modalStyle = {
     backgroundColor: colors.semantic.background.primary,
