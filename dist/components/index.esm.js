@@ -1,5 +1,5 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import { useState, forwardRef, createContext, useCallback, useContext, useRef, useMemo, useEffect } from 'react';
+import React, { useState, forwardRef, createContext, useCallback, useContext, useEffect, useRef, useMemo } from 'react';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -2710,16 +2710,32 @@ var Modal = function (_a) {
   var title = _a.title,
     description = _a.description,
     contentComponent = _a.contentComponent,
-    _b = _a.showCloseButton,
-    showCloseButton = _b === void 0 ? true : _b,
+    _b = _a.contentMaxHeight,
+    contentMaxHeight = _b === void 0 ? 500 : _b,
+    _c = _a.showScrollbar,
+    showScrollbar = _c === void 0 ? false : _c,
+    _d = _a.showCloseButton,
+    showCloseButton = _d === void 0 ? true : _d,
     primaryButton = _a.primaryButton,
     secondaryButton = _a.secondaryButton,
     isOpen = _a.isOpen,
     onClose = _a.onClose,
-    _c = _a.className,
-    className = _c === void 0 ? '' : _c,
-    _d = _a.style,
-    style = _d === void 0 ? {} : _d;
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.style,
+    style = _f === void 0 ? {} : _f;
+  var _g = React.useState(false),
+    isContentOverflowing = _g[0],
+    setIsContentOverflowing = _g[1];
+  var contentRef = React.useRef(null);
+  useEffect(function () {
+    if (contentComponent && contentRef.current) {
+      var _a = contentRef.current,
+        scrollHeight = _a.scrollHeight,
+        clientHeight = _a.clientHeight;
+      setIsContentOverflowing(scrollHeight > clientHeight);
+    }
+  }, [contentComponent, contentMaxHeight]);
   if (!isOpen) return null;
   var overlayStyle = __assign({
     position: 'fixed',
@@ -2738,8 +2754,8 @@ var Modal = function (_a) {
     borderRadius: '16px',
     padding: '32px',
     minWidth: '480px',
-    maxWidth: '90vw',
-    maxHeight: '90vh',
+    maxWidth: 'calc(100vw - 40px)',
+    maxHeight: 'calc(100vh - 40px)',
     boxShadow: shadows.m,
     display: 'flex',
     flexDirection: 'column',
@@ -2749,7 +2765,8 @@ var Modal = function (_a) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '20px'
+    gap: '20px',
+    flexShrink: 0
   };
   var titleStyle = __assign(__assign({}, textStyles.heading1), {
     color: colors.semantic.text.primary,
@@ -2768,7 +2785,9 @@ var Modal = function (_a) {
   var contentStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px'
+    gap: '16px',
+    flex: 1,
+    minHeight: 0
   };
   var descriptionStyle = __assign(__assign({}, textStyles.body1), {
     color: colors.semantic.text.secondary,
@@ -2777,13 +2796,21 @@ var Modal = function (_a) {
   var imageContainerStyle = {
     width: '100%',
     borderRadius: '8px',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    maxHeight: "".concat(contentMaxHeight, "px"),
+    overflowY: 'auto',
+    scrollbarWidth: showScrollbar ? 'thin' : 'none',
+    msOverflowStyle: showScrollbar ? 'auto' : 'none'
   };
-  var buttonContainerStyle = {
+  var buttonContainerStyle = __assign({
     display: 'flex',
     gap: '12px',
-    flexDirection: secondaryButton ? 'row' : 'column'
-  };
+    flexDirection: secondaryButton ? 'row' : 'column',
+    flexShrink: 0
+  }, isContentOverflowing && {
+    borderTop: "1px solid ".concat(colors.semantic.border.default),
+    paddingTop: '20px'
+  });
   var handleOverlayClick = function (e) {
     if (e.target === e.currentTarget) {
       onClose();
@@ -2821,7 +2848,9 @@ var Modal = function (_a) {
           style: descriptionStyle,
           children: description
         }), contentComponent && jsx("div", {
+          ref: contentRef,
           style: imageContainerStyle,
+          className: showScrollbar ? '' : 'modal-content-scrollable',
           children: contentComponent
         })]
       }), jsxs("div", {

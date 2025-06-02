@@ -21,3 +21,6 @@ export declare const WithoutCloseButton: any;
 export declare const WithCustomComponent: any;
 export declare const WithFormComponent: any;
 export declare const WithVideoComponent: any;
+export declare const WithCustomHeightAndScrollbar: any;
+export declare const WithLargeContentHeight: any;
+export declare const WithHiddenScrollbar: any;

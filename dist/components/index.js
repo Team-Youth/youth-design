@@ -1,7 +1,7 @@
 'use strict';
 
 var jsxRuntime = require('react/jsx-runtime');
-var react = require('react');
+var React = require('react');
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -500,10 +500,10 @@ var BoxButton = function (_a) {
     className = _f === void 0 ? '' : _f,
     _g = _a.isLoading,
     isLoading = _g === void 0 ? false : _g;
-  var _h = react.useState(false),
+  var _h = React.useState(false),
     isHovered = _h[0],
     setIsHovered = _h[1];
-  var _j = react.useState(false),
+  var _j = React.useState(false),
     isPressed = _j[0],
     setIsPressed = _j[1];
   // Size configurations
@@ -1154,7 +1154,7 @@ var Label = function (_a) {
   });
 };
 
-var TextInput = react.forwardRef(function (_a, ref) {
+var TextInput = React.forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
     value = _a.value,
@@ -1174,10 +1174,10 @@ var TextInput = react.forwardRef(function (_a, ref) {
     _g = _a.size,
     size = _g === void 0 ? 'l' : _g,
     restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "type", "size"]);
-  var _h = react.useState(false),
+  var _h = React.useState(false),
     isFocused = _h[0],
     setIsFocused = _h[1];
-  var _j = react.useState(defaultValue || ''),
+  var _j = React.useState(defaultValue || ''),
     internalValue = _j[0],
     setInternalValue = _j[1];
   // Size configurations
@@ -1408,7 +1408,7 @@ var Chips = function (_a) {
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
-  var _g = react.useState(false),
+  var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
   // Size configurations
@@ -1600,7 +1600,7 @@ var Radio = function (_a) {
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
-  var _g = react.useState(false),
+  var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
   var getSizeConfig = function () {
@@ -1806,7 +1806,7 @@ var Checkbox = function (_a) {
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
-  var _g = react.useState(false),
+  var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
   var getSizeConfig = function () {
@@ -2021,7 +2021,7 @@ var Toggle = function (_a) {
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
-  var _g = react.useState(false),
+  var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
   var getSizeConfig = function () {
@@ -2425,7 +2425,7 @@ var Toast = function (_a) {
 };
 
 // Context 생성
-var ToastContext = react.createContext(undefined);
+var ToastContext = React.createContext(undefined);
 /**
  * Toast Provider 컴포넌트
  *
@@ -2437,11 +2437,11 @@ var ToastProvider = function (_a) {
     position = _b === void 0 ? 'top-right' : _b,
     _c = _a.defaultDuration,
     defaultDuration = _c === void 0 ? 4000 : _c;
-  var _d = react.useState([]),
+  var _d = React.useState([]),
     toasts = _d[0],
     setToasts = _d[1];
   // Toast 추가
-  var addToast = react.useCallback(function (toast) {
+  var addToast = React.useCallback(function (toast) {
     var _a;
     var id = "toast-".concat(Date.now(), "-").concat(Math.random());
     var duration = (_a = toast.duration) !== null && _a !== void 0 ? _a : defaultDuration;
@@ -2461,7 +2461,7 @@ var ToastProvider = function (_a) {
     return id;
   }, [defaultDuration]);
   // Toast 제거
-  var removeToast = react.useCallback(function (id) {
+  var removeToast = React.useCallback(function (id) {
     setToasts(function (prev) {
       return prev.filter(function (toast) {
         return toast.id !== id;
@@ -2469,7 +2469,7 @@ var ToastProvider = function (_a) {
     });
   }, []);
   // 모든 Toast 제거
-  var removeAllToasts = react.useCallback(function () {
+  var removeAllToasts = React.useCallback(function () {
     setToasts([]);
   }, []);
   // 위치별 스타일
@@ -2556,7 +2556,7 @@ var ToastProvider = function (_a) {
  * Toast를 간편하게 사용할 수 있는 훅입니다.
  */
 var useToast = function () {
-  var context = react.useContext(ToastContext);
+  var context = React.useContext(ToastContext);
   if (!context) {
     throw new Error('useToast must be used within a ToastProvider');
   }
@@ -2712,16 +2712,32 @@ var Modal = function (_a) {
   var title = _a.title,
     description = _a.description,
     contentComponent = _a.contentComponent,
-    _b = _a.showCloseButton,
-    showCloseButton = _b === void 0 ? true : _b,
+    _b = _a.contentMaxHeight,
+    contentMaxHeight = _b === void 0 ? 500 : _b,
+    _c = _a.showScrollbar,
+    showScrollbar = _c === void 0 ? false : _c,
+    _d = _a.showCloseButton,
+    showCloseButton = _d === void 0 ? true : _d,
     primaryButton = _a.primaryButton,
     secondaryButton = _a.secondaryButton,
     isOpen = _a.isOpen,
     onClose = _a.onClose,
-    _c = _a.className,
-    className = _c === void 0 ? '' : _c,
-    _d = _a.style,
-    style = _d === void 0 ? {} : _d;
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.style,
+    style = _f === void 0 ? {} : _f;
+  var _g = React.useState(false),
+    isContentOverflowing = _g[0],
+    setIsContentOverflowing = _g[1];
+  var contentRef = React.useRef(null);
+  React.useEffect(function () {
+    if (contentComponent && contentRef.current) {
+      var _a = contentRef.current,
+        scrollHeight = _a.scrollHeight,
+        clientHeight = _a.clientHeight;
+      setIsContentOverflowing(scrollHeight > clientHeight);
+    }
+  }, [contentComponent, contentMaxHeight]);
   if (!isOpen) return null;
   var overlayStyle = __assign({
     position: 'fixed',
@@ -2740,8 +2756,8 @@ var Modal = function (_a) {
     borderRadius: '16px',
     padding: '32px',
     minWidth: '480px',
-    maxWidth: '90vw',
-    maxHeight: '90vh',
+    maxWidth: 'calc(100vw - 40px)',
+    maxHeight: 'calc(100vh - 40px)',
     boxShadow: shadows.m,
     display: 'flex',
     flexDirection: 'column',
@@ -2751,7 +2767,8 @@ var Modal = function (_a) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: '20px'
+    gap: '20px',
+    flexShrink: 0
   };
   var titleStyle = __assign(__assign({}, textStyles.heading1), {
     color: colors.semantic.text.primary,
@@ -2770,7 +2787,9 @@ var Modal = function (_a) {
   var contentStyle = {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px'
+    gap: '16px',
+    flex: 1,
+    minHeight: 0
   };
   var descriptionStyle = __assign(__assign({}, textStyles.body1), {
     color: colors.semantic.text.secondary,
@@ -2779,13 +2798,21 @@ var Modal = function (_a) {
   var imageContainerStyle = {
     width: '100%',
     borderRadius: '8px',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    maxHeight: "".concat(contentMaxHeight, "px"),
+    overflowY: 'auto',
+    scrollbarWidth: showScrollbar ? 'thin' : 'none',
+    msOverflowStyle: showScrollbar ? 'auto' : 'none'
   };
-  var buttonContainerStyle = {
+  var buttonContainerStyle = __assign({
     display: 'flex',
     gap: '12px',
-    flexDirection: secondaryButton ? 'row' : 'column'
-  };
+    flexDirection: secondaryButton ? 'row' : 'column',
+    flexShrink: 0
+  }, isContentOverflowing && {
+    borderTop: "1px solid ".concat(colors.semantic.border.default),
+    paddingTop: '20px'
+  });
   var handleOverlayClick = function (e) {
     if (e.target === e.currentTarget) {
       onClose();
@@ -2823,7 +2850,9 @@ var Modal = function (_a) {
           style: descriptionStyle,
           children: description
         }), contentComponent && jsxRuntime.jsx("div", {
+          ref: contentRef,
           style: imageContainerStyle,
+          className: showScrollbar ? '' : 'modal-content-scrollable',
           children: contentComponent
         })]
       }), jsxRuntime.jsxs("div", {
@@ -2880,32 +2909,32 @@ var Dropdown = function (_a) {
     enableSearch = _h === void 0 ? false : _h,
     _j = _a.hideOption,
     hideOption = _j === void 0 ? false : _j;
-  var _k = react.useState(false),
+  var _k = React.useState(false),
     isOpen = _k[0],
     setIsOpen = _k[1];
-  var _l = react.useState(false),
+  var _l = React.useState(false),
     isAnimating = _l[0],
     setIsAnimating = _l[1];
-  var _m = react.useState(false),
+  var _m = React.useState(false),
     shouldRender = _m[0],
     setShouldRender = _m[1];
-  var _o = react.useState(null),
+  var _o = React.useState(null),
     hoveredOptionIndex = _o[0],
     setHoveredOptionIndex = _o[1];
-  var _p = react.useState(''),
+  var _p = React.useState(''),
     searchText = _p[0],
     setSearchText = _p[1];
-  var dropdownRef = react.useRef(null);
-  var optionsContainerRef = react.useRef(null);
-  var inputRef = react.useRef(null);
-  var selectedOption = react.useMemo(function () {
+  var dropdownRef = React.useRef(null);
+  var optionsContainerRef = React.useRef(null);
+  var inputRef = React.useRef(null);
+  var selectedOption = React.useMemo(function () {
     return options.find(function (option) {
       return option.value === value;
     });
   }, [options, value]);
   var hasSelectedOption = !!selectedOption;
   // 검색 텍스트에 따른 옵션 필터링
-  var filteredOptions = react.useMemo(function () {
+  var filteredOptions = React.useMemo(function () {
     if (!enableSearch || !searchText.trim()) {
       return options;
     }
@@ -2914,14 +2943,14 @@ var Dropdown = function (_a) {
     });
   }, [options, searchText, enableSearch]);
   // 선택된 옵션의 인덱스를 찾기 위한 함수
-  var getSelectedOptionIndex = react.useCallback(function () {
+  var getSelectedOptionIndex = React.useCallback(function () {
     if (!hasSelectedOption) return -1;
     return filteredOptions.findIndex(function (option) {
       return option.value === value;
     });
   }, [filteredOptions, value, hasSelectedOption]);
   // 선택된 옵션으로 스크롤 이동
-  var scrollToSelectedOption = react.useCallback(function () {
+  var scrollToSelectedOption = React.useCallback(function () {
     if (!hasSelectedOption) return;
     // 스크롤 실행 함수
     var performScroll = function () {
@@ -2956,7 +2985,7 @@ var Dropdown = function (_a) {
     setTimeout(retryScroll, 0);
   }, [hasSelectedOption, getSelectedOptionIndex]);
   // 드롭다운 열기/닫기 애니메이션 관리
-  react.useEffect(function () {
+  React.useEffect(function () {
     if (isOpen) {
       // 열기: 먼저 DOM에 마운트하고 애니메이션 시작
       setShouldRender(true);
@@ -2993,7 +3022,7 @@ var Dropdown = function (_a) {
     }
   }, [isOpen, enableSearch, scrollToSelectedOption]);
   // 외부 클릭 시 드롭다운 닫기
-  react.useEffect(function () {
+  React.useEffect(function () {
     var handleClickOutside = function (event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
@@ -3007,7 +3036,7 @@ var Dropdown = function (_a) {
     };
   }, [isOpen]);
   // ESC 키로 드롭다운 닫기
-  react.useEffect(function () {
+  React.useEffect(function () {
     var handleKeyDown = function (event) {
       if (event.key === 'Escape' && isOpen) {
         setIsOpen(false);
@@ -3020,7 +3049,7 @@ var Dropdown = function (_a) {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
-  var getContainerStyles = react.useCallback(function () {
+  var getContainerStyles = React.useCallback(function () {
     var borderColor = colors.semantic.border.strong; // #D6D6D6
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
     if (disabled) {
@@ -3049,7 +3078,7 @@ var Dropdown = function (_a) {
       userSelect: 'none'
     });
   }, [disabled, error, isOpen, width, hideOption, enableSearch]);
-  var getTextStyles = react.useCallback(function () {
+  var getTextStyles = React.useCallback(function () {
     var textColor;
     if (disabled) {
       textColor = colors.semantic.disabled.foreground; // #D1D5DB
@@ -3073,7 +3102,7 @@ var Dropdown = function (_a) {
       userSelect: !enableSearch || hideOption ? 'none' : 'auto' // hideOption도 고려하여 user-select 설정
     };
   }, [disabled, error, hasSelectedOption, enableSearch, hideOption]);
-  var getInputStyles = react.useCallback(function () {
+  var getInputStyles = React.useCallback(function () {
     return {
       flex: 1,
       fontSize: '14px',
@@ -3088,7 +3117,7 @@ var Dropdown = function (_a) {
       width: '100%'
     };
   }, []);
-  var getIconColor = react.useCallback(function () {
+  var getIconColor = React.useCallback(function () {
     if (disabled) {
       return colors.semantic.disabled.foreground; // #D1D5DB
     } else if (error) {
@@ -3097,25 +3126,25 @@ var Dropdown = function (_a) {
       return colors.semantic.text.primary; // #25282D
     }
   }, [disabled, error]);
-  var getChevronIcon = react.useCallback(function () {
+  var getChevronIcon = React.useCallback(function () {
     return jsxRuntime.jsx(Icon, {
       type: isOpen ? 'chevron-up' : 'chevron-down',
       size: 20,
       color: "currentColor"
     });
   }, [isOpen]);
-  var handleClick = react.useCallback(function () {
+  var handleClick = React.useCallback(function () {
     if (!disabled && !hideOption) {
       setIsOpen(!isOpen);
     }
   }, [disabled, hideOption, isOpen]);
-  var handleOptionClick = react.useCallback(function (optionValue) {
+  var handleOptionClick = React.useCallback(function (optionValue) {
     if (!disabled) {
       onChange === null || onChange === void 0 ? void 0 : onChange(optionValue);
       setIsOpen(false);
     }
   }, [disabled, onChange]);
-  var handleKeyDown = react.useCallback(function (event) {
+  var handleKeyDown = React.useCallback(function (event) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       if (!hideOption) {
@@ -3123,7 +3152,7 @@ var Dropdown = function (_a) {
       }
     }
   }, [handleClick, hideOption]);
-  var handleInputKeyDown = react.useCallback(function (event) {
+  var handleInputKeyDown = React.useCallback(function (event) {
     if (!enableSearch) return;
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -3142,12 +3171,12 @@ var Dropdown = function (_a) {
       setIsOpen(false);
     }
   }, [enableSearch, filteredOptions, handleOptionClick]);
-  var handleInputChange = react.useCallback(function (event) {
+  var handleInputChange = React.useCallback(function (event) {
     if (!enableSearch) return;
     setSearchText(event.target.value);
     setHoveredOptionIndex(null);
   }, [enableSearch]);
-  var getOptionStyles = react.useCallback(function (option, index, isSelected) {
+  var getOptionStyles = React.useCallback(function (option, index, isSelected) {
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
     var textColor = colors.semantic.text.primary; // #25282D
     if (option.disabled) {
@@ -3176,7 +3205,7 @@ var Dropdown = function (_a) {
       transition: 'background-color 0.2s ease'
     };
   }, [hoveredOptionIndex]);
-  var dropdownOptionsStyle = react.useMemo(function () {
+  var dropdownOptionsStyle = React.useMemo(function () {
     return {
       position: 'absolute',
       top: '100%',
@@ -3345,7 +3374,7 @@ var Dropdown = function (_a) {
 };
 Dropdown.displayName = 'Dropdown';
 
-var TextArea = react.forwardRef(function (_a, ref) {
+var TextArea = React.forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
     value = _a.value,
@@ -3370,13 +3399,13 @@ var TextArea = react.forwardRef(function (_a, ref) {
     _j = _a.rows,
     rows = _j === void 0 ? 4 : _j,
     restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "showCharacterCounter", "maxLength", "status", "width", "rows"]);
-  var _k = react.useState(false),
+  var _k = React.useState(false),
     isFocused = _k[0],
     setIsFocused = _k[1];
-  var _l = react.useState(false),
+  var _l = React.useState(false),
     isHovered = _l[0],
     setIsHovered = _l[1];
-  var _m = react.useState(defaultValue || ''),
+  var _m = React.useState(defaultValue || ''),
     internalValue = _m[0],
     setInternalValue = _m[1];
   var currentValue = value !== undefined ? value : internalValue;
@@ -3538,7 +3567,7 @@ var TextArea = react.forwardRef(function (_a, ref) {
 });
 TextArea.displayName = 'TextArea';
 
-var TextField = react.forwardRef(function (_a, ref) {
+var TextField = React.forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
     value = _a.value,
@@ -3567,19 +3596,19 @@ var TextField = react.forwardRef(function (_a, ref) {
     _h = _a.width,
     width = _h === void 0 ? '320px' : _h,
     restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "readOnly", "error", "errorMessage", "className", "type", "leadingIcon", "trailingIcon", "leadingIconType", "trailingIconType", "onLeadingIconClick", "onTrailingIconClick", "status", "width"]);
-  var _j = react.useState(false),
+  var _j = React.useState(false),
     isFocused = _j[0],
     setIsFocused = _j[1];
-  var _k = react.useState(false),
+  var _k = React.useState(false),
     isHovered = _k[0],
     setIsHovered = _k[1];
-  var _l = react.useState(defaultValue || ''),
+  var _l = React.useState(defaultValue || ''),
     internalValue = _l[0],
     setInternalValue = _l[1];
   var currentValue = value !== undefined ? value : internalValue;
   var isEmpty = !currentValue || currentValue.length === 0;
   var actualStatus = status || (isEmpty ? 'empty' : 'filled');
-  var getContainerStyles = react.useCallback(function () {
+  var getContainerStyles = React.useCallback(function () {
     var borderColor = colors.semantic.border.strong; // #D6D6D6
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
     if (disabled) {
@@ -3616,7 +3645,7 @@ var TextField = react.forwardRef(function (_a, ref) {
       width: getWidth()
     };
   }, [disabled, readOnly, error, isFocused, isHovered, width]);
-  var getInputStyles = react.useCallback(function () {
+  var getInputStyles = React.useCallback(function () {
     var textColor = colors.semantic.text.tertiary; // #8D97A5 for placeholder
     if (disabled) {
       textColor = colors.semantic.text.tertiary;
@@ -3636,7 +3665,7 @@ var TextField = react.forwardRef(function (_a, ref) {
       cursor: cursorStyle
     }, textStyles.body1);
   }, [disabled, error, actualStatus, readOnly]);
-  var getIconColor = react.useCallback(function () {
+  var getIconColor = React.useCallback(function () {
     if (disabled) {
       return colors.semantic.disabled.foreground; // #D1D5DB
     } else if (error) {
@@ -3645,17 +3674,17 @@ var TextField = react.forwardRef(function (_a, ref) {
       return colors.semantic.text.primary; // #25282D
     }
   }, [disabled, error]);
-  var handleFocus = react.useCallback(function () {
+  var handleFocus = React.useCallback(function () {
     if (!disabled && !readOnly) {
       setIsFocused(true);
       onFocus === null || onFocus === void 0 ? void 0 : onFocus();
     }
   }, [disabled, readOnly, onFocus]);
-  var handleBlur = react.useCallback(function () {
+  var handleBlur = React.useCallback(function () {
     setIsFocused(false);
     onBlur === null || onBlur === void 0 ? void 0 : onBlur();
   }, [onBlur]);
-  var handleChange = react.useCallback(function (e) {
+  var handleChange = React.useCallback(function (e) {
     if (readOnly) return; // readOnly일 때 값 변경 방지
     var newValue = e.target.value;
     if (value === undefined) {
@@ -3663,12 +3692,12 @@ var TextField = react.forwardRef(function (_a, ref) {
     }
     onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
   }, [value, onChange, readOnly]);
-  var handleMouseEnter = react.useCallback(function () {
+  var handleMouseEnter = React.useCallback(function () {
     if (!disabled && !readOnly && !isFocused) {
       setIsHovered(true);
     }
   }, [disabled, readOnly, isFocused]);
-  var handleMouseLeave = react.useCallback(function () {
+  var handleMouseLeave = React.useCallback(function () {
     setIsHovered(false);
   }, []);
   var iconColor = getIconColor();

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BoxButton, BoxButtonProps } from '../box-button';
 import { Icon } from '../icon';
 import { colors } from '../../tokens/colors';
 import { textStyles } from '../../tokens/typography';
 import { shadows } from '../../tokens/shadows';
+import './Modal.css';
 
 export interface ModalProps {
   /** 모달 제목 */
@@ -12,6 +13,10 @@ export interface ModalProps {
   description?: string;
   /** 이미지 컴포넌트 (선택사항) */
   contentComponent?: React.ReactNode;
+  /** 컨텐츠 최대 높이 (기본값: 500px) */
+  contentMaxHeight?: number;
+  /** 스크롤바 표시 여부 (기본값: false) */
+  showScrollbar?: boolean;
   /** 닫기 버튼 표시 여부 */
   showCloseButton?: boolean;
   /** 메인 버튼 props */
@@ -38,6 +43,8 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   description,
   contentComponent,
+  contentMaxHeight = 500,
+  showScrollbar = false,
   showCloseButton = true,
   primaryButton,
   secondaryButton,
@@ -46,6 +53,16 @@ export const Modal: React.FC<ModalProps> = ({
   className = '',
   style = {},
 }) => {
+  const [isContentOverflowing, setIsContentOverflowing] = React.useState(false);
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (contentComponent && contentRef.current) {
+      const { scrollHeight, clientHeight } = contentRef.current;
+      setIsContentOverflowing(scrollHeight > clientHeight);
+    }
+  }, [contentComponent, contentMaxHeight]);
+
   if (!isOpen) return null;
 
   const overlayStyle: React.CSSProperties = {
@@ -67,8 +84,8 @@ export const Modal: React.FC<ModalProps> = ({
     borderRadius: '16px',
     padding: '32px',
     minWidth: '480px',
-    maxWidth: '90vw',
-    maxHeight: '90vh',
+    maxWidth: 'calc(100vw - 40px)',
+    maxHeight: 'calc(100vh - 40px)',
     boxShadow: shadows.m,
     display: 'flex',
     flexDirection: 'column',
@@ -80,6 +97,7 @@ export const Modal: React.FC<ModalProps> = ({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: '20px',
+    flexShrink: 0,
   };
 
   const titleStyle: React.CSSProperties = {
@@ -103,6 +121,8 @@ export const Modal: React.FC<ModalProps> = ({
     display: 'flex',
     flexDirection: 'column',
     gap: '16px',
+    flex: 1,
+    minHeight: 0,
   };
 
   const descriptionStyle: React.CSSProperties = {
@@ -123,12 +143,21 @@ export const Modal: React.FC<ModalProps> = ({
     width: '100%',
     borderRadius: '8px',
     overflow: 'hidden',
+    maxHeight: `${contentMaxHeight}px`,
+    overflowY: 'auto',
+    scrollbarWidth: showScrollbar ? 'thin' : 'none',
+    msOverflowStyle: showScrollbar ? 'auto' : 'none',
   };
 
   const buttonContainerStyle: React.CSSProperties = {
     display: 'flex',
     gap: '12px',
     flexDirection: secondaryButton ? 'row' : 'column',
+    flexShrink: 0,
+    ...(isContentOverflowing && {
+      borderTop: `1px solid ${colors.semantic.border.default}`,
+      paddingTop: '20px',
+    }),
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -156,7 +185,15 @@ export const Modal: React.FC<ModalProps> = ({
 
           {description && <p style={descriptionStyle}>{description}</p>}
 
-          {contentComponent && <div style={imageContainerStyle}>{contentComponent}</div>}
+          {contentComponent && (
+            <div
+              ref={contentRef}
+              style={imageContainerStyle}
+              className={showScrollbar ? '' : 'modal-content-scrollable'}
+            >
+              {contentComponent}
+            </div>
+          )}
         </div>
 
         <div className="modal-buttons" style={buttonContainerStyle}>

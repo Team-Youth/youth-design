@@ -486,3 +486,159 @@ export const WithVideoComponent = {
   },
   args: {},
 } as any;
+
+// 커스텀 높이와 스크롤바 표시 예시
+export const WithCustomHeightAndScrollbar = {
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const LongContentComponent = () => (
+      <div style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+        <h3 style={{ margin: '0 0 16px 0' }}>긴 콘텐츠 예시</h3>
+        {Array.from({ length: 20 }, (_, i) => (
+          <p key={i} style={{ margin: '0 0 12px 0', lineHeight: '1.5' }}>
+            이것은 {i + 1}번째 문단입니다. 이 콘텐츠는 설정된 최대 높이를 넘어가서 스크롤이
+            필요합니다. contentMaxHeight prop을 통해 최대 높이를 조절할 수 있고, showScrollbar
+            prop을 통해 스크롤바 표시 여부를 결정할 수 있습니다.
+          </p>
+        ))}
+      </div>
+    );
+
+    return (
+      <div>
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            padding: '12px 16px',
+            backgroundColor: '#7248D9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          커스텀 높이 + 스크롤바 표시
+        </button>
+        <Modal
+          title="커스텀 높이와 스크롤바"
+          description="contentMaxHeight를 300px로 설정하고 스크롤바를 표시합니다."
+          contentComponent={<LongContentComponent />}
+          contentMaxHeight={300}
+          showScrollbar={true}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          primaryButton={{
+            text: '확인',
+            onClick: () => setIsOpen(false),
+          }}
+          secondaryButton={{
+            text: '취소',
+            onClick: () => setIsOpen(false),
+          }}
+        />
+      </div>
+    );
+  },
+  args: {},
+} as any;
+
+// 큰 높이 설정 예시
+export const WithLargeContentHeight = {
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const MediumContentComponent = () => (
+      <div style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+        <h3 style={{ margin: '0 0 16px 0' }}>중간 길이 콘텐츠</h3>
+        {Array.from({ length: 15 }, (_, i) => (
+          <p key={i} style={{ margin: '0 0 12px 0', lineHeight: '1.5' }}>
+            이것은 {i + 1}번째 문단입니다. contentMaxHeight를 800px로 설정한 예시입니다. 이 정도
+            양의 콘텐츠는 스크롤 없이 모두 표시됩니다.
+          </p>
+        ))}
+      </div>
+    );
+
+    return (
+      <div>
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            padding: '12px 16px',
+            backgroundColor: '#7248D9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          큰 높이 설정 (800px)
+        </button>
+        <Modal
+          title="큰 높이 설정"
+          description="contentMaxHeight를 800px로 설정한 예시입니다."
+          contentComponent={<MediumContentComponent />}
+          contentMaxHeight={800}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          primaryButton={{
+            text: '확인',
+            onClick: () => setIsOpen(false),
+          }}
+        />
+      </div>
+    );
+  },
+  args: {},
+} as any;
+
+// 스크롤바 숨김 예시 (기본값)
+export const WithHiddenScrollbar = {
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const LongContentComponent = () => (
+      <div style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+        <h3 style={{ margin: '0 0 16px 0' }}>긴 콘텐츠 (스크롤바 숨김)</h3>
+        {Array.from({ length: 25 }, (_, i) => (
+          <p key={i} style={{ margin: '0 0 12px 0', lineHeight: '1.5' }}>
+            이것은 {i + 1}번째 문단입니다. showScrollbar가 false(기본값)로 설정되어 스크롤바가
+            숨겨져 있지만 마우스 휠이나 터치로 스크롤할 수 있습니다.
+          </p>
+        ))}
+      </div>
+    );
+
+    return (
+      <div>
+        <button
+          onClick={() => setIsOpen(true)}
+          style={{
+            padding: '12px 16px',
+            backgroundColor: '#7248D9',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          스크롤바 숨김 (기본값)
+        </button>
+        <Modal
+          title="스크롤바 숨김"
+          description="showScrollbar가 false(기본값)로 설정된 예시입니다."
+          contentComponent={<LongContentComponent />}
+          showScrollbar={false}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          primaryButton={{
+            text: '확인',
+            onClick: () => setIsOpen(false),
+          }}
+        />
+      </div>
+    );
+  },
+  args: {},
+} as any;
