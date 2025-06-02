@@ -55,6 +55,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
   const [searchText, setSearchText] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const optionsContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const selectedOption = useMemo(
@@ -73,6 +74,34 @@ export const Dropdown: React.FC<DropdownProps> = ({
     );
   }, [options, searchText, enableSearch]);
 
+  // 선택된 옵션의 인덱스를 찾기 위한 함수
+  const getSelectedOptionIndex = useCallback(() => {
+    if (!hasSelectedOption) return -1;
+    return filteredOptions.findIndex((option) => option.value === value);
+  }, [filteredOptions, value, hasSelectedOption]);
+
+  // 선택된 옵션으로 스크롤 이동
+  const scrollToSelectedOption = useCallback(() => {
+    if (!optionsContainerRef.current || !hasSelectedOption) return;
+
+    const selectedIndex = getSelectedOptionIndex();
+    if (selectedIndex === -1) return;
+
+    const container = optionsContainerRef.current;
+    const optionElements = container.children;
+    const selectedElement = optionElements[selectedIndex] as HTMLElement;
+
+    if (selectedElement) {
+      const containerHeight = container.clientHeight;
+      const optionHeight = selectedElement.offsetHeight;
+      const optionTop = selectedElement.offsetTop;
+
+      // 선택된 옵션이 중앙에 오도록 스크롤 위치 계산
+      const scrollTop = optionTop - containerHeight / 2 + optionHeight / 2;
+      container.scrollTop = Math.max(0, scrollTop);
+    }
+  }, [hasSelectedOption, getSelectedOptionIndex]);
+
   // 드롭다운 열기/닫기 애니메이션 관리
   useEffect(() => {
     if (isOpen) {
@@ -86,6 +115,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
           if (enableSearch && inputRef.current) {
             inputRef.current.focus();
           }
+          // 선택된 옵션으로 스크롤 이동
+          setTimeout(() => {
+            scrollToSelectedOption();
+          }, 50); // 애니메이션이 시작된 후 스크롤 이동
         });
       });
     } else {
@@ -101,7 +134,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
       return () => clearTimeout(timer);
     }
-  }, [isOpen, enableSearch]);
+  }, [isOpen, enableSearch, scrollToSelectedOption]);
 
   // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
@@ -162,8 +195,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
       cursor: disabled ? 'not-allowed' : 'pointer',
       width: width === 'fill' ? '100%' : width,
       boxSizing: 'border-box',
+      userSelect: !enableSearch ? 'none' : 'auto', // 검색 기능이 비활성화된 경우 user-select none
+      ...(hideOption && { userSelect: 'none' }),
     };
-  }, [disabled, error, isOpen, width]);
+  }, [disabled, error, isOpen, width, hideOption, enableSearch]);
 
   const getTextStyles = useCallback((): React.CSSProperties => {
     let textColor: string;
@@ -186,8 +221,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
       letterSpacing: '-0.28px', // -2%
       fontFamily: 'Pretendard',
       color: textColor,
+      userSelect: !enableSearch ? 'none' : 'auto', // 검색 기능이 비활성화된 경우 user-select none
     };
-  }, [disabled, error, hasSelectedOption]);
+  }, [disabled, error, hasSelectedOption, enableSearch]);
 
   const getInputStyles = useCallback((): React.CSSProperties => {
     return {
@@ -333,8 +369,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
       transform: isAnimating ? 'translateY(0) scaleY(1)' : 'translateY(-8px) scaleY(0.95)',
       transformOrigin: 'top center',
       transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)', // 자연스러운 easing
+      userSelect: !enableSearch ? 'none' : 'auto', // 검색 기능이 비활성화된 경우 user-select none
     }),
-    [isAnimating],
+    [isAnimating, enableSearch],
   );
 
   const getCheckIcon = () => <Icon type="check" size={20} color="currentColor" />;
@@ -412,7 +449,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       </div>
 
       {shouldRender && !hideOption && (
-        <div style={dropdownOptionsStyle} role="listbox">
+        <div style={dropdownOptionsStyle} role="listbox" ref={optionsContainerRef}>
           {filteredOptions.length === 0 ? (
             <div
               style={{
@@ -423,6 +460,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 color: colors.semantic.disabled.foreground,
                 fontFamily: 'Pretendard',
                 textAlign: 'center',
+                userSelect: !enableSearch ? 'none' : 'auto', // 검색 기능이 비활성화된 경우 user-select none
               }}
             >
               {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
@@ -433,7 +471,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
               return (
                 <div
                   key={option.value}
-                  style={getOptionStyles(option, index, isSelected)}
+                  style={{
+                    ...getOptionStyles(option, index, isSelected),
+                    userSelect: !enableSearch ? 'none' : 'auto', // 검색 기능이 비활성화된 경우 user-select none
+                  }}
                   onClick={() => !option.disabled && handleOptionClick(option.value)}
                   onMouseEnter={() => setHoveredOptionIndex(index)}
                   onMouseLeave={() => setHoveredOptionIndex(null)}

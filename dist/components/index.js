@@ -2904,6 +2904,7 @@ var Dropdown = function (_a) {
     searchText = _p[0],
     setSearchText = _p[1];
   var dropdownRef = react.useRef(null);
+  var optionsContainerRef = react.useRef(null);
   var inputRef = react.useRef(null);
   var selectedOption = react.useMemo(function () {
     return options.find(function (option) {
@@ -2920,6 +2921,30 @@ var Dropdown = function (_a) {
       return option.label.toLowerCase().includes(searchText.toLowerCase());
     });
   }, [options, searchText, enableSearch]);
+  // 선택된 옵션의 인덱스를 찾기 위한 함수
+  var getSelectedOptionIndex = react.useCallback(function () {
+    if (!hasSelectedOption) return -1;
+    return filteredOptions.findIndex(function (option) {
+      return option.value === value;
+    });
+  }, [filteredOptions, value, hasSelectedOption]);
+  // 선택된 옵션으로 스크롤 이동
+  var scrollToSelectedOption = react.useCallback(function () {
+    if (!optionsContainerRef.current || !hasSelectedOption) return;
+    var selectedIndex = getSelectedOptionIndex();
+    if (selectedIndex === -1) return;
+    var container = optionsContainerRef.current;
+    var optionElements = container.children;
+    var selectedElement = optionElements[selectedIndex];
+    if (selectedElement) {
+      var containerHeight = container.clientHeight;
+      var optionHeight = selectedElement.offsetHeight;
+      var optionTop = selectedElement.offsetTop;
+      // 선택된 옵션이 중앙에 오도록 스크롤 위치 계산
+      var scrollTop = optionTop - containerHeight / 2 + optionHeight / 2;
+      container.scrollTop = Math.max(0, scrollTop);
+    }
+  }, [hasSelectedOption, getSelectedOptionIndex]);
   // 드롭다운 열기/닫기 애니메이션 관리
   react.useEffect(function () {
     if (isOpen) {
@@ -2933,6 +2958,10 @@ var Dropdown = function (_a) {
           if (enableSearch && inputRef.current) {
             inputRef.current.focus();
           }
+          // 선택된 옵션으로 스크롤 이동
+          setTimeout(function () {
+            scrollToSelectedOption();
+          }, 50); // 애니메이션이 시작된 후 스크롤 이동
         });
       });
     } else {
@@ -2949,7 +2978,7 @@ var Dropdown = function (_a) {
         return clearTimeout(timer_1);
       };
     }
-  }, [isOpen, enableSearch]);
+  }, [isOpen, enableSearch, scrollToSelectedOption]);
   // 외부 클릭 시 드롭다운 닫기
   react.useEffect(function () {
     var handleClickOutside = function (event) {
@@ -2989,23 +3018,24 @@ var Dropdown = function (_a) {
     } else if (isOpen) {
       borderColor = colors.semantic.text.primary; // #25282D
     }
-    return {
+    return __assign({
       display: 'flex',
       alignItems: 'center',
       gap: spacing.xs,
-      // 8px
       padding: '13px 16px',
       // Figma 스펙에 맞춤
       backgroundColor: backgroundColor,
       border: "1px solid ".concat(borderColor),
       borderRadius: '8px',
-      // Figma 스펙에 맞춤
       transition: 'all 0.2s ease',
       cursor: disabled ? 'not-allowed' : 'pointer',
       width: width === 'fill' ? '100%' : width,
-      boxSizing: 'border-box'
-    };
-  }, [disabled, error, isOpen, width]);
+      boxSizing: 'border-box',
+      userSelect: !enableSearch ? 'none' : 'auto'
+    }, hideOption && {
+      userSelect: 'none'
+    });
+  }, [disabled, error, isOpen, width, hideOption, enableSearch]);
   var getTextStyles = react.useCallback(function () {
     var textColor;
     if (disabled) {
@@ -3026,9 +3056,10 @@ var Dropdown = function (_a) {
       letterSpacing: '-0.28px',
       // -2%
       fontFamily: 'Pretendard',
-      color: textColor
+      color: textColor,
+      userSelect: !enableSearch ? 'none' : 'auto' // 검색 기능이 비활성화된 경우 user-select none
     };
-  }, [disabled, error, hasSelectedOption]);
+  }, [disabled, error, hasSelectedOption, enableSearch]);
   var getInputStyles = react.useCallback(function () {
     return {
       flex: 1,
@@ -3153,9 +3184,11 @@ var Dropdown = function (_a) {
       opacity: isAnimating ? 1 : 0,
       transform: isAnimating ? 'translateY(0) scaleY(1)' : 'translateY(-8px) scaleY(0.95)',
       transformOrigin: 'top center',
-      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)' // 자연스러운 easing
+      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+      // 자연스러운 easing
+      userSelect: !enableSearch ? 'none' : 'auto' // 검색 기능이 비활성화된 경우 user-select none
     };
-  }, [isAnimating]);
+  }, [isAnimating, enableSearch]);
   var getCheckIcon = function () {
     return jsxRuntime.jsx(Icon, {
       type: "check",
@@ -3230,6 +3263,7 @@ var Dropdown = function (_a) {
     }), shouldRender && !hideOption && jsxRuntime.jsx("div", {
       style: dropdownOptionsStyle,
       role: "listbox",
+      ref: optionsContainerRef,
       children: filteredOptions.length === 0 ? jsxRuntime.jsx("div", {
         style: {
           padding: '13px 16px',
@@ -3238,13 +3272,16 @@ var Dropdown = function (_a) {
           lineHeight: '22px',
           color: colors.semantic.disabled.foreground,
           fontFamily: 'Pretendard',
-          textAlign: 'center'
+          textAlign: 'center',
+          userSelect: !enableSearch ? 'none' : 'auto' // 검색 기능이 비활성화된 경우 user-select none
         },
         children: enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'
       }) : filteredOptions.map(function (option, index) {
         var isSelected = value === option.value;
         return jsxRuntime.jsxs("div", {
-          style: getOptionStyles(option, index, isSelected),
+          style: __assign(__assign({}, getOptionStyles(option, index, isSelected)), {
+            userSelect: !enableSearch ? 'none' : 'auto'
+          }),
           onClick: function () {
             return !option.disabled && handleOptionClick(option.value);
           },
