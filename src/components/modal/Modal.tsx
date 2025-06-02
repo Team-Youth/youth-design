@@ -11,8 +11,8 @@ export interface ModalProps {
   title: string;
   /** 모달 설명 (선택사항) */
   description?: string;
-  /** 이미지 컴포넌트 (선택사항) */
-  contentComponent?: React.ReactNode;
+  /** 모달 내부 컨텐츠 */
+  children?: React.ReactNode;
   /** 컨텐츠 최대 높이 (기본값: 500px) */
   contentMaxHeight?: number;
   /** 스크롤바 표시 여부 (기본값: false) */
@@ -42,7 +42,7 @@ export interface ModalProps {
 export const Modal: React.FC<ModalProps> = ({
   title,
   description,
-  contentComponent,
+  children,
   contentMaxHeight = 500,
   showScrollbar = false,
   showCloseButton = true,
@@ -57,11 +57,11 @@ export const Modal: React.FC<ModalProps> = ({
   const contentRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (contentComponent && contentRef.current) {
+    if (children && contentRef.current) {
       const { scrollHeight, clientHeight } = contentRef.current;
       setIsContentOverflowing(scrollHeight > clientHeight);
     }
-  }, [contentComponent, contentMaxHeight]);
+  }, [children, contentMaxHeight]);
 
   if (!isOpen) return null;
 
@@ -189,13 +189,13 @@ export const Modal: React.FC<ModalProps> = ({
 
           {description && <p style={descriptionStyle}>{description}</p>}
 
-          {contentComponent && (
+          {children && (
             <div
               ref={contentRef}
               style={imageContainerStyle}
               className={showScrollbar ? '' : 'modal-content-scrollable'}
             >
-              {contentComponent}
+              {children}
             </div>
           )}
         </div>

@@ -2785,7 +2785,7 @@ var Popup = function (_a) {
 var Modal = function (_a) {
   var title = _a.title,
     description = _a.description,
-    contentComponent = _a.contentComponent,
+    children = _a.children,
     _b = _a.contentMaxHeight,
     contentMaxHeight = _b === void 0 ? 500 : _b,
     _c = _a.showScrollbar,
@@ -2805,13 +2805,13 @@ var Modal = function (_a) {
     setIsContentOverflowing = _g[1];
   var contentRef = React.useRef(null);
   React.useEffect(function () {
-    if (contentComponent && contentRef.current) {
+    if (children && contentRef.current) {
       var _a = contentRef.current,
         scrollHeight = _a.scrollHeight,
         clientHeight = _a.clientHeight;
       setIsContentOverflowing(scrollHeight > clientHeight);
     }
-  }, [contentComponent, contentMaxHeight]);
+  }, [children, contentMaxHeight]);
   if (!isOpen) return null;
   var overlayStyle = __assign({
     position: 'fixed',
@@ -2934,11 +2934,11 @@ var Modal = function (_a) {
         }), description && jsxRuntime.jsx("p", {
           style: descriptionStyle,
           children: description
-        }), contentComponent && jsxRuntime.jsx("div", {
+        }), children && jsxRuntime.jsx("div", {
           ref: contentRef,
           style: imageContainerStyle,
           className: showScrollbar ? '' : 'modal-content-scrollable',
-          children: contentComponent
+          children: children
         })]
       }), jsxRuntime.jsxs("div", {
         className: "modal-buttons",

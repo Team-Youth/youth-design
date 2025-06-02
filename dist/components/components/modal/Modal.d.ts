@@ -6,8 +6,8 @@ export interface ModalProps {
     title: string;
     /** 모달 설명 (선택사항) */
     description?: string;
-    /** 이미지 컴포넌트 (선택사항) */
-    contentComponent?: React.ReactNode;
+    /** 모달 내부 컨텐츠 */
+    children?: React.ReactNode;
     /** 컨텐츠 최대 높이 (기본값: 500px) */
     contentMaxHeight?: number;
     /** 스크롤바 표시 여부 (기본값: false) */

@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Figma 디자인을 기반으로 구현된 모달 컴포넌트입니다. contentComponent를 통해 다양한 React 컴포넌트를 주입할 수 있습니다.',
+          'Figma 디자인을 기반으로 구현된 모달 컴포넌트입니다. children을 통해 다양한 React 컴포넌트를 주입할 수 있습니다.',
       },
     },
   },
@@ -118,25 +118,24 @@ export const SingleButtonWithImage = {
         </button>
         <Modal
           title="Modal Title h1"
-          contentComponent={
-            <img
-              src="https://via.placeholder.com/400x240"
-              alt="예시 이미지"
-              style={{
-                width: '100%',
-                height: '240px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-              }}
-            />
-          }
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
             text: 'Button',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <img
+            src="https://via.placeholder.com/400x240"
+            alt="예시 이미지"
+            style={{
+              width: '100%',
+              height: '240px',
+              objectFit: 'cover',
+              borderRadius: '8px',
+            }}
+          />
+        </Modal>
       </div>
     );
   },
@@ -166,25 +165,24 @@ export const SingleButtonWithDescriptionAndImage = {
         <Modal
           title="Modal Title h1"
           description="Popup Contents Text body1 Area"
-          contentComponent={
-            <img
-              src="https://via.placeholder.com/400x240"
-              alt="예시 이미지"
-              style={{
-                width: '100%',
-                height: '240px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-              }}
-            />
-          }
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
             text: 'Button',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <img
+            src="https://via.placeholder.com/400x240"
+            alt="예시 이미지"
+            style={{
+              width: '100%',
+              height: '240px',
+              objectFit: 'cover',
+              borderRadius: '8px',
+            }}
+          />
+        </Modal>
       </div>
     );
   },
@@ -214,18 +212,6 @@ export const TwoButtonsWithDescriptionAndImage = {
         <Modal
           title="Modal Title h1"
           description="Popup Contents Text body1 Area"
-          contentComponent={
-            <img
-              src="https://via.placeholder.com/400x240"
-              alt="예시 이미지"
-              style={{
-                width: '100%',
-                height: '240px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-              }}
-            />
-          }
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
@@ -236,7 +222,18 @@ export const TwoButtonsWithDescriptionAndImage = {
             text: 'Button',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <img
+            src="https://via.placeholder.com/400x240"
+            alt="예시 이미지"
+            style={{
+              width: '100%',
+              height: '240px',
+              objectFit: 'cover',
+              borderRadius: '8px',
+            }}
+          />
+        </Modal>
       </div>
     );
   },
@@ -346,15 +343,16 @@ export const WithCustomComponent = {
         </button>
         <Modal
           title="커스텀 컴포넌트 모달"
-          description="contentComponent에 커스텀 컴포넌트를 주입한 예시입니다."
-          contentComponent={<CustomComponent />}
+          description="children에 커스텀 컴포넌트를 주입한 예시입니다."
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
             text: '확인',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <CustomComponent />
+        </Modal>
       </div>
     );
   },
@@ -422,7 +420,6 @@ export const WithFormComponent = {
         <Modal
           title="사용자 정보 입력"
           description="아래 폼을 작성해주세요."
-          contentComponent={<FormComponent />}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
@@ -436,7 +433,9 @@ export const WithFormComponent = {
             text: '취소',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <FormComponent />
+        </Modal>
       </div>
     );
   },
@@ -472,15 +471,16 @@ export const WithVideoComponent = {
         </button>
         <Modal
           title="비디오 플레이어"
-          description="contentComponent에 비디오를 주입한 예시입니다."
-          contentComponent={<VideoComponent />}
+          description="children에 비디오를 주입한 예시입니다."
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
           primaryButton={{
             text: '닫기',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <VideoComponent />
+        </Modal>
       </div>
     );
   },
@@ -523,7 +523,6 @@ export const WithCustomHeightAndScrollbar = {
         <Modal
           title="커스텀 높이와 스크롤바"
           description="contentMaxHeight를 300px로 설정하고 스크롤바를 표시합니다."
-          contentComponent={<LongContentComponent />}
           contentMaxHeight={300}
           showScrollbar={true}
           isOpen={isOpen}
@@ -536,7 +535,9 @@ export const WithCustomHeightAndScrollbar = {
             text: '취소',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <LongContentComponent />
+        </Modal>
       </div>
     );
   },
@@ -578,7 +579,6 @@ export const WithLargeContentHeight = {
         <Modal
           title="큰 높이 설정"
           description="contentMaxHeight를 800px로 설정한 예시입니다."
-          contentComponent={<MediumContentComponent />}
           contentMaxHeight={800}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
@@ -586,7 +586,9 @@ export const WithLargeContentHeight = {
             text: '확인',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <MediumContentComponent />
+        </Modal>
       </div>
     );
   },
@@ -628,7 +630,6 @@ export const WithHiddenScrollbar = {
         <Modal
           title="스크롤바 숨김"
           description="showScrollbar가 false(기본값)로 설정된 예시입니다."
-          contentComponent={<LongContentComponent />}
           showScrollbar={false}
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
@@ -636,7 +637,9 @@ export const WithHiddenScrollbar = {
             text: '확인',
             onClick: () => setIsOpen(false),
           }}
-        />
+        >
+          <LongContentComponent />
+        </Modal>
       </div>
     );
   },
