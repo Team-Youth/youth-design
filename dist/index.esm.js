@@ -2864,7 +2864,7 @@ var Modal = function (_a) {
     boxShadow: shadows.m,
     display: 'flex',
     flexDirection: 'column',
-    gap: secondaryButton ? '20px' : '24px'
+    gap: isContentOverflowing ? '0px' : secondaryButton ? '20px' : '24px'
   };
   var headerStyle = {
     display: 'flex',
@@ -2921,7 +2921,11 @@ var Modal = function (_a) {
     flexShrink: 0
   }, isContentOverflowing && {
     borderTop: "1px solid ".concat(colors.semantic.border.default),
-    paddingTop: '20px'
+    paddingTop: '20px',
+    marginLeft: '-32px',
+    marginRight: '-32px',
+    paddingLeft: '32px',
+    paddingRight: '32px'
   });
   var handleOverlayClick = function (e) {
     if (e.target === e.currentTarget) {

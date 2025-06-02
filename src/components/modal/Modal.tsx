@@ -89,7 +89,7 @@ export const Modal: React.FC<ModalProps> = ({
     boxShadow: shadows.m,
     display: 'flex',
     flexDirection: 'column',
-    gap: secondaryButton ? '20px' : '24px',
+    gap: isContentOverflowing ? '0px' : secondaryButton ? '20px' : '24px',
   };
 
   const headerStyle: React.CSSProperties = {
@@ -157,6 +157,10 @@ export const Modal: React.FC<ModalProps> = ({
     ...(isContentOverflowing && {
       borderTop: `1px solid ${colors.semantic.border.default}`,
       paddingTop: '20px',
+      marginLeft: '-32px',
+      marginRight: '-32px',
+      paddingLeft: '32px',
+      paddingRight: '32px',
     }),
   };
 
