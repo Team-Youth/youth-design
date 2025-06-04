@@ -145,7 +145,7 @@ export const Icon: React.FC<IconProps> = ({
     width: size,
     height: size,
     color: color,
-    cursor: onClick ? 'pointer' : 'default',
+    cursor: 'inherit',
     transition: 'all 0.2s ease',
     display: 'inline-flex',
     alignItems: 'center',
