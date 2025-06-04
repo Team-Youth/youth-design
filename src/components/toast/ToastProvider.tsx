@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useCallback, useMemo } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Toast, ToastProps } from './Toast';
 
@@ -78,9 +78,9 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
  * react-hot-toast를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 export const useToast = () => {
-  // 편의 메서드들
-  const toastMethods = {
-    success: (title: string, description?: string, options?: Partial<ToastItem>) => {
+  // 각 메서드를 useCallback으로 메모이제이션
+  const success = useCallback(
+    (title: string, description?: string, options?: Partial<ToastItem>) => {
       const toastData: ToastItem = {
         status: 'success',
         title,
@@ -96,25 +96,28 @@ export const useToast = () => {
         },
       );
     },
+    [],
+  );
 
-    error: (title: string, description?: string, options?: Partial<ToastItem>) => {
-      const toastData: ToastItem = {
-        status: 'error',
-        title,
-        description,
-        ...options,
-      };
+  const error = useCallback((title: string, description?: string, options?: Partial<ToastItem>) => {
+    const toastData: ToastItem = {
+      status: 'error',
+      title,
+      description,
+      ...options,
+    };
 
-      return toast.custom(
-        (t) => <Toast {...toastData} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
-        {
-          duration: options?.duration || 4000,
-          id: options?.id,
-        },
-      );
-    },
+    return toast.custom(
+      (t) => <Toast {...toastData} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
+      {
+        duration: options?.duration || 4000,
+        id: options?.id,
+      },
+    );
+  }, []);
 
-    warning: (title: string, description?: string, options?: Partial<ToastItem>) => {
+  const warning = useCallback(
+    (title: string, description?: string, options?: Partial<ToastItem>) => {
       const toastData: ToastItem = {
         status: 'warning',
         title,
@@ -130,36 +133,51 @@ export const useToast = () => {
         },
       );
     },
+    [],
+  );
 
-    info: (title: string, description?: string, options?: Partial<ToastItem>) => {
-      const toastData: ToastItem = {
-        status: 'info',
-        title,
-        description,
-        ...options,
-      };
+  const info = useCallback((title: string, description?: string, options?: Partial<ToastItem>) => {
+    const toastData: ToastItem = {
+      status: 'info',
+      title,
+      description,
+      ...options,
+    };
 
-      return toast.custom(
-        (t) => <Toast {...toastData} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
-        {
-          duration: options?.duration || 4000,
-          id: options?.id,
-        },
-      );
-    },
+    return toast.custom(
+      (t) => <Toast {...toastData} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
+      {
+        duration: options?.duration || 4000,
+        id: options?.id,
+      },
+    );
+  }, []);
 
-    custom: (options: Omit<ToastItem, 'id'>) => {
-      return toast.custom(
-        (t) => <Toast {...options} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
-        {
-          duration: options.duration || 4000,
-        },
-      );
-    },
+  const custom = useCallback((options: Omit<ToastItem, 'id'>) => {
+    return toast.custom(
+      (t) => <Toast {...options} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
+      {
+        duration: options.duration || 4000,
+      },
+    );
+  }, []);
 
-    remove: (id: string) => toast.dismiss(id),
-    removeAll: () => toast.dismiss(),
-  };
+  const remove = useCallback((id: string) => toast.dismiss(id), []);
+  const removeAll = useCallback(() => toast.dismiss(), []);
+
+  // 반환 객체를 useMemo로 메모이제이션
+  const toastMethods = useMemo(
+    () => ({
+      success,
+      error,
+      warning,
+      info,
+      custom,
+      remove,
+      removeAll,
+    }),
+    [success, error, warning, info, custom, remove, removeAll],
+  );
 
   return toastMethods;
 };
