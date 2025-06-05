@@ -431,7 +431,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     <div
       className={`dropdown-wrapper ${className}`}
       ref={dropdownRef}
-      style={{ position: 'relative' }} // Figma 스펙의 고정 너비
+      style={{ position: 'relative', width: width === 'fill' ? '100%' : width }} // Figma 스펙의 고정 너비
     >
       <div
         style={getContainerStyles()}

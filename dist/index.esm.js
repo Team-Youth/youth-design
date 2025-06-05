@@ -1,5 +1,5 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import React, { useState, forwardRef, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, { useState, forwardRef, useCallback, useMemo, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 /**
@@ -2575,99 +2575,109 @@ var ToastProvider = function (_a) {
  * react-hot-toast를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 var useToast = function () {
-  // 편의 메서드들
-  var toastMethods = {
-    success: function (title, description, options) {
-      var toastData = __assign({
-        status: 'success',
-        title: title,
-        description: description
-      }, options);
-      return toast.custom(function (t) {
-        return jsx(Toast, __assign({}, toastData, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-        id: options === null || options === void 0 ? void 0 : options.id
-      });
-    },
-    error: function (title, description, options) {
-      var toastData = __assign({
-        status: 'error',
-        title: title,
-        description: description
-      }, options);
-      return toast.custom(function (t) {
-        return jsx(Toast, __assign({}, toastData, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-        id: options === null || options === void 0 ? void 0 : options.id
-      });
-    },
-    warning: function (title, description, options) {
-      var toastData = __assign({
-        status: 'warning',
-        title: title,
-        description: description
-      }, options);
-      return toast.custom(function (t) {
-        return jsx(Toast, __assign({}, toastData, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-        id: options === null || options === void 0 ? void 0 : options.id
-      });
-    },
-    info: function (title, description, options) {
-      var toastData = __assign({
-        status: 'info',
-        title: title,
-        description: description
-      }, options);
-      return toast.custom(function (t) {
-        return jsx(Toast, __assign({}, toastData, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-        id: options === null || options === void 0 ? void 0 : options.id
-      });
-    },
-    custom: function (options) {
-      return toast.custom(function (t) {
-        return jsx(Toast, __assign({}, options, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: options.duration || 4000
-      });
-    },
-    remove: function (id) {
-      return toast.dismiss(id);
-    },
-    removeAll: function () {
-      return toast.dismiss();
-    }
-  };
+  // 각 메서드를 useCallback으로 메모이제이션
+  var success = useCallback(function (title, description, options) {
+    var toastData = __assign({
+      status: 'success',
+      title: title,
+      description: description
+    }, options);
+    return toast.custom(function (t) {
+      return jsx(Toast, __assign({}, toastData, {
+        onClose: function () {
+          return toast.dismiss(t.id);
+        },
+        showCloseButton: true
+      }));
+    }, {
+      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
+      id: options === null || options === void 0 ? void 0 : options.id
+    });
+  }, []);
+  var error = useCallback(function (title, description, options) {
+    var toastData = __assign({
+      status: 'error',
+      title: title,
+      description: description
+    }, options);
+    return toast.custom(function (t) {
+      return jsx(Toast, __assign({}, toastData, {
+        onClose: function () {
+          return toast.dismiss(t.id);
+        },
+        showCloseButton: true
+      }));
+    }, {
+      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
+      id: options === null || options === void 0 ? void 0 : options.id
+    });
+  }, []);
+  var warning = useCallback(function (title, description, options) {
+    var toastData = __assign({
+      status: 'warning',
+      title: title,
+      description: description
+    }, options);
+    return toast.custom(function (t) {
+      return jsx(Toast, __assign({}, toastData, {
+        onClose: function () {
+          return toast.dismiss(t.id);
+        },
+        showCloseButton: true
+      }));
+    }, {
+      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
+      id: options === null || options === void 0 ? void 0 : options.id
+    });
+  }, []);
+  var info = useCallback(function (title, description, options) {
+    var toastData = __assign({
+      status: 'info',
+      title: title,
+      description: description
+    }, options);
+    return toast.custom(function (t) {
+      return jsx(Toast, __assign({}, toastData, {
+        onClose: function () {
+          return toast.dismiss(t.id);
+        },
+        showCloseButton: true
+      }));
+    }, {
+      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
+      id: options === null || options === void 0 ? void 0 : options.id
+    });
+  }, []);
+  var custom = useCallback(function (options) {
+    return toast.custom(function (t) {
+      return jsx(Toast, __assign({}, options, {
+        onClose: function () {
+          return toast.dismiss(t.id);
+        },
+        showCloseButton: true
+      }));
+    }, {
+      duration: options.duration || 4000
+    });
+  }, []);
+  var remove = useCallback(function (id) {
+    return toast.dismiss(id);
+  }, []);
+  var removeAll = useCallback(function () {
+    return toast.dismiss();
+  }, []);
+  // 반환 객체를 useMemo로 메모이제이션
+  var toastMethods = useMemo(function () {
+    return {
+      success: success,
+      error: error,
+      warning: warning,
+      info: info,
+      custom: custom,
+      remove: remove,
+      removeAll: removeAll
+    };
+  }, [success, error, warning, info, custom, remove, removeAll]);
   return toastMethods;
 };
 
@@ -3348,7 +3358,8 @@ var Dropdown = function (_a) {
     className: "dropdown-wrapper ".concat(className),
     ref: dropdownRef,
     style: {
-      position: 'relative'
+      position: 'relative',
+      width: width === 'fill' ? '100%' : width
     },
     children: [jsxs("div", {
       style: getContainerStyles(),
@@ -3587,6 +3598,9 @@ var TextArea = forwardRef(function (_a, ref) {
   };
   return jsxs("div", {
     className: "text-area-wrapper ".concat(className),
+    style: {
+      width: width === 'fill' ? '100%' : width
+    },
     children: [jsx("div", {
       style: getContainerStyles(),
       onMouseEnter: handleMouseEnter,
@@ -3836,6 +3850,9 @@ var TextField = forwardRef(function (_a, ref) {
   };
   return jsxs("div", {
     className: "text-field-wrapper ".concat(className),
+    style: {
+      width: width === 'fill' ? '100%' : width
+    },
     children: [jsxs("div", {
       style: getContainerStyles(),
       onMouseEnter: handleMouseEnter,

@@ -246,7 +246,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     };
 
     return (
-      <div className={`text-field-wrapper ${className}`}>
+      <div
+        className={`text-field-wrapper ${className}`}
+        style={{ width: width === 'fill' ? '100%' : width }}
+      >
         <div
           style={getContainerStyles()}
           onMouseEnter={handleMouseEnter}
