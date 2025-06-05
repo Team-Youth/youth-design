@@ -1,0 +1,163 @@
+/* 검색 입력 애니메이션 */
+.exercise-list input[type="text"] {
+  transition: all 0.3s ease;
+}
+
+.exercise-list input[type="text"]:focus {
+  transform: translateY(-1px);
+  box-shadow: 0px 2px 8px rgba(114, 72, 217, 0.15);
+}
+
+/* 필터 버튼 호버 효과 */
+.exercise-list .filter-button {
+  transition: all 0.2s ease;
+}
+
+.exercise-list .filter-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 리스트 애니메이션 */
+.exercise-list .exercise-cards {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 빈 상태 애니메이션 */
+.exercise-list .empty-state {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.exercise-list .empty-state .icon {
+  animation: bounce 2s infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40%, 43% {
+    transform: translateY(-10px);
+  }
+  70% {
+    transform: translateY(-5px);
+  }
+  90% {
+    transform: translateY(-2px);
+  }
+}
+
+/* 통계 카드 애니메이션 */
+.exercise-list .stats-card {
+  transition: all 0.3s ease;
+}
+
+.exercise-list .stats-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 필터 태그 선택 애니메이션 */
+.exercise-list .filter-tag.active {
+  animation: selectPulse 0.3s ease-out;
+}
+
+@keyframes selectPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 스크롤 최적화 */
+.exercise-list .exercise-cards {
+  scroll-behavior: smooth;
+}
+
+/* 로딩 상태 */
+.exercise-list.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.exercise-list.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .exercise-list .filters {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .exercise-list .filter-buttons {
+    justify-content: center;
+  }
+  
+  .exercise-list .stats-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  
+  .exercise-list .stats-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercise-list {
+    padding: 12px;
+  }
+  
+  .exercise-list .filter-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  
+  .exercise-list .filter-button {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+  
+  .exercise-list .stats-card {
+    padding: 12px;
+  }
+} 

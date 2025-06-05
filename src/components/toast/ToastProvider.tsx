@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useMemo } from 'react';
+import React, { ReactNode, useCallback } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Toast, ToastProps } from './Toast';
 
@@ -33,31 +33,11 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
   position = 'top-right',
   defaultDuration = 4000,
 }) => {
-  // react-hot-toast position 매핑
-  const getToasterPosition = (pos: string) => {
-    switch (pos) {
-      case 'top-right':
-        return 'top-right';
-      case 'top-left':
-        return 'top-left';
-      case 'bottom-right':
-        return 'bottom-right';
-      case 'bottom-left':
-        return 'bottom-left';
-      case 'top-center':
-        return 'top-center';
-      case 'bottom-center':
-        return 'bottom-center';
-      default:
-        return 'top-right';
-    }
-  };
-
   return (
     <>
       {children}
       <Toaster
-        position={getToasterPosition(position)}
+        position={position}
         toastOptions={{
           duration: defaultDuration,
           style: {
@@ -78,108 +58,137 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
  * react-hot-toast를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 export const useToast = () => {
-  // 각 메서드를 useCallback으로 메모이제이션
+  // dismiss 함수를 미리 참조로 저장하여 재생성 방지
+  const dismissToast = useCallback((id: string) => toast.dismiss(id), []);
+
   const success = useCallback(
     (title: string, description?: string, options?: Partial<ToastItem>) => {
-      const toastData: ToastItem = {
-        status: 'success',
-        title,
-        description,
-        ...options,
-      };
-
       return toast.custom(
-        (t) => <Toast {...toastData} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
+        (t) => (
+          <Toast
+            key={t.id}
+            status="success"
+            title={title}
+            description={description}
+            showLeadingIcon={options?.showLeadingIcon ?? true}
+            showCloseButton={true}
+            onClose={() => dismissToast(t.id)}
+            {...options}
+          />
+        ),
         {
           duration: options?.duration || 4000,
           id: options?.id,
         },
       );
     },
-    [],
+    [dismissToast],
   );
 
-  const error = useCallback((title: string, description?: string, options?: Partial<ToastItem>) => {
-    const toastData: ToastItem = {
-      status: 'error',
-      title,
-      description,
-      ...options,
-    };
-
-    return toast.custom(
-      (t) => <Toast {...toastData} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
-      {
-        duration: options?.duration || 4000,
-        id: options?.id,
-      },
-    );
-  }, []);
+  const error = useCallback(
+    (title: string, description?: string, options?: Partial<ToastItem>) => {
+      return toast.custom(
+        (t) => (
+          <Toast
+            key={t.id}
+            status="error"
+            title={title}
+            description={description}
+            showLeadingIcon={options?.showLeadingIcon ?? true}
+            showCloseButton={true}
+            onClose={() => dismissToast(t.id)}
+            {...options}
+          />
+        ),
+        {
+          duration: options?.duration || 4000,
+          id: options?.id,
+        },
+      );
+    },
+    [dismissToast],
+  );
 
   const warning = useCallback(
     (title: string, description?: string, options?: Partial<ToastItem>) => {
-      const toastData: ToastItem = {
-        status: 'warning',
-        title,
-        description,
-        ...options,
-      };
-
       return toast.custom(
-        (t) => <Toast {...toastData} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
+        (t) => (
+          <Toast
+            key={t.id}
+            status="warning"
+            title={title}
+            description={description}
+            showLeadingIcon={options?.showLeadingIcon ?? true}
+            showCloseButton={true}
+            onClose={() => dismissToast(t.id)}
+            {...options}
+          />
+        ),
         {
           duration: options?.duration || 4000,
           id: options?.id,
         },
       );
     },
-    [],
+    [dismissToast],
   );
 
-  const info = useCallback((title: string, description?: string, options?: Partial<ToastItem>) => {
-    const toastData: ToastItem = {
-      status: 'info',
-      title,
-      description,
-      ...options,
-    };
+  const info = useCallback(
+    (title: string, description?: string, options?: Partial<ToastItem>) => {
+      return toast.custom(
+        (t) => (
+          <Toast
+            key={t.id}
+            status="info"
+            title={title}
+            description={description}
+            showLeadingIcon={options?.showLeadingIcon ?? true}
+            showCloseButton={true}
+            onClose={() => dismissToast(t.id)}
+            {...options}
+          />
+        ),
+        {
+          duration: options?.duration || 4000,
+          id: options?.id,
+        },
+      );
+    },
+    [dismissToast],
+  );
 
-    return toast.custom(
-      (t) => <Toast {...toastData} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
-      {
-        duration: options?.duration || 4000,
-        id: options?.id,
-      },
-    );
-  }, []);
+  const custom = useCallback(
+    (options: Omit<ToastItem, 'id'>) => {
+      return toast.custom(
+        (t) => (
+          <Toast
+            key={t.id}
+            showLeadingIcon={true}
+            showCloseButton={true}
+            onClose={() => dismissToast(t.id)}
+            {...options}
+          />
+        ),
+        {
+          duration: options.duration || 4000,
+        },
+      );
+    },
+    [dismissToast],
+  );
 
-  const custom = useCallback((options: Omit<ToastItem, 'id'>) => {
-    return toast.custom(
-      (t) => <Toast {...options} onClose={() => toast.dismiss(t.id)} showCloseButton={true} />,
-      {
-        duration: options.duration || 4000,
-      },
-    );
-  }, []);
-
-  const remove = useCallback((id: string) => toast.dismiss(id), []);
+  const remove = useCallback((id: string) => dismissToast(id), [dismissToast]);
   const removeAll = useCallback(() => toast.dismiss(), []);
 
-  // 반환 객체를 useMemo로 메모이제이션
-  const toastMethods = useMemo(
-    () => ({
-      success,
-      error,
-      warning,
-      info,
-      custom,
-      remove,
-      removeAll,
-    }),
-    [success, error, warning, info, custom, remove, removeAll],
-  );
-
-  return toastMethods;
+  return {
+    success,
+    error,
+    warning,
+    info,
+    custom,
+    remove,
+    removeAll,
+  };
 };
 
 export default ToastProvider;

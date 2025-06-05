@@ -2327,7 +2327,7 @@ var statusConfig = {
  * 사용자가 어떤 작업을 완료했을 때, 시스템이 잘 처리됐다는 걸 알려주는 알림입니다.
  * 현재 하고 있는 일을 방해하지 않고, 잠깐 나타났다 사라지는 방식으로 보여집니다.
  */
-var Toast = function (_a) {
+var Toast = React.memo(function (_a) {
   var status = _a.status,
     title = _a.title,
     description = _a.description,
@@ -2340,9 +2340,9 @@ var Toast = function (_a) {
     className = _d === void 0 ? '' : _d;
   var config = statusConfig[status];
   var IconComponent = config.icon;
-  var handleCloseClick = function () {
+  var handleCloseClick = React.useCallback(function () {
     onClose === null || onClose === void 0 ? void 0 : onClose();
-  };
+  }, [onClose]);
   var toastStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -2379,6 +2379,12 @@ var Toast = function (_a) {
     borderRadius: radius.xs,
     transition: 'background-color 0.2s ease'
   };
+  var handleMouseEnter = React.useCallback(function (e) {
+    e.target.style.backgroundColor = colors.primary.coolGray[100];
+  }, []);
+  var handleMouseLeave = React.useCallback(function (e) {
+    e.target.style.backgroundColor = 'transparent';
+  }, []);
   return jsxRuntime.jsxs("div", {
     className: "toast toast--".concat(status, " ").concat(className),
     style: toastStyle,
@@ -2406,12 +2412,8 @@ var Toast = function (_a) {
       style: closeButtonStyle,
       onClick: handleCloseClick,
       "aria-label": "\uC54C\uB9BC \uB2EB\uAE30",
-      onMouseEnter: function (e) {
-        e.target.style.backgroundColor = colors.primary.coolGray[100];
-      },
-      onMouseLeave: function (e) {
-        e.target.style.backgroundColor = 'transparent';
-      },
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
       children: jsxRuntime.jsx(Icon, {
         type: "close",
         size: 16,
@@ -2419,7 +2421,12 @@ var Toast = function (_a) {
       })
     })]
   });
-};
+}, function (prevProps, nextProps) {
+  // 커스텀 비교 함수: onClose를 제외한 나머지 props만 비교
+  return prevProps.status === nextProps.status && prevProps.title === nextProps.title && prevProps.description === nextProps.description && prevProps.showLeadingIcon === nextProps.showLeadingIcon && prevProps.showCloseButton === nextProps.showCloseButton && prevProps.className === nextProps.className;
+});
+// displayName 추가 (React Dev Tools에서 식별하기 쉽게)
+Toast.displayName = 'Toast';
 
 /**
  * Toast Provider 컴포넌트
@@ -2432,28 +2439,9 @@ var ToastProvider = function (_a) {
     position = _b === void 0 ? 'top-right' : _b,
     _c = _a.defaultDuration,
     defaultDuration = _c === void 0 ? 4000 : _c;
-  // react-hot-toast position 매핑
-  var getToasterPosition = function (pos) {
-    switch (pos) {
-      case 'top-right':
-        return 'top-right';
-      case 'top-left':
-        return 'top-left';
-      case 'bottom-right':
-        return 'bottom-right';
-      case 'bottom-left':
-        return 'bottom-left';
-      case 'top-center':
-        return 'top-center';
-      case 'bottom-center':
-        return 'bottom-center';
-      default:
-        return 'top-right';
-    }
-  };
   return jsxRuntime.jsxs(jsxRuntime.Fragment, {
     children: [children, jsxRuntime.jsx(toast.Toaster, {
-      position: getToasterPosition(position),
+      position: position,
       toastOptions: {
         duration: defaultDuration,
         style: {
@@ -2472,100 +2460,110 @@ var ToastProvider = function (_a) {
  * react-hot-toast를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 var useToast = function () {
-  // 편의 메서드들
-  var toastMethods = {
-    success: function (title, description, options) {
-      var toastData = __assign({
-        status: 'success',
+  // dismiss 함수를 미리 참조로 저장하여 재생성 방지
+  var dismissToast = React.useCallback(function (id) {
+    return toast.dismiss(id);
+  }, []);
+  var success = React.useCallback(function (title, description, options) {
+    return toast.custom(function (t) {
+      var _a;
+      return jsxRuntime.jsx(Toast, __assign({
+        status: "success",
         title: title,
-        description: description
-      }, options);
-      return toast.custom(function (t) {
-        return jsxRuntime.jsx(Toast, __assign({}, toastData, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-        id: options === null || options === void 0 ? void 0 : options.id
-      });
-    },
-    error: function (title, description, options) {
-      var toastData = __assign({
-        status: 'error',
+        description: description,
+        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
+        showCloseButton: true,
+        onClose: function () {
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
+    }, {
+      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
+      id: options === null || options === void 0 ? void 0 : options.id
+    });
+  }, [dismissToast]);
+  var error = React.useCallback(function (title, description, options) {
+    return toast.custom(function (t) {
+      var _a;
+      return jsxRuntime.jsx(Toast, __assign({
+        status: "error",
         title: title,
-        description: description
-      }, options);
-      return toast.custom(function (t) {
-        return jsxRuntime.jsx(Toast, __assign({}, toastData, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-        id: options === null || options === void 0 ? void 0 : options.id
-      });
-    },
-    warning: function (title, description, options) {
-      var toastData = __assign({
-        status: 'warning',
+        description: description,
+        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
+        showCloseButton: true,
+        onClose: function () {
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
+    }, {
+      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
+      id: options === null || options === void 0 ? void 0 : options.id
+    });
+  }, [dismissToast]);
+  var warning = React.useCallback(function (title, description, options) {
+    return toast.custom(function (t) {
+      var _a;
+      return jsxRuntime.jsx(Toast, __assign({
+        status: "warning",
         title: title,
-        description: description
-      }, options);
-      return toast.custom(function (t) {
-        return jsxRuntime.jsx(Toast, __assign({}, toastData, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-        id: options === null || options === void 0 ? void 0 : options.id
-      });
-    },
-    info: function (title, description, options) {
-      var toastData = __assign({
-        status: 'info',
+        description: description,
+        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
+        showCloseButton: true,
+        onClose: function () {
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
+    }, {
+      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
+      id: options === null || options === void 0 ? void 0 : options.id
+    });
+  }, [dismissToast]);
+  var info = React.useCallback(function (title, description, options) {
+    return toast.custom(function (t) {
+      var _a;
+      return jsxRuntime.jsx(Toast, __assign({
+        status: "info",
         title: title,
-        description: description
-      }, options);
-      return toast.custom(function (t) {
-        return jsxRuntime.jsx(Toast, __assign({}, toastData, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-        id: options === null || options === void 0 ? void 0 : options.id
-      });
-    },
-    custom: function (options) {
-      return toast.custom(function (t) {
-        return jsxRuntime.jsx(Toast, __assign({}, options, {
-          onClose: function () {
-            return toast.dismiss(t.id);
-          },
-          showCloseButton: true
-        }));
-      }, {
-        duration: options.duration || 4000
-      });
-    },
-    remove: function (id) {
-      return toast.dismiss(id);
-    },
-    removeAll: function () {
-      return toast.dismiss();
-    }
+        description: description,
+        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
+        showCloseButton: true,
+        onClose: function () {
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
+    }, {
+      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
+      id: options === null || options === void 0 ? void 0 : options.id
+    });
+  }, [dismissToast]);
+  var custom = React.useCallback(function (options) {
+    return toast.custom(function (t) {
+      return jsxRuntime.jsx(Toast, __assign({
+        showLeadingIcon: true,
+        showCloseButton: true,
+        onClose: function () {
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
+    }, {
+      duration: options.duration || 4000
+    });
+  }, [dismissToast]);
+  var remove = React.useCallback(function (id) {
+    return dismissToast(id);
+  }, [dismissToast]);
+  var removeAll = React.useCallback(function () {
+    return toast.dismiss();
+  }, []);
+  return {
+    success: success,
+    error: error,
+    warning: warning,
+    info: info,
+    custom: custom,
+    remove: remove,
+    removeAll: removeAll
   };
-  return toastMethods;
 };
 
 var Popup = function (_a) {
@@ -3771,11 +3769,1014 @@ var TextField = React.forwardRef(function (_a, ref) {
 });
 TextField.displayName = 'TextField';
 
+var ExerciseCard = function (_a) {
+  var title = _a.title,
+    description = _a.description,
+    _b = _a.type,
+    type = _b === void 0 ? 'cardio' : _b,
+    duration = _a.duration,
+    calories = _a.calories,
+    icon = _a.icon,
+    _c = _a.isCompleted,
+    isCompleted = _c === void 0 ? false : _c,
+    _d = _a.isFavorite,
+    isFavorite = _d === void 0 ? false : _d,
+    _e = _a.width,
+    width = _e === void 0 ? '300px' : _e,
+    onClick = _a.onClick,
+    onFavoriteToggle = _a.onFavoriteToggle,
+    onCompleteToggle = _a.onCompleteToggle,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f;
+  var _g = React.useState(false),
+    isHovered = _g[0],
+    setIsHovered = _g[1];
+  // 운동 타입별 색상 및 아이콘
+  var typeConfig = {
+    cardio: {
+      color: colors.primary.tint.blue[500],
+      bgColor: colors.primary.tint.blue[50],
+      icon: '🏃‍♂️',
+      label: '유산소'
+    },
+    strength: {
+      color: colors.primary.tint.red[500],
+      bgColor: colors.primary.tint.red[50],
+      icon: '💪',
+      label: '근력'
+    },
+    stretching: {
+      color: colors.primary.tint.green[500],
+      bgColor: colors.primary.tint.green[50],
+      icon: '🧘‍♀️',
+      label: '스트레칭'
+    },
+    balance: {
+      color: colors.primary.tint.violet[500],
+      bgColor: colors.primary.tint.violet[50],
+      icon: '⚖️',
+      label: '밸런스'
+    }
+  };
+  var currentTypeConfig = typeConfig[type];
+  // width 동적 설정
+  var getWidth = function () {
+    if (width === 'fill') {
+      return '100%';
+    }
+    return width;
+  };
+  var cardStyles = {
+    display: 'flex',
+    alignItems: 'center',
+    padding: spacing.m,
+    backgroundColor: isCompleted ? colors.primary.coolGray[50] : colors.semantic.background.primary,
+    border: "1px solid ".concat(isHovered ? currentTypeConfig.color : colors.semantic.border.default),
+    borderRadius: radius.m,
+    boxShadow: isHovered ? shadows.m : shadows.s,
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+    opacity: isCompleted ? 0.7 : 1,
+    position: 'relative',
+    overflow: 'hidden',
+    width: getWidth(),
+    minWidth: '300px' // 최소 너비 설정
+  };
+  var handleCardClick = function (e) {
+    e.stopPropagation();
+    if (onClick) onClick();
+  };
+  var handleFavoriteClick = function (e) {
+    e.stopPropagation();
+    if (onFavoriteToggle) onFavoriteToggle();
+  };
+  var handleCompleteClick = function (e) {
+    e.stopPropagation();
+    if (onCompleteToggle) onCompleteToggle();
+  };
+  return jsxRuntime.jsxs("div", {
+    className: "exercise-card ".concat(className),
+    style: __assign({}, cardStyles),
+    onClick: handleCardClick,
+    onMouseEnter: function () {
+      return setIsHovered(true);
+    },
+    onMouseLeave: function () {
+      return setIsHovered(false);
+    },
+    children: [isCompleted && jsxRuntime.jsx("div", {
+      style: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '4px',
+        height: '100%',
+        backgroundColor: colors.semantic.state.success
+      }
+    }), jsxRuntime.jsx("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '48px',
+        height: '48px',
+        backgroundColor: currentTypeConfig.bgColor,
+        borderRadius: radius.s,
+        marginRight: spacing.m,
+        fontSize: '20px'
+      },
+      children: icon || currentTypeConfig.icon
+    }), jsxRuntime.jsxs("div", {
+      style: {
+        flex: 1,
+        minWidth: 0
+      },
+      children: [jsxRuntime.jsxs("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: spacing.xxs
+        },
+        children: [jsxRuntime.jsx("h3", {
+          style: __assign(__assign({}, textStyles.heading4), {
+            color: isCompleted ? colors.semantic.text.tertiary : colors.semantic.text.primary,
+            margin: 0,
+            textDecoration: isCompleted ? 'line-through' : 'none'
+          }),
+          children: title
+        }), jsxRuntime.jsx("span", {
+          style: __assign(__assign({}, textStyles.caption), {
+            color: currentTypeConfig.color,
+            backgroundColor: currentTypeConfig.bgColor,
+            padding: "".concat(spacing.xxxs, " ").concat(spacing.xs),
+            borderRadius: radius.xs,
+            marginLeft: spacing.xs,
+            fontSize: '10px',
+            fontWeight: 500
+          }),
+          children: currentTypeConfig.label
+        })]
+      }), description && jsxRuntime.jsx("p", {
+        style: __assign(__assign({}, textStyles.body3), {
+          color: colors.semantic.text.secondary,
+          margin: 0,
+          marginBottom: spacing.xs,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }),
+        children: description
+      }), jsxRuntime.jsxs("div", {
+        style: {
+          display: 'flex',
+          gap: spacing.m,
+          alignItems: 'center'
+        },
+        children: [duration && jsxRuntime.jsxs("div", {
+          style: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: spacing.xxs
+          },
+          children: [jsxRuntime.jsx("span", {
+            style: {
+              fontSize: '12px'
+            },
+            children: "\u23F1\uFE0F"
+          }), jsxRuntime.jsxs("span", {
+            style: __assign(__assign({}, textStyles.caption), {
+              color: colors.semantic.text.tertiary
+            }),
+            children: [duration, "\uBD84"]
+          })]
+        }), calories && jsxRuntime.jsxs("div", {
+          style: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: spacing.xxs
+          },
+          children: [jsxRuntime.jsx("span", {
+            style: {
+              fontSize: '12px'
+            },
+            children: "\uD83D\uDD25"
+          }), jsxRuntime.jsxs("span", {
+            style: __assign(__assign({}, textStyles.caption), {
+              color: colors.semantic.text.tertiary
+            }),
+            children: [calories, "kcal"]
+          })]
+        })]
+      })]
+    }), jsxRuntime.jsxs("div", {
+      style: {
+        display: 'flex',
+        gap: spacing.xs,
+        alignItems: 'center'
+      },
+      children: [jsxRuntime.jsx("button", {
+        onClick: handleFavoriteClick,
+        style: {
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          fontSize: '16px',
+          padding: spacing.xxs,
+          borderRadius: radius.xs,
+          transition: 'all 0.2s ease',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        },
+        title: isFavorite ? '즐겨찾기 해제' : '즐겨찾기 추가',
+        children: isFavorite ? '⭐' : '☆'
+      }), jsxRuntime.jsx("button", {
+        onClick: handleCompleteClick,
+        style: {
+          background: 'none',
+          border: "1px solid ".concat(isCompleted ? colors.semantic.state.success : colors.semantic.border.default),
+          cursor: 'pointer',
+          padding: spacing.xs,
+          borderRadius: radius.xs,
+          transition: 'all 0.2s ease',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: isCompleted ? colors.semantic.state.success : 'transparent'
+        },
+        title: isCompleted ? '완료 취소' : '완료 표시',
+        children: jsxRuntime.jsx("span", {
+          style: {
+            fontSize: '12px',
+            color: isCompleted ? colors.semantic.background.primary : colors.semantic.text.tertiary
+          },
+          children: isCompleted ? '✓' : '○'
+        })
+      })]
+    })]
+  });
+};
+
+var ActivityGoalCard = function (_a) {
+  var title = _a.title,
+    description = _a.description,
+    currentValue = _a.currentValue,
+    goalValue = _a.goalValue,
+    unit = _a.unit,
+    _b = _a.theme,
+    theme = _b === void 0 ? 'primary' : _b,
+    icon = _a.icon,
+    onClick = _a.onClick,
+    _c = _a.className,
+    className = _c === void 0 ? '' : _c;
+  // 진행률 계산
+  var progressPercentage = Math.min(currentValue / goalValue * 100, 100);
+  var isCompleted = progressPercentage >= 100;
+  // 테마별 색상 설정
+  var themeConfig = {
+    primary: {
+      color: colors.primary.mainviolet,
+      bgColor: colors.primary.tint.violet[50],
+      lightColor: colors.primary.tint.violet[100]
+    },
+    success: {
+      color: colors.semantic.state.success,
+      bgColor: colors.primary.tint.green[50],
+      lightColor: colors.primary.tint.green[100]
+    },
+    warning: {
+      color: colors.semantic.state.warning,
+      bgColor: colors.primary.tint.yellow[50],
+      lightColor: colors.primary.tint.yellow[100]
+    },
+    info: {
+      color: colors.semantic.state.info,
+      bgColor: colors.primary.tint.blue[50],
+      lightColor: colors.primary.tint.blue[100]
+    }
+  };
+  var currentTheme = themeConfig[theme];
+  var cardStyles = {
+    padding: spacing.l,
+    backgroundColor: currentTheme.bgColor,
+    border: "1px solid ".concat(currentTheme.lightColor),
+    borderRadius: radius.l,
+    boxShadow: shadows.s,
+    cursor: onClick ? 'pointer' : 'default',
+    transition: 'all 0.3s ease',
+    position: 'relative',
+    overflow: 'hidden'
+  };
+  var progressBarStyles = {
+    width: '100%',
+    height: '8px',
+    backgroundColor: colors.semantic.background.secondary,
+    borderRadius: radius.xs,
+    overflow: 'hidden',
+    position: 'relative'
+  };
+  var progressFillStyles = {
+    height: '100%',
+    backgroundColor: currentTheme.color,
+    borderRadius: radius.xs,
+    width: "".concat(progressPercentage, "%"),
+    transition: 'width 0.5s ease',
+    position: 'relative'
+  };
+  return jsxRuntime.jsxs("div", {
+    className: "activity-goal-card ".concat(className, " ").concat(isCompleted ? 'completed' : ''),
+    style: cardStyles,
+    onClick: onClick,
+    children: [isCompleted && jsxRuntime.jsx("div", {
+      style: {
+        position: 'absolute',
+        top: spacing.s,
+        right: spacing.s,
+        fontSize: '20px',
+        animation: 'bounce 0.6s ease-in-out'
+      },
+      children: "\uD83C\uDF89"
+    }), jsxRuntime.jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: spacing.m
+      },
+      children: [icon && jsxRuntime.jsx("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '40px',
+          height: '40px',
+          backgroundColor: currentTheme.color,
+          color: colors.semantic.background.primary,
+          borderRadius: radius.s,
+          marginRight: spacing.s,
+          fontSize: '18px'
+        },
+        children: icon
+      }), jsxRuntime.jsxs("div", {
+        style: {
+          flex: 1
+        },
+        children: [jsxRuntime.jsx("h3", {
+          style: __assign(__assign({}, textStyles.heading3), {
+            color: colors.semantic.text.primary,
+            margin: 0,
+            marginBottom: spacing.xxxs
+          }),
+          children: title
+        }), description && jsxRuntime.jsx("p", {
+          style: __assign(__assign({}, textStyles.body3), {
+            color: colors.semantic.text.secondary,
+            margin: 0
+          }),
+          children: description
+        })]
+      })]
+    }), jsxRuntime.jsx("div", {
+      style: {
+        marginBottom: spacing.s
+      },
+      children: jsxRuntime.jsxs("div", {
+        style: {
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'baseline'
+        },
+        children: [jsxRuntime.jsxs("div", {
+          style: {
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: spacing.xxxs
+          },
+          children: [jsxRuntime.jsx("span", {
+            style: __assign(__assign({}, textStyles.display2), {
+              color: currentTheme.color,
+              fontWeight: 700
+            }),
+            children: currentValue.toLocaleString()
+          }), jsxRuntime.jsx("span", {
+            style: __assign(__assign({}, textStyles.body2), {
+              color: colors.semantic.text.secondary
+            }),
+            children: unit
+          })]
+        }), jsxRuntime.jsxs("span", {
+          style: __assign(__assign({}, textStyles.body3), {
+            color: colors.semantic.text.tertiary
+          }),
+          children: ["\uBAA9\uD45C: ", goalValue.toLocaleString(), unit]
+        })]
+      })
+    }), jsxRuntime.jsx("div", {
+      style: progressBarStyles,
+      children: jsxRuntime.jsx("div", {
+        style: progressFillStyles,
+        children: jsxRuntime.jsx("div", {
+          style: {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '50%',
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%)',
+            borderRadius: "".concat(radius.xs, " ").concat(radius.xs, " 0 0")
+          }
+        })
+      })
+    }), jsxRuntime.jsx("div", {
+      style: {
+        marginTop: spacing.s,
+        textAlign: 'center'
+      },
+      children: jsxRuntime.jsx("span", {
+        style: __assign(__assign({}, textStyles.caption), {
+          color: isCompleted ? currentTheme.color : colors.semantic.text.tertiary,
+          fontWeight: isCompleted ? 600 : 400
+        }),
+        children: isCompleted ? '목표 달성! 🎯' : "".concat(progressPercentage.toFixed(1), "% \uB2EC\uC131")
+      })
+    }), jsxRuntime.jsx("div", {
+      style: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '100px',
+        height: '100px',
+        background: "radial-gradient(circle, ".concat(currentTheme.lightColor, " 1px, transparent 1px)"),
+        backgroundSize: '12px 12px',
+        opacity: 0.3,
+        pointerEvents: 'none'
+      }
+    })]
+  });
+};
+
+var GreetingHeader = function (_a) {
+  var _b = _a.userName,
+    userName = _b === void 0 ? '익명' : _b,
+    customGreeting = _a.customGreeting,
+    _c = _a.showDate,
+    showDate = _c === void 0 ? true : _c,
+    weather = _a.weather,
+    onClick = _a.onClick,
+    _d = _a.className,
+    className = _d === void 0 ? '' : _d;
+  var _e = React.useState(new Date()),
+    currentTime = _e[0],
+    setCurrentTime = _e[1];
+  React.useEffect(function () {
+    var timer = setInterval(function () {
+      setCurrentTime(new Date());
+    }, 60000); // 1분마다 업데이트
+    return function () {
+      return clearInterval(timer);
+    };
+  }, []);
+  // 시간대별 인사말 생성
+  var getTimeBasedGreeting = function () {
+    var hour = currentTime.getHours();
+    if (hour >= 5 && hour < 12) {
+      return {
+        greeting: '좋은 아침이에요!',
+        emoji: '🌅',
+        bgGradient: 'linear-gradient(135deg, #FFE5B4 0%, #FFD700 100%)',
+        textColor: colors.primary.gray[800]
+      };
+    } else if (hour >= 12 && hour < 18) {
+      return {
+        greeting: '활기찬 오후네요!',
+        emoji: '☀️',
+        bgGradient: 'linear-gradient(135deg, #87CEEB 0%, #4FC3F7 100%)',
+        textColor: colors.semantic.background.primary
+      };
+    } else if (hour >= 18 && hour < 22) {
+      return {
+        greeting: '좋은 저녁이에요!',
+        emoji: '🌇',
+        bgGradient: 'linear-gradient(135deg, #FF9A56 0%, #FF6B35 100%)',
+        textColor: colors.semantic.background.primary
+      };
+    } else {
+      return {
+        greeting: '늦은 시간이네요!',
+        emoji: '🌙',
+        bgGradient: 'linear-gradient(135deg, #2C3E50 0%, #4A6741 100%)',
+        textColor: colors.semantic.background.primary
+      };
+    }
+  };
+  // 날씨 아이콘 및 정보
+  var getWeatherInfo = function () {
+    if (!weather || !weather.condition) return null;
+    var weatherIcons = {
+      sunny: '☀️',
+      cloudy: '☁️',
+      rainy: '🌧️',
+      snowy: '❄️'
+    };
+    return {
+      icon: weatherIcons[weather.condition] || '🌤️',
+      temp: weather.temperature
+    };
+  };
+  var timeGreeting = getTimeBasedGreeting();
+  var weatherInfo = getWeatherInfo();
+  var displayGreeting = customGreeting || timeGreeting.greeting;
+  // 요일 및 날짜 포맷팅
+  var formatDate = function () {
+    var days = ['일', '월', '화', '수', '목', '금', '토'];
+    var month = currentTime.getMonth() + 1;
+    var date = currentTime.getDate();
+    var day = days[currentTime.getDay()];
+    return "".concat(month, "\uC6D4 ").concat(date, "\uC77C (").concat(day, ")");
+  };
+  var headerStyles = {
+    background: timeGreeting.bgGradient,
+    padding: spacing.l,
+    borderRadius: radius.l,
+    position: 'relative',
+    overflow: 'hidden',
+    cursor: onClick ? 'pointer' : 'default',
+    transition: 'all 0.3s ease',
+    minHeight: '120px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center'
+  };
+  return jsxRuntime.jsxs("div", {
+    className: "greeting-header ".concat(className),
+    style: headerStyles,
+    onClick: onClick,
+    children: [jsxRuntime.jsx("div", {
+      style: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        width: '150px',
+        height: '150px',
+        background: "radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)",
+        backgroundSize: '15px 15px',
+        opacity: 0.6,
+        pointerEvents: 'none'
+      }
+    }), jsxRuntime.jsxs("div", {
+      style: {
+        position: 'relative',
+        zIndex: 1
+      },
+      children: [jsxRuntime.jsxs("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: spacing.s
+        },
+        children: [jsxRuntime.jsx("span", {
+          style: {
+            fontSize: '32px',
+            marginRight: spacing.s
+          },
+          children: timeGreeting.emoji
+        }), jsxRuntime.jsxs("div", {
+          children: [jsxRuntime.jsx("h1", {
+            style: __assign(__assign({}, textStyles.display1), {
+              color: timeGreeting.textColor,
+              margin: 0,
+              marginBottom: spacing.xxxs,
+              textShadow: '0px 1px 2px rgba(0,0,0,0.1)'
+            }),
+            children: displayGreeting
+          }), jsxRuntime.jsxs("p", {
+            style: __assign(__assign({}, textStyles.heading3), {
+              color: timeGreeting.textColor,
+              margin: 0,
+              opacity: 0.9
+            }),
+            children: [userName, "\uB2D8 \uD83D\uDCAA"]
+          })]
+        })]
+      }), jsxRuntime.jsxs("div", {
+        style: {
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginTop: spacing.m
+        },
+        children: [showDate && jsxRuntime.jsxs("div", {
+          style: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: spacing.xs
+          },
+          children: [jsxRuntime.jsx("span", {
+            style: {
+              fontSize: '16px'
+            },
+            children: "\uD83D\uDCC5"
+          }), jsxRuntime.jsx("span", {
+            style: __assign(__assign({}, textStyles.body2), {
+              color: timeGreeting.textColor,
+              opacity: 0.8
+            }),
+            children: formatDate()
+          })]
+        }), weatherInfo && jsxRuntime.jsxs("div", {
+          style: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: spacing.xs
+          },
+          children: [jsxRuntime.jsx("span", {
+            style: {
+              fontSize: '16px'
+            },
+            children: weatherInfo.icon
+          }), weatherInfo.temp && jsxRuntime.jsxs("span", {
+            style: __assign(__assign({}, textStyles.body2), {
+              color: timeGreeting.textColor,
+              opacity: 0.8
+            }),
+            children: [weatherInfo.temp, "\u00B0C"]
+          })]
+        })]
+      })]
+    }), jsxRuntime.jsx("div", {
+      style: {
+        position: 'absolute',
+        bottom: spacing.s,
+        right: spacing.m,
+        opacity: 0.7
+      },
+      children: jsxRuntime.jsx("span", {
+        style: __assign(__assign({}, textStyles.caption), {
+          color: timeGreeting.textColor,
+          fontStyle: 'italic'
+        }),
+        children: getMotivationalMessage()
+      })
+    })]
+  });
+};
+// 동기부여 메시지 생성 함수
+var getMotivationalMessage = function () {
+  var messages = ['오늘도 화이팅! 💪', '한 걸음씩 나아가요 🚶‍♂️', '건강한 하루 되세요! 🌟', '당신은 할 수 있어요! ✨', '작은 변화, 큰 성장 🌱', '꾸준함이 답입니다 ⭐', '건강이 최고의 투자예요 💎'];
+  return messages[Math.floor(Math.random() * messages.length)];
+};
+
+var ExerciseList = function (_a) {
+  var exercises = _a.exercises,
+    _b = _a.emptyMessage,
+    emptyMessage = _b === void 0 ? '등록된 운동이 없습니다.' : _b,
+    _c = _a.emptyIcon,
+    emptyIcon = _c === void 0 ? '🏃‍♂️' : _c,
+    _d = _a.showFilters,
+    showFilters = _d === void 0 ? true : _d,
+    _e = _a.showSearch,
+    showSearch = _e === void 0 ? true : _e,
+    onExerciseClick = _a.onExerciseClick,
+    onFavoriteToggle = _a.onFavoriteToggle,
+    onCompleteToggle = _a.onCompleteToggle,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f;
+  var _g = React.useState(''),
+    searchQuery = _g[0],
+    setSearchQuery = _g[1];
+  var _h = React.useState('all'),
+    filterType = _h[0],
+    setFilterType = _h[1];
+  var _j = React.useState('name'),
+    sortBy = _j[0],
+    setSortBy = _j[1];
+  var _k = React.useState(true),
+    showCompleted = _k[0],
+    setShowCompleted = _k[1];
+  // 필터링 및 정렬된 운동 목록
+  var filteredAndSortedExercises = React.useMemo(function () {
+    var filtered = exercises;
+    // 검색 필터
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(function (exercise) {
+        return exercise.title.toLowerCase().includes(searchQuery.toLowerCase()) || exercise.description && exercise.description.toLowerCase().includes(searchQuery.toLowerCase());
+      });
+    }
+    // 타입 필터
+    if (filterType !== 'all') {
+      filtered = filtered.filter(function (exercise) {
+        return exercise.type === filterType;
+      });
+    }
+    // 완료 상태 필터
+    if (!showCompleted) {
+      filtered = filtered.filter(function (exercise) {
+        return !exercise.isCompleted;
+      });
+    }
+    // 정렬
+    filtered.sort(function (a, b) {
+      switch (sortBy) {
+        case 'name':
+          return a.title.localeCompare(b.title);
+        case 'duration':
+          return (b.duration || 0) - (a.duration || 0);
+        case 'calories':
+          return (b.calories || 0) - (a.calories || 0);
+        case 'type':
+          return (a.type || '').localeCompare(b.type || '');
+        default:
+          return 0;
+      }
+    });
+    return filtered;
+  }, [exercises, searchQuery, filterType, sortBy, showCompleted]);
+  // 통계 정보
+  var stats = React.useMemo(function () {
+    var completed = exercises.filter(function (ex) {
+      return ex.isCompleted;
+    }).length;
+    var total = exercises.length;
+    var totalDuration = exercises.reduce(function (sum, ex) {
+      return sum + (ex.duration || 0);
+    }, 0);
+    var totalCalories = exercises.reduce(function (sum, ex) {
+      return sum + (ex.calories || 0);
+    }, 0);
+    return {
+      completed: completed,
+      total: total,
+      completionRate: total > 0 ? Math.round(completed / total * 100) : 0,
+      totalDuration: totalDuration,
+      totalCalories: totalCalories
+    };
+  }, [exercises]);
+  var filterOptions = [{
+    value: 'all',
+    label: '전체',
+    icon: '🏃‍♂️'
+  }, {
+    value: 'cardio',
+    label: '유산소',
+    icon: '🏃‍♂️'
+  }, {
+    value: 'strength',
+    label: '근력',
+    icon: '💪'
+  }, {
+    value: 'stretching',
+    label: '스트레칭',
+    icon: '🧘‍♀️'
+  }, {
+    value: 'balance',
+    label: '밸런스',
+    icon: '⚖️'
+  }];
+  var sortOptions = [{
+    value: 'name',
+    label: '이름순'
+  }, {
+    value: 'duration',
+    label: '시간순'
+  }, {
+    value: 'calories',
+    label: '칼로리순'
+  }, {
+    value: 'type',
+    label: '타입순'
+  }];
+  return jsxRuntime.jsxs("div", {
+    className: "exercise-list ".concat(className),
+    children: [jsxRuntime.jsxs("div", {
+      style: {
+        marginBottom: spacing.l
+      },
+      children: [jsxRuntime.jsxs("div", {
+        style: {
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: spacing.m,
+          padding: spacing.m,
+          backgroundColor: colors.primary.coolGray[50],
+          borderRadius: radius.s,
+          border: "1px solid ".concat(colors.semantic.border.default)
+        },
+        children: [jsxRuntime.jsxs("div", {
+          children: [jsxRuntime.jsx("h2", {
+            style: __assign(__assign({}, textStyles.heading2), {
+              color: colors.semantic.text.primary,
+              margin: 0,
+              marginBottom: spacing.xxxs
+            }),
+            children: "\uB4F1\uB85D\uB41C \uC6B4\uB3D9 \uBAA9\uB85D"
+          }), jsxRuntime.jsxs("p", {
+            style: __assign(__assign({}, textStyles.body3), {
+              color: colors.semantic.text.secondary,
+              margin: 0
+            }),
+            children: ["\uCD1D ", stats.total, "\uAC1C \u2022 \uC644\uB8CC\uC728 ", stats.completionRate, "%"]
+          })]
+        }), jsxRuntime.jsxs("div", {
+          style: {
+            display: 'flex',
+            gap: spacing.s,
+            alignItems: 'center',
+            fontSize: '12px'
+          },
+          children: [stats.totalDuration > 0 && jsxRuntime.jsx("div", {
+            style: {
+              textAlign: 'center',
+              color: colors.semantic.text.tertiary
+            },
+            children: jsxRuntime.jsxs("div", {
+              children: ["\u23F1\uFE0F ", stats.totalDuration, "\uBD84"]
+            })
+          }), stats.totalCalories > 0 && jsxRuntime.jsx("div", {
+            style: {
+              textAlign: 'center',
+              color: colors.semantic.text.tertiary
+            },
+            children: jsxRuntime.jsxs("div", {
+              children: ["\uD83D\uDD25 ", stats.totalCalories, "kcal"]
+            })
+          })]
+        })]
+      }), (showSearch || showFilters) && jsxRuntime.jsxs("div", {
+        style: {
+          marginBottom: spacing.m
+        },
+        children: [showSearch && jsxRuntime.jsx("div", {
+          style: {
+            marginBottom: spacing.s
+          },
+          children: jsxRuntime.jsx("input", {
+            type: "text",
+            placeholder: "\uC6B4\uB3D9 \uAC80\uC0C9...",
+            value: searchQuery,
+            onChange: function (e) {
+              return setSearchQuery(e.target.value);
+            },
+            style: {
+              width: '100%',
+              padding: "".concat(spacing.s, " ").concat(spacing.m),
+              border: "1px solid ".concat(colors.semantic.border.default),
+              borderRadius: radius.s,
+              fontSize: '14px',
+              backgroundColor: colors.semantic.background.primary,
+              color: colors.semantic.text.primary,
+              outline: 'none',
+              transition: 'border-color 0.2s ease'
+            },
+            onFocus: function (e) {
+              e.target.style.borderColor = colors.primary.mainviolet;
+            },
+            onBlur: function (e) {
+              e.target.style.borderColor = colors.semantic.border.default;
+            }
+          })
+        }), showFilters && jsxRuntime.jsxs("div", {
+          style: {
+            display: 'flex',
+            gap: spacing.s,
+            flexWrap: 'wrap',
+            alignItems: 'center'
+          },
+          children: [jsxRuntime.jsx("div", {
+            style: {
+              display: 'flex',
+              gap: spacing.xxs
+            },
+            children: filterOptions.map(function (option) {
+              return jsxRuntime.jsxs("button", {
+                onClick: function () {
+                  return setFilterType(option.value);
+                },
+                style: {
+                  padding: "".concat(spacing.xs, " ").concat(spacing.s),
+                  border: "1px solid ".concat(filterType === option.value ? colors.primary.mainviolet : colors.semantic.border.default),
+                  borderRadius: radius.xs,
+                  backgroundColor: filterType === option.value ? colors.primary.mainviolet : colors.semantic.background.primary,
+                  color: filterType === option.value ? colors.semantic.background.primary : colors.semantic.text.primary,
+                  cursor: 'pointer',
+                  fontSize: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: spacing.xxxs,
+                  transition: 'all 0.2s ease'
+                },
+                children: [jsxRuntime.jsx("span", {
+                  children: option.icon
+                }), option.label]
+              }, option.value);
+            })
+          }), jsxRuntime.jsx("select", {
+            value: sortBy,
+            onChange: function (e) {
+              return setSortBy(e.target.value);
+            },
+            style: {
+              padding: "".concat(spacing.xs, " ").concat(spacing.s),
+              border: "1px solid ".concat(colors.semantic.border.default),
+              borderRadius: radius.xs,
+              backgroundColor: colors.semantic.background.primary,
+              color: colors.semantic.text.primary,
+              fontSize: '12px',
+              cursor: 'pointer'
+            },
+            children: sortOptions.map(function (option) {
+              return jsxRuntime.jsx("option", {
+                value: option.value,
+                children: option.label
+              }, option.value);
+            })
+          }), jsxRuntime.jsxs("label", {
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              gap: spacing.xs,
+              cursor: 'pointer',
+              fontSize: '12px',
+              color: colors.semantic.text.secondary
+            },
+            children: [jsxRuntime.jsx("input", {
+              type: "checkbox",
+              checked: showCompleted,
+              onChange: function (e) {
+                return setShowCompleted(e.target.checked);
+              },
+              style: {
+                cursor: 'pointer'
+              }
+            }), "\uC644\uB8CC\uB41C \uC6B4\uB3D9 \uD45C\uC2DC"]
+          })]
+        })]
+      })]
+    }), filteredAndSortedExercises.length > 0 ? jsxRuntime.jsx("div", {
+      style: {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: spacing.s
+      },
+      children: filteredAndSortedExercises.map(function (exercise) {
+        return jsxRuntime.jsx(ExerciseCard, __assign({}, exercise, {
+          width: "fill",
+          onClick: function () {
+            return onExerciseClick === null || onExerciseClick === void 0 ? void 0 : onExerciseClick(exercise);
+          },
+          onFavoriteToggle: function () {
+            return onFavoriteToggle === null || onFavoriteToggle === void 0 ? void 0 : onFavoriteToggle(exercise.id);
+          },
+          onCompleteToggle: function () {
+            return onCompleteToggle === null || onCompleteToggle === void 0 ? void 0 : onCompleteToggle(exercise.id);
+          }
+        }), exercise.id);
+      })
+    }) : (/* 빈 상태 */
+    jsxRuntime.jsxs("div", {
+      style: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: "".concat(spacing.xxxl, " ").concat(spacing.l),
+        textAlign: 'center',
+        color: colors.semantic.text.tertiary
+      },
+      children: [jsxRuntime.jsx("div", {
+        style: {
+          fontSize: '48px',
+          marginBottom: spacing.m
+        },
+        children: emptyIcon
+      }), jsxRuntime.jsx("h3", {
+        style: __assign(__assign({}, textStyles.heading3), {
+          color: colors.semantic.text.secondary,
+          margin: 0,
+          marginBottom: spacing.xs
+        }),
+        children: emptyMessage
+      }), jsxRuntime.jsx("p", {
+        style: __assign(__assign({}, textStyles.body3), {
+          color: colors.semantic.text.tertiary,
+          margin: 0,
+          maxWidth: '300px'
+        }),
+        children: searchQuery || filterType !== 'all' ? '검색 조건을 변경해보세요.' : '새로운 운동을 추가해보세요!'
+      })]
+    }))]
+  });
+};
+
+exports.ActivityGoalCard = ActivityGoalCard;
 exports.BoxButton = BoxButton;
 exports.Checkbox = Checkbox;
 exports.Chips = Chips;
 exports.Dropdown = Dropdown;
+exports.ExerciseCard = ExerciseCard;
+exports.ExerciseList = ExerciseList;
 exports.Font = Font;
+exports.GreetingHeader = GreetingHeader;
 exports.Icon = Icon;
 exports.Label = Label;
 exports.Modal = Modal;

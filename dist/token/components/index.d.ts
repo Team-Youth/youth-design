@@ -22,3 +22,7 @@ export * from './modal';
 export * from './dropdown';
 export * from './text-area';
 export * from './text-field';
+export * from './exercise-card';
+export * from './activity-goal-card';
+export * from './greeting-header';
+export * from './exercise-list';
