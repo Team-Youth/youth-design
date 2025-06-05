@@ -168,7 +168,10 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     };
 
     return (
-      <div className={`text-area-wrapper ${className}`}>
+      <div
+        className={`text-area-wrapper ${className}`}
+        style={{ width: width === 'fill' ? '100%' : width }}
+      >
         <div
           style={getContainerStyles()}
           onMouseEnter={handleMouseEnter}
