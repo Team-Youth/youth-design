@@ -1,5 +1,5 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import React, { useState, forwardRef, useCallback, useMemo, useEffect, useRef } from 'react';
+import React, { useState, forwardRef, useCallback, useEffect, useRef, useMemo } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 /******************************************************************************
@@ -2458,110 +2458,110 @@ var ToastProvider = function (_a) {
  * react-hot-toast를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 var useToast = function () {
-  // 각 메서드를 useCallback으로 메모이제이션
+  // dismiss 함수를 미리 참조로 저장하여 재생성 방지
+  var dismissToast = useCallback(function (id) {
+    return toast.dismiss(id);
+  }, []);
   var success = useCallback(function (title, description, options) {
-    var toastData = __assign({
-      status: 'success',
-      title: title,
-      description: description
-    }, options);
     return toast.custom(function (t) {
-      return jsx(Toast, __assign({}, toastData, {
+      var _a;
+      return jsx(Toast, __assign({
+        status: "success",
+        title: title,
+        description: description,
+        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
+        showCloseButton: true,
         onClose: function () {
-          return toast.dismiss(t.id);
-        },
-        showCloseButton: true
-      }));
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
     }, {
       duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
       id: options === null || options === void 0 ? void 0 : options.id
     });
-  }, []);
+  }, [dismissToast]);
   var error = useCallback(function (title, description, options) {
-    var toastData = __assign({
-      status: 'error',
-      title: title,
-      description: description
-    }, options);
     return toast.custom(function (t) {
-      return jsx(Toast, __assign({}, toastData, {
+      var _a;
+      return jsx(Toast, __assign({
+        status: "error",
+        title: title,
+        description: description,
+        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
+        showCloseButton: true,
         onClose: function () {
-          return toast.dismiss(t.id);
-        },
-        showCloseButton: true
-      }));
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
     }, {
       duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
       id: options === null || options === void 0 ? void 0 : options.id
     });
-  }, []);
+  }, [dismissToast]);
   var warning = useCallback(function (title, description, options) {
-    var toastData = __assign({
-      status: 'warning',
-      title: title,
-      description: description
-    }, options);
     return toast.custom(function (t) {
-      return jsx(Toast, __assign({}, toastData, {
+      var _a;
+      return jsx(Toast, __assign({
+        status: "warning",
+        title: title,
+        description: description,
+        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
+        showCloseButton: true,
         onClose: function () {
-          return toast.dismiss(t.id);
-        },
-        showCloseButton: true
-      }));
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
     }, {
       duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
       id: options === null || options === void 0 ? void 0 : options.id
     });
-  }, []);
+  }, [dismissToast]);
   var info = useCallback(function (title, description, options) {
-    var toastData = __assign({
-      status: 'info',
-      title: title,
-      description: description
-    }, options);
     return toast.custom(function (t) {
-      return jsx(Toast, __assign({}, toastData, {
+      var _a;
+      return jsx(Toast, __assign({
+        status: "info",
+        title: title,
+        description: description,
+        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
+        showCloseButton: true,
         onClose: function () {
-          return toast.dismiss(t.id);
-        },
-        showCloseButton: true
-      }));
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
     }, {
       duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
       id: options === null || options === void 0 ? void 0 : options.id
     });
-  }, []);
+  }, [dismissToast]);
   var custom = useCallback(function (options) {
     return toast.custom(function (t) {
-      return jsx(Toast, __assign({}, options, {
+      return jsx(Toast, __assign({
+        showLeadingIcon: true,
+        showCloseButton: true,
         onClose: function () {
-          return toast.dismiss(t.id);
-        },
-        showCloseButton: true
-      }));
+          return dismissToast(t.id);
+        }
+      }, options), t.id);
     }, {
       duration: options.duration || 4000
     });
-  }, []);
+  }, [dismissToast]);
   var remove = useCallback(function (id) {
-    return toast.dismiss(id);
-  }, []);
+    return dismissToast(id);
+  }, [dismissToast]);
   var removeAll = useCallback(function () {
     return toast.dismiss();
   }, []);
-  // 반환 객체를 useMemo로 메모이제이션
-  var toastMethods = useMemo(function () {
-    return {
-      success: success,
-      error: error,
-      warning: warning,
-      info: info,
-      custom: custom,
-      remove: remove,
-      removeAll: removeAll
-    };
-  }, [success, error, warning, info, custom, remove, removeAll]);
-  return toastMethods;
+  return {
+    success: success,
+    error: error,
+    warning: warning,
+    info: info,
+    custom: custom,
+    remove: remove,
+    removeAll: removeAll
+  };
 };
 
 var Popup = function (_a) {
