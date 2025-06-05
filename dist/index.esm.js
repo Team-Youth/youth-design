@@ -2788,6 +2788,7 @@ var Modal = function (_a) {
     showScrollbar = _c === void 0 ? false : _c,
     _d = _a.showCloseButton,
     showCloseButton = _d === void 0 ? true : _d,
+    width = _a.width,
     primaryButton = _a.primaryButton,
     secondaryButton = _a.secondaryButton,
     isOpen = _a.isOpen,
@@ -2795,10 +2796,12 @@ var Modal = function (_a) {
     _e = _a.className,
     className = _e === void 0 ? '' : _e,
     _f = _a.style,
-    style = _f === void 0 ? {} : _f;
-  var _g = React.useState(false),
-    isContentOverflowing = _g[0],
-    setIsContentOverflowing = _g[1];
+    style = _f === void 0 ? {} : _f,
+    _g = _a.overlayStyle,
+    overlayStyle = _g === void 0 ? {} : _g;
+  var _h = React.useState(false),
+    isContentOverflowing = _h[0],
+    setIsContentOverflowing = _h[1];
   var contentRef = React.useRef(null);
   useEffect(function () {
     if (children && contentRef.current) {
@@ -2809,7 +2812,7 @@ var Modal = function (_a) {
     }
   }, [children, contentMaxHeight]);
   if (!isOpen) return null;
-  var overlayStyle = __assign({
+  var overlayStyleConfig = __assign({
     position: 'fixed',
     top: 0,
     left: 0,
@@ -2820,19 +2823,20 @@ var Modal = function (_a) {
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 9999
-  }, style);
-  var modalStyle = {
+  }, overlayStyle);
+  var modalStyle = __assign({
     backgroundColor: colors.semantic.background.primary,
     borderRadius: '16px',
     padding: '32px',
-    minWidth: '480px',
+    minWidth: typeof width === 'number' ? "".concat(width, "px") : width || '480px',
+    width: typeof width === 'number' ? "".concat(width, "px") : width,
     maxWidth: 'calc(100vw - 40px)',
     maxHeight: 'calc(100vh - 40px)',
     boxShadow: shadows.m,
     display: 'flex',
     flexDirection: 'column',
     gap: isContentOverflowing ? '0px' : secondaryButton ? '20px' : '24px'
-  };
+  }, style);
   var headerStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -2904,7 +2908,7 @@ var Modal = function (_a) {
   };
   return jsx("div", {
     className: "modal-overlay ".concat(className),
-    style: overlayStyle,
+    style: overlayStyleConfig,
     onClick: handleOverlayClick,
     children: jsxs("div", {
       className: "modal",

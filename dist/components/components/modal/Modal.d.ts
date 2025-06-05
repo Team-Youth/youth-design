@@ -14,6 +14,8 @@ export interface ModalProps {
     showScrollbar?: boolean;
     /** 닫기 버튼 표시 여부 */
     showCloseButton?: boolean;
+    /** 모달 너비 (기본값: 480px) */
+    width?: string | number;
     /** 메인 버튼 props */
     primaryButton: {
         text: string;
@@ -30,7 +32,9 @@ export interface ModalProps {
     onClose: () => void;
     /** 추가 CSS 클래스 */
     className?: string;
-    /** 추가 스타일 */
+    /** 모달 컨테이너 추가 스타일 */
     style?: React.CSSProperties;
+    /** 오버레이 추가 스타일 */
+    overlayStyle?: React.CSSProperties;
 }
 export declare const Modal: React.FC<ModalProps>;

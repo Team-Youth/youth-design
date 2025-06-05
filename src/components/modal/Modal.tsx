@@ -19,6 +19,8 @@ export interface ModalProps {
   showScrollbar?: boolean;
   /** 닫기 버튼 표시 여부 */
   showCloseButton?: boolean;
+  /** 모달 너비 (기본값: 480px) */
+  width?: string | number;
   /** 메인 버튼 props */
   primaryButton: {
     text: string;
@@ -35,8 +37,10 @@ export interface ModalProps {
   onClose: () => void;
   /** 추가 CSS 클래스 */
   className?: string;
-  /** 추가 스타일 */
+  /** 모달 컨테이너 추가 스타일 */
   style?: React.CSSProperties;
+  /** 오버레이 추가 스타일 */
+  overlayStyle?: React.CSSProperties;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -46,12 +50,14 @@ export const Modal: React.FC<ModalProps> = ({
   contentMaxHeight = 500,
   showScrollbar = false,
   showCloseButton = true,
+  width,
   primaryButton,
   secondaryButton,
   isOpen,
   onClose,
   className = '',
   style = {},
+  overlayStyle = {},
 }) => {
   const [isContentOverflowing, setIsContentOverflowing] = React.useState(false);
   const contentRef = React.useRef<HTMLDivElement>(null);
@@ -65,7 +71,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
-  const overlayStyle: React.CSSProperties = {
+  const overlayStyleConfig: React.CSSProperties = {
     position: 'fixed',
     top: 0,
     left: 0,
@@ -76,20 +82,22 @@ export const Modal: React.FC<ModalProps> = ({
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 9999,
-    ...style,
+    ...overlayStyle,
   };
 
   const modalStyle: React.CSSProperties = {
     backgroundColor: colors.semantic.background.primary,
     borderRadius: '16px',
     padding: '32px',
-    minWidth: '480px',
+    minWidth: typeof width === 'number' ? `${width}px` : width || '480px',
+    width: typeof width === 'number' ? `${width}px` : width,
     maxWidth: 'calc(100vw - 40px)',
     maxHeight: 'calc(100vh - 40px)',
     boxShadow: shadows.m,
     display: 'flex',
     flexDirection: 'column',
     gap: isContentOverflowing ? '0px' : secondaryButton ? '20px' : '24px',
+    ...style,
   };
 
   const headerStyle: React.CSSProperties = {
@@ -175,7 +183,11 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className={`modal-overlay ${className}`} style={overlayStyle} onClick={handleOverlayClick}>
+    <div
+      className={`modal-overlay ${className}`}
+      style={overlayStyleConfig}
+      onClick={handleOverlayClick}
+    >
       <div className="modal" style={modalStyle}>
         <div className="modal-content" style={contentStyle}>
           <div className="modal-header" style={headerStyle}>
