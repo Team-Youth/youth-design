@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoxButtonProps } from '../box-button';
+import { ButtonProps } from '../box-button';
 export interface PopupProps {
     /** 팝업 제목 */
     title: string;
@@ -9,12 +9,12 @@ export interface PopupProps {
     primaryButton: {
         text: string;
         onClick: () => void;
-    } & Partial<Omit<BoxButtonProps, 'onClick'>>;
+    } & Partial<Omit<ButtonProps, 'onClick'>>;
     /** 보조 버튼 props (선택사항) */
     secondaryButton?: {
         text: string;
         onClick: () => void;
-    } & Partial<Omit<BoxButtonProps, 'onClick'>>;
+    } & Partial<Omit<ButtonProps, 'onClick'>>;
     /** 팝업이 표시되는지 여부 */
     isOpen: boolean;
     /** 팝업 닫기 핸들러 */

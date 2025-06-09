@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoxButtonProps } from '../box-button';
+import { ButtonProps } from '../box-button';
 import './Modal.css';
 export interface ModalProps {
     /** 모달 제목 */
@@ -20,12 +20,12 @@ export interface ModalProps {
     primaryButton: {
         text: string;
         onClick: () => void;
-    } & Partial<Omit<BoxButtonProps, 'onClick'>>;
+    } & Partial<Omit<ButtonProps, 'onClick'>>;
     /** 보조 버튼 props (선택사항) */
     secondaryButton?: {
         text: string;
         onClick: () => void;
-    } & Partial<Omit<BoxButtonProps, 'onClick'>>;
+    } & Partial<Omit<ButtonProps, 'onClick'>>;
     /** 모달이 표시되는지 여부 */
     isOpen: boolean;
     /** 모달 닫기 핸들러 */

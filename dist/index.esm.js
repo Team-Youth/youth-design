@@ -578,57 +578,64 @@ var LoadingIcon = function () {
     })
   });
 };
-var BoxButton = function (_a) {
+var Button = function (_a) {
   var _b = _a.type,
     type = _b === void 0 ? 'solid' : _b,
-    _c = _a.size,
-    size = _c === void 0 ? 'l' : _c,
-    _d = _a.width,
-    width = _d === void 0 ? '320px' : _d,
-    _e = _a.disabled,
-    disabled = _e === void 0 ? false : _e,
+    _c = _a.level,
+    level = _c === void 0 ? 'CTA' : _c,
+    _d = _a.size,
+    size = _d === void 0 ? 'l' : _d,
+    _e = _a.width,
+    width = _e === void 0 ? '320px' : _e,
+    _f = _a.disabled,
+    disabled = _f === void 0 ? false : _f,
     icon = _a.icon,
     children = _a.children,
     onClick = _a.onClick,
-    _f = _a.className,
-    className = _f === void 0 ? '' : _f,
-    _g = _a.isLoading,
-    isLoading = _g === void 0 ? false : _g;
-  var _h = useState(false),
-    isHovered = _h[0],
-    setIsHovered = _h[1];
-  var _j = useState(false),
-    isPressed = _j[0],
-    setIsPressed = _j[1];
+    _g = _a.className,
+    className = _g === void 0 ? '' : _g,
+    _h = _a.isLoading,
+    isLoading = _h === void 0 ? false : _h,
+    _j = _a.underline,
+    underline = _j === void 0 ? false : _j;
+  var _k = useState(false),
+    isHovered = _k[0],
+    setIsHovered = _k[1];
+  var _l = useState(false),
+    isPressed = _l[0],
+    setIsPressed = _l[1];
   // Size configurations
   var sizeConfig = {
-    l: __assign(__assign({
-      paddingX: '16px',
-      paddingY: '12px',
-      borderRadius: '12px',
+    l: {
+      paddingX: type === 'text' ? '12px' : '16px',
+      paddingY: type === 'text' ? '0px' : '12px',
+      borderRadius: type === 'text' ? '12px' : '12px',
       width: '320px',
-      height: '48px'
-    }, textStyles.body1), {
-      fontWeight: fontWeight.medium
-    }),
-    m: __assign(__assign({
-      paddingX: '12px',
-      paddingY: '8px',
-      borderRadius: '8px',
+      height: type === 'text' ? '32px' : '48px',
+      fontSize: '16px',
+      fontWeight: '500',
+      iconSize: '20px'
+    },
+    m: {
+      paddingX: type === 'text' ? '8px' : '12px',
+      paddingY: type === 'text' ? '0px' : '8px',
+      borderRadius: type === 'text' ? '12px' : '8px',
       width: '320px',
-      height: '40px'
-    }, textStyles.body2), {
-      fontWeight: fontWeight.medium
-    }),
-    s: __assign(__assign({
-      paddingX: '8px',
-      paddingY: '6px',
-      borderRadius: '4px',
+      height: type === 'text' ? '24px' : '40px',
+      fontSize: '14px',
+      fontWeight: '500',
+      iconSize: '16px'
+    },
+    s: {
+      paddingX: type === 'text' ? '8px' : '8px',
+      paddingY: type === 'text' ? '0px' : '6px',
+      borderRadius: type === 'text' ? '12px' : '4px',
       width: '320px',
-      height: '32px'
-    }, textStyles.body3), {
-      fontWeight: fontWeight.medium
-    })
+      height: type === 'text' ? '20px' : '32px',
+      fontSize: '12px',
+      fontWeight: '500',
+      iconSize: type === 'text' ? '14px' : '16px'
+    }
   };
   var getStyles = function () {
     var config = sizeConfig[size];
@@ -647,80 +654,158 @@ var BoxButton = function (_a) {
       borderRadius: config.borderRadius,
       width: getWidth(),
       height: config.height,
-      border: '1px solid transparent',
+      border: type === 'text' ? 'none' : '1px solid transparent',
       cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
       transition: 'all 0.2s ease',
-      fontSize: '14px',
-      fontWeight: '500'
+      fontSize: config.fontSize,
+      fontWeight: config.fontWeight,
+      textDecoration: type === 'text' && underline ? 'underline' : 'none',
+      background: 'none'
     };
+    // Type별 스타일 적용
     if (type === 'solid') {
-      if (disabled) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.disabled.background,
-          color: colors.semantic.disabled.foreground,
-          border: "1px solid ".concat(colors.semantic.disabled.background),
-          cursor: 'not-allowed'
-        });
-      } else if (isPressed) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.tint.violet[700],
-          color: colors.semantic.background.primary,
-          border: "1px solid ".concat(colors.primary.tint.violet[700])
-        });
-      } else if (isHovered) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.tint.violet[600],
-          color: colors.semantic.background.primary,
-          border: "1px solid ".concat(colors.primary.tint.violet[600])
-        });
-      } else {
-        styles = __assign(__assign({}, styles), {
+      styles = __assign(__assign({}, styles), getSolidStyles(level, disabled, isLoading, isPressed, isHovered));
+    } else if (type === 'outlined') {
+      styles = __assign(__assign({}, styles), getOutlinedStyles(disabled, isLoading, isPressed, isHovered));
+    } else if (type === 'text') {
+      styles = __assign(__assign({}, styles), getTextStyles(disabled));
+    }
+    return styles;
+  };
+  var getSolidStyles = function (level, disabled, isLoading, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.disabled.foreground,
+        border: "1px solid ".concat(colors.semantic.disabled.background)
+      };
+    }
+    if (isLoading) {
+      if (level === 'CTA') {
+        return {
           backgroundColor: colors.primary.mainviolet,
           color: colors.semantic.background.primary,
           border: "1px solid ".concat(colors.primary.mainviolet)
-        });
-      }
-    } else if (type === 'ghost') {
-      if (disabled) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.background.primary,
-          color: colors.semantic.disabled.foreground,
-          border: "".concat(border.s, " ").concat(colors.semantic.disabled.foreground),
-          cursor: 'not-allowed'
-        });
-      } else if (isPressed || isHovered) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.coolGray[100],
-          color: colors.semantic.text.primary,
-          border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-        });
-      } else {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.background.primary,
-          color: colors.semantic.text.primary,
-          border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-        });
-      }
-    }
-    // Loading state overrides
-    if (isLoading) {
-      if (type === 'solid') {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.mainviolet,
+        };
+      } else if (level === 'secondary') {
+        return {
+          backgroundColor: colors.primary.coolGray[200],
           color: colors.semantic.background.primary,
-          border: "".concat(border.s, " ").concat(colors.primary.mainviolet),
-          cursor: 'not-allowed'
-        });
-      } else {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.background.primary,
+          border: "1px solid ".concat(colors.primary.coolGray[200])
+        };
+      } else if (level === 'tertiary') {
+        return {
+          backgroundColor: colors.semantic.disabled.background,
           color: colors.semantic.text.primary,
-          border: "".concat(border.s, " ").concat(colors.semantic.border.strong),
-          cursor: 'not-allowed'
-        });
+          border: "1px solid ".concat(colors.semantic.disabled.background)
+        };
       }
     }
-    return styles;
+    // Level별 색상 정의
+    var levelColors = {
+      CTA: {
+        normal: {
+          bg: colors.primary.mainviolet,
+          text: colors.semantic.background.primary
+        },
+        hovered: {
+          bg: colors.primary.tint.violet[600],
+          text: colors.semantic.background.primary
+        },
+        pressed: {
+          bg: colors.primary.tint.violet[700],
+          text: colors.semantic.background.primary
+        }
+      },
+      secondary: {
+        normal: {
+          bg: colors.primary.coolGray[200],
+          text: colors.semantic.background.primary
+        },
+        hovered: {
+          bg: colors.primary.coolGray[300],
+          text: colors.semantic.background.primary
+        },
+        pressed: {
+          bg: colors.primary.coolGray[400],
+          text: colors.primary.tint.violet[600]
+        }
+      },
+      tertiary: {
+        normal: {
+          bg: colors.semantic.disabled.background,
+          text: colors.semantic.text.primary
+        },
+        hovered: {
+          bg: colors.primary.coolGray[100],
+          text: colors.semantic.text.primary
+        },
+        pressed: {
+          bg: colors.semantic.disabled.foreground,
+          text: colors.semantic.text.primary
+        }
+      }
+    };
+    var currentLevel = levelColors[level];
+    var currentState = currentLevel.normal;
+    if (isPressed) {
+      currentState = currentLevel.pressed;
+    } else if (isHovered) {
+      currentState = currentLevel.hovered;
+    }
+    return {
+      backgroundColor: currentState.bg,
+      color: currentState.text,
+      border: "1px solid ".concat(currentState.bg)
+    };
+  };
+  var getOutlinedStyles = function (disabled, isLoading, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.disabled.foreground,
+        border: "1px solid ".concat(colors.semantic.disabled.foreground)
+      };
+    }
+    if (isLoading) {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    }
+    if (isPressed) {
+      return {
+        backgroundColor: colors.primary.coolGray[100],
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    } else if (isHovered) {
+      return {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    } else {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    }
+  };
+  var getTextStyles = function (disabled, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        color: colors.semantic.disabled.foreground,
+        backgroundColor: 'transparent'
+      };
+    }
+    // text 버튼은 배경색 변화 없이 텍스트 색상만 변경
+    return {
+      color: colors.semantic.text.primary,
+      backgroundColor: 'transparent'
+    };
   };
   var handleClick = function () {
     if (!disabled && !isLoading && onClick) {
@@ -748,15 +833,29 @@ var BoxButton = function (_a) {
     if (isLoading) {
       return jsx(LoadingIcon, {});
     }
+    var config = sizeConfig[size];
+    var iconStyle = {
+      width: config.iconSize,
+      height: config.iconSize,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    };
     return jsxs("div", {
       style: {
         display: 'flex',
         alignItems: 'center',
         gap: '4px'
       },
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && icon.left, children && jsx("span", {
+      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && jsx("div", {
+        style: iconStyle,
+        children: icon.left
+      }), children && jsx("span", {
         children: children
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && icon.right]
+      }), (icon === null || icon === void 0 ? void 0 : icon.right) && jsx("div", {
+        style: iconStyle,
+        children: icon.right
+      })]
     });
   };
   return jsx("button", {
@@ -2748,8 +2847,8 @@ var Popup = function (_a) {
       }), jsxs("div", {
         className: "popup-buttons",
         style: buttonContainerStyle,
-        children: [secondaryButton && jsx(BoxButton, __assign({
-          type: "ghost",
+        children: [secondaryButton && jsx(Button, __assign({
+          type: "outlined",
           size: "l",
           width: "fill",
           onClick: secondaryButton.onClick
@@ -2760,7 +2859,7 @@ var Popup = function (_a) {
           return rest;
         }(secondaryButton), {
           children: secondaryButton.text
-        })), jsx(BoxButton, __assign({
+        })), jsx(Button, __assign({
           type: "solid",
           size: "l",
           width: "fill",
@@ -2943,8 +3042,8 @@ var Modal = function (_a) {
       }), jsxs("div", {
         className: "modal-buttons",
         style: buttonContainerStyle,
-        children: [secondaryButton && jsx(BoxButton, __assign({
-          type: "ghost",
+        children: [secondaryButton && jsx(Button, __assign({
+          type: "outlined",
           size: "l",
           width: "fill",
           onClick: secondaryButton.onClick
@@ -2955,7 +3054,7 @@ var Modal = function (_a) {
           return rest;
         }(secondaryButton), {
           children: secondaryButton.text
-        })), jsx(BoxButton, __assign({
+        })), jsx(Button, __assign({
           type: "solid",
           size: "l",
           width: "fill",
@@ -4889,5 +4988,5 @@ var ExerciseList = function (_a) {
   });
 };
 
-export { ActivityGoalCard, BoxButton, Checkbox, Chips, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Label, Modal, Popup, Radio, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
+export { ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Label, Modal, Popup, Radio, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
 //# sourceMappingURL=index.esm.js.map

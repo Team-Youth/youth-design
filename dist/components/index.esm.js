@@ -217,6 +217,316 @@ var colors = {
   }
 };
 
+var LoadingIcon = function () {
+  return jsx("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 50 50",
+    className: "loading-icon",
+    children: jsx("circle", {
+      cx: "25",
+      cy: "25",
+      r: "20",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "4",
+      strokeLinecap: "round"
+    })
+  });
+};
+var Button = function (_a) {
+  var _b = _a.type,
+    type = _b === void 0 ? 'solid' : _b,
+    _c = _a.level,
+    level = _c === void 0 ? 'CTA' : _c,
+    _d = _a.size,
+    size = _d === void 0 ? 'l' : _d,
+    _e = _a.width,
+    width = _e === void 0 ? '320px' : _e,
+    _f = _a.disabled,
+    disabled = _f === void 0 ? false : _f,
+    icon = _a.icon,
+    children = _a.children,
+    onClick = _a.onClick,
+    _g = _a.className,
+    className = _g === void 0 ? '' : _g,
+    _h = _a.isLoading,
+    isLoading = _h === void 0 ? false : _h,
+    _j = _a.underline,
+    underline = _j === void 0 ? false : _j;
+  var _k = useState(false),
+    isHovered = _k[0],
+    setIsHovered = _k[1];
+  var _l = useState(false),
+    isPressed = _l[0],
+    setIsPressed = _l[1];
+  // Size configurations
+  var sizeConfig = {
+    l: {
+      paddingX: type === 'text' ? '12px' : '16px',
+      paddingY: type === 'text' ? '0px' : '12px',
+      borderRadius: type === 'text' ? '12px' : '12px',
+      width: '320px',
+      height: type === 'text' ? '32px' : '48px',
+      fontSize: '16px',
+      fontWeight: '500',
+      iconSize: '20px'
+    },
+    m: {
+      paddingX: type === 'text' ? '8px' : '12px',
+      paddingY: type === 'text' ? '0px' : '8px',
+      borderRadius: type === 'text' ? '12px' : '8px',
+      width: '320px',
+      height: type === 'text' ? '24px' : '40px',
+      fontSize: '14px',
+      fontWeight: '500',
+      iconSize: '16px'
+    },
+    s: {
+      paddingX: type === 'text' ? '8px' : '8px',
+      paddingY: type === 'text' ? '0px' : '6px',
+      borderRadius: type === 'text' ? '12px' : '4px',
+      width: '320px',
+      height: type === 'text' ? '20px' : '32px',
+      fontSize: '12px',
+      fontWeight: '500',
+      iconSize: type === 'text' ? '14px' : '16px'
+    }
+  };
+  var getStyles = function () {
+    var config = sizeConfig[size];
+    // width 동적 설정
+    var getWidth = function () {
+      if (width === 'fill') {
+        return '100%';
+      }
+      return width;
+    };
+    var styles = {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
+      borderRadius: config.borderRadius,
+      width: getWidth(),
+      height: config.height,
+      border: type === 'text' ? 'none' : '1px solid transparent',
+      cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
+      transition: 'all 0.2s ease',
+      fontSize: config.fontSize,
+      fontWeight: config.fontWeight,
+      textDecoration: type === 'text' && underline ? 'underline' : 'none',
+      background: 'none'
+    };
+    // Type별 스타일 적용
+    if (type === 'solid') {
+      styles = __assign(__assign({}, styles), getSolidStyles(level, disabled, isLoading, isPressed, isHovered));
+    } else if (type === 'outlined') {
+      styles = __assign(__assign({}, styles), getOutlinedStyles(disabled, isLoading, isPressed, isHovered));
+    } else if (type === 'text') {
+      styles = __assign(__assign({}, styles), getTextStyles(disabled));
+    }
+    return styles;
+  };
+  var getSolidStyles = function (level, disabled, isLoading, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.disabled.foreground,
+        border: "1px solid ".concat(colors.semantic.disabled.background)
+      };
+    }
+    if (isLoading) {
+      if (level === 'CTA') {
+        return {
+          backgroundColor: colors.primary.mainviolet,
+          color: colors.semantic.background.primary,
+          border: "1px solid ".concat(colors.primary.mainviolet)
+        };
+      } else if (level === 'secondary') {
+        return {
+          backgroundColor: colors.primary.coolGray[200],
+          color: colors.semantic.background.primary,
+          border: "1px solid ".concat(colors.primary.coolGray[200])
+        };
+      } else if (level === 'tertiary') {
+        return {
+          backgroundColor: colors.semantic.disabled.background,
+          color: colors.semantic.text.primary,
+          border: "1px solid ".concat(colors.semantic.disabled.background)
+        };
+      }
+    }
+    // Level별 색상 정의
+    var levelColors = {
+      CTA: {
+        normal: {
+          bg: colors.primary.mainviolet,
+          text: colors.semantic.background.primary
+        },
+        hovered: {
+          bg: colors.primary.tint.violet[600],
+          text: colors.semantic.background.primary
+        },
+        pressed: {
+          bg: colors.primary.tint.violet[700],
+          text: colors.semantic.background.primary
+        }
+      },
+      secondary: {
+        normal: {
+          bg: colors.primary.coolGray[200],
+          text: colors.semantic.background.primary
+        },
+        hovered: {
+          bg: colors.primary.coolGray[300],
+          text: colors.semantic.background.primary
+        },
+        pressed: {
+          bg: colors.primary.coolGray[400],
+          text: colors.primary.tint.violet[600]
+        }
+      },
+      tertiary: {
+        normal: {
+          bg: colors.semantic.disabled.background,
+          text: colors.semantic.text.primary
+        },
+        hovered: {
+          bg: colors.primary.coolGray[100],
+          text: colors.semantic.text.primary
+        },
+        pressed: {
+          bg: colors.semantic.disabled.foreground,
+          text: colors.semantic.text.primary
+        }
+      }
+    };
+    var currentLevel = levelColors[level];
+    var currentState = currentLevel.normal;
+    if (isPressed) {
+      currentState = currentLevel.pressed;
+    } else if (isHovered) {
+      currentState = currentLevel.hovered;
+    }
+    return {
+      backgroundColor: currentState.bg,
+      color: currentState.text,
+      border: "1px solid ".concat(currentState.bg)
+    };
+  };
+  var getOutlinedStyles = function (disabled, isLoading, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.disabled.foreground,
+        border: "1px solid ".concat(colors.semantic.disabled.foreground)
+      };
+    }
+    if (isLoading) {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    }
+    if (isPressed) {
+      return {
+        backgroundColor: colors.primary.coolGray[100],
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    } else if (isHovered) {
+      return {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    } else {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    }
+  };
+  var getTextStyles = function (disabled, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        color: colors.semantic.disabled.foreground,
+        backgroundColor: 'transparent'
+      };
+    }
+    // text 버튼은 배경색 변화 없이 텍스트 색상만 변경
+    return {
+      color: colors.semantic.text.primary,
+      backgroundColor: 'transparent'
+    };
+  };
+  var handleClick = function () {
+    if (!disabled && !isLoading && onClick) {
+      onClick();
+    }
+  };
+  var handleMouseEnter = function () {
+    if (!disabled && !isLoading) {
+      setIsHovered(true);
+    }
+  };
+  var handleMouseLeave = function () {
+    setIsHovered(false);
+    setIsPressed(false);
+  };
+  var handleMouseDown = function () {
+    if (!disabled && !isLoading) {
+      setIsPressed(true);
+    }
+  };
+  var handleMouseUp = function () {
+    setIsPressed(false);
+  };
+  var renderContent = function () {
+    if (isLoading) {
+      return jsx(LoadingIcon, {});
+    }
+    var config = sizeConfig[size];
+    var iconStyle = {
+      width: config.iconSize,
+      height: config.iconSize,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    };
+    return jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px'
+      },
+      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && jsx("div", {
+        style: iconStyle,
+        children: icon.left
+      }), children && jsx("span", {
+        children: children
+      }), (icon === null || icon === void 0 ? void 0 : icon.right) && jsx("div", {
+        style: iconStyle,
+        children: icon.right
+      })]
+    });
+  };
+  return jsx("button", {
+    style: getStyles(),
+    onClick: handleClick,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    onMouseDown: handleMouseDown,
+    onMouseUp: handleMouseUp,
+    disabled: disabled || isLoading,
+    className: className,
+    children: renderContent()
+  });
+};
+
 /**
  * Typography Design Tokens
  * 서비스와 사용자가 커뮤니케이션하는 주요 요소
@@ -364,307 +674,6 @@ var textStyles = {
     letterSpacing: letterSpacing.m,
     fontFamily: fontFamily.primary
   }
-};
-
-/**
- * Spacing Design Tokens
- * 균일한 요소와 간격을 사용하여 UI의 체계적인 배열을 도와줌
- * 4와 8의 배수에 기반한 스페이싱 시스템
- */
-var spacing = {
-  /** 2px - 최소 간격 */
-  xxxs: '2px',
-  /** 4px - 매우 작은 간격 */
-  xxs: '4px',
-  /** 8px - 작은 간격 */
-  xs: '8px',
-  /** 12px - 작은-중간 간격 */
-  s: '12px',
-  /** 16px - 기본 간격 */
-  m: '16px',
-  /** 20px - 중간-큰 간격 */
-  l: '20px',
-  /** 24px - 큰 간격 */
-  xl: '24px',
-  /** 32px - 매우 큰 간격 */
-  xxl: '32px',
-  /** 40px - 최대 간격 */
-  xxxl: '40px'
-};
-
-/**
- * Radius Design Tokens
- * UI 요소의 모서리를 둥글게 하여 부드러운 사용자 경험을 제공
- */
-var radius = {
-  /** 작은 버튼, 입력 필드, 체크박스에 최소한의 둥근 효과를 줄 때 사용 */
-  xs: '4px',
-  /** 카드, 드롭다운, 배너, 일반 버튼에 기본적인 둥근 스타일을 적용할 때 사용 */
-  s: '8px',
-  /** 중간 크기의 카드, 팝업, 모달에 부드러운 곡률을 적용할 때 사용 */
-  m: '12px',
-  /** 큰 모달, 프로필 이미지, 강조 영역에 둥근 효과를 줄 때 사용 */
-  l: '16px',
-  /** Hero Section과 같은 대형 UI 요소에 강한 둥근 효과를 적용할 때 사용 */
-  xl: '20px',
-  /** 아바타, 토글 버튼과 같은 완전한 원형 요소에 적용할 때 사용 */
-  full: '50%'
-};
-
-/**
- * Shadow Design Tokens
- * 그림자는 적용된 UI의 높이(elevation)와 이동 방향, 가장자리 등에 대한 단서를 제공
- */
-var shadows = {
-  /** 높이 48px 이하의 작은 요소에 가벼운 깊이감을 줄 때 사용 - 아이콘, 버튼, 배지, 입력 필드, 체크박스 등 */
-  s: '0px 1px 8px rgba(0, 0, 0, 0.1)',
-  /** 너비 또는 높이가 48px ~ 200px 사이의 중간 크기 요소를 명확히 구분할 때 사용 - 카드, 모달, 드롭다운, 중간 크기 버튼 등 */
-  m: '0px 1px 16px rgba(0, 0, 0, 0.1)',
-  /** 너비 200px 이상 또는 화면 너비의 50% 이상을 초과하는 큰 요소, 또는 강조가 필요한 구성 요소에 사용 - 다이얼로그, 대형 카드 등 */
-  l: '0px 1px 24px rgba(0, 0, 0, 0.12)'
-};
-
-/**
- * Border Design Tokens
- * 컴포넌트에 테두리를 추가하여 구분감을 제공하는 속성
- */
-// Border Widths
-var borderWidth = {
-  /** UI 요소의 기본적인 구분감을 제공할 때 사용 */
-  s: '1px',
-  /** 1px보다 더 명확한 구분이 필요할 때 사용 */
-  m: '1.5px',
-  /** 중요한 요소를 강조하거나, 요소 간 강한 대비가 필요할 때 사용 */
-  l: '2px'
-};
-// Border Styles
-var borderStyle = {
-  solid: 'solid',
-  dashed: 'dashed',
-  dotted: 'dotted',
-  none: 'none'
-};
-// Combined Border Tokens
-var border = {
-  /** 기본 보더 - UI 요소의 기본적인 구분감 제공 */
-  s: "".concat(borderWidth.s, " ").concat(borderStyle.solid),
-  /** 중간 보더 - 더 명확한 구분이 필요할 때 */
-  m: "".concat(borderWidth.m, " ").concat(borderStyle.solid),
-  /** 큰 보더 - 중요한 요소 강조나 강한 대비가 필요할 때 */
-  l: "".concat(borderWidth.l, " ").concat(borderStyle.solid),
-  /** 보더 없음 */
-  none: borderStyle.none
-};
-
-var LoadingIcon = function () {
-  return jsx("svg", {
-    width: "16",
-    height: "16",
-    viewBox: "0 0 50 50",
-    className: "loading-icon",
-    children: jsx("circle", {
-      cx: "25",
-      cy: "25",
-      r: "20",
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: "4",
-      strokeLinecap: "round"
-    })
-  });
-};
-var BoxButton = function (_a) {
-  var _b = _a.type,
-    type = _b === void 0 ? 'solid' : _b,
-    _c = _a.size,
-    size = _c === void 0 ? 'l' : _c,
-    _d = _a.width,
-    width = _d === void 0 ? '320px' : _d,
-    _e = _a.disabled,
-    disabled = _e === void 0 ? false : _e,
-    icon = _a.icon,
-    children = _a.children,
-    onClick = _a.onClick,
-    _f = _a.className,
-    className = _f === void 0 ? '' : _f,
-    _g = _a.isLoading,
-    isLoading = _g === void 0 ? false : _g;
-  var _h = useState(false),
-    isHovered = _h[0],
-    setIsHovered = _h[1];
-  var _j = useState(false),
-    isPressed = _j[0],
-    setIsPressed = _j[1];
-  // Size configurations
-  var sizeConfig = {
-    l: __assign(__assign({
-      paddingX: '16px',
-      paddingY: '12px',
-      borderRadius: '12px',
-      width: '320px',
-      height: '48px'
-    }, textStyles.body1), {
-      fontWeight: fontWeight.medium
-    }),
-    m: __assign(__assign({
-      paddingX: '12px',
-      paddingY: '8px',
-      borderRadius: '8px',
-      width: '320px',
-      height: '40px'
-    }, textStyles.body2), {
-      fontWeight: fontWeight.medium
-    }),
-    s: __assign(__assign({
-      paddingX: '8px',
-      paddingY: '6px',
-      borderRadius: '4px',
-      width: '320px',
-      height: '32px'
-    }, textStyles.body3), {
-      fontWeight: fontWeight.medium
-    })
-  };
-  var getStyles = function () {
-    var config = sizeConfig[size];
-    // width 동적 설정
-    var getWidth = function () {
-      if (width === 'fill') {
-        return '100%';
-      }
-      return width;
-    };
-    var styles = {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
-      borderRadius: config.borderRadius,
-      width: getWidth(),
-      height: config.height,
-      border: '1px solid transparent',
-      cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
-      transition: 'all 0.2s ease',
-      fontSize: '14px',
-      fontWeight: '500'
-    };
-    if (type === 'solid') {
-      if (disabled) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.disabled.background,
-          color: colors.semantic.disabled.foreground,
-          border: "1px solid ".concat(colors.semantic.disabled.background),
-          cursor: 'not-allowed'
-        });
-      } else if (isPressed) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.tint.violet[700],
-          color: colors.semantic.background.primary,
-          border: "1px solid ".concat(colors.primary.tint.violet[700])
-        });
-      } else if (isHovered) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.tint.violet[600],
-          color: colors.semantic.background.primary,
-          border: "1px solid ".concat(colors.primary.tint.violet[600])
-        });
-      } else {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.mainviolet,
-          color: colors.semantic.background.primary,
-          border: "1px solid ".concat(colors.primary.mainviolet)
-        });
-      }
-    } else if (type === 'ghost') {
-      if (disabled) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.background.primary,
-          color: colors.semantic.disabled.foreground,
-          border: "".concat(border.s, " ").concat(colors.semantic.disabled.foreground),
-          cursor: 'not-allowed'
-        });
-      } else if (isPressed || isHovered) {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.coolGray[100],
-          color: colors.semantic.text.primary,
-          border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-        });
-      } else {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.background.primary,
-          color: colors.semantic.text.primary,
-          border: "".concat(border.s, " ").concat(colors.semantic.border.strong)
-        });
-      }
-    }
-    // Loading state overrides
-    if (isLoading) {
-      if (type === 'solid') {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.mainviolet,
-          color: colors.semantic.background.primary,
-          border: "".concat(border.s, " ").concat(colors.primary.mainviolet),
-          cursor: 'not-allowed'
-        });
-      } else {
-        styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.background.primary,
-          color: colors.semantic.text.primary,
-          border: "".concat(border.s, " ").concat(colors.semantic.border.strong),
-          cursor: 'not-allowed'
-        });
-      }
-    }
-    return styles;
-  };
-  var handleClick = function () {
-    if (!disabled && !isLoading && onClick) {
-      onClick();
-    }
-  };
-  var handleMouseEnter = function () {
-    if (!disabled && !isLoading) {
-      setIsHovered(true);
-    }
-  };
-  var handleMouseLeave = function () {
-    setIsHovered(false);
-    setIsPressed(false);
-  };
-  var handleMouseDown = function () {
-    if (!disabled && !isLoading) {
-      setIsPressed(true);
-    }
-  };
-  var handleMouseUp = function () {
-    setIsPressed(false);
-  };
-  var renderContent = function () {
-    if (isLoading) {
-      return jsx(LoadingIcon, {});
-    }
-    return jsxs("div", {
-      style: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '4px'
-      },
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && icon.left, children && jsx("span", {
-        children: children
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && icon.right]
-    });
-  };
-  return jsx("button", {
-    style: getStyles(),
-    onClick: handleClick,
-    onMouseEnter: handleMouseEnter,
-    onMouseLeave: handleMouseLeave,
-    onMouseDown: handleMouseDown,
-    onMouseUp: handleMouseUp,
-    disabled: disabled || isLoading,
-    className: className,
-    children: renderContent()
-  });
 };
 
 var Font = function (_a) {
@@ -1141,6 +1150,96 @@ var Label = function (_a) {
       children: trailingIcon
     })]
   });
+};
+
+/**
+ * Spacing Design Tokens
+ * 균일한 요소와 간격을 사용하여 UI의 체계적인 배열을 도와줌
+ * 4와 8의 배수에 기반한 스페이싱 시스템
+ */
+var spacing = {
+  /** 2px - 최소 간격 */
+  xxxs: '2px',
+  /** 4px - 매우 작은 간격 */
+  xxs: '4px',
+  /** 8px - 작은 간격 */
+  xs: '8px',
+  /** 12px - 작은-중간 간격 */
+  s: '12px',
+  /** 16px - 기본 간격 */
+  m: '16px',
+  /** 20px - 중간-큰 간격 */
+  l: '20px',
+  /** 24px - 큰 간격 */
+  xl: '24px',
+  /** 32px - 매우 큰 간격 */
+  xxl: '32px',
+  /** 40px - 최대 간격 */
+  xxxl: '40px'
+};
+
+/**
+ * Radius Design Tokens
+ * UI 요소의 모서리를 둥글게 하여 부드러운 사용자 경험을 제공
+ */
+var radius = {
+  /** 작은 버튼, 입력 필드, 체크박스에 최소한의 둥근 효과를 줄 때 사용 */
+  xs: '4px',
+  /** 카드, 드롭다운, 배너, 일반 버튼에 기본적인 둥근 스타일을 적용할 때 사용 */
+  s: '8px',
+  /** 중간 크기의 카드, 팝업, 모달에 부드러운 곡률을 적용할 때 사용 */
+  m: '12px',
+  /** 큰 모달, 프로필 이미지, 강조 영역에 둥근 효과를 줄 때 사용 */
+  l: '16px',
+  /** Hero Section과 같은 대형 UI 요소에 강한 둥근 효과를 적용할 때 사용 */
+  xl: '20px',
+  /** 아바타, 토글 버튼과 같은 완전한 원형 요소에 적용할 때 사용 */
+  full: '50%'
+};
+
+/**
+ * Shadow Design Tokens
+ * 그림자는 적용된 UI의 높이(elevation)와 이동 방향, 가장자리 등에 대한 단서를 제공
+ */
+var shadows = {
+  /** 높이 48px 이하의 작은 요소에 가벼운 깊이감을 줄 때 사용 - 아이콘, 버튼, 배지, 입력 필드, 체크박스 등 */
+  s: '0px 1px 8px rgba(0, 0, 0, 0.1)',
+  /** 너비 또는 높이가 48px ~ 200px 사이의 중간 크기 요소를 명확히 구분할 때 사용 - 카드, 모달, 드롭다운, 중간 크기 버튼 등 */
+  m: '0px 1px 16px rgba(0, 0, 0, 0.1)',
+  /** 너비 200px 이상 또는 화면 너비의 50% 이상을 초과하는 큰 요소, 또는 강조가 필요한 구성 요소에 사용 - 다이얼로그, 대형 카드 등 */
+  l: '0px 1px 24px rgba(0, 0, 0, 0.12)'
+};
+
+/**
+ * Border Design Tokens
+ * 컴포넌트에 테두리를 추가하여 구분감을 제공하는 속성
+ */
+// Border Widths
+var borderWidth = {
+  /** UI 요소의 기본적인 구분감을 제공할 때 사용 */
+  s: '1px',
+  /** 1px보다 더 명확한 구분이 필요할 때 사용 */
+  m: '1.5px',
+  /** 중요한 요소를 강조하거나, 요소 간 강한 대비가 필요할 때 사용 */
+  l: '2px'
+};
+// Border Styles
+var borderStyle = {
+  solid: 'solid',
+  dashed: 'dashed',
+  dotted: 'dotted',
+  none: 'none'
+};
+// Combined Border Tokens
+var border = {
+  /** 기본 보더 - UI 요소의 기본적인 구분감 제공 */
+  s: "".concat(borderWidth.s, " ").concat(borderStyle.solid),
+  /** 중간 보더 - 더 명확한 구분이 필요할 때 */
+  m: "".concat(borderWidth.m, " ").concat(borderStyle.solid),
+  /** 큰 보더 - 중요한 요소 강조나 강한 대비가 필요할 때 */
+  l: "".concat(borderWidth.l, " ").concat(borderStyle.solid),
+  /** 보더 없음 */
+  none: borderStyle.none
 };
 
 var TextInput = forwardRef(function (_a, ref) {
@@ -2643,8 +2742,8 @@ var Popup = function (_a) {
       }), jsxs("div", {
         className: "popup-buttons",
         style: buttonContainerStyle,
-        children: [secondaryButton && jsx(BoxButton, __assign({
-          type: "ghost",
+        children: [secondaryButton && jsx(Button, __assign({
+          type: "outlined",
           size: "l",
           width: "fill",
           onClick: secondaryButton.onClick
@@ -2655,7 +2754,7 @@ var Popup = function (_a) {
           return rest;
         }(secondaryButton), {
           children: secondaryButton.text
-        })), jsx(BoxButton, __assign({
+        })), jsx(Button, __assign({
           type: "solid",
           size: "l",
           width: "fill",
@@ -2831,8 +2930,8 @@ var Modal = function (_a) {
       }), jsxs("div", {
         className: "modal-buttons",
         style: buttonContainerStyle,
-        children: [secondaryButton && jsx(BoxButton, __assign({
-          type: "ghost",
+        children: [secondaryButton && jsx(Button, __assign({
+          type: "outlined",
           size: "l",
           width: "fill",
           onClick: secondaryButton.onClick
@@ -2843,7 +2942,7 @@ var Modal = function (_a) {
           return rest;
         }(secondaryButton), {
           children: secondaryButton.text
-        })), jsx(BoxButton, __assign({
+        })), jsx(Button, __assign({
           type: "solid",
           size: "l",
           width: "fill",
@@ -4777,5 +4876,5 @@ var ExerciseList = function (_a) {
   });
 };
 
-export { ActivityGoalCard, BoxButton, Checkbox, Chips, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Label, Modal, Popup, Radio, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, useToast };
+export { ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Label, Modal, Popup, Radio, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, useToast };
 //# sourceMappingURL=index.esm.js.map

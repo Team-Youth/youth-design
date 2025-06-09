@@ -157,7 +157,7 @@ export const CustomButtonProps = {
     secondaryButton: {
       text: '취소',
       onClick: () => {},
-      type: 'ghost',
+      type: 'outlined',
     },
   },
 } as any;

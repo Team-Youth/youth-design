@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BoxButton, BoxButtonProps } from '../box-button';
+import { Button, ButtonProps } from '../box-button';
 import { Icon } from '../icon';
 import { colors } from '../../tokens/colors';
 import { textStyles } from '../../tokens/typography';
@@ -25,12 +25,12 @@ export interface ModalProps {
   primaryButton: {
     text: string;
     onClick: () => void;
-  } & Partial<Omit<BoxButtonProps, 'onClick'>>;
+  } & Partial<Omit<ButtonProps, 'onClick'>>;
   /** 보조 버튼 props (선택사항) */
   secondaryButton?: {
     text: string;
     onClick: () => void;
-  } & Partial<Omit<BoxButtonProps, 'onClick'>>;
+  } & Partial<Omit<ButtonProps, 'onClick'>>;
   /** 모달이 표시되는지 여부 */
   isOpen: boolean;
   /** 모달 닫기 핸들러 */
@@ -214,17 +214,17 @@ export const Modal: React.FC<ModalProps> = ({
 
         <div className="modal-buttons" style={buttonContainerStyle}>
           {secondaryButton && (
-            <BoxButton
-              type="ghost"
+            <Button
+              type="outlined"
               size="l"
               width="fill"
               onClick={secondaryButton.onClick}
               {...(({ text, onClick, ...rest }) => rest)(secondaryButton)}
             >
               {secondaryButton.text}
-            </BoxButton>
+            </Button>
           )}
-          <BoxButton
+          <Button
             type="solid"
             size="l"
             width="fill"
@@ -232,7 +232,7 @@ export const Modal: React.FC<ModalProps> = ({
             {...(({ text, onClick, ...rest }) => rest)(primaryButton)}
           >
             {primaryButton.text}
-          </BoxButton>
+          </Button>
         </div>
       </div>
     </div>
