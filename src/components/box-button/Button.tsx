@@ -168,9 +168,9 @@ export const Button: React.FC<ButtonProps> = ({
         pressed: { bg: colors.primary.tint.violet[700], text: colors.semantic.background.primary },
       },
       secondary: {
-        normal: { bg: colors.primary.coolGray[200], text: colors.semantic.background.primary },
-        hovered: { bg: colors.primary.coolGray[300], text: colors.semantic.background.primary },
-        pressed: { bg: colors.primary.coolGray[400], text: colors.primary.tint.violet[600] },
+        normal: { bg: colors.primary.tint.violet[100], text: colors.primary.mainviolet },
+        hovered: { bg: colors.primary.tint.violet[200], text: colors.semantic.background.primary },
+        pressed: { bg: colors.primary.tint.violet[300], text: colors.primary.tint.violet[600] },
       },
       tertiary: {
         normal: { bg: colors.semantic.disabled.background, text: colors.semantic.text.primary },
