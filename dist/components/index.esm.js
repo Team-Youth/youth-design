@@ -2975,8 +2975,9 @@ var Dropdown = function (_a) {
     _f = _a.className,
     className = _f === void 0 ? '' : _f,
     leadingIconType = _a.leadingIconType,
-    _g = _a.width,
-    width = _g === void 0 ? '320px' : _g,
+    _g = _a.size,
+    size = _g === void 0 ? 'l' : _g,
+    width = _a.width,
     _h = _a.enableSearch,
     enableSearch = _h === void 0 ? false : _h,
     _j = _a.hideOption,
@@ -3005,6 +3006,13 @@ var Dropdown = function (_a) {
     });
   }, [options, value]);
   var hasSelectedOption = !!selectedOption;
+  // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
+  var finalWidth = useMemo(function () {
+    if (width) {
+      return width;
+    }
+    return size === 'm' ? '140px' : '320px';
+  }, [width, size]);
   // 검색 텍스트에 따른 옵션 필터링
   var filteredOptions = useMemo(function () {
     if (!enableSearch || !searchText.trim()) {
@@ -3143,13 +3151,13 @@ var Dropdown = function (_a) {
       borderRadius: '8px',
       transition: 'all 0.2s ease',
       cursor: disabled ? 'not-allowed' : 'pointer',
-      width: width === 'fill' ? '100%' : width,
+      width: finalWidth === 'fill' ? '100%' : finalWidth,
       boxSizing: 'border-box',
       userSelect: !enableSearch ? 'none' : 'auto'
     }, hideOption && {
       userSelect: 'none'
     });
-  }, [disabled, error, isOpen, width, hideOption, enableSearch]);
+  }, [disabled, error, isOpen, finalWidth, hideOption, enableSearch]);
   var getTextStyles = useCallback(function () {
     var textColor;
     if (disabled) {
@@ -3338,7 +3346,7 @@ var Dropdown = function (_a) {
     ref: dropdownRef,
     style: {
       position: 'relative',
-      width: width === 'fill' ? '100%' : width
+      width: finalWidth === 'fill' ? '100%' : finalWidth
     },
     children: [jsxs("div", {
       style: getContainerStyles(),

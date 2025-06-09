@@ -24,6 +24,8 @@ export interface DropdownProps {
     className?: string;
     /** Leading 아이콘 타입 (Icon 컴포넌트 사용) */
     leadingIconType?: IconType;
+    /** 크기 설정 */
+    size?: 'l' | 'm';
     /** 너비 설정 */
     width?: 'fill' | (string & {});
     /** 검색 기능 활성화 여부 */

@@ -27,6 +27,8 @@ export interface DropdownProps {
   className?: string;
   /** Leading 아이콘 타입 (Icon 컴포넌트 사용) */
   leadingIconType?: IconType;
+  /** 크기 설정 */
+  size?: 'l' | 'm';
   /** 너비 설정 */
   width?: 'fill' | (string & {});
   /** 검색 기능 활성화 여부 */
@@ -45,7 +47,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
   errorMessage,
   className = '',
   leadingIconType,
-  width = '320px',
+  size = 'l',
+  width,
   enableSearch = false,
   hideOption = false,
 }) => {
@@ -63,6 +66,14 @@ export const Dropdown: React.FC<DropdownProps> = ({
     [options, value],
   );
   const hasSelectedOption = !!selectedOption;
+
+  // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
+  const finalWidth = useMemo(() => {
+    if (width) {
+      return width;
+    }
+    return size === 'm' ? '140px' : '320px';
+  }, [width, size]);
 
   // 검색 텍스트에 따른 옵션 필터링
   const filteredOptions = useMemo(() => {
@@ -221,12 +232,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
       borderRadius: '8px', // Figma 스펙에 맞춤
       transition: 'all 0.2s ease',
       cursor: disabled ? 'not-allowed' : 'pointer',
-      width: width === 'fill' ? '100%' : width,
+      width: finalWidth === 'fill' ? '100%' : finalWidth,
       boxSizing: 'border-box',
       userSelect: !enableSearch ? 'none' : 'auto', // 검색 기능이 비활성화된 경우 user-select none
       ...(hideOption && { userSelect: 'none' }),
     };
-  }, [disabled, error, isOpen, width, hideOption, enableSearch]);
+  }, [disabled, error, isOpen, finalWidth, hideOption, enableSearch]);
 
   const getTextStyles = useCallback((): React.CSSProperties => {
     let textColor: string;
@@ -431,7 +442,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     <div
       className={`dropdown-wrapper ${className}`}
       ref={dropdownRef}
-      style={{ position: 'relative', width: width === 'fill' ? '100%' : width }} // Figma 스펙의 고정 너비
+      style={{ position: 'relative', width: finalWidth === 'fill' ? '100%' : finalWidth }} // Figma 스펙의 고정 너비
     >
       <div
         style={getContainerStyles()}
