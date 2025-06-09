@@ -147,9 +147,9 @@ export const Button: React.FC<ButtonProps> = ({
         };
       } else if (level === 'secondary') {
         return {
-          backgroundColor: colors.primary.coolGray[200],
-          color: colors.semantic.background.primary,
-          border: `1px solid ${colors.primary.coolGray[200]}`,
+          backgroundColor: colors.primary.tint.violet[200],
+          color: colors.primary.mainviolet,
+          border: `1px solid ${colors.primary.tint.violet[200]}`,
         };
       } else if (level === 'tertiary') {
         return {
@@ -169,7 +169,7 @@ export const Button: React.FC<ButtonProps> = ({
       },
       secondary: {
         normal: { bg: colors.primary.tint.violet[100], text: colors.primary.mainviolet },
-        hovered: { bg: colors.primary.tint.violet[200], text: colors.semantic.background.primary },
+        hovered: { bg: colors.primary.tint.violet[200], text: colors.primary.mainviolet },
         pressed: { bg: colors.primary.tint.violet[300], text: colors.primary.tint.violet[600] },
       },
       tertiary: {
