@@ -1870,7 +1870,7 @@ var Tab = function (_a) {
     });
   };
   var renderNumber = function () {
-    if (!number) return null;
+    if (number === undefined || number === null || number === '') return null;
     return jsx("span", {
       style: {
         color: colorScheme.number,

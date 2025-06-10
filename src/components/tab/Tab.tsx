@@ -240,7 +240,7 @@ export const Tab: React.FC<TabProps> = ({
   };
 
   const renderNumber = () => {
-    if (!number) return null;
+    if (number === undefined || number === null || number === '') return null;
     return (
       <span
         style={{
