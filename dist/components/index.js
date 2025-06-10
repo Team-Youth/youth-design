@@ -1483,6 +1483,303 @@ var TextButton = function (_a) {
   });
 };
 
+var Tab = function (_a) {
+  var _b = _a.type,
+    type = _b === void 0 ? 'underline' : _b,
+    _c = _a.size,
+    size = _c === void 0 ? 'm' : _c,
+    _d = _a.selected,
+    selected = _d === void 0 ? false : _d,
+    _e = _a.disabled,
+    disabled = _e === void 0 ? false : _e,
+    icon = _a.icon,
+    number = _a.number,
+    children = _a.children,
+    onClick = _a.onClick,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f,
+    style = _a.style,
+    width = _a.width;
+  var getSizeConfig = function () {
+    var getFontWeight = function () {
+      if (type === 'toggle') {
+        return selected ? fontWeight.semibold : fontWeight.medium;
+      }
+      return fontWeight.semibold;
+    };
+    var configs = {
+      l: __assign(__assign({}, type === 'underline' ? textStyles.heading4 : type === 'capsule' ? textStyles.heading4 : textStyles.body1), {
+        height: type === 'underline' ? 64 : type === 'capsule' ? 42 : 40,
+        padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '10px 16px' : '0 8px',
+        fontWeight: getFontWeight(),
+        iconSize: 20,
+        borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 8 : 0
+      }),
+      m: __assign(__assign({}, type === 'underline' ? textStyles.heading4 : type === 'capsule' ? textStyles.heading4 : textStyles.body3), {
+        height: type === 'underline' ? 48 : type === 'capsule' ? 36 : 32,
+        padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '6px 12px' : '0 8px',
+        fontWeight: getFontWeight(),
+        iconSize: 16,
+        borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 6 : 0
+      }),
+      s: __assign(__assign({}, type === 'underline' ? textStyles.heading5 : type === 'capsule' ? textStyles.body3 : textStyles.body2), {
+        height: type === 'underline' ? 40 : type === 'capsule' ? 30 : 28,
+        padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '5px 12px' : '4px 8px',
+        fontWeight: getFontWeight(),
+        iconSize: 16,
+        borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 4 : 0
+      })
+    };
+    return configs[size];
+  };
+  var getTabWidth = function () {
+    if (width === 'fill') {
+      return '100%';
+    }
+    if (width) {
+      return width;
+    }
+    return 'fit-content';
+  };
+  var getColors = function () {
+    if (disabled) {
+      return {
+        text: colors.semantic.disabled.foreground,
+        background: 'transparent',
+        border: 'transparent',
+        number: colors.semantic.disabled.foreground
+      };
+    }
+    switch (type) {
+      case 'underline':
+        if (selected) {
+          return {
+            text: colors.primary.coolGray[800],
+            background: 'transparent',
+            border: colors.primary.coolGray[800],
+            number: colors.primary.tint.violet[500]
+          };
+        }
+        return {
+          text: colors.primary.coolGray[400],
+          background: 'transparent',
+          border: 'transparent',
+          number: colors.primary.coolGray[200]
+        };
+      case 'capsule':
+        if (selected) {
+          return {
+            text: colors.primary.gray.white,
+            background: colors.primary.coolGray[800],
+            border: 'transparent',
+            number: colors.primary.tint.violet[500]
+          };
+        }
+        return {
+          text: colors.primary.coolGray[800],
+          background: 'transparent',
+          border: colors.primary.coolGray[300],
+          number: colors.primary.coolGray[400]
+        };
+      case 'toggle':
+        if (selected) {
+          return {
+            text: colors.primary.coolGray[800],
+            background: colors.primary.gray.white,
+            border: 'transparent',
+            number: colors.primary.tint.violet[500]
+          };
+        }
+        return {
+          text: colors.primary.coolGray[400],
+          background: 'transparent',
+          border: 'transparent',
+          number: colors.primary.coolGray[200]
+        };
+      default:
+        return {
+          text: colors.primary.coolGray[400],
+          background: 'transparent',
+          border: 'transparent',
+          number: colors.primary.coolGray[200]
+        };
+    }
+  };
+  var config = getSizeConfig();
+  var colorScheme = getColors();
+  var getBaseStyles = function () {
+    return __assign({
+      display: width === 'fill' ? 'flex' : 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: '4px',
+      height: config.height,
+      padding: config.padding,
+      fontSize: config.fontSize,
+      fontWeight: config.fontWeight,
+      borderRadius: config.borderRadius,
+      borderBottom: type === 'underline' && selected ? "2px solid ".concat(colorScheme.border) : type === 'underline' ? '2px solid transparent' : 'none',
+      border: type === 'capsule' ? "1px solid ".concat(colorScheme.border) : 'none',
+      background: colorScheme.background,
+      color: colorScheme.text,
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      transition: 'all 0.2s ease',
+      boxShadow: type === 'toggle' && selected ? '0px 1px 8px 0px rgba(21, 23, 25, 0.08)' : 'none',
+      position: 'relative',
+      minWidth: width === 'fill' ? '0' : 'fit-content',
+      width: getTabWidth()
+    }, style);
+  };
+  var getHoverStyles = function () {
+    if (disabled || selected) return {};
+    switch (type) {
+      case 'underline':
+        return {
+          color: colors.primary.coolGray[600],
+          borderBottomColor: colors.primary.coolGray[300]
+        };
+      case 'capsule':
+        return {
+          backgroundColor: colors.primary.coolGray[50],
+          borderColor: colors.primary.coolGray[400]
+        };
+      case 'toggle':
+        return {
+          backgroundColor: colors.primary.coolGray[100]
+        };
+      default:
+        return {};
+    }
+  };
+  var handleClick = function () {
+    if (!disabled && onClick) {
+      onClick();
+    }
+  };
+  var handleMouseEnter = function (e) {
+    if (disabled || selected) return;
+    var hoverStyles = getHoverStyles();
+    Object.assign(e.currentTarget.style, hoverStyles);
+  };
+  var handleMouseLeave = function (e) {
+    if (disabled || selected) return;
+    // 기본 스타일로 복원
+    var baseStyles = getBaseStyles();
+    Object.assign(e.currentTarget.style, baseStyles);
+  };
+  var renderIcon = function () {
+    if (!icon) return null;
+    return jsxRuntime.jsx(Icon, {
+      type: icon,
+      size: config.iconSize,
+      color: "currentColor"
+    });
+  };
+  var renderNumber = function () {
+    if (!number) return null;
+    return jsxRuntime.jsx("span", {
+      style: {
+        color: colorScheme.number,
+        fontSize: config.fontSize,
+        fontWeight: config.fontWeight
+      },
+      children: number
+    });
+  };
+  return jsxRuntime.jsxs("button", {
+    style: getBaseStyles(),
+    onClick: handleClick,
+    disabled: disabled,
+    className: className,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: [renderIcon(), jsxRuntime.jsx("span", {
+      children: children
+    }), renderNumber()]
+  });
+};
+
+var TabBar = function (_a) {
+  var _b = _a.type,
+    type = _b === void 0 ? 'underline' : _b,
+    _c = _a.size,
+    size = _c === void 0 ? 'm' : _c,
+    width = _a.width,
+    _d = _a.defaultSelectedIndex,
+    defaultSelectedIndex = _d === void 0 ? 0 : _d,
+    selectedIndex = _a.selectedIndex,
+    onTabChange = _a.onTabChange,
+    tabs = _a.tabs,
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e;
+  var _f = React.useState(defaultSelectedIndex),
+    internalSelectedIndex = _f[0],
+    setInternalSelectedIndex = _f[1];
+  var currentSelectedIndex = selectedIndex !== undefined ? selectedIndex : internalSelectedIndex;
+  var handleTabClick = function (index) {
+    var _a;
+    if ((_a = tabs[index]) === null || _a === void 0 ? void 0 : _a.disabled) return;
+    if (selectedIndex === undefined) {
+      setInternalSelectedIndex(index);
+    }
+    onTabChange === null || onTabChange === void 0 ? void 0 : onTabChange(index);
+  };
+  var getContainerStyles = function () {
+    var baseStyles = {
+      display: 'flex',
+      alignItems: 'center',
+      gap: type === 'toggle' ? '0px' : type === 'capsule' ? '12px' : '8px',
+      flexDirection: 'row',
+      width: width === 'fill' ? '100%' : width || 'fit-content',
+      borderBottom: type === 'underline' ? "1px solid ".concat(colors.semantic.border.default) : 'none',
+      background: type === 'toggle' ? colors.primary.coolGray[50] : 'transparent',
+      borderRadius: type === 'toggle' ? size === 'l' ? '12px' : '8px' : '0px',
+      padding: type === 'toggle' ? '4px' : '0px'
+    };
+    return baseStyles;
+  };
+  var getTabStyles = function (index) {
+    if (type === 'toggle') {
+      return {
+        width: width === 'fill' ? 'fill' : undefined,
+        style: {
+          flex: width === 'fill' ? '1' : 'none',
+          minWidth: '0'
+        }
+      };
+    }
+    if (width === 'fill') {
+      return {
+        width: 'fill',
+        style: {
+          flex: '1',
+          minWidth: '0'
+        }
+      };
+    }
+    return {};
+  };
+  return jsxRuntime.jsx("div", {
+    style: getContainerStyles(),
+    className: className,
+    children: tabs.map(function (tab, index) {
+      return jsxRuntime.jsx(Tab, __assign({
+        type: type,
+        size: size,
+        selected: index === currentSelectedIndex,
+        disabled: tab.disabled,
+        icon: tab.icon,
+        number: tab.number,
+        onClick: function () {
+          return handleTabClick(index);
+        }
+      }, getTabStyles(), {
+        children: tab.label
+      }), index);
+    })
+  });
+};
+
 var Chips = function (_a) {
   var _b = _a.size,
     size = _b === void 0 ? 'medium' : _b,
@@ -4900,6 +5197,8 @@ exports.Label = Label;
 exports.Modal = Modal;
 exports.Popup = Popup;
 exports.Radio = Radio;
+exports.Tab = Tab;
+exports.TabBar = TabBar;
 exports.TextArea = TextArea;
 exports.TextButton = TextButton;
 exports.TextField = TextField;
