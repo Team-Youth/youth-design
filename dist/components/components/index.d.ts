@@ -32,3 +32,5 @@ export * from './exercise-card';
 export * from './activity-goal-card';
 export * from './greeting-header';
 export * from './exercise-list';
+export { Stepper } from './stepper';
+export type { StepperProps } from './stepper';

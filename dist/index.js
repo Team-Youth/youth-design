@@ -5386,6 +5386,230 @@ var ExerciseList = function (_a) {
   });
 };
 
+var Stepper = function (_a) {
+  var _b = _a.value,
+    value = _b === void 0 ? 0 : _b,
+    _c = _a.min,
+    min = _c === void 0 ? 0 : _c,
+    _d = _a.max,
+    max = _d === void 0 ? 100 : _d,
+    onChange = _a.onChange,
+    _e = _a.disabled,
+    disabled = _e === void 0 ? false : _e,
+    _f = _a.width,
+    width = _f === void 0 ? '335px' : _f,
+    _g = _a.error,
+    error = _g === void 0 ? false : _g,
+    errorMessage = _a.errorMessage,
+    _h = _a.focused,
+    focused = _h === void 0 ? false : _h,
+    _j = _a.editable,
+    editable = _j === void 0 ? false : _j,
+    _k = _a.className,
+    className = _k === void 0 ? '' : _k,
+    _l = _a.style,
+    style = _l === void 0 ? {} : _l;
+  var _m = React.useState(value),
+    internalValue = _m[0],
+    setInternalValue = _m[1];
+  var _o = React.useState(focused),
+    isFocused = _o[0],
+    setIsFocused = _o[1];
+  var _p = React.useState(false),
+    isEditing = _p[0],
+    setIsEditing = _p[1];
+  var _q = React.useState(String(value)),
+    editValue = _q[0],
+    setEditValue = _q[1];
+  var inputRef = React.useRef(null);
+  var currentValue = onChange ? value : internalValue;
+  var isMinReached = currentValue <= min;
+  var isMaxReached = currentValue >= max;
+  React.useEffect(function () {
+    if (!isEditing) {
+      setEditValue(String(currentValue));
+    }
+  }, [currentValue, isEditing]);
+  var handleIncrement = function () {
+    if (disabled || isMaxReached) return;
+    var newValue = currentValue + 1;
+    if (onChange) {
+      onChange(newValue);
+    } else {
+      setInternalValue(newValue);
+    }
+  };
+  var handleDecrement = function () {
+    if (disabled || isMinReached) return;
+    var newValue = currentValue - 1;
+    if (onChange) {
+      onChange(newValue);
+    } else {
+      setInternalValue(newValue);
+    }
+  };
+  var handleValueClick = function () {
+    if (editable && !disabled && !error) {
+      setIsEditing(true);
+      setIsFocused(true);
+      setEditValue(String(currentValue));
+      setTimeout(function () {
+        var _a, _b;
+        (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.focus();
+        (_b = inputRef.current) === null || _b === void 0 ? void 0 : _b.select();
+      }, 0);
+    }
+  };
+  var handleInputChange = function (e) {
+    var inputValue = e.target.value;
+    // 숫자와 마이너스 기호만 허용
+    if (inputValue === '' || /^-?\d*$/.test(inputValue)) {
+      setEditValue(inputValue);
+    }
+  };
+  var handleInputBlur = function () {
+    setIsEditing(false);
+    setIsFocused(false);
+    var newValue = parseInt(editValue, 10);
+    // 빈 값이거나 유효하지 않은 값인 경우 현재 값 유지
+    if (editValue === '' || isNaN(newValue)) {
+      setEditValue(String(currentValue));
+      return;
+    }
+    // min, max 범위 체크
+    if (newValue < min) {
+      newValue = min;
+    } else if (newValue > max) {
+      newValue = max;
+    }
+    setEditValue(String(newValue));
+    if (onChange) {
+      onChange(newValue);
+    } else {
+      setInternalValue(newValue);
+    }
+  };
+  var handleInputKeyDown = function (e) {
+    if (e.key === 'Enter') {
+      handleInputBlur();
+    } else if (e.key === 'Escape') {
+      setIsEditing(false);
+      setIsFocused(false);
+      setEditValue(String(currentValue));
+    }
+  };
+  // 스타일 계산
+  var containerStyle = __assign({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: error && errorMessage ? '6px' : '16px',
+    width: width === 'fill' ? '100%' : width,
+    userSelect: 'none'
+  }, style);
+  var stepperStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '15px',
+    padding: '12px 16px',
+    borderRadius: '8px',
+    border: "1px solid ".concat(error ? colors.semantic.state.error : isFocused ? colors.primary.coolGray[800] : colors.primary.coolGray[300]),
+    backgroundColor: disabled ? colors.primary.coolGray[50] : colors.primary.gray.white,
+    width: '100%',
+    boxSizing: 'border-box',
+    transition: 'all 0.2s ease',
+    position: 'relative',
+    userSelect: 'none'
+  };
+  var valueContainerStyle = {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+    cursor: editable && !disabled && !error ? 'text' : 'default',
+    userSelect: 'none'
+  };
+  var inputStyle = __assign(__assign({}, textStyles.heading3), {
+    background: 'transparent',
+    border: 'none',
+    outline: 'none',
+    fontWeight: fontWeight.semibold,
+    textAlign: 'center',
+    color: colors.primary.coolGray[800],
+    width: '100%',
+    padding: 0,
+    margin: 0,
+    userSelect: 'none'
+  });
+  return jsxRuntime.jsxs("div", {
+    className: "stepper ".concat(className),
+    style: containerStyle,
+    children: [jsxRuntime.jsxs("div", {
+      style: stepperStyle,
+      children: [jsxRuntime.jsx(Icon, {
+        type: "minus-circle-filled",
+        size: 24,
+        color: disabled || isMinReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800],
+        onClick: handleDecrement,
+        style: {
+          cursor: disabled || isMinReached ? 'not-allowed' : 'pointer',
+          opacity: disabled || isMinReached ? 0.5 : 1,
+          userSelect: 'none'
+        }
+      }), jsxRuntime.jsx("div", {
+        style: valueContainerStyle,
+        onClick: handleValueClick,
+        children: isEditing ? jsxRuntime.jsx("input", {
+          ref: inputRef,
+          type: "text",
+          value: editValue,
+          onChange: handleInputChange,
+          onBlur: handleInputBlur,
+          onKeyDown: handleInputKeyDown,
+          style: inputStyle
+        }) : jsxRuntime.jsx(Font, {
+          type: "heading3",
+          fontWeight: "semibold",
+          color: disabled ? colors.primary.coolGray[400] : error ? colors.semantic.state.error : colors.primary.coolGray[800],
+          align: "center",
+          style: {
+            userSelect: 'none'
+          },
+          children: currentValue
+        })
+      }), jsxRuntime.jsx(Icon, {
+        type: "add-circle-filled",
+        size: 24,
+        color: disabled || isMaxReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800],
+        onClick: handleIncrement,
+        style: {
+          cursor: disabled || isMaxReached ? 'not-allowed' : 'pointer',
+          opacity: disabled || isMaxReached ? 0.5 : 1,
+          userSelect: 'none'
+        }
+      })]
+    }), error && errorMessage && jsxRuntime.jsx("div", {
+      style: {
+        paddingLeft: '16px',
+        width: '100%',
+        boxSizing: 'border-box',
+        userSelect: 'none'
+      },
+      children: jsxRuntime.jsx(Font, {
+        type: "body2",
+        fontWeight: "medium",
+        color: colors.semantic.state.error,
+        align: "left",
+        style: {
+          userSelect: 'none'
+        },
+        children: errorMessage
+      })
+    })]
+  });
+};
+
 exports.ActivityGoalCard = ActivityGoalCard;
 exports.Button = Button;
 exports.Checkbox = Checkbox;
@@ -5401,6 +5625,7 @@ exports.Label = Label;
 exports.Modal = Modal;
 exports.Popup = Popup;
 exports.Radio = Radio;
+exports.Stepper = Stepper;
 exports.Tab = Tab;
 exports.TabBar = TabBar;
 exports.TextArea = TextArea;
