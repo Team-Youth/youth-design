@@ -701,6 +701,7 @@ var Font = function (_a) {
     color: color,
     textAlign: align,
     whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
+    wordBreak: 'keep-all',
     textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
     overflow: noWhiteSpace ? 'hidden' : undefined,
     textDecoration: underline ? 'underline' : 'none',
