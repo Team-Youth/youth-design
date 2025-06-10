@@ -4,6 +4,8 @@ export { Font } from './font';
 export type { FontProps, FontType, FontWeight } from './font';
 export { Icon } from './icon';
 export type { IconProps, IconType } from './icon';
+export { Illust } from './illust';
+export type { IllustProps, IllustType } from './illust';
 export { Label } from './label';
 export type { LabelProps } from './label';
 export { TextInput } from './text-input';
