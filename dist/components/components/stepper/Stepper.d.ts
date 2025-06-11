@@ -24,5 +24,13 @@ export interface StepperProps {
     className?: string;
     /** 추가 스타일 */
     style?: React.CSSProperties;
+    /** 단위 (예: "회", "분", "개월") */
+    unit?: string;
+    /** 증감 폭 (기본값: 1) */
+    step?: number;
+    /** 시간 관련 값인지 여부 */
+    isTime?: boolean;
+    /** 시간의 시작 단위 ('sec' | 'min' | 'hour') */
+    timeBaseUnit?: 'sec' | 'min' | 'hour';
 }
 export declare const Stepper: React.FC<StepperProps>;

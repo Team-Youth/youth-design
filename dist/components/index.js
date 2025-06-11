@@ -5274,6 +5274,131 @@ var ExerciseList = function (_a) {
   });
 };
 
+// 시간 변환 유틸리티 함수들
+var formatTime = function (totalValue, baseUnit) {
+  var totalSeconds;
+  // baseUnit에 따라 초로 변환
+  if (baseUnit === 'min') {
+    totalSeconds = totalValue * 60;
+  } else if (baseUnit === 'hour') {
+    totalSeconds = totalValue * 3600;
+  } else {
+    totalSeconds = totalValue;
+  }
+  // baseUnit에 따라 최소 표시 단위 결정
+  if (baseUnit === 'hour') {
+    // 시간 단위: 최소 시간으로 표시
+    var hours_1 = totalSeconds / 3600;
+    if (hours_1 === Math.floor(hours_1)) {
+      return "".concat(Math.floor(hours_1), "\uC2DC\uAC04");
+    }
+    var wholeHours = Math.floor(hours_1);
+    var remainingMinutes = Math.round((hours_1 - wholeHours) * 60);
+    if (wholeHours === 0) {
+      return "".concat(remainingMinutes, "\uBD84");
+    }
+    if (remainingMinutes === 0) {
+      return "".concat(wholeHours, "\uC2DC\uAC04");
+    }
+    return "".concat(wholeHours, "\uC2DC\uAC04 ").concat(remainingMinutes, "\uBD84");
+  }
+  if (baseUnit === 'min') {
+    // 분 단위: 최소 분으로 표시 (초는 표시하지 않음)
+    var totalMinutes = Math.round(totalSeconds / 60);
+    if (totalMinutes < 60) {
+      return "".concat(totalMinutes, "\uBD84");
+    }
+    var hours_2 = Math.floor(totalMinutes / 60);
+    var minutes_1 = totalMinutes % 60;
+    if (minutes_1 === 0) {
+      return "".concat(hours_2, "\uC2DC\uAC04");
+    }
+    return "".concat(hours_2, "\uC2DC\uAC04 ").concat(minutes_1, "\uBD84");
+  }
+  // 초 단위: 초, 분, 시간 모두 표시
+  if (totalSeconds < 60) {
+    return "".concat(totalSeconds, "\uCD08");
+  }
+  if (totalSeconds < 3600) {
+    var minutes_2 = Math.floor(totalSeconds / 60);
+    var seconds_1 = totalSeconds % 60;
+    if (seconds_1 === 0) {
+      return "".concat(minutes_2, "\uBD84");
+    }
+    return "".concat(minutes_2, "\uBD84 ").concat(seconds_1, "\uCD08");
+  }
+  var hours = Math.floor(totalSeconds / 3600);
+  var remainingSeconds = totalSeconds % 3600;
+  var minutes = Math.floor(remainingSeconds / 60);
+  var seconds = remainingSeconds % 60;
+  var result = "".concat(hours, "\uC2DC\uAC04");
+  if (minutes > 0) {
+    result += " ".concat(minutes, "\uBD84");
+  }
+  if (seconds > 0) {
+    result += " ".concat(seconds, "\uCD08");
+  }
+  return result;
+};
+var parseTimeString = function (timeStr, baseUnit) {
+  // 빈 문자열이면 0 반환
+  if (!timeStr.trim()) {
+    return 0;
+  }
+  // "1시간 30분 45초" or "90분 30초" or "45초" 형태의 문자열을 파싱
+  var hourMatch = timeStr.match(/(\d+)시간/);
+  var minuteMatch = timeStr.match(/(\d+)분/);
+  var secondMatch = timeStr.match(/(\d+)초/);
+  var totalSeconds = 0;
+  var hasValidInput = false;
+  if (hourMatch) {
+    var hours = parseInt(hourMatch[1]);
+    if (!isNaN(hours)) {
+      totalSeconds += hours * 3600;
+      hasValidInput = true;
+    }
+  }
+  if (minuteMatch) {
+    var minutes = parseInt(minuteMatch[1]);
+    if (!isNaN(minutes)) {
+      totalSeconds += minutes * 60;
+      hasValidInput = true;
+    }
+  }
+  if (secondMatch && baseUnit === 'sec') {
+    // 초는 baseUnit이 'sec'일 때만 처리
+    var seconds = parseInt(secondMatch[1]);
+    if (!isNaN(seconds)) {
+      totalSeconds += seconds;
+      hasValidInput = true;
+    }
+  }
+  // 순수 숫자만 입력된 경우 (단위 없음)
+  if (!hasValidInput) {
+    var numericValue = parseInt(timeStr.trim());
+    if (!isNaN(numericValue)) {
+      totalSeconds = numericValue;
+      // baseUnit에 따라 초로 변환
+      if (baseUnit === 'min') {
+        totalSeconds = numericValue * 60;
+      } else if (baseUnit === 'hour') {
+        totalSeconds = numericValue * 3600;
+      }
+      hasValidInput = true;
+    }
+  }
+  // 유효한 입력이 없으면 에러 던지기
+  if (!hasValidInput) {
+    throw new Error('Invalid time format');
+  }
+  // baseUnit에 따라 원래 단위로 변환
+  if (baseUnit === 'min') {
+    return totalSeconds / 60;
+  } else if (baseUnit === 'hour') {
+    return totalSeconds / 3600;
+  }
+  return totalSeconds;
+};
 var Stepper = function (_a) {
   var _b = _a.value,
     value = _b === void 0 ? 0 : _b,
@@ -5296,31 +5421,47 @@ var Stepper = function (_a) {
     _k = _a.className,
     className = _k === void 0 ? '' : _k,
     _l = _a.style,
-    style = _l === void 0 ? {} : _l;
-  var _m = React.useState(value),
-    internalValue = _m[0],
-    setInternalValue = _m[1];
-  var _o = React.useState(focused),
-    isFocused = _o[0],
-    setIsFocused = _o[1];
-  var _p = React.useState(false),
-    isEditing = _p[0],
-    setIsEditing = _p[1];
-  var _q = React.useState(String(value)),
-    editValue = _q[0],
-    setEditValue = _q[1];
+    style = _l === void 0 ? {} : _l,
+    _m = _a.unit,
+    unit = _m === void 0 ? '' : _m,
+    _o = _a.step,
+    step = _o === void 0 ? 1 : _o,
+    _p = _a.isTime,
+    isTime = _p === void 0 ? false : _p,
+    _q = _a.timeBaseUnit,
+    timeBaseUnit = _q === void 0 ? 'min' : _q;
+  var _r = React.useState(value),
+    internalValue = _r[0],
+    setInternalValue = _r[1];
+  var _s = React.useState(focused),
+    isFocused = _s[0],
+    setIsFocused = _s[1];
+  var _t = React.useState(false),
+    isEditing = _t[0],
+    setIsEditing = _t[1];
+  var _u = React.useState(String(value)),
+    editValue = _u[0],
+    setEditValue = _u[1];
   var inputRef = React.useRef(null);
   var currentValue = onChange ? value : internalValue;
   var isMinReached = currentValue <= min;
   var isMaxReached = currentValue >= max;
   React.useEffect(function () {
     if (!isEditing) {
-      setEditValue(String(currentValue));
+      if (isTime) {
+        setEditValue(formatTime(currentValue, timeBaseUnit));
+      } else {
+        setEditValue(String(currentValue));
+      }
     }
-  }, [currentValue, isEditing]);
+  }, [currentValue, isEditing, isTime, timeBaseUnit]);
   var handleIncrement = function () {
     if (disabled || isMaxReached) return;
-    var newValue = currentValue + 1;
+    var newValue = currentValue + step;
+    // max 범위 체크
+    if (newValue > max) {
+      newValue = max;
+    }
     if (onChange) {
       onChange(newValue);
     } else {
@@ -5329,7 +5470,11 @@ var Stepper = function (_a) {
   };
   var handleDecrement = function () {
     if (disabled || isMinReached) return;
-    var newValue = currentValue - 1;
+    var newValue = currentValue - step;
+    // min 범위 체크
+    if (newValue < min) {
+      newValue = min;
+    }
     if (onChange) {
       onChange(newValue);
     } else {
@@ -5340,7 +5485,11 @@ var Stepper = function (_a) {
     if (editable && !disabled && !error) {
       setIsEditing(true);
       setIsFocused(true);
-      setEditValue(String(currentValue));
+      if (isTime) {
+        setEditValue(formatTime(currentValue, timeBaseUnit));
+      } else {
+        setEditValue(String(currentValue));
+      }
       setTimeout(function () {
         var _a, _b;
         (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.focus();
@@ -5350,27 +5499,69 @@ var Stepper = function (_a) {
   };
   var handleInputChange = function (e) {
     var inputValue = e.target.value;
-    // 숫자와 마이너스 기호만 허용
-    if (inputValue === '' || /^-?\d*$/.test(inputValue)) {
-      setEditValue(inputValue);
+    if (isTime) {
+      // 시간 형식 입력 허용 (숫자, 시간, 분, 초, 공백)
+      // 순수 숫자만 입력하는 경우도 허용 (나중에 baseUnit에 따라 해석)
+      if (inputValue === '' || /^[\d시간분초\s]*$/.test(inputValue)) {
+        setEditValue(inputValue);
+      }
+    } else {
+      // 숫자와 마이너스 기호만 허용
+      if (inputValue === '' || /^-?\d*$/.test(inputValue)) {
+        setEditValue(inputValue);
+      }
     }
   };
   var handleInputBlur = function () {
     setIsEditing(false);
     setIsFocused(false);
-    var newValue = parseInt(editValue, 10);
-    // 빈 값이거나 유효하지 않은 값인 경우 현재 값 유지
-    if (editValue === '' || isNaN(newValue)) {
-      setEditValue(String(currentValue));
-      return;
+    var newValue;
+    if (isTime) {
+      // 시간 문자열을 숫자로 변환
+      try {
+        newValue = parseTimeString(editValue, timeBaseUnit);
+      } catch (error) {
+        // 파싱 실패시 현재 값 유지
+        setEditValue(formatTime(currentValue, timeBaseUnit));
+        return;
+      }
+    } else {
+      newValue = parseInt(editValue, 10);
+      // 빈 값이거나 유효하지 않은 값인 경우 현재 값 유지
+      if (editValue === '' || isNaN(newValue)) {
+        setEditValue(String(currentValue));
+        return;
+      }
     }
-    // min, max 범위 체크
+    // min, max 범위 체크 먼저
     if (newValue < min) {
       newValue = min;
     } else if (newValue > max) {
       newValue = max;
     }
-    setEditValue(String(newValue));
+    // step 단위로 반올림 (min/max 범위 내에서만)
+    if (step && step > 0) {
+      var roundedValue = Math.round(newValue / step) * step;
+      // 반올림 결과가 범위를 벗어나면 가장 가까운 유효한 step 값으로 조정
+      if (roundedValue < min) {
+        newValue = Math.ceil(min / step) * step;
+        if (newValue > max) {
+          newValue = min;
+        }
+      } else if (roundedValue > max) {
+        newValue = Math.floor(max / step) * step;
+        if (newValue < min) {
+          newValue = max;
+        }
+      } else {
+        newValue = roundedValue;
+      }
+    }
+    if (isTime) {
+      setEditValue(formatTime(newValue, timeBaseUnit));
+    } else {
+      setEditValue(String(newValue));
+    }
     if (onChange) {
       onChange(newValue);
     } else {
@@ -5383,8 +5574,21 @@ var Stepper = function (_a) {
     } else if (e.key === 'Escape') {
       setIsEditing(false);
       setIsFocused(false);
-      setEditValue(String(currentValue));
+      if (isTime) {
+        setEditValue(formatTime(currentValue, timeBaseUnit));
+      } else {
+        setEditValue(String(currentValue));
+      }
     }
+  };
+  // 표시할 값 계산
+  var displayValue = function () {
+    if (isTime) {
+      return formatTime(currentValue, timeBaseUnit);
+    } else if (unit) {
+      return "".concat(currentValue).concat(unit);
+    }
+    return String(currentValue);
   };
   // 스타일 계산
   var containerStyle = __assign({
@@ -5464,7 +5668,7 @@ var Stepper = function (_a) {
           style: {
             userSelect: 'none'
           },
-          children: currentValue
+          children: displayValue()
         })
       }), jsxRuntime.jsx(Icon, {
         type: "add-circle-filled",
