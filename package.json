@@ -116,6 +116,8 @@
   },
   "homepage": "https://github.com/Team-Youth/youth-design#readme",
   "dependencies": {
-    "react-hot-toast": "^2.5.2"
+    "lottie-react": "^2.4.1",
+    "react-hot-toast": "^2.5.2",
+    "rooks": "^8.0.1"
   }
 }

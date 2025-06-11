@@ -1,4 +1,7 @@
 /* src/global.css */
+div {
+  box-sizing: border-box;
+}
 span {
   margin: 0;
   padding: 0;

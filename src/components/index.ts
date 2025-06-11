@@ -13,6 +13,9 @@ export type { IllustProps, IllustType } from './illust';
 export { Label } from './label';
 export type { LabelProps } from './label';
 
+export { YouthLottie } from './lottie';
+export type { LottieProps, LottieRef } from './lottie';
+
 export { TextInput } from './text-input';
 export type { TextInputProps } from './text-input';
 

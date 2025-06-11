@@ -4,9 +4,10 @@ import { spacing } from './chunk-KDFHLJHE.js';
 import { radius } from './chunk-XG5H75OT.js';
 import { shadows } from './chunk-ZQEWHDA3.js';
 import { border } from './chunk-33WN62XQ.js';
-import { __objRest, __spreadProps, __spreadValues } from './chunk-2NMEKWO5.js';
-import React10, { forwardRef, useState, useCallback, useEffect, useRef, useMemo } from 'react';
-import { jsxs, jsx, Fragment } from 'react/jsx-runtime';
+import { __spreadValues, __objRest, __spreadProps } from './chunk-2NMEKWO5.js';
+import React11, { forwardRef, useRef, useImperativeHandle, useCallback, useState, useEffect, useMemo } from 'react';
+import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
+import Lottie from 'lottie-react';
 import toast, { Toaster } from 'react-hot-toast';
 
 var LoadingIcon = () => /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 50 50", className: "loading-icon", children: /* @__PURE__ */ jsx(
@@ -833,6 +834,102 @@ var Label = ({
     }
   );
 };
+var YouthLottie = forwardRef(
+  ({
+    animationData,
+    loop = true,
+    autoplay = true,
+    speed = 1,
+    direction = 1,
+    width,
+    height,
+    className = "",
+    style = {},
+    onComplete,
+    onLoopComplete,
+    segments,
+    rendererSettings
+  }, ref) => {
+    const lottieRef = useRef(null);
+    useImperativeHandle(ref, () => ({
+      play: () => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.play();
+      },
+      stop: () => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.stop();
+      },
+      pause: () => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.pause();
+      },
+      goToAndStop: (frame) => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.goToAndStop(frame, true);
+      },
+      goToAndPlay: (frame) => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.goToAndPlay(frame, true);
+      },
+      setSpeed: (speed2) => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.setSpeed(speed2);
+      },
+      setDirection: (direction2) => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.setDirection(direction2);
+      },
+      getLottieInstance: () => lottieRef.current
+    }));
+    const handleComplete = useCallback(() => {
+      if (onComplete) {
+        onComplete();
+      }
+    }, [onComplete]);
+    const handleLoopComplete = useCallback(() => {
+      if (onLoopComplete) {
+        onLoopComplete();
+      }
+    }, [onLoopComplete]);
+    const containerStyle = __spreadValues({
+      width: width || "100%",
+      height: height || "auto",
+      display: "inline-block"
+    }, style);
+    const lottieOptions = __spreadValues({
+      animationData,
+      loop,
+      autoplay,
+      onComplete: handleComplete,
+      onLoopComplete: handleLoopComplete,
+      lottieRef,
+      rendererSettings: __spreadValues({
+        preserveAspectRatio: "xMidYMid slice",
+        clearCanvas: true,
+        progressiveLoad: false,
+        hideOnTransparent: true
+      }, rendererSettings)
+    }, segments && { segments });
+    React11.useEffect(() => {
+      if (lottieRef.current) {
+        lottieRef.current.setSpeed(speed);
+        lottieRef.current.setDirection(direction);
+      }
+    }, [speed, direction]);
+    return /* @__PURE__ */ jsx(
+      "div",
+      {
+        className: `youth-lottie ${className}`,
+        style: containerStyle,
+        role: "img",
+        "aria-label": "\uC560\uB2C8\uBA54\uC774\uC158",
+        children: /* @__PURE__ */ jsx(Lottie, __spreadValues({}, lottieOptions))
+      }
+    );
+  }
+);
+YouthLottie.displayName = "YouthLottie";
 var TextInput = forwardRef(
   (_a, ref) => {
     var _b = _a, {
@@ -2131,7 +2228,7 @@ var statusConfig = {
     color: colors.semantic.state.info
   }
 };
-var Toast = React10.memo(
+var Toast = React11.memo(
   ({
     status,
     title,
@@ -2494,8 +2591,8 @@ var Modal = ({
   style = {},
   overlayStyle = {}
 }) => {
-  const [isContentOverflowing, setIsContentOverflowing] = React10.useState(false);
-  const contentRef = React10.useRef(null);
+  const [isContentOverflowing, setIsContentOverflowing] = React11.useState(false);
+  const contentRef = React11.useRef(null);
   useEffect(() => {
     if (children && contentRef.current) {
       const { scrollHeight, clientHeight } = contentRef.current;
@@ -4985,6 +5082,6 @@ var Stepper = ({
   ] });
 };
 
-export { ActivityGoalCard_default as ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard_default as ExerciseCard, ExerciseList_default as ExerciseList, Font, GreetingHeader_default as GreetingHeader, Icon, Illust, Label, Modal, Popup, Radio, Stepper, Tab, TabBar, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, useToast };
+export { ActivityGoalCard_default as ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard_default as ExerciseCard, ExerciseList_default as ExerciseList, Font, GreetingHeader_default as GreetingHeader, Icon, Illust, Label, Modal, Popup, Radio, Stepper, Tab, TabBar, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

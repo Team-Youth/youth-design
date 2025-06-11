@@ -7,13 +7,15 @@ var chunkD27RAFY6_cjs = require('./chunk-D27RAFY6.cjs');
 var chunk47T4DMK5_cjs = require('./chunk-47T4DMK5.cjs');
 var chunkGLWQAUVB_cjs = require('./chunk-GLWQAUVB.cjs');
 var chunkS367Y35J_cjs = require('./chunk-S367Y35J.cjs');
-var React10 = require('react');
+var React11 = require('react');
 var jsxRuntime = require('react/jsx-runtime');
+var Lottie = require('lottie-react');
 var toast = require('react-hot-toast');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
 
-var React10__default = /*#__PURE__*/_interopDefault(React10);
+var React11__default = /*#__PURE__*/_interopDefault(React11);
+var Lottie__default = /*#__PURE__*/_interopDefault(Lottie);
 var toast__default = /*#__PURE__*/_interopDefault(toast);
 
 var LoadingIcon = () => /* @__PURE__ */ jsxRuntime.jsx("svg", { width: "16", height: "16", viewBox: "0 0 50 50", className: "loading-icon", children: /* @__PURE__ */ jsxRuntime.jsx(
@@ -41,8 +43,8 @@ var Button = ({
   isLoading = false,
   underline = false
 }) => {
-  const [isHovered, setIsHovered] = React10.useState(false);
-  const [isPressed, setIsPressed] = React10.useState(false);
+  const [isHovered, setIsHovered] = React11.useState(false);
+  const [isPressed, setIsPressed] = React11.useState(false);
   const sizeConfig = {
     l: {
       paddingX: type === "text" ? "12px" : "16px",
@@ -840,7 +842,103 @@ var Label = ({
     }
   );
 };
-var TextInput = React10.forwardRef(
+var YouthLottie = React11.forwardRef(
+  ({
+    animationData,
+    loop = true,
+    autoplay = true,
+    speed = 1,
+    direction = 1,
+    width,
+    height,
+    className = "",
+    style = {},
+    onComplete,
+    onLoopComplete,
+    segments,
+    rendererSettings
+  }, ref) => {
+    const lottieRef = React11.useRef(null);
+    React11.useImperativeHandle(ref, () => ({
+      play: () => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.play();
+      },
+      stop: () => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.stop();
+      },
+      pause: () => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.pause();
+      },
+      goToAndStop: (frame) => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.goToAndStop(frame, true);
+      },
+      goToAndPlay: (frame) => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.goToAndPlay(frame, true);
+      },
+      setSpeed: (speed2) => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.setSpeed(speed2);
+      },
+      setDirection: (direction2) => {
+        var _a;
+        return (_a = lottieRef.current) == null ? void 0 : _a.setDirection(direction2);
+      },
+      getLottieInstance: () => lottieRef.current
+    }));
+    const handleComplete = React11.useCallback(() => {
+      if (onComplete) {
+        onComplete();
+      }
+    }, [onComplete]);
+    const handleLoopComplete = React11.useCallback(() => {
+      if (onLoopComplete) {
+        onLoopComplete();
+      }
+    }, [onLoopComplete]);
+    const containerStyle = chunkS367Y35J_cjs.__spreadValues({
+      width: width || "100%",
+      height: height || "auto",
+      display: "inline-block"
+    }, style);
+    const lottieOptions = chunkS367Y35J_cjs.__spreadValues({
+      animationData,
+      loop,
+      autoplay,
+      onComplete: handleComplete,
+      onLoopComplete: handleLoopComplete,
+      lottieRef,
+      rendererSettings: chunkS367Y35J_cjs.__spreadValues({
+        preserveAspectRatio: "xMidYMid slice",
+        clearCanvas: true,
+        progressiveLoad: false,
+        hideOnTransparent: true
+      }, rendererSettings)
+    }, segments && { segments });
+    React11__default.default.useEffect(() => {
+      if (lottieRef.current) {
+        lottieRef.current.setSpeed(speed);
+        lottieRef.current.setDirection(direction);
+      }
+    }, [speed, direction]);
+    return /* @__PURE__ */ jsxRuntime.jsx(
+      "div",
+      {
+        className: `youth-lottie ${className}`,
+        style: containerStyle,
+        role: "img",
+        "aria-label": "\uC560\uB2C8\uBA54\uC774\uC158",
+        children: /* @__PURE__ */ jsxRuntime.jsx(Lottie__default.default, chunkS367Y35J_cjs.__spreadValues({}, lottieOptions))
+      }
+    );
+  }
+);
+YouthLottie.displayName = "YouthLottie";
+var TextInput = React11.forwardRef(
   (_a, ref) => {
     var _b = _a, {
       placeholder = "Placeholder",
@@ -869,8 +967,8 @@ var TextInput = React10.forwardRef(
       "type",
       "size"
     ]);
-    const [isFocused, setIsFocused] = React10.useState(false);
-    const [internalValue, setInternalValue] = React10.useState(defaultValue || "");
+    const [isFocused, setIsFocused] = React11.useState(false);
+    const [internalValue, setInternalValue] = React11.useState(defaultValue || "");
     const sizeConfig = {
       l: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
         paddingX: "16px",
@@ -1291,7 +1389,7 @@ var TabBar = ({
   tabs,
   className = ""
 }) => {
-  const [internalSelectedIndex, setInternalSelectedIndex] = React10.useState(defaultSelectedIndex);
+  const [internalSelectedIndex, setInternalSelectedIndex] = React11.useState(defaultSelectedIndex);
   const currentSelectedIndex = selectedIndex !== void 0 ? selectedIndex : internalSelectedIndex;
   const handleTabClick = (index) => {
     var _a;
@@ -1363,7 +1461,7 @@ var Chips = ({
   onClick,
   className = ""
 }) => {
-  const [isHovered, setIsHovered] = React10.useState(false);
+  const [isHovered, setIsHovered] = React11.useState(false);
   const sizeConfig = {
     large: {
       paddingX: "16px",
@@ -1524,7 +1622,7 @@ var Radio = ({
   onClick,
   className = ""
 }) => {
-  const [isHovered, setIsHovered] = React10.useState(false);
+  const [isHovered, setIsHovered] = React11.useState(false);
   const getSizeConfig = () => {
     switch (size) {
       case "small":
@@ -1716,7 +1814,7 @@ var Checkbox = ({
   onClick,
   className = ""
 }) => {
-  const [isHovered, setIsHovered] = React10.useState(false);
+  const [isHovered, setIsHovered] = React11.useState(false);
   const getSizeConfig = () => {
     switch (size) {
       case "small":
@@ -1909,7 +2007,7 @@ var Toggle = ({
   onClick,
   className = ""
 }) => {
-  const [isHovered, setIsHovered] = React10.useState(false);
+  const [isHovered, setIsHovered] = React11.useState(false);
   const getSizeConfig = () => {
     switch (size) {
       case "small":
@@ -2138,7 +2236,7 @@ var statusConfig = {
     color: chunkSWJQBQIY_cjs.colors.semantic.state.info
   }
 };
-var Toast = React10__default.default.memo(
+var Toast = React11__default.default.memo(
   ({
     status,
     title,
@@ -2150,7 +2248,7 @@ var Toast = React10__default.default.memo(
   }) => {
     const config = statusConfig[status];
     const IconComponent = config.icon;
-    const handleCloseClick = React10.useCallback(() => {
+    const handleCloseClick = React11.useCallback(() => {
       onClose == null ? void 0 : onClose();
     }, [onClose]);
     const toastStyle = {
@@ -2189,10 +2287,10 @@ var Toast = React10__default.default.memo(
       borderRadius: chunkD27RAFY6_cjs.radius.xs,
       transition: "background-color 0.2s ease"
     };
-    const handleMouseEnter = React10.useCallback((e) => {
+    const handleMouseEnter = React11.useCallback((e) => {
       e.target.style.backgroundColor = chunkSWJQBQIY_cjs.colors.primary.coolGray[100];
     }, []);
-    const handleMouseLeave = React10.useCallback((e) => {
+    const handleMouseLeave = React11.useCallback((e) => {
       e.target.style.backgroundColor = "transparent";
     }, []);
     return /* @__PURE__ */ jsxRuntime.jsxs(
@@ -2254,8 +2352,8 @@ var ToastProvider = ({
   ] });
 };
 var useToast = () => {
-  const dismissToast = React10.useCallback((id) => toast__default.default.dismiss(id), []);
-  const success = React10.useCallback(
+  const dismissToast = React11.useCallback((id) => toast__default.default.dismiss(id), []);
+  const success = React11.useCallback(
     (title, description, options) => {
       return toast__default.default.custom(
         (t) => {
@@ -2281,7 +2379,7 @@ var useToast = () => {
     },
     [dismissToast]
   );
-  const error = React10.useCallback(
+  const error = React11.useCallback(
     (title, description, options) => {
       return toast__default.default.custom(
         (t) => {
@@ -2307,7 +2405,7 @@ var useToast = () => {
     },
     [dismissToast]
   );
-  const warning = React10.useCallback(
+  const warning = React11.useCallback(
     (title, description, options) => {
       return toast__default.default.custom(
         (t) => {
@@ -2333,7 +2431,7 @@ var useToast = () => {
     },
     [dismissToast]
   );
-  const info = React10.useCallback(
+  const info = React11.useCallback(
     (title, description, options) => {
       return toast__default.default.custom(
         (t) => {
@@ -2359,7 +2457,7 @@ var useToast = () => {
     },
     [dismissToast]
   );
-  const custom = React10.useCallback(
+  const custom = React11.useCallback(
     (options) => {
       return toast__default.default.custom(
         (t) => /* @__PURE__ */ jsxRuntime.jsx(
@@ -2378,8 +2476,8 @@ var useToast = () => {
     },
     [dismissToast]
   );
-  const remove = React10.useCallback((id) => dismissToast(id), [dismissToast]);
-  const removeAll = React10.useCallback(() => toast__default.default.dismiss(), []);
+  const remove = React11.useCallback((id) => dismissToast(id), [dismissToast]);
+  const removeAll = React11.useCallback(() => toast__default.default.dismiss(), []);
   return {
     success,
     error,
@@ -2501,9 +2599,9 @@ var Modal = ({
   style = {},
   overlayStyle = {}
 }) => {
-  const [isContentOverflowing, setIsContentOverflowing] = React10__default.default.useState(false);
-  const contentRef = React10__default.default.useRef(null);
-  React10.useEffect(() => {
+  const [isContentOverflowing, setIsContentOverflowing] = React11__default.default.useState(false);
+  const contentRef = React11__default.default.useRef(null);
+  React11.useEffect(() => {
     if (children && contentRef.current) {
       const { scrollHeight, clientHeight } = contentRef.current;
       setIsContentOverflowing(scrollHeight > clientHeight);
@@ -2671,26 +2769,26 @@ var Dropdown = ({
   enableSearch = false,
   hideOption = false
 }) => {
-  const [isOpen, setIsOpen] = React10.useState(false);
-  const [isAnimating, setIsAnimating] = React10.useState(false);
-  const [shouldRender, setShouldRender] = React10.useState(false);
-  const [hoveredOptionIndex, setHoveredOptionIndex] = React10.useState(null);
-  const [searchText, setSearchText] = React10.useState("");
-  const dropdownRef = React10.useRef(null);
-  const optionsContainerRef = React10.useRef(null);
-  const inputRef = React10.useRef(null);
-  const selectedOption = React10.useMemo(
+  const [isOpen, setIsOpen] = React11.useState(false);
+  const [isAnimating, setIsAnimating] = React11.useState(false);
+  const [shouldRender, setShouldRender] = React11.useState(false);
+  const [hoveredOptionIndex, setHoveredOptionIndex] = React11.useState(null);
+  const [searchText, setSearchText] = React11.useState("");
+  const dropdownRef = React11.useRef(null);
+  const optionsContainerRef = React11.useRef(null);
+  const inputRef = React11.useRef(null);
+  const selectedOption = React11.useMemo(
     () => options.find((option) => option.value === value),
     [options, value]
   );
   const hasSelectedOption = !!selectedOption;
-  const finalWidth = React10.useMemo(() => {
+  const finalWidth = React11.useMemo(() => {
     if (width) {
       return width;
     }
     return size === "m" ? "140px" : "320px";
   }, [width, size]);
-  const filteredOptions = React10.useMemo(() => {
+  const filteredOptions = React11.useMemo(() => {
     if (!enableSearch || !searchText.trim()) {
       return options;
     }
@@ -2698,11 +2796,11 @@ var Dropdown = ({
       (option) => option.label.toLowerCase().includes(searchText.toLowerCase())
     );
   }, [options, searchText, enableSearch]);
-  const getSelectedOptionIndex = React10.useCallback(() => {
+  const getSelectedOptionIndex = React11.useCallback(() => {
     if (!hasSelectedOption) return -1;
     return filteredOptions.findIndex((option) => option.value === value);
   }, [filteredOptions, value, hasSelectedOption]);
-  const scrollToSelectedOption = React10.useCallback(() => {
+  const scrollToSelectedOption = React11.useCallback(() => {
     if (!hasSelectedOption) return;
     const performScroll = () => {
       if (!optionsContainerRef.current) return false;
@@ -2732,7 +2830,7 @@ var Dropdown = ({
     };
     setTimeout(retryScroll, 0);
   }, [hasSelectedOption, getSelectedOptionIndex]);
-  React10.useEffect(() => {
+  React11.useEffect(() => {
     if (isOpen) {
       setShouldRender(true);
       setHoveredOptionIndex(null);
@@ -2757,7 +2855,7 @@ var Dropdown = ({
       return () => clearTimeout(timer);
     }
   }, [isOpen, enableSearch, scrollToSelectedOption]);
-  React10.useEffect(() => {
+  React11.useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsOpen(false);
@@ -2770,7 +2868,7 @@ var Dropdown = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isOpen]);
-  React10.useEffect(() => {
+  React11.useEffect(() => {
     const handleKeyDown2 = (event) => {
       if (event.key === "Escape" && isOpen) {
         setIsOpen(false);
@@ -2783,7 +2881,7 @@ var Dropdown = ({
       document.removeEventListener("keydown", handleKeyDown2);
     };
   }, [isOpen]);
-  const getContainerStyles = React10.useCallback(() => {
+  const getContainerStyles = React11.useCallback(() => {
     let borderColor = chunkSWJQBQIY_cjs.colors.semantic.border.strong;
     let backgroundColor = chunkSWJQBQIY_cjs.colors.semantic.background.primary;
     if (disabled) {
@@ -2812,7 +2910,7 @@ var Dropdown = ({
       userSelect: !enableSearch ? "none" : "auto"
     }, hideOption && { userSelect: "none" });
   }, [disabled, error, isOpen, finalWidth, hideOption, enableSearch]);
-  const getTextStyles = React10.useCallback(() => {
+  const getTextStyles = React11.useCallback(() => {
     let textColor;
     if (disabled) {
       textColor = chunkSWJQBQIY_cjs.colors.semantic.disabled.foreground;
@@ -2837,7 +2935,7 @@ var Dropdown = ({
       // hideOption도 고려하여 user-select 설정
     };
   }, [disabled, error, hasSelectedOption, enableSearch, hideOption]);
-  const getInputStyles = React10.useCallback(() => {
+  const getInputStyles = React11.useCallback(() => {
     return {
       flex: 1,
       fontSize: "14px",
@@ -2852,7 +2950,7 @@ var Dropdown = ({
       width: "100%"
     };
   }, []);
-  const getIconColor = React10.useCallback(() => {
+  const getIconColor = React11.useCallback(() => {
     if (disabled) {
       return chunkSWJQBQIY_cjs.colors.semantic.disabled.foreground;
     } else if (error) {
@@ -2861,16 +2959,16 @@ var Dropdown = ({
       return chunkSWJQBQIY_cjs.colors.semantic.text.primary;
     }
   }, [disabled, error]);
-  const getChevronIcon = React10.useCallback(
+  const getChevronIcon = React11.useCallback(
     () => /* @__PURE__ */ jsxRuntime.jsx(Icon, { type: isOpen ? "chevron-up" : "chevron-down", size: 20, color: "currentColor" }),
     [isOpen]
   );
-  const handleClick = React10.useCallback(() => {
+  const handleClick = React11.useCallback(() => {
     if (!disabled && !hideOption) {
       setIsOpen(!isOpen);
     }
   }, [disabled, hideOption, isOpen]);
-  const handleOptionClick = React10.useCallback(
+  const handleOptionClick = React11.useCallback(
     (optionValue) => {
       if (!disabled) {
         onChange == null ? void 0 : onChange(optionValue);
@@ -2879,7 +2977,7 @@ var Dropdown = ({
     },
     [disabled, onChange]
   );
-  const handleKeyDown = React10.useCallback(
+  const handleKeyDown = React11.useCallback(
     (event) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
@@ -2890,7 +2988,7 @@ var Dropdown = ({
     },
     [handleClick, hideOption]
   );
-  const handleInputKeyDown = React10.useCallback(
+  const handleInputKeyDown = React11.useCallback(
     (event) => {
       if (!enableSearch) return;
       if (event.key === "Enter") {
@@ -2910,7 +3008,7 @@ var Dropdown = ({
     },
     [enableSearch, filteredOptions, handleOptionClick]
   );
-  const handleInputChange = React10.useCallback(
+  const handleInputChange = React11.useCallback(
     (event) => {
       if (!enableSearch) return;
       setSearchText(event.target.value);
@@ -2918,7 +3016,7 @@ var Dropdown = ({
     },
     [enableSearch]
   );
-  const getOptionStyles = React10.useCallback(
+  const getOptionStyles = React11.useCallback(
     (option, index, isSelected) => {
       let backgroundColor = chunkSWJQBQIY_cjs.colors.semantic.background.primary;
       let textColor = chunkSWJQBQIY_cjs.colors.semantic.text.primary;
@@ -2950,7 +3048,7 @@ var Dropdown = ({
     },
     [hoveredOptionIndex]
   );
-  const dropdownOptionsStyle = React10.useMemo(
+  const dropdownOptionsStyle = React11.useMemo(
     () => ({
       position: "absolute",
       top: "100%",
@@ -3132,7 +3230,7 @@ var Dropdown = ({
   );
 };
 Dropdown.displayName = "Dropdown";
-var TextArea = React10.forwardRef(
+var TextArea = React11.forwardRef(
   (_a, ref) => {
     var _b = _a, {
       placeholder = "Placeholder",
@@ -3167,9 +3265,9 @@ var TextArea = React10.forwardRef(
       "width",
       "rows"
     ]);
-    const [isFocused, setIsFocused] = React10.useState(false);
-    const [isHovered, setIsHovered] = React10.useState(false);
-    const [internalValue, setInternalValue] = React10.useState(defaultValue || "");
+    const [isFocused, setIsFocused] = React11.useState(false);
+    const [isHovered, setIsHovered] = React11.useState(false);
+    const [internalValue, setInternalValue] = React11.useState(defaultValue || "");
     const currentValue = value !== void 0 ? value : internalValue;
     const isEmpty = !currentValue || currentValue.length === 0;
     const actualStatus = status || (isEmpty ? "empty" : "filled");
@@ -3369,7 +3467,7 @@ var TextArea = React10.forwardRef(
   }
 );
 TextArea.displayName = "TextArea";
-var TextField = React10.forwardRef(
+var TextField = React11.forwardRef(
   (_a, ref) => {
     var _b = _a, {
       placeholder = "Placeholder",
@@ -3414,13 +3512,13 @@ var TextField = React10.forwardRef(
       "status",
       "width"
     ]);
-    const [isFocused, setIsFocused] = React10.useState(false);
-    const [isHovered, setIsHovered] = React10.useState(false);
-    const [internalValue, setInternalValue] = React10.useState(defaultValue || "");
+    const [isFocused, setIsFocused] = React11.useState(false);
+    const [isHovered, setIsHovered] = React11.useState(false);
+    const [internalValue, setInternalValue] = React11.useState(defaultValue || "");
     const currentValue = value !== void 0 ? value : internalValue;
     const isEmpty = !currentValue || currentValue.length === 0;
     const actualStatus = status || (isEmpty ? "empty" : "filled");
-    const getContainerStyles = React10.useCallback(() => {
+    const getContainerStyles = React11.useCallback(() => {
       let borderColor = chunkSWJQBQIY_cjs.colors.semantic.border.strong;
       let backgroundColor = chunkSWJQBQIY_cjs.colors.semantic.background.primary;
       if (disabled) {
@@ -3457,7 +3555,7 @@ var TextField = React10.forwardRef(
         width: getWidth()
       };
     }, [disabled, readOnly, error, isFocused, isHovered, width]);
-    const getInputStyles = React10.useCallback(() => {
+    const getInputStyles = React11.useCallback(() => {
       let textColor = chunkSWJQBQIY_cjs.colors.semantic.text.tertiary;
       if (disabled) {
         textColor = chunkSWJQBQIY_cjs.colors.semantic.text.tertiary;
@@ -3476,7 +3574,7 @@ var TextField = React10.forwardRef(
         cursor: cursorStyle
       }, chunkBGZS6YGP_cjs.textStyles.body1);
     }, [disabled, error, actualStatus, readOnly]);
-    const getIconColor = React10.useCallback(() => {
+    const getIconColor = React11.useCallback(() => {
       if (disabled) {
         return chunkSWJQBQIY_cjs.colors.semantic.disabled.foreground;
       } else if (error) {
@@ -3485,17 +3583,17 @@ var TextField = React10.forwardRef(
         return chunkSWJQBQIY_cjs.colors.semantic.text.primary;
       }
     }, [disabled, error]);
-    const handleFocus = React10.useCallback(() => {
+    const handleFocus = React11.useCallback(() => {
       if (!disabled && !readOnly) {
         setIsFocused(true);
         onFocus == null ? void 0 : onFocus();
       }
     }, [disabled, readOnly, onFocus]);
-    const handleBlur = React10.useCallback(() => {
+    const handleBlur = React11.useCallback(() => {
       setIsFocused(false);
       onBlur == null ? void 0 : onBlur();
     }, [onBlur]);
-    const handleChange = React10.useCallback(
+    const handleChange = React11.useCallback(
       (e) => {
         if (readOnly) return;
         const newValue = e.target.value;
@@ -3506,12 +3604,12 @@ var TextField = React10.forwardRef(
       },
       [value, onChange, readOnly]
     );
-    const handleMouseEnter = React10.useCallback(() => {
+    const handleMouseEnter = React11.useCallback(() => {
       if (!disabled && !readOnly && !isFocused) {
         setIsHovered(true);
       }
     }, [disabled, readOnly, isFocused]);
-    const handleMouseLeave = React10.useCallback(() => {
+    const handleMouseLeave = React11.useCallback(() => {
       setIsHovered(false);
     }, []);
     const iconColor = getIconColor();
@@ -3647,7 +3745,7 @@ var ExerciseCard = ({
   onCompleteToggle,
   className = ""
 }) => {
-  const [isHovered, setIsHovered] = React10.useState(false);
+  const [isHovered, setIsHovered] = React11.useState(false);
   const typeConfig = {
     cardio: {
       color: chunkSWJQBQIY_cjs.colors.primary.tint.blue[500],
@@ -4097,8 +4195,8 @@ var GreetingHeader = ({
   onClick,
   className = ""
 }) => {
-  const [currentTime, setCurrentTime] = React10.useState(/* @__PURE__ */ new Date());
-  React10.useEffect(() => {
+  const [currentTime, setCurrentTime] = React11.useState(/* @__PURE__ */ new Date());
+  React11.useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(/* @__PURE__ */ new Date());
     }, 6e4);
@@ -4311,11 +4409,11 @@ var ExerciseList = ({
   onCompleteToggle,
   className = ""
 }) => {
-  const [searchQuery, setSearchQuery] = React10.useState("");
-  const [filterType, setFilterType] = React10.useState("all");
-  const [sortBy, setSortBy] = React10.useState("name");
-  const [showCompleted, setShowCompleted] = React10.useState(true);
-  const filteredAndSortedExercises = React10.useMemo(() => {
+  const [searchQuery, setSearchQuery] = React11.useState("");
+  const [filterType, setFilterType] = React11.useState("all");
+  const [sortBy, setSortBy] = React11.useState("name");
+  const [showCompleted, setShowCompleted] = React11.useState(true);
+  const filteredAndSortedExercises = React11.useMemo(() => {
     let filtered = exercises;
     if (searchQuery.trim()) {
       filtered = filtered.filter(
@@ -4344,7 +4442,7 @@ var ExerciseList = ({
     });
     return filtered;
   }, [exercises, searchQuery, filterType, sortBy, showCompleted]);
-  const stats = React10.useMemo(() => {
+  const stats = React11.useMemo(() => {
     const completed = exercises.filter((ex) => ex.isCompleted).length;
     const total = exercises.length;
     const totalDuration = exercises.reduce((sum, ex) => sum + (ex.duration || 0), 0);
@@ -4727,15 +4825,15 @@ var Stepper = ({
   isTime = false,
   timeBaseUnit = "min"
 }) => {
-  const [internalValue, setInternalValue] = React10.useState(value);
-  const [isFocused, setIsFocused] = React10.useState(focused);
-  const [isEditing, setIsEditing] = React10.useState(false);
-  const [editValue, setEditValue] = React10.useState(String(value));
-  const inputRef = React10.useRef(null);
+  const [internalValue, setInternalValue] = React11.useState(value);
+  const [isFocused, setIsFocused] = React11.useState(focused);
+  const [isEditing, setIsEditing] = React11.useState(false);
+  const [editValue, setEditValue] = React11.useState(String(value));
+  const inputRef = React11.useRef(null);
   const currentValue = onChange ? value : internalValue;
   const isMinReached = currentValue <= min;
   const isMaxReached = currentValue >= max;
-  React10.useEffect(() => {
+  React11.useEffect(() => {
     if (!isEditing) {
       if (isTime) {
         setEditValue(formatTime(currentValue, timeBaseUnit));
@@ -5017,6 +5115,7 @@ exports.TextInput = TextInput;
 exports.Toast = Toast;
 exports.ToastProvider = ToastProvider;
 exports.Toggle = Toggle;
+exports.YouthLottie = YouthLottie;
 exports.useToast = useToast;
 //# sourceMappingURL=index.cjs.map
 //# sourceMappingURL=index.cjs.map
