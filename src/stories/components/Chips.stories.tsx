@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Chips } from '../../components/chips/Chips';
+import React from 'react';
 
 // 아이콘 예시들
 const CheckIcon = () => (

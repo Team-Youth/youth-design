@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Font } from '../../components';
 import { textStyles, fontWeight, colors } from '../../tokens';
+import React from 'react';
 
 const meta: Meta<typeof Font> = {
   title: 'Components/Font',

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { DropdownOption, Dropdown, TextField, TextArea } from '../../components';
+import React from 'react';
 
 // Icon components
 const UserIcon = () => (

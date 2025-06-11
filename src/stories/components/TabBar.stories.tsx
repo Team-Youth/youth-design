@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { action } from '@storybook/addon-actions';
 import { TabBar } from '../../components/tab-bar';
+import React from 'react';
 
 const meta: Meta<typeof TabBar> = {
   title: 'Components/TabBar',

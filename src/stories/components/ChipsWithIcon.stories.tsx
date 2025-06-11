@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Chips } from '../../components/chips/Chips';
 import { Icon, IconType } from '../../components/icon/Icon';
 import { colors } from '../../tokens/colors';
+import React from 'react';
 
 const meta: Meta<typeof Chips> = {
   title: 'Components/Chips/With Icon',

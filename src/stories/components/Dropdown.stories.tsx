@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { DropdownOption, Dropdown } from '../../components';
+import React from 'react';
 
 // Sample options
 const cityOptions: DropdownOption[] = [

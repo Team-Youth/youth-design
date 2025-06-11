@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { spacing } from '../tokens/spacing';
+import React from 'react';
 
 interface SpacingSampleProps {
   name: string;

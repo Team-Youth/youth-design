@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import { action } from '@storybook/addon-actions';
 import { Checkbox } from '../../components';
+import React from 'react';
 
 const meta: Meta<typeof Checkbox> = {
   title: 'Components/Checkbox',

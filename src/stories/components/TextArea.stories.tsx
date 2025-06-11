@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TextArea } from '../../components/text-area/TextArea';
 import { useState } from 'react';
+import React from 'react';
 
 // Controlled TextArea component for interactive stories
 const ControlledTextArea = (props: any) => {

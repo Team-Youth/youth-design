@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Label } from '../../components';
+import React from 'react';
 
 // Icon component for demonstration (using a simple SVG)
 const AddIcon = () => (

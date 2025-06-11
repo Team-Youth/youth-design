@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { TextButton } from '../../components/text-button/TextButton';
+import React from 'react';
 
 // 아이콘 예시들
 const HeartIcon = () => (
