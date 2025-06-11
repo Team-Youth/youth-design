@@ -40,7 +40,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   disabled = false,
   label,
   description,
-  labelPosition = 'left',
+  labelPosition = 'right',
   onChange,
   onClick,
   className = '',
