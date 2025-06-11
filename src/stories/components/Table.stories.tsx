@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import Table from '../../components/table/Table';
+
 import React from 'react';
 import Font from '../../components/font';
+import { Table } from '../../components';
 
 // 샘플 데이터 타입들
 interface User {

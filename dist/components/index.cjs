@@ -5204,7 +5204,7 @@ var Table = ({
               ref: (el) => {
                 headerRefs.current[index] = el;
               },
-              style: chunkN3JJVTOD_cjs.__spreadValues({
+              style: chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadValues({
                 display: "flex",
                 alignItems: "center",
                 borderBottom: "1px solid #eee",
@@ -5215,7 +5215,15 @@ var Table = ({
                 boxSizing: "border-box",
                 overflow: "visible",
                 height: 48
-              }, column.style),
+              }, isWidthCalculationComplete && chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadValues({}, type === "parent" ? index === formattedColumns.length - 2 && {
+                flex: 1,
+                minWidth: 0,
+                width: "auto"
+              } : index === formattedColumns.length - 1 && {
+                flex: 2,
+                minWidth: 0,
+                width: "auto"
+              }), type === "child" && index !== formattedColumns.length - 1 && { flex: 1, width: "auto" })), column.style),
               children: /* @__PURE__ */ jsxRuntime.jsx(
                 Font_default,
                 chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, type === "parent" && {
