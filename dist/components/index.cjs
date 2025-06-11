@@ -4823,14 +4823,22 @@ var Stepper = ({
   unit = "",
   step = 1,
   isTime = false,
-  timeBaseUnit = "min"
+  timeBaseUnit = "min",
+  autoRound = false
 }) => {
   const [internalValue, setInternalValue] = React11.useState(value);
   const [isFocused, setIsFocused] = React11.useState(focused);
   const [isEditing, setIsEditing] = React11.useState(false);
   const [editValue, setEditValue] = React11.useState(String(value));
+  const [stepCount, setStepCount] = React11.useState(() => {
+    return step > 0 ? Math.round(value / step) : 0;
+  });
   const inputRef = React11.useRef(null);
-  const currentValue = onChange ? value : internalValue;
+  const currentValue = internalValue;
+  const getActualValue = (count) => {
+    const stepValue = count * step;
+    return Math.max(min, Math.min(max, stepValue));
+  };
   const isMinReached = currentValue <= min;
   const isMaxReached = currentValue >= max;
   React11.useEffect(() => {
@@ -4842,29 +4850,39 @@ var Stepper = ({
       }
     }
   }, [currentValue, isEditing, isTime, timeBaseUnit]);
+  React11.useEffect(() => {
+    const newStepCount = step > 0 ? Math.round(currentValue / step) : 0;
+    setStepCount(newStepCount);
+  }, [currentValue, step]);
   const handleIncrement = () => {
     if (disabled || isMaxReached) return;
-    let newValue = currentValue + step;
-    if (newValue > max) {
-      newValue = max;
-    }
-    if (onChange) {
-      onChange(newValue);
+    let newValue;
+    const isExactStepValue = currentValue % step === 0;
+    if (isExactStepValue) {
+      newValue = currentValue + step;
     } else {
-      setInternalValue(newValue);
+      newValue = Math.ceil(currentValue / step) * step;
     }
+    newValue = Math.max(min, Math.min(max, newValue));
+    const newStepCount = step > 0 ? Math.round(newValue / step) : 0;
+    setStepCount(newStepCount);
+    onChange && onChange(newValue);
+    setInternalValue(newValue);
   };
   const handleDecrement = () => {
     if (disabled || isMinReached) return;
-    let newValue = currentValue - step;
-    if (newValue < min) {
-      newValue = min;
-    }
-    if (onChange) {
-      onChange(newValue);
+    let newValue;
+    const isExactStepValue = currentValue % step === 0;
+    if (isExactStepValue) {
+      newValue = currentValue - step;
     } else {
-      setInternalValue(newValue);
+      newValue = Math.floor(currentValue / step) * step;
     }
+    newValue = Math.max(min, Math.min(max, newValue));
+    const newStepCount = step > 0 ? Math.round(newValue / step) : 0;
+    setStepCount(newStepCount);
+    onChange && onChange(newValue);
+    setInternalValue(newValue);
   };
   const handleValueClick = () => {
     if (editable && !disabled && !error) {
@@ -4917,32 +4935,21 @@ var Stepper = ({
     } else if (newValue > max) {
       newValue = max;
     }
-    if (step && step > 0) {
-      const roundedValue = Math.round(newValue / step) * step;
-      if (roundedValue < min) {
-        newValue = Math.ceil(min / step) * step;
-        if (newValue > max) {
-          newValue = min;
-        }
-      } else if (roundedValue > max) {
-        newValue = Math.floor(max / step) * step;
-        if (newValue < min) {
-          newValue = max;
-        }
-      } else {
-        newValue = roundedValue;
-      }
+    if ((isTime || autoRound) && step && step > 0) {
+      const roundedStepCount = Math.round(newValue / step);
+      newValue = getActualValue(roundedStepCount);
+      setStepCount(roundedStepCount);
+    } else {
+      const newStepCount = step > 0 ? Math.round(newValue / step) : 0;
+      setStepCount(newStepCount);
     }
     if (isTime) {
       setEditValue(formatTime(newValue, timeBaseUnit));
     } else {
       setEditValue(String(newValue));
     }
-    if (onChange) {
-      onChange(newValue);
-    } else {
-      setInternalValue(newValue);
-    }
+    onChange && onChange(newValue);
+    setInternalValue(newValue);
   };
   const handleInputKeyDown = (e) => {
     if (e.key === "Enter") {
