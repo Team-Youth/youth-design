@@ -1011,8 +1011,6 @@ interface CheckboxProps {
     description?: string;
     /** 라벨 위치 */
     labelPosition?: 'right' | 'left';
-    /** 크기 */
-    size?: 'small' | 'medium' | 'large';
     /** 변경 이벤트 핸들러 */
     onChange?: (checked: boolean) => void;
     /** 클릭 이벤트 핸들러 */

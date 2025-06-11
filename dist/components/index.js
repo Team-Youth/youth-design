@@ -1704,45 +1704,17 @@ var Checkbox = ({
   label,
   description,
   labelPosition = "right",
-  size = "medium",
   onChange,
   onClick,
   className = ""
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const getSizeConfig = () => {
-    switch (size) {
-      case "small":
-        return __spreadProps(__spreadValues({}, textStyles.body2), {
-          fontWeight: fontWeight.medium,
-          checkboxSize: "16px",
-          iconSize: "10px",
-          gap: "6px",
-          descriptionFontStyle: __spreadProps(__spreadValues({}, textStyles.body3), { fontWeight: fontWeight.regular })
-        });
-      case "large":
-        return __spreadProps(__spreadValues({}, textStyles.heading3), {
-          fontWeight: fontWeight.medium,
-          checkboxSize: "24px",
-          iconSize: "18px",
-          gap: "10px",
-          descriptionFontStyle: __spreadProps(__spreadValues({}, textStyles.body1), { fontWeight: fontWeight.regular })
-        });
-      default:
-        return __spreadProps(__spreadValues({}, textStyles.body1), {
-          fontWeight: fontWeight.medium,
-          checkboxSize: "20px",
-          iconSize: "14px",
-          gap: "8px",
-          descriptionFontStyle: __spreadProps(__spreadValues({}, textStyles.body2), { fontWeight: fontWeight.regular })
-        });
-    }
-  };
-  const sizeConfig = getSizeConfig();
+  const checkboxSize = "24px";
+  const gap = "8px";
   const getCheckboxStyles = () => {
     const baseStyles = {
-      width: sizeConfig.checkboxSize,
-      height: sizeConfig.checkboxSize,
+      width: checkboxSize,
+      height: checkboxSize,
       borderRadius: "4px",
       display: "flex",
       alignItems: "center",
@@ -1788,7 +1760,7 @@ var Checkbox = ({
       });
     }
   };
-  const getIconColor = () => {
+  const getIconColor = useCallback(() => {
     if (disabled && checked) {
       return "white";
     } else if (disabled) {
@@ -1800,16 +1772,18 @@ var Checkbox = ({
     } else {
       return colors.primary.coolGray[100];
     }
-  };
+  }, [checked, disabled, isHovered]);
   const getLabelStyles = () => {
-    return __spreadProps(__spreadValues({}, sizeConfig), {
-      color: disabled ? colors.semantic.text.disabled : colors.semantic.text.primary,
+    return __spreadProps(__spreadValues({}, textStyles.body1), {
+      fontWeight: fontWeight.medium,
+      color: disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800],
       cursor: disabled ? "not-allowed" : "pointer"
     });
   };
   const getDescriptionStyles = () => {
-    return __spreadProps(__spreadValues({}, sizeConfig.descriptionFontStyle), {
-      color: disabled ? colors.semantic.text.disabled : colors.primary.coolGray[300],
+    return __spreadProps(__spreadValues({}, textStyles.body2), {
+      fontWeight: fontWeight.regular,
+      color: disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[300],
       lineHeight: "1.3",
       marginTop: "2px",
       cursor: disabled ? "not-allowed" : "pointer"
@@ -1834,7 +1808,7 @@ var Checkbox = ({
   const containerStyles = {
     display: "flex",
     alignItems: description ? "flex-start" : "center",
-    gap: sizeConfig.gap,
+    gap,
     flexDirection: labelPosition === "left" ? "row-reverse" : "row",
     cursor: disabled ? "not-allowed" : "pointer"
   };
@@ -1843,25 +1817,16 @@ var Checkbox = ({
     flexDirection: "column",
     flex: 1
   };
-  const CheckIcon = () => /* @__PURE__ */ jsx(
-    "svg",
+  const iconColor = getIconColor();
+  const CheckIcon = () => /* @__PURE__ */ jsx("svg", { width: "14", height: "12", viewBox: "0 0 14 12", xmlns: "http://www.w3.org/2000/svg", children: /* @__PURE__ */ jsx(
+    "path",
     {
-      width: sizeConfig.iconSize,
-      height: sizeConfig.iconSize,
-      viewBox: "0 0 14 12",
-      fill: "none",
-      xmlns: "http://www.w3.org/2000/svg",
-      children: /* @__PURE__ */ jsx(
-        "path",
-        {
-          fill: getIconColor(),
-          fillRule: "evenodd",
-          clipRule: "evenodd",
-          d: "M13.3821 0.997823C13.7285 1.30089 13.7636 1.82736 13.4605 2.17372L5.80428 10.9237C5.64699 11.1035 5.42012 11.2071 5.18127 11.2083C4.94241 11.2095 4.71453 11.1081 4.55546 10.9299L0.545044 6.43733C0.238554 6.09399 0.268427 5.56719 0.611766 5.2607C0.955106 4.95421 1.4819 4.98409 1.78839 5.32743L5.17089 9.11661L12.2062 1.07622C12.5093 0.729853 13.0358 0.694755 13.3821 0.997823Z"
-        }
-      )
+      fill: iconColor,
+      fillRule: "evenodd",
+      clipRule: "evenodd",
+      d: "M13.3821 0.997823C13.7285 1.30089 13.7636 1.82736 13.4605 2.17372L5.80428 10.9237C5.64699 11.1035 5.42012 11.2071 5.18127 11.2083C4.94241 11.2095 4.71453 11.1081 4.55546 10.9299L0.545044 6.43733C0.238554 6.09399 0.268427 5.56719 0.611766 5.2607C0.955106 4.95421 1.4819 4.98409 1.78839 5.32743L5.17089 9.11661L12.2062 1.07622C12.5093 0.729853 13.0358 0.694755 13.3821 0.997823Z"
     }
-  );
+  ) });
   return /* @__PURE__ */ jsxs(
     "div",
     {
@@ -1882,7 +1847,7 @@ var Checkbox = ({
             style: { display: "none" }
           }
         ),
-        /* @__PURE__ */ jsx("div", { style: getCheckboxStyles(), children: checked && /* @__PURE__ */ jsx(CheckIcon, {}) }),
+        /* @__PURE__ */ jsx("div", { style: getCheckboxStyles(), children: /* @__PURE__ */ jsx(CheckIcon, {}) }),
         (label || description) && /* @__PURE__ */ jsxs("div", { style: labelContainerStyles, children: [
           label && /* @__PURE__ */ jsx("span", { style: getLabelStyles(), children: label }),
           description && /* @__PURE__ */ jsx("span", { style: getDescriptionStyles(), children: description })
