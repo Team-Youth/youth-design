@@ -28,8 +28,6 @@ export const Table = <T,>({
   // 각 열의 최대 너비를 저장하는 상태
   const [columnLayouts, setColumnLayouts] = useState<{ [key: number]: number }>({});
 
-  console.log(99999, columnLayouts);
-
   // 너비 계산이 완료되었는지 추적하는 상태
   const [isWidthCalculationComplete, setIsWidthCalculationComplete] = useState(false);
 
@@ -130,7 +128,6 @@ export const Table = <T,>({
       {/* 헤더 */}
       <div style={{ display: 'flex' }}>
         {formattedColumns.map((column, index) => {
-          console.log(999999, columnLayouts[index]);
           return (
             <div
               key={`header-${index}`}
@@ -262,6 +259,7 @@ const Row = <T,>({
             tableType={tableType}
             style={column.style}
             isWidthCalculationComplete={isWidthCalculationComplete}
+            hasRowAccordion={!!rowAccordion}
           />
         ))}
       </div>
@@ -292,6 +290,7 @@ interface CellProps {
   tableType?: 'parent' | 'child';
   style?: React.CSSProperties;
   isWidthCalculationComplete: boolean;
+  hasRowAccordion?: boolean;
 }
 
 const Cell = memo(
@@ -305,6 +304,7 @@ const Cell = memo(
     tableType,
     style,
     isWidthCalculationComplete,
+    hasRowAccordion,
   }: CellProps) => {
     const cellRef = useRef<HTMLDivElement>(null);
 
@@ -351,11 +351,14 @@ const Cell = memo(
           <div
             style={{
               display: 'flex',
-              ...(columnIndex === 0 && {
-                transition: 'transform 0.3s ease',
-                transform:
-                  isRowAccordionOpen && tableType === 'parent' ? 'rotate(180deg)' : 'rotate(0deg)',
-              }),
+              ...(columnIndex === 0 &&
+                hasRowAccordion && {
+                  transition: 'transform 0.3s ease',
+                  transform:
+                    isRowAccordionOpen && tableType === 'parent'
+                      ? 'rotate(180deg)'
+                      : 'rotate(0deg)',
+                }),
             }}
           >
             {cell}

@@ -5122,7 +5122,6 @@ var Table = ({
   isLoading
 }) => {
   const [columnLayouts, setColumnLayouts] = React11.useState({});
-  console.log(99999, columnLayouts);
   const [isWidthCalculationComplete, setIsWidthCalculationComplete] = React11.useState(false);
   const headerRefs = React11.useRef([]);
   const updateColumnWidth = (index, width) => {
@@ -5207,7 +5206,6 @@ var Table = ({
       },
       children: [
         /* @__PURE__ */ jsxRuntime.jsx("div", { style: { display: "flex" }, children: formattedColumns.map((column, index) => {
-          console.log(999999, columnLayouts[index]);
           return /* @__PURE__ */ jsxRuntime.jsx(
             "div",
             {
@@ -5314,7 +5312,8 @@ var Row = ({
         isRowAccordionOpen,
         tableType,
         style: column.style,
-        isWidthCalculationComplete
+        isWidthCalculationComplete,
+        hasRowAccordion: !!rowAccordion
       },
       `cell-${index}`
     )) }),
@@ -5345,7 +5344,8 @@ var Cell = React11.memo(
     isRowAccordionOpen,
     tableType,
     style,
-    isWidthCalculationComplete
+    isWidthCalculationComplete,
+    hasRowAccordion
   }) => {
     const cellRef = React11.useRef(null);
     React11.useLayoutEffect(() => {
@@ -5382,7 +5382,7 @@ var Cell = React11.memo(
           {
             style: chunkN3JJVTOD_cjs.__spreadValues({
               display: "flex"
-            }, columnIndex === 0 && {
+            }, columnIndex === 0 && hasRowAccordion && {
               transition: "transform 0.3s ease",
               transform: isRowAccordionOpen && tableType === "parent" ? "rotate(180deg)" : "rotate(0deg)"
             }),

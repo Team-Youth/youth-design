@@ -5104,7 +5104,6 @@ var Table = ({
   isLoading
 }) => {
   const [columnLayouts, setColumnLayouts] = useState({});
-  console.log(99999, columnLayouts);
   const [isWidthCalculationComplete, setIsWidthCalculationComplete] = useState(false);
   const headerRefs = useRef([]);
   const updateColumnWidth = (index, width) => {
@@ -5189,7 +5188,6 @@ var Table = ({
       },
       children: [
         /* @__PURE__ */ jsx("div", { style: { display: "flex" }, children: formattedColumns.map((column, index) => {
-          console.log(999999, columnLayouts[index]);
           return /* @__PURE__ */ jsx(
             "div",
             {
@@ -5296,7 +5294,8 @@ var Row = ({
         isRowAccordionOpen,
         tableType,
         style: column.style,
-        isWidthCalculationComplete
+        isWidthCalculationComplete,
+        hasRowAccordion: !!rowAccordion
       },
       `cell-${index}`
     )) }),
@@ -5327,7 +5326,8 @@ var Cell = memo(
     isRowAccordionOpen,
     tableType,
     style,
-    isWidthCalculationComplete
+    isWidthCalculationComplete,
+    hasRowAccordion
   }) => {
     const cellRef = useRef(null);
     useLayoutEffect(() => {
@@ -5364,7 +5364,7 @@ var Cell = memo(
           {
             style: __spreadValues({
               display: "flex"
-            }, columnIndex === 0 && {
+            }, columnIndex === 0 && hasRowAccordion && {
               transition: "transform 0.3s ease",
               transform: isRowAccordionOpen && tableType === "parent" ? "rotate(180deg)" : "rotate(0deg)"
             }),
