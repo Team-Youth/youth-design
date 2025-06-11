@@ -10,7 +10,7 @@ interface Column<T> {
   style?: React.CSSProperties;
 }
 
-interface TableProps<T> {
+export interface TableProps<T> {
   data: T[];
   columns: Column<T>[];
   isLoading: boolean;
@@ -18,7 +18,13 @@ interface TableProps<T> {
   type?: 'parent' | 'child';
 }
 
-const Table = <T,>({ data, columns, rowAccordion, type = 'parent', isLoading }: TableProps<T>) => {
+export const Table = <T,>({
+  data,
+  columns,
+  rowAccordion,
+  type = 'parent',
+  isLoading,
+}: TableProps<T>) => {
   // 각 열의 최대 너비를 저장하는 상태
   const [columnLayouts, setColumnLayouts] = useState<{ [key: number]: number }>({});
 
@@ -346,5 +352,3 @@ const Cell = memo(
     );
   },
 );
-
-export default Table;

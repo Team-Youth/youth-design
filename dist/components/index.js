@@ -4,12 +4,19 @@ import { spacing } from './chunk-KDFHLJHE.js';
 import { radius } from './chunk-XG5H75OT.js';
 import { shadows } from './chunk-ZQEWHDA3.js';
 import { border } from './chunk-33WN62XQ.js';
-import { __spreadValues, __objRest, __spreadProps } from './chunk-2NMEKWO5.js';
-import React11, { forwardRef, useRef, useImperativeHandle, useCallback, useState, useEffect, useMemo } from 'react';
+import { __commonJS, __spreadValues, __objRest, __spreadProps } from './chunk-VA6NMPQP.js';
+import React11, { forwardRef, useRef, useImperativeHandle, useCallback, useState, memo, useLayoutEffect, useEffect, useMemo } from 'react';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import Lottie from 'lottie-react';
 import toast, { Toaster } from 'react-hot-toast';
+import { useEffectOnceWhen } from 'rooks';
 
+// src/components/table/loadingSpinner.json
+var require_loadingSpinner = __commonJS({
+  "src/components/table/loadingSpinner.json"(exports, module) {
+    module.exports = { assets: [], ddd: 0, fr: 30, h: 300, ip: 0, layers: [{ ddd: 0, ind: 1, ty: 4, nm: "Group 1", hd: false, sr: 1, ks: { a: { a: 0, k: [0, 0] }, o: { a: 0, k: 100 }, p: { a: 0, k: [150, 150] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }, ao: 0, ip: 0, op: 42, st: 0, bm: 0, shapes: [{ ty: "gr", hd: false, nm: "Shape Layer 2 Group", bm: 0, it: [{ ty: "gr", hd: false, nm: "Ellipse Path 1 Group", bm: 0, it: [{ ty: "el", hd: false, nm: "Ellipse Path 1", p: { a: 0, k: [125, 125] }, s: { a: 0, k: [250, 250] }, d: 1 }, { ty: "st", hd: false, bm: 0, c: { a: 0, k: [0.447, 0.282, 0.851] }, lc: 2, lj: 1, ml: 4, o: { a: 0, k: 100 }, w: { a: 0, k: 30 } }, { ty: "tr", nm: "Transform", a: { a: 0, k: [125, 125] }, o: { a: 0, k: 100 }, p: { a: 0, k: [0, 0] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }], np: 0 }, { ty: "tm", hd: false, bm: 0, e: { a: 1, k: [{ t: 0, s: [0.1], i: { x: 0.667, y: 1 }, o: { x: 0.333, y: 0 } }, { t: 20.1, s: [100], i: { x: 0, y: 0 }, o: { x: 1, y: 1 } }] }, o: { a: 0, k: 0 }, s: { a: 1, k: [{ t: 0, s: [0], i: { x: 0.75, y: 0.75 }, o: { x: 0.25, y: 0.25 } }, { t: 20.1, s: [0], i: { x: 0.667, y: 1 }, o: { x: 0.333, y: 0 } }, { t: 39.9, s: [99.99], i: { x: 0, y: 0 }, o: { x: 1, y: 1 } }] }, m: 1 }, { ty: "tr", nm: "Transform", a: { a: 0, k: [0, 0] }, o: { a: 0, k: 100 }, p: { a: 0, k: [0, 0] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }], np: 0 }, { ty: "gr", hd: false, nm: "Shape Layer 3 Group", bm: 0, it: [{ ty: "gr", hd: false, nm: "Ellipse Path 1 Group", bm: 0, it: [{ ty: "el", hd: false, nm: "Ellipse Path 1", p: { a: 0, k: [125, 125] }, s: { a: 0, k: [250, 250] }, d: 1 }, { ty: "st", hd: false, bm: 0, c: { a: 0, k: [1, 1, 1] }, lc: 2, lj: 1, ml: 4, o: { a: 0, k: 0 }, w: { a: 0, k: 30 } }, { ty: "tr", nm: "Transform", a: { a: 0, k: [125, 125] }, o: { a: 0, k: 100 }, p: { a: 0, k: [0, 0] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }], np: 0 }, { ty: "tr", nm: "Transform", a: { a: 0, k: [0, 0] }, o: { a: 0, k: 100 }, p: { a: 0, k: [0, 0] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }], np: 0 }] }], meta: { g: "@phase-software/lottie-exporter 0.7.0" }, nm: "", op: 41, v: "5.6.0", w: 300 };
+  }
+});
 var LoadingIcon = () => /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 50 50", className: "loading-icon", children: /* @__PURE__ */ jsx(
   "circle",
   {
@@ -310,6 +317,7 @@ var Font = ({
     }
   );
 };
+var Font_default = Font;
 
 // src/components/icon/assets/index.ts
 var Lock = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 6.5C6.5 3.46243 8.96243 1 12 1C15.0376 1 17.5 3.46243 17.5 6.5V8.5H18C19.6569 8.5 21 9.84315 21 11.5V20C21 21.6569 19.6569 23 18 23H6C4.34315 23 3 21.6569 3 20V11.5C3 9.84315 4.34315 8.5 6 8.5H6.5V6.5ZM9 8.5H15V6.5C15 4.84315 13.6569 3.5 12 3.5C10.3431 3.5 9 4.84315 9 6.5V8.5ZM11 14.5C11 13.9477 11.4477 13.5 12 13.5C12.5523 13.5 13 13.9477 13 14.5V17.5C13 18.0523 12.5523 18.5 12 18.5C11.4477 18.5 11 18.0523 11 17.5V14.5Z" fill="#25282D"/></svg>`;
@@ -5088,7 +5096,278 @@ var Stepper = ({
     )
   ] });
 };
+var Table = ({
+  data,
+  columns,
+  rowAccordion,
+  type = "parent",
+  isLoading
+}) => {
+  const [columnLayouts, setColumnLayouts] = useState({});
+  console.log(99999, columnLayouts);
+  const [isWidthCalculationComplete, setIsWidthCalculationComplete] = useState(false);
+  const headerRefs = useRef([]);
+  const updateColumnWidth = (index, width) => {
+    setColumnLayouts((prevLayouts) => {
+      const currentWidth = prevLayouts[index] || 0;
+      if (width > currentWidth) {
+        return __spreadProps(__spreadValues({}, prevLayouts), { [index]: width });
+      }
+      return prevLayouts;
+    });
+  };
+  const formattedColumns = useMemo(() => {
+    if (type === "child") return columns;
+    return [...columns];
+  }, [columns]);
+  useLayoutEffect(() => {
+    formattedColumns.forEach((column, index) => {
+      const headerEl = headerRefs.current[index];
+      if (headerEl) {
+        const width = Math.ceil(headerEl.getBoundingClientRect().width);
+        updateColumnWidth(index, width);
+      }
+    });
+  }, [formattedColumns, data]);
+  useEffect(() => {
+    if (data.length > 0 && formattedColumns.length > 0) {
+      const allColumnsHaveWidth = formattedColumns.every((_, index) => columnLayouts[index] > 0);
+      if (allColumnsHaveWidth && !isWidthCalculationComplete) {
+        setTimeout(() => {
+          setIsWidthCalculationComplete(true);
+        }, 100);
+      }
+    }
+  }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
+  useEffect(() => {
+    setIsWidthCalculationComplete(false);
+  }, [data, columns]);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsWidthCalculationComplete(false);
+      formattedColumns.forEach((column, index) => {
+        const headerEl = headerRefs.current[index];
+        if (headerEl) {
+          const width = Math.ceil(headerEl.getBoundingClientRect().width);
+          updateColumnWidth(index, width);
+        }
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  if (isLoading) {
+    return /* @__PURE__ */ jsx(
+      "div",
+      {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: 100
+        },
+        children: /* @__PURE__ */ jsx(
+          YouthLottie,
+          {
+            animationData: require_loadingSpinner(),
+            style: { width: 48, aspectRatio: 1 },
+            loop: true
+          }
+        )
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        flex: 1
+      },
+      children: [
+        /* @__PURE__ */ jsx("div", { style: { display: "flex" }, children: formattedColumns.map((column, index) => {
+          console.log(999999, columnLayouts[index]);
+          return /* @__PURE__ */ jsx(
+            "div",
+            {
+              ref: (el) => {
+                headerRefs.current[index] = el;
+              },
+              style: __spreadValues({
+                display: "flex",
+                alignItems: "center",
+                borderBottom: "1px solid #eee",
+                backgroundColor: type === "parent" ? colors.primary.coolGray[50] : "transparent",
+                whiteSpace: "nowrap",
+                padding: "8px 12px",
+                width: columnLayouts[index] ? `${columnLayouts[index]}px` : "auto",
+                boxSizing: "border-box",
+                overflow: "visible",
+                height: 48
+              }, column.style),
+              children: /* @__PURE__ */ jsx(
+                Font_default,
+                __spreadProps(__spreadValues({}, type === "parent" && {
+                  hide: index === 0 || column.header === "empty"
+                }), {
+                  type: "body2",
+                  fontWeight: "medium",
+                  color: type === "parent" ? colors.primary.coolGray[800] : colors.primary.coolGray[500],
+                  noWhiteSpace: true,
+                  children: column.header
+                })
+              )
+            },
+            `header-${index}`
+          );
+        }) }),
+        /* @__PURE__ */ jsx(
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "nowrap"
+            },
+            children: data.map((rowData, rowIndex) => /* @__PURE__ */ jsx(
+              Row,
+              {
+                data: rowData,
+                columns: formattedColumns,
+                updateColumnWidth,
+                columnLayouts,
+                isWidthCalculationComplete,
+                rowAccordion,
+                tableType: type
+              },
+              `row-${rowIndex}`
+            ))
+          }
+        )
+      ]
+    }
+  );
+};
+var Row = ({
+  data,
+  columns,
+  updateColumnWidth,
+  columnLayouts,
+  isWidthCalculationComplete,
+  rowAccordion,
+  tableType
+}) => {
+  const [isRowAccordionOpen, setIsRowAccordionOpen] = useState(false);
+  const rowDetailRef = useRef(null);
+  const [rowDetailHeight, setRowDetailHeight] = useState("auto");
+  const onPressRow = () => {
+    if (data.status === "\uBBF8\uB4F1\uB85D") return;
+    setIsRowAccordionOpen((prev) => !prev);
+  };
+  useEffectOnceWhen(() => {
+    setIsRowAccordionOpen(true);
+  }, data.status === "\uB4F1\uB85D \uC644\uB8CC");
+  useEffect(() => {
+    if (rowAccordion && data && rowDetailRef.current) {
+      const calculatedHeight = rowDetailRef.current.scrollHeight;
+      setRowDetailHeight(calculatedHeight);
+    }
+  }, [rowAccordion, data]);
+  return /* @__PURE__ */ jsxs("div", { children: [
+    /* @__PURE__ */ jsx("div", { onClick: onPressRow, style: { display: "flex" }, children: columns.map((column, index) => /* @__PURE__ */ jsx(
+      Cell,
+      {
+        cell: column.cell(data),
+        updateColumnWidth,
+        columnIndex: index,
+        columnWidth: columnLayouts[index],
+        columnLength: columns.length,
+        isRowAccordionOpen,
+        tableType,
+        style: column.style,
+        isWidthCalculationComplete
+      },
+      `cell-${index}`
+    )) }),
+    /* @__PURE__ */ jsx(
+      "div",
+      {
+        ref: rowDetailRef,
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          height: isRowAccordionOpen ? rowDetailHeight : 0,
+          transition: "height 330ms ease-in-out",
+          overflow: "hidden"
+        },
+        children: rowAccordion && rowAccordion(data)
+      }
+    )
+  ] });
+};
+var Cell = memo(
+  ({
+    cell,
+    updateColumnWidth,
+    columnIndex,
+    columnWidth,
+    columnLength,
+    isRowAccordionOpen,
+    tableType,
+    style,
+    isWidthCalculationComplete
+  }) => {
+    const cellRef = useRef(null);
+    useLayoutEffect(() => {
+      if (cellRef.current) {
+        const { width } = cellRef.current.getBoundingClientRect();
+        const ceilWidth = Math.ceil(width);
+        if (ceilWidth > (columnWidth || 0)) {
+          updateColumnWidth(columnIndex, ceilWidth);
+        }
+      }
+    }, [cell, updateColumnWidth, columnIndex, columnWidth]);
+    const handleClick = (e) => {
+      if (columnIndex === columnLength - 1) {
+        e.stopPropagation();
+      }
+    };
+    return /* @__PURE__ */ jsx(
+      "div",
+      {
+        ref: cellRef,
+        onClick: handleClick,
+        style: __spreadValues(__spreadValues({
+          display: "flex",
+          borderBottom: tableType === "parent" ? "1px solid #eee" : "none",
+          padding: tableType === "parent" && columnIndex === columnLength - 1 ? "16px 12px" : "8px 12px",
+          whiteSpace: "nowrap",
+          boxSizing: "border-box",
+          minWidth: columnIndex === 1 ? 84 : columnWidth ? `${columnWidth}px` : "0",
+          width: columnWidth ? `${columnWidth}px` : "auto",
+          overflow: "visible"
+        }, isWidthCalculationComplete && __spreadValues(__spreadValues({}, tableType === "parent" ? columnIndex === columnLength - 2 && { flex: 1, minWidth: 0 } : columnIndex === columnLength - 1 && { flex: 2, minWidth: 0 }), tableType === "child" && columnIndex !== columnLength - 1 && { flex: 1 })), style),
+        children: columnIndex === 0 ? /* @__PURE__ */ jsx(
+          "div",
+          {
+            style: __spreadValues({
+              display: "flex"
+            }, columnIndex === 0 && {
+              transition: "transform 0.3s ease",
+              transform: isRowAccordionOpen && tableType === "parent" ? "rotate(180deg)" : "rotate(0deg)"
+            }),
+            children: cell
+          }
+        ) : /* @__PURE__ */ jsx("div", { style: { display: "flex" }, children: cell })
+      }
+    );
+  }
+);
 
-export { ActivityGoalCard_default as ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard_default as ExerciseCard, ExerciseList_default as ExerciseList, Font, GreetingHeader_default as GreetingHeader, Icon, Illust, Label, Modal, Popup, Radio, Stepper, Tab, TabBar, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
+export { ActivityGoalCard_default as ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard_default as ExerciseCard, ExerciseList_default as ExerciseList, Font, GreetingHeader_default as GreetingHeader, Icon, Illust, Label, Modal, Popup, Radio, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
 //# sourceMappingURL=index.js.map
 //# sourceMappingURL=index.js.map

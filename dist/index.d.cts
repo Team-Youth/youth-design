@@ -1,4 +1,5 @@
-import React$1, { ReactNode } from 'react';
+import React$1, { ReactNode, JSX } from 'react';
+import * as react_jsx_runtime from 'react/jsx-runtime';
 
 /**
  * Border Design Tokens
@@ -1463,4 +1464,18 @@ interface StepperProps {
 }
 declare const Stepper: React$1.FC<StepperProps>;
 
-export { ActivityGoalCard, type ActivityGoalCardProps, Button, type ButtonProps, Checkbox, type CheckboxProps, Chips, type ChipsProps, Dropdown, type DropdownProps, ExerciseCard, type ExerciseCardProps, ExerciseList, type ExerciseListProps, Font, type FontProps, type FontType, type FontWeight, GreetingHeader, type GreetingHeaderProps, Icon, type IconProps, type IconType, Illust, type IllustProps, type IllustType, Label, type LabelProps, type LottieProps, type LottieRef, Modal, type ModalProps, Popup, type PopupProps, Radio, type RadioProps, Stepper, type StepperProps, Tab, TabBar, type TabBarProps, type TabProps, TextArea, type TextAreaProps, TextButton, type TextButtonProps, TextField, type TextFieldProps, TextInput, type TextInputProps, Toast, type ToastItem, type ToastProps, ToastProvider, type ToastStatus, Toggle, type ToggleProps, YouthLottie, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
+interface Column<T> {
+    header: string;
+    cell: (row: T) => React$1.ReactNode;
+    style?: React$1.CSSProperties;
+}
+interface TableProps<T> {
+    data: T[];
+    columns: Column<T>[];
+    isLoading: boolean;
+    rowAccordion?: (rowData: T) => JSX.Element;
+    type?: 'parent' | 'child';
+}
+declare const Table: <T>({ data, columns, rowAccordion, type, isLoading, }: TableProps<T>) => react_jsx_runtime.JSX.Element;
+
+export { ActivityGoalCard, type ActivityGoalCardProps, Button, type ButtonProps, Checkbox, type CheckboxProps, Chips, type ChipsProps, Dropdown, type DropdownProps, ExerciseCard, type ExerciseCardProps, ExerciseList, type ExerciseListProps, Font, type FontProps, type FontType, type FontWeight, GreetingHeader, type GreetingHeaderProps, Icon, type IconProps, type IconType, Illust, type IllustProps, type IllustType, Label, type LabelProps, type LottieProps, type LottieRef, Modal, type ModalProps, Popup, type PopupProps, Radio, type RadioProps, Stepper, type StepperProps, Tab, TabBar, type TabBarProps, type TabProps, Table, type TableProps, TextArea, type TextAreaProps, TextButton, type TextButtonProps, TextField, type TextFieldProps, TextInput, type TextInputProps, Toast, type ToastItem, type ToastProps, ToastProvider, type ToastStatus, Toggle, type ToggleProps, YouthLottie, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };

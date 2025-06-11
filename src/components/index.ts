@@ -72,3 +72,6 @@ export type { ExerciseListProps } from './exercise-list';
 
 export { Stepper } from './stepper';
 export type { StepperProps } from './stepper';
+
+export { Table } from './table';
+export type { TableProps } from './table';

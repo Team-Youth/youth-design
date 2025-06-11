@@ -6,11 +6,12 @@ var chunkCJKBSSNG_cjs = require('./chunk-CJKBSSNG.cjs');
 var chunkD27RAFY6_cjs = require('./chunk-D27RAFY6.cjs');
 var chunk47T4DMK5_cjs = require('./chunk-47T4DMK5.cjs');
 var chunkGLWQAUVB_cjs = require('./chunk-GLWQAUVB.cjs');
-var chunkS367Y35J_cjs = require('./chunk-S367Y35J.cjs');
+var chunkN3JJVTOD_cjs = require('./chunk-N3JJVTOD.cjs');
 var React11 = require('react');
 var jsxRuntime = require('react/jsx-runtime');
 var Lottie = require('lottie-react');
 var toast = require('react-hot-toast');
+var rooks = require('rooks');
 
 function _interopDefault (e) { return e && e.__esModule ? e : { default: e }; }
 
@@ -18,6 +19,12 @@ var React11__default = /*#__PURE__*/_interopDefault(React11);
 var Lottie__default = /*#__PURE__*/_interopDefault(Lottie);
 var toast__default = /*#__PURE__*/_interopDefault(toast);
 
+// src/components/table/loadingSpinner.json
+var require_loadingSpinner = chunkN3JJVTOD_cjs.__commonJS({
+  "src/components/table/loadingSpinner.json"(exports, module) {
+    module.exports = { assets: [], ddd: 0, fr: 30, h: 300, ip: 0, layers: [{ ddd: 0, ind: 1, ty: 4, nm: "Group 1", hd: false, sr: 1, ks: { a: { a: 0, k: [0, 0] }, o: { a: 0, k: 100 }, p: { a: 0, k: [150, 150] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }, ao: 0, ip: 0, op: 42, st: 0, bm: 0, shapes: [{ ty: "gr", hd: false, nm: "Shape Layer 2 Group", bm: 0, it: [{ ty: "gr", hd: false, nm: "Ellipse Path 1 Group", bm: 0, it: [{ ty: "el", hd: false, nm: "Ellipse Path 1", p: { a: 0, k: [125, 125] }, s: { a: 0, k: [250, 250] }, d: 1 }, { ty: "st", hd: false, bm: 0, c: { a: 0, k: [0.447, 0.282, 0.851] }, lc: 2, lj: 1, ml: 4, o: { a: 0, k: 100 }, w: { a: 0, k: 30 } }, { ty: "tr", nm: "Transform", a: { a: 0, k: [125, 125] }, o: { a: 0, k: 100 }, p: { a: 0, k: [0, 0] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }], np: 0 }, { ty: "tm", hd: false, bm: 0, e: { a: 1, k: [{ t: 0, s: [0.1], i: { x: 0.667, y: 1 }, o: { x: 0.333, y: 0 } }, { t: 20.1, s: [100], i: { x: 0, y: 0 }, o: { x: 1, y: 1 } }] }, o: { a: 0, k: 0 }, s: { a: 1, k: [{ t: 0, s: [0], i: { x: 0.75, y: 0.75 }, o: { x: 0.25, y: 0.25 } }, { t: 20.1, s: [0], i: { x: 0.667, y: 1 }, o: { x: 0.333, y: 0 } }, { t: 39.9, s: [99.99], i: { x: 0, y: 0 }, o: { x: 1, y: 1 } }] }, m: 1 }, { ty: "tr", nm: "Transform", a: { a: 0, k: [0, 0] }, o: { a: 0, k: 100 }, p: { a: 0, k: [0, 0] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }], np: 0 }, { ty: "gr", hd: false, nm: "Shape Layer 3 Group", bm: 0, it: [{ ty: "gr", hd: false, nm: "Ellipse Path 1 Group", bm: 0, it: [{ ty: "el", hd: false, nm: "Ellipse Path 1", p: { a: 0, k: [125, 125] }, s: { a: 0, k: [250, 250] }, d: 1 }, { ty: "st", hd: false, bm: 0, c: { a: 0, k: [1, 1, 1] }, lc: 2, lj: 1, ml: 4, o: { a: 0, k: 0 }, w: { a: 0, k: 30 } }, { ty: "tr", nm: "Transform", a: { a: 0, k: [125, 125] }, o: { a: 0, k: 100 }, p: { a: 0, k: [0, 0] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }], np: 0 }, { ty: "tr", nm: "Transform", a: { a: 0, k: [0, 0] }, o: { a: 0, k: 100 }, p: { a: 0, k: [0, 0] }, r: { a: 0, k: 0 }, s: { a: 0, k: [100, 100] }, sk: { a: 0, k: 0 }, sa: { a: 0, k: 0 } }], np: 0 }] }], meta: { g: "@phase-software/lottie-exporter 0.7.0" }, nm: "", op: 41, v: "5.6.0", w: 300 };
+  }
+});
 var LoadingIcon = () => /* @__PURE__ */ jsxRuntime.jsx("svg", { width: "16", height: "16", viewBox: "0 0 50 50", className: "loading-icon", children: /* @__PURE__ */ jsxRuntime.jsx(
   "circle",
   {
@@ -102,11 +109,11 @@ var Button = ({
       background: "none"
     };
     if (type === "solid") {
-      styles = chunkS367Y35J_cjs.__spreadValues(chunkS367Y35J_cjs.__spreadValues({}, styles), getSolidStyles(level, disabled, isLoading, isPressed, isHovered));
+      styles = chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadValues({}, styles), getSolidStyles(level, disabled, isLoading, isPressed, isHovered));
     } else if (type === "outlined") {
-      styles = chunkS367Y35J_cjs.__spreadValues(chunkS367Y35J_cjs.__spreadValues({}, styles), getOutlinedStyles(disabled, isLoading, isPressed, isHovered));
+      styles = chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadValues({}, styles), getOutlinedStyles(disabled, isLoading, isPressed, isHovered));
     } else if (type === "text") {
-      styles = chunkS367Y35J_cjs.__spreadValues(chunkS367Y35J_cjs.__spreadValues({}, styles), getTextStyles(disabled));
+      styles = chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadValues({}, styles), getTextStyles(disabled));
     }
     return styles;
   };
@@ -285,7 +292,7 @@ var Font = ({
   children
 }) => {
   const baseStyle = chunkBGZS6YGP_cjs.textStyles[type];
-  const fontStyles = chunkS367Y35J_cjs.__spreadValues(chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues(chunkS367Y35J_cjs.__spreadValues({}, baseStyle), fontWeight2 && { fontWeight: chunkBGZS6YGP_cjs.fontWeight[fontWeight2] }), {
+  const fontStyles = chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadValues({}, baseStyle), fontWeight2 && { fontWeight: chunkBGZS6YGP_cjs.fontWeight[fontWeight2] }), {
     color,
     textAlign: align,
     whiteSpace: noWhiteSpace ? "nowrap" : whiteSpace || "normal",
@@ -318,6 +325,7 @@ var Font = ({
     }
   );
 };
+var Font_default = Font;
 
 // src/components/icon/assets/index.ts
 var Lock = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.5 6.5C6.5 3.46243 8.96243 1 12 1C15.0376 1 17.5 3.46243 17.5 6.5V8.5H18C19.6569 8.5 21 9.84315 21 11.5V20C21 21.6569 19.6569 23 18 23H6C4.34315 23 3 21.6569 3 20V11.5C3 9.84315 4.34315 8.5 6 8.5H6.5V6.5ZM9 8.5H15V6.5C15 4.84315 13.6569 3.5 12 3.5C10.3431 3.5 9 4.84315 9 6.5V8.5ZM11 14.5C11 13.9477 11.4477 13.5 12 13.5C12.5523 13.5 13 13.9477 13 14.5V17.5C13 18.0523 12.5523 18.5 12 18.5C11.4477 18.5 11 18.0523 11 17.5V14.5Z" fill="#25282D"/></svg>`;
@@ -553,7 +561,7 @@ var Icon = ({
   style = {}
 }) => {
   const svgContent = iconMap[type];
-  const iconStyle = chunkS367Y35J_cjs.__spreadValues({
+  const iconStyle = chunkN3JJVTOD_cjs.__spreadValues({
     width: size,
     height: size,
     color,
@@ -679,7 +687,7 @@ var Illust = ({
   style = {}
 }) => {
   const svgContent = illustMap[type];
-  const illustStyle = chunkS367Y35J_cjs.__spreadValues({
+  const illustStyle = chunkN3JJVTOD_cjs.__spreadValues({
     width: size,
     height: size,
     cursor: "inherit",
@@ -900,19 +908,19 @@ var YouthLottie = React11.forwardRef(
         onLoopComplete();
       }
     }, [onLoopComplete]);
-    const containerStyle = chunkS367Y35J_cjs.__spreadValues({
+    const containerStyle = chunkN3JJVTOD_cjs.__spreadValues({
       width: width || "100%",
       height: height || "auto",
       display: "inline-block"
     }, style);
-    const lottieOptions = chunkS367Y35J_cjs.__spreadValues({
+    const lottieOptions = chunkN3JJVTOD_cjs.__spreadValues({
       animationData,
       loop,
       autoplay,
       onComplete: handleComplete,
       onLoopComplete: handleLoopComplete,
       lottieRef,
-      rendererSettings: chunkS367Y35J_cjs.__spreadValues({
+      rendererSettings: chunkN3JJVTOD_cjs.__spreadValues({
         preserveAspectRatio: "xMidYMid slice",
         clearCanvas: true,
         progressiveLoad: false,
@@ -932,7 +940,7 @@ var YouthLottie = React11.forwardRef(
         style: containerStyle,
         role: "img",
         "aria-label": "\uC560\uB2C8\uBA54\uC774\uC158",
-        children: /* @__PURE__ */ jsxRuntime.jsx(Lottie__default.default, chunkS367Y35J_cjs.__spreadValues({}, lottieOptions))
+        children: /* @__PURE__ */ jsxRuntime.jsx(Lottie__default.default, chunkN3JJVTOD_cjs.__spreadValues({}, lottieOptions))
       }
     );
   }
@@ -953,7 +961,7 @@ var TextInput = React11.forwardRef(
       className = "",
       type = "text",
       size = "l"
-    } = _b, restProps = chunkS367Y35J_cjs.__objRest(_b, [
+    } = _b, restProps = chunkN3JJVTOD_cjs.__objRest(_b, [
       "placeholder",
       "value",
       "defaultValue",
@@ -970,7 +978,7 @@ var TextInput = React11.forwardRef(
     const [isFocused, setIsFocused] = React11.useState(false);
     const [internalValue, setInternalValue] = React11.useState(defaultValue || "");
     const sizeConfig = {
-      l: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
+      l: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({
         paddingX: "16px",
         paddingY: "12px",
         borderRadius: "12px",
@@ -978,7 +986,7 @@ var TextInput = React11.forwardRef(
       }, chunkBGZS6YGP_cjs.textStyles.body1), {
         fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular
       }),
-      m: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
+      m: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({
         paddingX: "12px",
         paddingY: "8px",
         borderRadius: "8px",
@@ -986,7 +994,7 @@ var TextInput = React11.forwardRef(
       }, chunkBGZS6YGP_cjs.textStyles.body2), {
         fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular
       }),
-      s: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
+      s: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({
         paddingX: "8px",
         paddingY: "6px",
         borderRadius: "4px",
@@ -1011,27 +1019,27 @@ var TextInput = React11.forwardRef(
         fontFamily: "inherit"
       };
       if (disabled) {
-        styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+        styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
           backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.disabled.background,
           color: chunkSWJQBQIY_cjs.colors.semantic.disabled.foreground,
           border: `${chunkGLWQAUVB_cjs.border.s} ${chunkSWJQBQIY_cjs.colors.semantic.disabled.background}`,
           cursor: "not-allowed"
         });
       } else if (error) {
-        styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+        styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
           backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.background.primary,
           color: chunkSWJQBQIY_cjs.colors.semantic.text.primary,
           border: `${chunkGLWQAUVB_cjs.border.s} ${chunkSWJQBQIY_cjs.colors.semantic.state.error}`
         });
       } else if (isFocused) {
-        styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+        styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
           backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.background.primary,
           color: chunkSWJQBQIY_cjs.colors.semantic.text.primary,
           border: `${chunkGLWQAUVB_cjs.border.s} ${chunkSWJQBQIY_cjs.colors.primary.mainviolet}`,
           boxShadow: `0 0 0 3px ${chunkSWJQBQIY_cjs.colors.primary.tint.violet[100]}`
         });
       } else {
-        styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+        styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
           backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.background.primary,
           color: chunkSWJQBQIY_cjs.colors.semantic.text.primary,
           border: `${chunkGLWQAUVB_cjs.border.s} ${chunkSWJQBQIY_cjs.colors.semantic.border.default}`
@@ -1060,7 +1068,7 @@ var TextInput = React11.forwardRef(
     return /* @__PURE__ */ jsxRuntime.jsxs("div", { className: `text-input-container ${className}`, children: [
       /* @__PURE__ */ jsxRuntime.jsx(
         "input",
-        chunkS367Y35J_cjs.__spreadValues({
+        chunkN3JJVTOD_cjs.__spreadValues({
           ref,
           type,
           value: inputValue,
@@ -1104,15 +1112,15 @@ var TextButton = ({
   color
 }) => {
   const sizeConfig = {
-    m: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
+    m: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
       fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
       padding: "4px 8px"
     }),
-    s: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
+    s: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
       fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
       padding: "3px 6px"
     }),
-    xs: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
+    xs: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
       fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
       padding: "2px 4px"
     })
@@ -1188,21 +1196,21 @@ var Tab = ({
       return chunkBGZS6YGP_cjs.fontWeight.semibold;
     };
     const configs = {
-      l: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, type === "underline" ? chunkBGZS6YGP_cjs.textStyles.heading4 : type === "capsule" ? chunkBGZS6YGP_cjs.textStyles.heading4 : chunkBGZS6YGP_cjs.textStyles.body1), {
+      l: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, type === "underline" ? chunkBGZS6YGP_cjs.textStyles.heading4 : type === "capsule" ? chunkBGZS6YGP_cjs.textStyles.heading4 : chunkBGZS6YGP_cjs.textStyles.body1), {
         height: type === "underline" ? 64 : type === "capsule" ? 42 : 40,
         padding: type === "underline" ? "0 8px" : type === "capsule" ? "10px 16px" : "0 8px",
         fontWeight: getFontWeight(),
         iconSize: 20,
         borderRadius: type === "capsule" ? 100 : type === "toggle" ? 8 : 0
       }),
-      m: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, type === "underline" ? chunkBGZS6YGP_cjs.textStyles.heading4 : type === "capsule" ? chunkBGZS6YGP_cjs.textStyles.heading4 : chunkBGZS6YGP_cjs.textStyles.body3), {
+      m: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, type === "underline" ? chunkBGZS6YGP_cjs.textStyles.heading4 : type === "capsule" ? chunkBGZS6YGP_cjs.textStyles.heading4 : chunkBGZS6YGP_cjs.textStyles.body3), {
         height: type === "underline" ? 48 : type === "capsule" ? 36 : 32,
         padding: type === "underline" ? "0 8px" : type === "capsule" ? "6px 12px" : "0 8px",
         fontWeight: getFontWeight(),
         iconSize: 16,
         borderRadius: type === "capsule" ? 100 : type === "toggle" ? 6 : 0
       }),
-      s: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, type === "underline" ? chunkBGZS6YGP_cjs.textStyles.heading5 : type === "capsule" ? chunkBGZS6YGP_cjs.textStyles.body3 : chunkBGZS6YGP_cjs.textStyles.body2), {
+      s: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, type === "underline" ? chunkBGZS6YGP_cjs.textStyles.heading5 : type === "capsule" ? chunkBGZS6YGP_cjs.textStyles.body3 : chunkBGZS6YGP_cjs.textStyles.body2), {
         height: type === "underline" ? 40 : type === "capsule" ? 30 : 28,
         padding: type === "underline" ? "0 8px" : type === "capsule" ? "5px 12px" : "4px 8px",
         fontWeight: getFontWeight(),
@@ -1287,7 +1295,7 @@ var Tab = ({
   };
   const config = getSizeConfig();
   const colorScheme = getColors();
-  const getBaseStyles = () => chunkS367Y35J_cjs.__spreadValues({
+  const getBaseStyles = () => chunkN3JJVTOD_cjs.__spreadValues({
     display: width === "fill" ? "flex" : "inline-flex",
     alignItems: "center",
     justifyContent: "center",
@@ -1436,7 +1444,7 @@ var TabBar = ({
   };
   return /* @__PURE__ */ jsxRuntime.jsx("div", { style: getContainerStyles(), className, children: tabs.map((tab, index) => /* @__PURE__ */ jsxRuntime.jsx(
     Tab,
-    chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
+    chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({
       type,
       size,
       selected: index === currentSelectedIndex,
@@ -1496,25 +1504,25 @@ var Chips = ({
     switch (state) {
       case "selected":
         if (type === "square") {
-          styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+          styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
             backgroundColor: chunkSWJQBQIY_cjs.colors.primary.gray.white,
             border: `1px solid ${chunkSWJQBQIY_cjs.colors.primary.mainviolet}`
           });
         } else {
-          styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+          styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
             backgroundColor: chunkSWJQBQIY_cjs.colors.primary.mainviolet,
             border: `1px solid ${chunkSWJQBQIY_cjs.colors.primary.mainviolet}`
           });
         }
         break;
       case "hover":
-        styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+        styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
           backgroundColor: chunkSWJQBQIY_cjs.colors.primary.coolGray[50],
           border: `1px solid ${chunkSWJQBQIY_cjs.colors.primary.coolGray[200]}`
         });
         break;
       case "disabled":
-        styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+        styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
           backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.disabled.background,
           border: `1px solid ${chunkSWJQBQIY_cjs.colors.semantic.disabled.background}`,
           cursor: "not-allowed"
@@ -1523,12 +1531,12 @@ var Chips = ({
       case "resting":
       default:
         if (isHovered) {
-          styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+          styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
             backgroundColor: chunkSWJQBQIY_cjs.colors.primary.coolGray[50],
             border: `1px solid ${chunkSWJQBQIY_cjs.colors.primary.coolGray[200]}`
           });
         } else {
-          styles = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, styles), {
+          styles = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, styles), {
             backgroundColor: chunkSWJQBQIY_cjs.colors.primary.gray.white,
             border: `1px solid ${chunkSWJQBQIY_cjs.colors.semantic.border.default}`
           });
@@ -1626,36 +1634,36 @@ var Radio = ({
   const getSizeConfig = () => {
     switch (size) {
       case "small":
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           radioSize: "16px",
           dotSize: "8px",
           gap: "4px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
       case "medium":
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           radioSize: "18px",
           dotSize: "10px",
           gap: "6px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
       case "large":
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           radioSize: "22px",
           dotSize: "14px",
           gap: "8px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
       default:
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           radioSize: "22px",
           dotSize: "14px",
           gap: "8px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
     }
   };
@@ -1728,13 +1736,13 @@ var Radio = ({
     };
   };
   const getLabelStyles = () => {
-    return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, sizeConfig), {
+    return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, sizeConfig), {
       color: disabled ? chunkSWJQBQIY_cjs.colors.semantic.text.disabled : chunkSWJQBQIY_cjs.colors.semantic.text.primary,
       cursor: disabled ? "not-allowed" : "pointer"
     });
   };
   const getDescriptionStyles = () => {
-    return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, sizeConfig.descriptionFontStyle), {
+    return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, sizeConfig.descriptionFontStyle), {
       color: disabled ? chunkSWJQBQIY_cjs.colors.semantic.text.disabled : chunkSWJQBQIY_cjs.colors.primary.coolGray[300],
       marginTop: "2px",
       cursor: disabled ? "not-allowed" : "pointer"
@@ -1818,28 +1826,28 @@ var Checkbox = ({
   const getSizeConfig = () => {
     switch (size) {
       case "small":
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           checkboxSize: "16px",
           iconSize: "10px",
           gap: "6px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
       case "large":
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           checkboxSize: "24px",
           iconSize: "18px",
           gap: "10px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
       default:
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           checkboxSize: "20px",
           iconSize: "14px",
           gap: "8px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
     }
   };
@@ -1856,37 +1864,37 @@ var Checkbox = ({
       position: "relative"
     };
     if (disabled && checked) {
-      return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, baseStyles), {
+      return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, baseStyles), {
         border: `2px solid ${chunkSWJQBQIY_cjs.colors.semantic.disabled.foreground}`,
         backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.disabled.foreground,
         cursor: "not-allowed"
       });
     } else if (disabled) {
-      return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, baseStyles), {
+      return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, baseStyles), {
         border: `2px solid ${chunkSWJQBQIY_cjs.colors.semantic.disabled.foreground}`,
         backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.disabled.background,
         cursor: "not-allowed"
       });
     } else if (checked && isHovered) {
-      return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, baseStyles), {
+      return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, baseStyles), {
         border: `2px solid ${chunkSWJQBQIY_cjs.colors.primary.tint.violet[600]}`,
         backgroundColor: chunkSWJQBQIY_cjs.colors.primary.tint.violet[600],
         cursor: "pointer"
       });
     } else if (checked) {
-      return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, baseStyles), {
+      return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, baseStyles), {
         border: `2px solid ${chunkSWJQBQIY_cjs.colors.primary.mainviolet}`,
         backgroundColor: chunkSWJQBQIY_cjs.colors.primary.mainviolet,
         cursor: "pointer"
       });
     } else if (isHovered) {
-      return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, baseStyles), {
+      return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, baseStyles), {
         border: `2px solid ${chunkSWJQBQIY_cjs.colors.primary.coolGray[200]}`,
         backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.background.primary,
         cursor: "pointer"
       });
     } else {
-      return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, baseStyles), {
+      return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, baseStyles), {
         border: `2px solid ${chunkSWJQBQIY_cjs.colors.primary.coolGray[100]}`,
         backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.background.primary,
         cursor: "pointer"
@@ -1907,13 +1915,13 @@ var Checkbox = ({
     }
   };
   const getLabelStyles = () => {
-    return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, sizeConfig), {
+    return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, sizeConfig), {
       color: disabled ? chunkSWJQBQIY_cjs.colors.semantic.text.disabled : chunkSWJQBQIY_cjs.colors.semantic.text.primary,
       cursor: disabled ? "not-allowed" : "pointer"
     });
   };
   const getDescriptionStyles = () => {
-    return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, sizeConfig.descriptionFontStyle), {
+    return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, sizeConfig.descriptionFontStyle), {
       color: disabled ? chunkSWJQBQIY_cjs.colors.semantic.text.disabled : chunkSWJQBQIY_cjs.colors.primary.coolGray[300],
       lineHeight: "1.3",
       marginTop: "2px",
@@ -2011,34 +2019,34 @@ var Toggle = ({
   const getSizeConfig = () => {
     switch (size) {
       case "small":
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           toggleWidth: "32px",
           toggleHeight: "18px",
           thumbSize: "14px",
           thumbOffset: "2px",
           gap: "6px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
       case "large":
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           toggleWidth: "52px",
           toggleHeight: "28px",
           thumbSize: "24px",
           thumbOffset: "2px",
           gap: "10px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
       default:
-        return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
           fontWeight: chunkBGZS6YGP_cjs.fontWeight.medium,
           toggleWidth: "48px",
           toggleHeight: "24px",
           thumbSize: "20px",
           thumbOffset: "2px",
           gap: "8px",
-          descriptionFontStyle: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
+          descriptionFontStyle: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), { fontWeight: chunkBGZS6YGP_cjs.fontWeight.regular })
         });
     }
   };
@@ -2112,13 +2120,13 @@ var Toggle = ({
     };
   };
   const getLabelStyles = () => {
-    return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, sizeConfig), {
+    return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, sizeConfig), {
       color: disabled ? chunkSWJQBQIY_cjs.colors.semantic.text.disabled : chunkSWJQBQIY_cjs.colors.primary.coolGray[800],
       cursor: disabled ? "not-allowed" : "pointer"
     });
   };
   const getDescriptionStyles = () => {
-    return chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, sizeConfig.descriptionFontStyle), {
+    return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, sizeConfig.descriptionFontStyle), {
       color: disabled ? chunkSWJQBQIY_cjs.colors.semantic.text.disabled : chunkSWJQBQIY_cjs.colors.primary.coolGray[300],
       lineHeight: "1.3",
       marginTop: "2px",
@@ -2268,11 +2276,11 @@ var Toast = React11__default.default.memo(
       gap: chunkCJKBSSNG_cjs.spacing.xxs,
       flex: 1
     };
-    const titleStyle = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
+    const titleStyle = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
       color: chunkSWJQBQIY_cjs.colors.semantic.text.primary,
       margin: 0
     });
-    const descriptionStyle = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
+    const descriptionStyle = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
       color: chunkSWJQBQIY_cjs.colors.semantic.text.secondary,
       margin: 0
     });
@@ -2360,7 +2368,7 @@ var useToast = () => {
           var _a;
           return /* @__PURE__ */ jsxRuntime.jsx(
             Toast,
-            chunkS367Y35J_cjs.__spreadValues({
+            chunkN3JJVTOD_cjs.__spreadValues({
               status: "success",
               title,
               description,
@@ -2386,7 +2394,7 @@ var useToast = () => {
           var _a;
           return /* @__PURE__ */ jsxRuntime.jsx(
             Toast,
-            chunkS367Y35J_cjs.__spreadValues({
+            chunkN3JJVTOD_cjs.__spreadValues({
               status: "error",
               title,
               description,
@@ -2412,7 +2420,7 @@ var useToast = () => {
           var _a;
           return /* @__PURE__ */ jsxRuntime.jsx(
             Toast,
-            chunkS367Y35J_cjs.__spreadValues({
+            chunkN3JJVTOD_cjs.__spreadValues({
               status: "warning",
               title,
               description,
@@ -2438,7 +2446,7 @@ var useToast = () => {
           var _a;
           return /* @__PURE__ */ jsxRuntime.jsx(
             Toast,
-            chunkS367Y35J_cjs.__spreadValues({
+            chunkN3JJVTOD_cjs.__spreadValues({
               status: "info",
               title,
               description,
@@ -2462,7 +2470,7 @@ var useToast = () => {
       return toast__default.default.custom(
         (t) => /* @__PURE__ */ jsxRuntime.jsx(
           Toast,
-          chunkS367Y35J_cjs.__spreadValues({
+          chunkN3JJVTOD_cjs.__spreadValues({
             showLeadingIcon: true,
             showCloseButton: true,
             onClose: () => dismissToast(t.id)
@@ -2499,7 +2507,7 @@ var Popup = ({
   style = {}
 }) => {
   if (!isOpen) return null;
-  const overlayStyle = chunkS367Y35J_cjs.__spreadValues({
+  const overlayStyle = chunkN3JJVTOD_cjs.__spreadValues({
     position: "fixed",
     top: 0,
     left: 0,
@@ -2528,11 +2536,11 @@ var Popup = ({
     flexDirection: "column",
     gap: "16px"
   };
-  const titleStyle = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading1), {
+  const titleStyle = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading1), {
     color: chunkSWJQBQIY_cjs.colors.semantic.text.primary,
     margin: 0
   });
-  const descriptionStyle = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
+  const descriptionStyle = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
     color: chunkSWJQBQIY_cjs.colors.semantic.text.secondary,
     margin: 0
   });
@@ -2554,13 +2562,13 @@ var Popup = ({
     /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "popup-buttons", style: buttonContainerStyle, children: [
       secondaryButton && /* @__PURE__ */ jsxRuntime.jsx(
         Button,
-        chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
+        chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({
           type: "outlined",
           size: "l",
           width: "fill",
           onClick: secondaryButton.onClick
         }, ((_a) => {
-          var _b = _a, { text, onClick } = _b, rest = chunkS367Y35J_cjs.__objRest(_b, ["text", "onClick"]);
+          var _b = _a, { text, onClick } = _b, rest = chunkN3JJVTOD_cjs.__objRest(_b, ["text", "onClick"]);
           return rest;
         })(secondaryButton)), {
           children: secondaryButton.text
@@ -2568,13 +2576,13 @@ var Popup = ({
       ),
       /* @__PURE__ */ jsxRuntime.jsx(
         Button,
-        chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
+        chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({
           type: "solid",
           size: "l",
           width: "fill",
           onClick: primaryButton.onClick
         }, ((_c) => {
-          var _d = _c, { text, onClick } = _d, rest = chunkS367Y35J_cjs.__objRest(_d, ["text", "onClick"]);
+          var _d = _c, { text, onClick } = _d, rest = chunkN3JJVTOD_cjs.__objRest(_d, ["text", "onClick"]);
           return rest;
         })(primaryButton)), {
           children: primaryButton.text
@@ -2608,7 +2616,7 @@ var Modal = ({
     }
   }, [children, contentMaxHeight]);
   if (!isOpen) return null;
-  const overlayStyleConfig = chunkS367Y35J_cjs.__spreadValues({
+  const overlayStyleConfig = chunkN3JJVTOD_cjs.__spreadValues({
     position: "fixed",
     top: 0,
     left: 0,
@@ -2620,7 +2628,7 @@ var Modal = ({
     justifyContent: "center",
     zIndex: 9999
   }, overlayStyle);
-  const modalStyle = chunkS367Y35J_cjs.__spreadValues({
+  const modalStyle = chunkN3JJVTOD_cjs.__spreadValues({
     backgroundColor: chunkSWJQBQIY_cjs.colors.semantic.background.primary,
     borderRadius: "16px",
     padding: "32px",
@@ -2640,7 +2648,7 @@ var Modal = ({
     gap: "20px",
     flexShrink: 0
   };
-  const titleStyle = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading1), {
+  const titleStyle = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading1), {
     color: chunkSWJQBQIY_cjs.colors.semantic.text.primary,
     margin: 0,
     flex: 1
@@ -2661,7 +2669,7 @@ var Modal = ({
     flex: 1,
     minHeight: 0
   };
-  const descriptionStyle = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
+  const descriptionStyle = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body1), {
     color: chunkSWJQBQIY_cjs.colors.semantic.text.secondary,
     margin: 0
   });
@@ -2676,7 +2684,7 @@ var Modal = ({
     scrollbarWidth: showScrollbar ? "thin" : "none",
     msOverflowStyle: showScrollbar ? "auto" : "none"
   };
-  const buttonContainerStyle = chunkS367Y35J_cjs.__spreadValues({
+  const buttonContainerStyle = chunkN3JJVTOD_cjs.__spreadValues({
     display: "flex",
     gap: "12px",
     flexDirection: secondaryButton ? "row" : "column",
@@ -2723,13 +2731,13 @@ var Modal = ({
         /* @__PURE__ */ jsxRuntime.jsxs("div", { className: "modal-buttons", style: buttonContainerStyle, children: [
           secondaryButton && /* @__PURE__ */ jsxRuntime.jsx(
             Button,
-            chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
+            chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({
               type: "outlined",
               size: "l",
               width: "fill",
               onClick: secondaryButton.onClick
             }, ((_a) => {
-              var _b = _a, { text, onClick } = _b, rest = chunkS367Y35J_cjs.__objRest(_b, ["text", "onClick"]);
+              var _b = _a, { text, onClick } = _b, rest = chunkN3JJVTOD_cjs.__objRest(_b, ["text", "onClick"]);
               return rest;
             })(secondaryButton)), {
               children: secondaryButton.text
@@ -2737,13 +2745,13 @@ var Modal = ({
           ),
           /* @__PURE__ */ jsxRuntime.jsx(
             Button,
-            chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({
+            chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({
               type: "solid",
               size: "l",
               width: "fill",
               onClick: primaryButton.onClick
             }, ((_c) => {
-              var _d = _c, { text, onClick } = _d, rest = chunkS367Y35J_cjs.__objRest(_d, ["text", "onClick"]);
+              var _d = _c, { text, onClick } = _d, rest = chunkN3JJVTOD_cjs.__objRest(_d, ["text", "onClick"]);
               return rest;
             })(primaryButton)), {
               children: primaryButton.text
@@ -2892,7 +2900,7 @@ var Dropdown = ({
     } else if (isOpen) {
       borderColor = chunkSWJQBQIY_cjs.colors.semantic.text.primary;
     }
-    return chunkS367Y35J_cjs.__spreadValues({
+    return chunkN3JJVTOD_cjs.__spreadValues({
       display: "flex",
       alignItems: "center",
       gap: chunkCJKBSSNG_cjs.spacing.xs,
@@ -3167,7 +3175,7 @@ var Dropdown = ({
           return /* @__PURE__ */ jsxRuntime.jsxs(
             "div",
             {
-              style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, getOptionStyles(option, index, isSelected)), {
+              style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, getOptionStyles(option, index, isSelected)), {
                 userSelect: !enableSearch ? "none" : "auto"
                 // 검색 기능이 비활성화된 경우 user-select none
               }),
@@ -3248,7 +3256,7 @@ var TextArea = React11.forwardRef(
       status,
       width = "320px",
       rows = 4
-    } = _b, restProps = chunkS367Y35J_cjs.__objRest(_b, [
+    } = _b, restProps = chunkN3JJVTOD_cjs.__objRest(_b, [
       "placeholder",
       "value",
       "defaultValue",
@@ -3375,7 +3383,7 @@ var TextArea = React11.forwardRef(
               onMouseLeave: handleMouseLeave,
               children: /* @__PURE__ */ jsxRuntime.jsx(
                 "textarea",
-                chunkS367Y35J_cjs.__spreadValues({
+                chunkN3JJVTOD_cjs.__spreadValues({
                   ref,
                   value: currentValue,
                   placeholder,
@@ -3490,7 +3498,7 @@ var TextField = React11.forwardRef(
       onTrailingIconClick,
       status,
       width = "320px"
-    } = _b, restProps = chunkS367Y35J_cjs.__objRest(_b, [
+    } = _b, restProps = chunkN3JJVTOD_cjs.__objRest(_b, [
       "placeholder",
       "value",
       "defaultValue",
@@ -3565,7 +3573,7 @@ var TextField = React11.forwardRef(
         textColor = chunkSWJQBQIY_cjs.colors.semantic.text.primary;
       }
       const cursorStyle = readOnly ? "default" : "text";
-      return chunkS367Y35J_cjs.__spreadValues({
+      return chunkN3JJVTOD_cjs.__spreadValues({
         flex: 1,
         border: "none",
         outline: "none",
@@ -3673,7 +3681,7 @@ var TextField = React11.forwardRef(
                 renderLeadingIcon(),
                 /* @__PURE__ */ jsxRuntime.jsx(
                   "input",
-                  chunkS367Y35J_cjs.__spreadValues({
+                  chunkN3JJVTOD_cjs.__spreadValues({
                     ref,
                     type,
                     value: currentValue,
@@ -3813,7 +3821,7 @@ var ExerciseCard = ({
     "div",
     {
       className: `exercise-card ${className}`,
-      style: chunkS367Y35J_cjs.__spreadValues({}, cardStyles),
+      style: chunkN3JJVTOD_cjs.__spreadValues({}, cardStyles),
       onClick: handleCardClick,
       onMouseEnter: () => setIsHovered(true),
       onMouseLeave: () => setIsHovered(false),
@@ -3853,7 +3861,7 @@ var ExerciseCard = ({
             /* @__PURE__ */ jsxRuntime.jsx(
               "h3",
               {
-                style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading4), {
+                style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading4), {
                   color: isCompleted ? chunkSWJQBQIY_cjs.colors.semantic.text.tertiary : chunkSWJQBQIY_cjs.colors.semantic.text.primary,
                   margin: 0,
                   textDecoration: isCompleted ? "line-through" : "none"
@@ -3864,7 +3872,7 @@ var ExerciseCard = ({
             /* @__PURE__ */ jsxRuntime.jsx(
               "span",
               {
-                style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
+                style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
                   color: currentTypeConfig.color,
                   backgroundColor: currentTypeConfig.bgColor,
                   padding: `${chunkCJKBSSNG_cjs.spacing.xxxs} ${chunkCJKBSSNG_cjs.spacing.xs}`,
@@ -3880,7 +3888,7 @@ var ExerciseCard = ({
           description && /* @__PURE__ */ jsxRuntime.jsx(
             "p",
             {
-              style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
+              style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
                 color: chunkSWJQBQIY_cjs.colors.semantic.text.secondary,
                 margin: 0,
                 marginBottom: chunkCJKBSSNG_cjs.spacing.xs,
@@ -3897,7 +3905,7 @@ var ExerciseCard = ({
               /* @__PURE__ */ jsxRuntime.jsxs(
                 "span",
                 {
-                  style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
+                  style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
                     color: chunkSWJQBQIY_cjs.colors.semantic.text.tertiary
                   }),
                   children: [
@@ -3912,7 +3920,7 @@ var ExerciseCard = ({
               /* @__PURE__ */ jsxRuntime.jsxs(
                 "span",
                 {
-                  style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
+                  style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
                     color: chunkSWJQBQIY_cjs.colors.semantic.text.tertiary
                   }),
                   children: [
@@ -4086,7 +4094,7 @@ var ActivityGoalCard = ({
             /* @__PURE__ */ jsxRuntime.jsx(
               "h3",
               {
-                style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
+                style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
                   color: chunkSWJQBQIY_cjs.colors.semantic.text.primary,
                   margin: 0,
                   marginBottom: chunkCJKBSSNG_cjs.spacing.xxxs
@@ -4097,7 +4105,7 @@ var ActivityGoalCard = ({
             description && /* @__PURE__ */ jsxRuntime.jsx(
               "p",
               {
-                style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
+                style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
                   color: chunkSWJQBQIY_cjs.colors.semantic.text.secondary,
                   margin: 0
                 }),
@@ -4111,7 +4119,7 @@ var ActivityGoalCard = ({
             /* @__PURE__ */ jsxRuntime.jsx(
               "span",
               {
-                style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.display2), {
+                style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.display2), {
                   color: currentTheme.color,
                   fontWeight: 700
                 }),
@@ -4121,7 +4129,7 @@ var ActivityGoalCard = ({
             /* @__PURE__ */ jsxRuntime.jsx(
               "span",
               {
-                style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
+                style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
                   color: chunkSWJQBQIY_cjs.colors.semantic.text.secondary
                 }),
                 children: unit
@@ -4131,7 +4139,7 @@ var ActivityGoalCard = ({
           /* @__PURE__ */ jsxRuntime.jsxs(
             "span",
             {
-              style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
+              style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
                 color: chunkSWJQBQIY_cjs.colors.semantic.text.tertiary
               }),
               children: [
@@ -4159,7 +4167,7 @@ var ActivityGoalCard = ({
         /* @__PURE__ */ jsxRuntime.jsx("div", { style: { marginTop: chunkCJKBSSNG_cjs.spacing.s, textAlign: "center" }, children: /* @__PURE__ */ jsxRuntime.jsx(
           "span",
           {
-            style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
+            style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
               color: isCompleted ? currentTheme.color : chunkSWJQBQIY_cjs.colors.semantic.text.tertiary,
               fontWeight: isCompleted ? 600 : 400
             }),
@@ -4294,7 +4302,7 @@ var GreetingHeader = ({
           /* @__PURE__ */ jsxRuntime.jsx(
             "h1",
             {
-              style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.display1), {
+              style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.display1), {
                 color: timeGreeting.textColor,
                 margin: 0,
                 marginBottom: chunkCJKBSSNG_cjs.spacing.xxxs,
@@ -4306,7 +4314,7 @@ var GreetingHeader = ({
           /* @__PURE__ */ jsxRuntime.jsxs(
             "p",
             {
-              style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
+              style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
                 color: timeGreeting.textColor,
                 margin: 0,
                 opacity: 0.9
@@ -4334,7 +4342,7 @@ var GreetingHeader = ({
               /* @__PURE__ */ jsxRuntime.jsx(
                 "span",
                 {
-                  style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
+                  style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
                     color: timeGreeting.textColor,
                     opacity: 0.8
                   }),
@@ -4347,7 +4355,7 @@ var GreetingHeader = ({
               weatherInfo.temp && /* @__PURE__ */ jsxRuntime.jsxs(
                 "span",
                 {
-                  style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
+                  style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body2), {
                     color: timeGreeting.textColor,
                     opacity: 0.8
                   }),
@@ -4374,7 +4382,7 @@ var GreetingHeader = ({
         children: /* @__PURE__ */ jsxRuntime.jsx(
           "span",
           {
-            style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
+            style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.caption), {
               color: timeGreeting.textColor,
               fontStyle: "italic"
             }),
@@ -4488,7 +4496,7 @@ var ExerciseList = ({
               /* @__PURE__ */ jsxRuntime.jsx(
                 "h2",
                 {
-                  style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading2), {
+                  style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading2), {
                     color: chunkSWJQBQIY_cjs.colors.semantic.text.primary,
                     margin: 0,
                     marginBottom: chunkCJKBSSNG_cjs.spacing.xxxs
@@ -4499,7 +4507,7 @@ var ExerciseList = ({
               /* @__PURE__ */ jsxRuntime.jsxs(
                 "p",
                 {
-                  style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
+                  style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
                     color: chunkSWJQBQIY_cjs.colors.semantic.text.secondary,
                     margin: 0
                   }),
@@ -4641,7 +4649,7 @@ var ExerciseList = ({
         },
         children: filteredAndSortedExercises.map((exercise) => /* @__PURE__ */ jsxRuntime.jsx(
           ExerciseCard_default,
-          chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, exercise), {
+          chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, exercise), {
             width: "fill",
             onClick: () => onExerciseClick == null ? void 0 : onExerciseClick(exercise),
             onFavoriteToggle: () => onFavoriteToggle == null ? void 0 : onFavoriteToggle(exercise.id),
@@ -4669,7 +4677,7 @@ var ExerciseList = ({
             /* @__PURE__ */ jsxRuntime.jsx(
               "h3",
               {
-                style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
+                style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
                   color: chunkSWJQBQIY_cjs.colors.semantic.text.secondary,
                   margin: 0,
                   marginBottom: chunkCJKBSSNG_cjs.spacing.xs
@@ -4680,7 +4688,7 @@ var ExerciseList = ({
             /* @__PURE__ */ jsxRuntime.jsx(
               "p",
               {
-                style: chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
+                style: chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.body3), {
                   color: chunkSWJQBQIY_cjs.colors.semantic.text.tertiary,
                   margin: 0,
                   maxWidth: "300px"
@@ -4972,7 +4980,7 @@ var Stepper = ({
     }
     return String(currentValue);
   };
-  const containerStyle = chunkS367Y35J_cjs.__spreadValues({
+  const containerStyle = chunkN3JJVTOD_cjs.__spreadValues({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -5003,7 +5011,7 @@ var Stepper = ({
     cursor: editable && !disabled && !error ? "text" : "default",
     userSelect: "none"
   };
-  const inputStyle = chunkS367Y35J_cjs.__spreadProps(chunkS367Y35J_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
+  const inputStyle = chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, chunkBGZS6YGP_cjs.textStyles.heading3), {
     background: "transparent",
     border: "none",
     outline: "none",
@@ -5096,6 +5104,277 @@ var Stepper = ({
     )
   ] });
 };
+var Table = ({
+  data,
+  columns,
+  rowAccordion,
+  type = "parent",
+  isLoading
+}) => {
+  const [columnLayouts, setColumnLayouts] = React11.useState({});
+  console.log(99999, columnLayouts);
+  const [isWidthCalculationComplete, setIsWidthCalculationComplete] = React11.useState(false);
+  const headerRefs = React11.useRef([]);
+  const updateColumnWidth = (index, width) => {
+    setColumnLayouts((prevLayouts) => {
+      const currentWidth = prevLayouts[index] || 0;
+      if (width > currentWidth) {
+        return chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, prevLayouts), { [index]: width });
+      }
+      return prevLayouts;
+    });
+  };
+  const formattedColumns = React11.useMemo(() => {
+    if (type === "child") return columns;
+    return [...columns];
+  }, [columns]);
+  React11.useLayoutEffect(() => {
+    formattedColumns.forEach((column, index) => {
+      const headerEl = headerRefs.current[index];
+      if (headerEl) {
+        const width = Math.ceil(headerEl.getBoundingClientRect().width);
+        updateColumnWidth(index, width);
+      }
+    });
+  }, [formattedColumns, data]);
+  React11.useEffect(() => {
+    if (data.length > 0 && formattedColumns.length > 0) {
+      const allColumnsHaveWidth = formattedColumns.every((_, index) => columnLayouts[index] > 0);
+      if (allColumnsHaveWidth && !isWidthCalculationComplete) {
+        setTimeout(() => {
+          setIsWidthCalculationComplete(true);
+        }, 100);
+      }
+    }
+  }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
+  React11.useEffect(() => {
+    setIsWidthCalculationComplete(false);
+  }, [data, columns]);
+  React11.useEffect(() => {
+    const handleResize = () => {
+      setIsWidthCalculationComplete(false);
+      formattedColumns.forEach((column, index) => {
+        const headerEl = headerRefs.current[index];
+        if (headerEl) {
+          const width = Math.ceil(headerEl.getBoundingClientRect().width);
+          updateColumnWidth(index, width);
+        }
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  if (isLoading) {
+    return /* @__PURE__ */ jsxRuntime.jsx(
+      "div",
+      {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: 100
+        },
+        children: /* @__PURE__ */ jsxRuntime.jsx(
+          YouthLottie,
+          {
+            animationData: require_loadingSpinner(),
+            style: { width: 48, aspectRatio: 1 },
+            loop: true
+          }
+        )
+      }
+    );
+  }
+  return /* @__PURE__ */ jsxRuntime.jsxs(
+    "div",
+    {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        flex: 1
+      },
+      children: [
+        /* @__PURE__ */ jsxRuntime.jsx("div", { style: { display: "flex" }, children: formattedColumns.map((column, index) => {
+          console.log(999999, columnLayouts[index]);
+          return /* @__PURE__ */ jsxRuntime.jsx(
+            "div",
+            {
+              ref: (el) => {
+                headerRefs.current[index] = el;
+              },
+              style: chunkN3JJVTOD_cjs.__spreadValues({
+                display: "flex",
+                alignItems: "center",
+                borderBottom: "1px solid #eee",
+                backgroundColor: type === "parent" ? chunkSWJQBQIY_cjs.colors.primary.coolGray[50] : "transparent",
+                whiteSpace: "nowrap",
+                padding: "8px 12px",
+                width: columnLayouts[index] ? `${columnLayouts[index]}px` : "auto",
+                boxSizing: "border-box",
+                overflow: "visible",
+                height: 48
+              }, column.style),
+              children: /* @__PURE__ */ jsxRuntime.jsx(
+                Font_default,
+                chunkN3JJVTOD_cjs.__spreadProps(chunkN3JJVTOD_cjs.__spreadValues({}, type === "parent" && {
+                  hide: index === 0 || column.header === "empty"
+                }), {
+                  type: "body2",
+                  fontWeight: "medium",
+                  color: type === "parent" ? chunkSWJQBQIY_cjs.colors.primary.coolGray[800] : chunkSWJQBQIY_cjs.colors.primary.coolGray[500],
+                  noWhiteSpace: true,
+                  children: column.header
+                })
+              )
+            },
+            `header-${index}`
+          );
+        }) }),
+        /* @__PURE__ */ jsxRuntime.jsx(
+          "div",
+          {
+            style: {
+              display: "flex",
+              flexDirection: "column",
+              flexWrap: "nowrap"
+            },
+            children: data.map((rowData, rowIndex) => /* @__PURE__ */ jsxRuntime.jsx(
+              Row,
+              {
+                data: rowData,
+                columns: formattedColumns,
+                updateColumnWidth,
+                columnLayouts,
+                isWidthCalculationComplete,
+                rowAccordion,
+                tableType: type
+              },
+              `row-${rowIndex}`
+            ))
+          }
+        )
+      ]
+    }
+  );
+};
+var Row = ({
+  data,
+  columns,
+  updateColumnWidth,
+  columnLayouts,
+  isWidthCalculationComplete,
+  rowAccordion,
+  tableType
+}) => {
+  const [isRowAccordionOpen, setIsRowAccordionOpen] = React11.useState(false);
+  const rowDetailRef = React11.useRef(null);
+  const [rowDetailHeight, setRowDetailHeight] = React11.useState("auto");
+  const onPressRow = () => {
+    if (data.status === "\uBBF8\uB4F1\uB85D") return;
+    setIsRowAccordionOpen((prev) => !prev);
+  };
+  rooks.useEffectOnceWhen(() => {
+    setIsRowAccordionOpen(true);
+  }, data.status === "\uB4F1\uB85D \uC644\uB8CC");
+  React11.useEffect(() => {
+    if (rowAccordion && data && rowDetailRef.current) {
+      const calculatedHeight = rowDetailRef.current.scrollHeight;
+      setRowDetailHeight(calculatedHeight);
+    }
+  }, [rowAccordion, data]);
+  return /* @__PURE__ */ jsxRuntime.jsxs("div", { children: [
+    /* @__PURE__ */ jsxRuntime.jsx("div", { onClick: onPressRow, style: { display: "flex" }, children: columns.map((column, index) => /* @__PURE__ */ jsxRuntime.jsx(
+      Cell,
+      {
+        cell: column.cell(data),
+        updateColumnWidth,
+        columnIndex: index,
+        columnWidth: columnLayouts[index],
+        columnLength: columns.length,
+        isRowAccordionOpen,
+        tableType,
+        style: column.style,
+        isWidthCalculationComplete
+      },
+      `cell-${index}`
+    )) }),
+    /* @__PURE__ */ jsxRuntime.jsx(
+      "div",
+      {
+        ref: rowDetailRef,
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+          height: isRowAccordionOpen ? rowDetailHeight : 0,
+          transition: "height 330ms ease-in-out",
+          overflow: "hidden"
+        },
+        children: rowAccordion && rowAccordion(data)
+      }
+    )
+  ] });
+};
+var Cell = React11.memo(
+  ({
+    cell,
+    updateColumnWidth,
+    columnIndex,
+    columnWidth,
+    columnLength,
+    isRowAccordionOpen,
+    tableType,
+    style,
+    isWidthCalculationComplete
+  }) => {
+    const cellRef = React11.useRef(null);
+    React11.useLayoutEffect(() => {
+      if (cellRef.current) {
+        const { width } = cellRef.current.getBoundingClientRect();
+        const ceilWidth = Math.ceil(width);
+        if (ceilWidth > (columnWidth || 0)) {
+          updateColumnWidth(columnIndex, ceilWidth);
+        }
+      }
+    }, [cell, updateColumnWidth, columnIndex, columnWidth]);
+    const handleClick = (e) => {
+      if (columnIndex === columnLength - 1) {
+        e.stopPropagation();
+      }
+    };
+    return /* @__PURE__ */ jsxRuntime.jsx(
+      "div",
+      {
+        ref: cellRef,
+        onClick: handleClick,
+        style: chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadValues({
+          display: "flex",
+          borderBottom: tableType === "parent" ? "1px solid #eee" : "none",
+          padding: tableType === "parent" && columnIndex === columnLength - 1 ? "16px 12px" : "8px 12px",
+          whiteSpace: "nowrap",
+          boxSizing: "border-box",
+          minWidth: columnIndex === 1 ? 84 : columnWidth ? `${columnWidth}px` : "0",
+          width: columnWidth ? `${columnWidth}px` : "auto",
+          overflow: "visible"
+        }, isWidthCalculationComplete && chunkN3JJVTOD_cjs.__spreadValues(chunkN3JJVTOD_cjs.__spreadValues({}, tableType === "parent" ? columnIndex === columnLength - 2 && { flex: 1, minWidth: 0 } : columnIndex === columnLength - 1 && { flex: 2, minWidth: 0 }), tableType === "child" && columnIndex !== columnLength - 1 && { flex: 1 })), style),
+        children: columnIndex === 0 ? /* @__PURE__ */ jsxRuntime.jsx(
+          "div",
+          {
+            style: chunkN3JJVTOD_cjs.__spreadValues({
+              display: "flex"
+            }, columnIndex === 0 && {
+              transition: "transform 0.3s ease",
+              transform: isRowAccordionOpen && tableType === "parent" ? "rotate(180deg)" : "rotate(0deg)"
+            }),
+            children: cell
+          }
+        ) : /* @__PURE__ */ jsxRuntime.jsx("div", { style: { display: "flex" }, children: cell })
+      }
+    );
+  }
+);
 
 exports.ActivityGoalCard = ActivityGoalCard_default;
 exports.Button = Button;
@@ -5115,6 +5394,7 @@ exports.Radio = Radio;
 exports.Stepper = Stepper;
 exports.Tab = Tab;
 exports.TabBar = TabBar;
+exports.Table = Table;
 exports.TextArea = TextArea;
 exports.TextButton = TextButton;
 exports.TextField = TextField;
