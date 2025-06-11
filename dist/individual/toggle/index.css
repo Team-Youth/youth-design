@@ -1,0 +1,23 @@
+/* src/components/toggle/Toggle.css */
+.youth-toggle {
+  box-sizing: border-box;
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.youth-toggle * {
+  box-sizing: border-box;
+}
+.youth-toggle:focus-visible {
+  outline: 2px solid #7248D9;
+  outline-offset: 2px;
+}
+.youth-toggle input[type=checkbox] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+}
+/*# sourceMappingURL=index.css.map */

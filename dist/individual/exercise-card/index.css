@@ -1,0 +1,81 @@
+/* src/components/exercise-card/ExerciseCard.css */
+.exercise-card {
+}
+.exercise-card:hover {
+}
+.exercise-card.completed {
+  position: relative;
+}
+.exercise-card.completed::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300C785'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m5 13 4 4L19 7'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
+  opacity: 0.1;
+  pointer-events: none;
+}
+.exercise-card button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.exercise-card:focus-visible {
+  outline: 2px solid #7248D9;
+  outline-offset: 2px;
+}
+.exercise-card button:focus-visible {
+  outline: 2px solid #7248D9;
+  outline-offset: 1px;
+}
+@media (max-width: 768px) {
+  .exercise-card {
+    padding: 12px;
+    min-width: 280px;
+  }
+  .exercise-card .type-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .exercise-card .actions {
+    gap: 4px;
+  }
+  .exercise-card button {
+    padding: 4px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+}
+@media (max-width: 480px) {
+  .exercise-card {
+    padding: 8px;
+    min-width: 250px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .exercise-card .type-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    margin-right: 8px;
+    margin-bottom: 0;
+  }
+  .exercise-card .main-content {
+    width: 100%;
+  }
+  .exercise-card .actions {
+    align-self: flex-end;
+    margin-top: 8px;
+  }
+  .exercise-card .header-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+/*# sourceMappingURL=index.css.map */

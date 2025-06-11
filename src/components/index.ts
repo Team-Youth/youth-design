@@ -27,24 +27,45 @@ export type { TabBarProps } from './tab-bar';
 
 export { Chips } from './chips';
 export type { ChipsProps } from './chips';
-export * from './radio';
-export * from './check-box';
-export * from './toggle';
+
+export { Radio } from './radio';
+export type { RadioProps } from './radio';
+
+export { Checkbox } from './check-box';
+export type { CheckboxProps } from './check-box';
+
+export { Toggle } from './toggle';
+export type { ToggleProps } from './toggle';
 
 export { Toast, ToastProvider, useToast } from './toast';
 export type { ToastProps, ToastStatus, ToastItem } from './toast';
 
-export * from './popup';
-export * from './modal';
-export * from './dropdown';
-export * from './text-area';
-export * from './text-field';
+export { Popup } from './popup';
+export type { PopupProps } from './popup';
 
-// New exercise-related components
-export * from './exercise-card';
-export * from './activity-goal-card';
-export * from './greeting-header';
-export * from './exercise-list';
+export { Modal } from './modal';
+export type { ModalProps } from './modal';
+
+export { Dropdown } from './dropdown';
+export type { DropdownProps } from './dropdown';
+
+export { TextArea } from './text-area';
+export type { TextAreaProps } from './text-area';
+
+export { TextField } from './text-field';
+export type { TextFieldProps } from './text-field';
+
+export { ExerciseCard } from './exercise-card';
+export type { ExerciseCardProps } from './exercise-card';
+
+export { ActivityGoalCard } from './activity-goal-card';
+export type { ActivityGoalCardProps } from './activity-goal-card';
+
+export { GreetingHeader } from './greeting-header';
+export type { GreetingHeaderProps } from './greeting-header';
+
+export { ExerciseList } from './exercise-list';
+export type { ExerciseListProps } from './exercise-list';
 
 export { Stepper } from './stepper';
 export type { StepperProps } from './stepper';

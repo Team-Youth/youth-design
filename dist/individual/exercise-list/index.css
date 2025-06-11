@@ -1,0 +1,213 @@
+/* src/components/exercise-card/ExerciseCard.css */
+.exercise-card {
+}
+.exercise-card:hover {
+}
+.exercise-card.completed {
+  position: relative;
+}
+.exercise-card.completed::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300C785'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m5 13 4 4L19 7'/%3E%3C/svg%3E") no-repeat center;
+  background-size: contain;
+  opacity: 0.1;
+  pointer-events: none;
+}
+.exercise-card button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.exercise-card:focus-visible {
+  outline: 2px solid #7248D9;
+  outline-offset: 2px;
+}
+.exercise-card button:focus-visible {
+  outline: 2px solid #7248D9;
+  outline-offset: 1px;
+}
+@media (max-width: 768px) {
+  .exercise-card {
+    padding: 12px;
+    min-width: 280px;
+  }
+  .exercise-card .type-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  .exercise-card .actions {
+    gap: 4px;
+  }
+  .exercise-card button {
+    padding: 4px;
+    min-width: 28px;
+    min-height: 28px;
+  }
+}
+@media (max-width: 480px) {
+  .exercise-card {
+    padding: 8px;
+    min-width: 250px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .exercise-card .type-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    margin-right: 8px;
+    margin-bottom: 0;
+  }
+  .exercise-card .main-content {
+    width: 100%;
+  }
+  .exercise-card .actions {
+    align-self: flex-end;
+    margin-top: 8px;
+  }
+  .exercise-card .header-row {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+
+/* src/components/exercise-list/ExerciseList.css */
+.exercise-list input[type=text] {
+  transition: all 0.3s ease;
+}
+.exercise-list input[type=text]:focus {
+  transform: translateY(-1px);
+  box-shadow: 0px 2px 8px rgba(114, 72, 217, 0.15);
+}
+.exercise-list .filter-button {
+  transition: all 0.2s ease;
+}
+.exercise-list .filter-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.exercise-list .exercise-cards {
+  animation: fadeInUp 0.5s ease-out;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.exercise-list .empty-state {
+  animation: fadeIn 0.8s ease-out;
+}
+.exercise-list .empty-state .icon {
+  animation: bounce 2s infinite;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40%, 43% {
+    transform: translateY(-10px);
+  }
+  70% {
+    transform: translateY(-5px);
+  }
+  90% {
+    transform: translateY(-2px);
+  }
+}
+.exercise-list .stats-card {
+  transition: all 0.3s ease;
+}
+.exercise-list .stats-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+.exercise-list .filter-tag.active {
+  animation: selectPulse 0.3s ease-out;
+}
+@keyframes selectPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.exercise-list .exercise-cards {
+  scroll-behavior: smooth;
+}
+.exercise-list.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+.exercise-list.loading::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 768px) {
+  .exercise-list .filters {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  .exercise-list .filter-buttons {
+    justify-content: center;
+  }
+  .exercise-list .stats-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  .exercise-list .stats-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+@media (max-width: 480px) {
+  .exercise-list {
+    padding: 12px;
+  }
+  .exercise-list .filter-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .exercise-list .filter-button {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+  .exercise-list .stats-card {
+    padding: 12px;
+  }
+}
+/*# sourceMappingURL=index.css.map */
