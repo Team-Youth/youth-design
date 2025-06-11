@@ -2,6 +2,7 @@ import babel from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
+import json from '@rollup/plugin-json';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 
@@ -27,6 +28,7 @@ const createConfig = (input, outputDir) => ({
       browser: true,
     }),
     commonjs(),
+    json(),
     postcss({
       extract: true,
       minimize: true,
@@ -52,4 +54,4 @@ export default [
   createConfig('src/tokens/index.ts', 'token'),
   // Components entry point
   createConfig('src/components/index.ts', 'components'),
-]; 
+];

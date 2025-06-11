@@ -23837,6 +23837,467 @@ function useEffectOnceWhen(callback, when = true) {
   }, [when]);
 }
 
+var assets = [
+];
+var ddd = 0;
+var fr = 30;
+var h = 300;
+var ip = 0;
+var layers = [
+	{
+		ddd: 0,
+		ind: 1,
+		ty: 4,
+		nm: "Group 1",
+		hd: false,
+		sr: 1,
+		ks: {
+			a: {
+				a: 0,
+				k: [
+					0,
+					0
+				]
+			},
+			o: {
+				a: 0,
+				k: 100
+			},
+			p: {
+				a: 0,
+				k: [
+					150,
+					150
+				]
+			},
+			r: {
+				a: 0,
+				k: 0
+			},
+			s: {
+				a: 0,
+				k: [
+					100,
+					100
+				]
+			},
+			sk: {
+				a: 0,
+				k: 0
+			},
+			sa: {
+				a: 0,
+				k: 0
+			}
+		},
+		ao: 0,
+		ip: 0,
+		op: 42,
+		st: 0,
+		bm: 0,
+		shapes: [
+			{
+				ty: "gr",
+				hd: false,
+				nm: "Shape Layer 2 Group",
+				bm: 0,
+				it: [
+					{
+						ty: "gr",
+						hd: false,
+						nm: "Ellipse Path 1 Group",
+						bm: 0,
+						it: [
+							{
+								ty: "el",
+								hd: false,
+								nm: "Ellipse Path 1",
+								p: {
+									a: 0,
+									k: [
+										125,
+										125
+									]
+								},
+								s: {
+									a: 0,
+									k: [
+										250,
+										250
+									]
+								},
+								d: 1
+							},
+							{
+								ty: "st",
+								hd: false,
+								bm: 0,
+								c: {
+									a: 0,
+									k: [
+										0.447,
+										0.282,
+										0.851
+									]
+								},
+								lc: 2,
+								lj: 1,
+								ml: 4,
+								o: {
+									a: 0,
+									k: 100
+								},
+								w: {
+									a: 0,
+									k: 30
+								}
+							},
+							{
+								ty: "tr",
+								nm: "Transform",
+								a: {
+									a: 0,
+									k: [
+										125,
+										125
+									]
+								},
+								o: {
+									a: 0,
+									k: 100
+								},
+								p: {
+									a: 0,
+									k: [
+										0,
+										0
+									]
+								},
+								r: {
+									a: 0,
+									k: 0
+								},
+								s: {
+									a: 0,
+									k: [
+										100,
+										100
+									]
+								},
+								sk: {
+									a: 0,
+									k: 0
+								},
+								sa: {
+									a: 0,
+									k: 0
+								}
+							}
+						],
+						np: 0
+					},
+					{
+						ty: "tm",
+						hd: false,
+						bm: 0,
+						e: {
+							a: 1,
+							k: [
+								{
+									t: 0,
+									s: [
+										0.1
+									],
+									i: {
+										x: 0.667,
+										y: 1
+									},
+									o: {
+										x: 0.333,
+										y: 0
+									}
+								},
+								{
+									t: 20.1,
+									s: [
+										100
+									],
+									i: {
+										x: 0,
+										y: 0
+									},
+									o: {
+										x: 1,
+										y: 1
+									}
+								}
+							]
+						},
+						o: {
+							a: 0,
+							k: 0
+						},
+						s: {
+							a: 1,
+							k: [
+								{
+									t: 0,
+									s: [
+										0
+									],
+									i: {
+										x: 0.75,
+										y: 0.75
+									},
+									o: {
+										x: 0.25,
+										y: 0.25
+									}
+								},
+								{
+									t: 20.1,
+									s: [
+										0
+									],
+									i: {
+										x: 0.667,
+										y: 1
+									},
+									o: {
+										x: 0.333,
+										y: 0
+									}
+								},
+								{
+									t: 39.9,
+									s: [
+										99.99
+									],
+									i: {
+										x: 0,
+										y: 0
+									},
+									o: {
+										x: 1,
+										y: 1
+									}
+								}
+							]
+						},
+						m: 1
+					},
+					{
+						ty: "tr",
+						nm: "Transform",
+						a: {
+							a: 0,
+							k: [
+								0,
+								0
+							]
+						},
+						o: {
+							a: 0,
+							k: 100
+						},
+						p: {
+							a: 0,
+							k: [
+								0,
+								0
+							]
+						},
+						r: {
+							a: 0,
+							k: 0
+						},
+						s: {
+							a: 0,
+							k: [
+								100,
+								100
+							]
+						},
+						sk: {
+							a: 0,
+							k: 0
+						},
+						sa: {
+							a: 0,
+							k: 0
+						}
+					}
+				],
+				np: 0
+			},
+			{
+				ty: "gr",
+				hd: false,
+				nm: "Shape Layer 3 Group",
+				bm: 0,
+				it: [
+					{
+						ty: "gr",
+						hd: false,
+						nm: "Ellipse Path 1 Group",
+						bm: 0,
+						it: [
+							{
+								ty: "el",
+								hd: false,
+								nm: "Ellipse Path 1",
+								p: {
+									a: 0,
+									k: [
+										125,
+										125
+									]
+								},
+								s: {
+									a: 0,
+									k: [
+										250,
+										250
+									]
+								},
+								d: 1
+							},
+							{
+								ty: "st",
+								hd: false,
+								bm: 0,
+								c: {
+									a: 0,
+									k: [
+										1,
+										1,
+										1
+									]
+								},
+								lc: 2,
+								lj: 1,
+								ml: 4,
+								o: {
+									a: 0,
+									k: 0
+								},
+								w: {
+									a: 0,
+									k: 30
+								}
+							},
+							{
+								ty: "tr",
+								nm: "Transform",
+								a: {
+									a: 0,
+									k: [
+										125,
+										125
+									]
+								},
+								o: {
+									a: 0,
+									k: 100
+								},
+								p: {
+									a: 0,
+									k: [
+										0,
+										0
+									]
+								},
+								r: {
+									a: 0,
+									k: 0
+								},
+								s: {
+									a: 0,
+									k: [
+										100,
+										100
+									]
+								},
+								sk: {
+									a: 0,
+									k: 0
+								},
+								sa: {
+									a: 0,
+									k: 0
+								}
+							}
+						],
+						np: 0
+					},
+					{
+						ty: "tr",
+						nm: "Transform",
+						a: {
+							a: 0,
+							k: [
+								0,
+								0
+							]
+						},
+						o: {
+							a: 0,
+							k: 100
+						},
+						p: {
+							a: 0,
+							k: [
+								0,
+								0
+							]
+						},
+						r: {
+							a: 0,
+							k: 0
+						},
+						s: {
+							a: 0,
+							k: [
+								100,
+								100
+							]
+						},
+						sk: {
+							a: 0,
+							k: 0
+						},
+						sa: {
+							a: 0,
+							k: 0
+						}
+					}
+				],
+				np: 0
+			}
+		]
+	}
+];
+var meta = {
+	g: "@phase-software/lottie-exporter 0.7.0"
+};
+var nm = "";
+var op = 41;
+var v = "5.6.0";
+var w = 300;
+var loadingSpinnerData = {
+	assets: assets,
+	ddd: ddd,
+	fr: fr,
+	h: h,
+	ip: ip,
+	layers: layers,
+	meta: meta,
+	nm: nm,
+	op: op,
+	v: v,
+	w: w
+};
+
 var Table = function (_a) {
   var data = _a.data,
     columns = _a.columns,
@@ -23924,7 +24385,7 @@ var Table = function (_a) {
         height: 100
       },
       children: jsxRuntime.jsx(YouthLottie, {
-        animationData: require('./loadingSpinner.json'),
+        animationData: loadingSpinnerData,
         style: {
           width: 48,
           aspectRatio: 1

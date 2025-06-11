@@ -1,8 +1,9 @@
 import React, { JSX, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useEffectOnceWhen } from 'rooks';
-import { YouthLottie } from '../lottie';
-import Font from '../font';
-import { colors } from '../../tokens';
+import { YouthLottie } from '../lottie/Lottie';
+import Font from '../font/Font';
+import { colors } from '../../tokens/colors';
+import loadingSpinnerData from './loadingSpinner.json';
 
 interface Column<T> {
   header: string;
@@ -109,7 +110,7 @@ export const Table = <T,>({
         }}
       >
         <YouthLottie
-          animationData={require('./loadingSpinner.json')}
+          animationData={loadingSpinnerData}
           style={{ width: 48, aspectRatio: 1 }}
           loop
         />
