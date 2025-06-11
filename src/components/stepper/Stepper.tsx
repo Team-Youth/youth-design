@@ -37,6 +37,8 @@ export interface StepperProps {
   isTime?: boolean;
   /** 시간의 시작 단위 ('sec' | 'min' | 'hour') */
   timeBaseUnit?: 'sec' | 'min' | 'hour';
+  /** 입력값을 step 단위로 자동 반올림할지 여부 (기본값: false) */
+  autoRound?: boolean;
 }
 
 // 시간 변환 유틸리티 함수들
@@ -211,14 +213,26 @@ export const Stepper: React.FC<StepperProps> = ({
   step = 1,
   isTime = false,
   timeBaseUnit = 'min',
+  autoRound = false,
 }) => {
   const [internalValue, setInternalValue] = useState(value);
   const [isFocused, setIsFocused] = useState(focused);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(String(value));
+  const [stepCount, setStepCount] = useState(() => {
+    // 초기 stepCount 계산 - value를 step으로 나눈 값의 반올림
+    return step > 0 ? Math.round(value / step) : 0;
+  });
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const currentValue = onChange ? value : internalValue;
+  const currentValue = internalValue;
+
+  // stepCount 기반으로 실제 값 계산
+  const getActualValue = (count: number): number => {
+    const stepValue = count * step;
+    return Math.max(min, Math.min(max, stepValue));
+  };
+
   const isMinReached = currentValue <= min;
   const isMaxReached = currentValue >= max;
 
@@ -232,36 +246,60 @@ export const Stepper: React.FC<StepperProps> = ({
     }
   }, [currentValue, isEditing, isTime, timeBaseUnit]);
 
+  // value prop이 변경될 때 stepCount 동기화
+  useEffect(() => {
+    const newStepCount = step > 0 ? Math.round(currentValue / step) : 0;
+    setStepCount(newStepCount);
+  }, [currentValue, step]);
+
   const handleIncrement = () => {
     if (disabled || isMaxReached) return;
-    let newValue = currentValue + step;
 
-    // max 범위 체크
-    if (newValue > max) {
-      newValue = max;
-    }
+    let newValue: number;
+    const isExactStepValue = currentValue % step === 0;
 
-    if (onChange) {
-      onChange(newValue);
+    if (isExactStepValue) {
+      // 정확한 step 배수라면 step만큼 증가
+      newValue = currentValue + step;
     } else {
-      setInternalValue(newValue);
+      // step 배수가 아니라면 다음 step 배수로 올림
+      newValue = Math.ceil(currentValue / step) * step;
     }
+
+    // min/max 범위 체크
+    newValue = Math.max(min, Math.min(max, newValue));
+
+    // stepCount 업데이트
+    const newStepCount = step > 0 ? Math.round(newValue / step) : 0;
+    setStepCount(newStepCount);
+
+    onChange && onChange(newValue);
+    setInternalValue(newValue);
   };
 
   const handleDecrement = () => {
     if (disabled || isMinReached) return;
-    let newValue = currentValue - step;
 
-    // min 범위 체크
-    if (newValue < min) {
-      newValue = min;
-    }
+    let newValue: number;
+    const isExactStepValue = currentValue % step === 0;
 
-    if (onChange) {
-      onChange(newValue);
+    if (isExactStepValue) {
+      // 정확한 step 배수라면 step만큼 감소
+      newValue = currentValue - step;
     } else {
-      setInternalValue(newValue);
+      // step 배수가 아니라면 이전 step 배수로 내림
+      newValue = Math.floor(currentValue / step) * step;
     }
+
+    // min/max 범위 체크
+    newValue = Math.max(min, Math.min(max, newValue));
+
+    // stepCount 업데이트
+    const newStepCount = step > 0 ? Math.round(newValue / step) : 0;
+    setStepCount(newStepCount);
+
+    onChange && onChange(newValue);
+    setInternalValue(newValue);
   };
 
   const handleValueClick = () => {
@@ -328,24 +366,15 @@ export const Stepper: React.FC<StepperProps> = ({
       newValue = max;
     }
 
-    // step 단위로 반올림 (min/max 범위 내에서만)
-    if (step && step > 0) {
-      const roundedValue = Math.round(newValue / step) * step;
-
-      // 반올림 결과가 범위를 벗어나면 가장 가까운 유효한 step 값으로 조정
-      if (roundedValue < min) {
-        newValue = Math.ceil(min / step) * step;
-        if (newValue > max) {
-          newValue = min;
-        }
-      } else if (roundedValue > max) {
-        newValue = Math.floor(max / step) * step;
-        if (newValue < min) {
-          newValue = max;
-        }
-      } else {
-        newValue = roundedValue;
-      }
+    // step 단위로 반올림 (isTime이거나 autoRound가 true일 때만)
+    if ((isTime || autoRound) && step && step > 0) {
+      const roundedStepCount = Math.round(newValue / step);
+      newValue = getActualValue(roundedStepCount);
+      setStepCount(roundedStepCount);
+    } else {
+      // autoRound가 false인 경우에도 stepCount 업데이트
+      const newStepCount = step > 0 ? Math.round(newValue / step) : 0;
+      setStepCount(newStepCount);
     }
 
     if (isTime) {
@@ -354,11 +383,8 @@ export const Stepper: React.FC<StepperProps> = ({
       setEditValue(String(newValue));
     }
 
-    if (onChange) {
-      onChange(newValue);
-    } else {
-      setInternalValue(newValue);
-    }
+    onChange && onChange(newValue);
+    setInternalValue(newValue);
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

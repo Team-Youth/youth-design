@@ -1405,6 +1405,8 @@ interface StepperProps {
     isTime?: boolean;
     /** 시간의 시작 단위 ('sec' | 'min' | 'hour') */
     timeBaseUnit?: 'sec' | 'min' | 'hour';
+    /** 입력값을 step 단위로 자동 반올림할지 여부 (기본값: false) */
+    autoRound?: boolean;
 }
 declare const Stepper: React$1.FC<StepperProps>;
 
