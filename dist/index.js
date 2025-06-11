@@ -20197,20 +20197,31 @@ var Checkbox = function (_a) {
     label = _a.label,
     description = _a.description,
     _d = _a.labelPosition,
-    labelPosition = _d === void 0 ? 'right' : _d,
+    labelPosition = _d === void 0 ? 'left' : _d,
     onChange = _a.onChange,
     onClick = _a.onClick,
     _e = _a.className,
-    className = _e === void 0 ? '' : _e;
-  var _f = React.useState(false),
-    isHovered = _f[0],
-    setIsHovered = _f[1];
-  var checkboxSize = '24px';
+    className = _e === void 0 ? '' : _e,
+    _f = _a.checkboxWidth,
+    checkboxWidth = _f === void 0 ? '24px' : _f,
+    _g = _a.titleTextStyle,
+    titleTextStyle = _g === void 0 ? 'body1' : _g,
+    _h = _a.descriptionTextStyle,
+    descriptionTextStyle = _h === void 0 ? 'body2' : _h,
+    _j = _a.titleFontWeight,
+    titleFontWeight = _j === void 0 ? 'medium' : _j,
+    _k = _a.descriptionFontWeight,
+    descriptionFontWeight = _k === void 0 ? 'regular' : _k,
+    titleColor = _a.titleColor,
+    descriptionColor = _a.descriptionColor;
+  var _l = React.useState(false),
+    isHovered = _l[0],
+    setIsHovered = _l[1];
   var gap = '8px';
   var getCheckboxStyles = function () {
     var baseStyles = {
-      width: checkboxSize,
-      height: checkboxSize,
+      width: checkboxWidth,
+      height: checkboxWidth,
       borderRadius: '4px',
       display: 'flex',
       alignItems: 'center',
@@ -20281,16 +20292,18 @@ var Checkbox = function (_a) {
     }
   }, [checked, disabled, isHovered]);
   var getLabelStyles = function () {
-    return __assign(__assign({}, textStyles.body1), {
-      fontWeight: fontWeight.medium,
-      color: disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800],
+    var defaultColor = disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800];
+    return __assign(__assign({}, textStyles[titleTextStyle]), {
+      fontWeight: fontWeight[titleFontWeight],
+      color: titleColor || defaultColor,
       cursor: disabled ? 'not-allowed' : 'pointer'
     });
   };
   var getDescriptionStyles = function () {
-    return __assign(__assign({}, textStyles.body2), {
-      fontWeight: fontWeight.regular,
-      color: disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[300],
+    var defaultColor = disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[300];
+    return __assign(__assign({}, textStyles[descriptionTextStyle]), {
+      fontWeight: fontWeight[descriptionFontWeight],
+      color: descriptionColor || defaultColor,
       lineHeight: '1.3',
       marginTop: '2px',
       cursor: disabled ? 'not-allowed' : 'pointer'

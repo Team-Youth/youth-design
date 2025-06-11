@@ -19,6 +19,20 @@ export interface CheckboxProps {
   onClick?: () => void;
   /** 추가 CSS 클래스 */
   className?: string;
+  /** 체크박스 너비 */
+  checkboxWidth?: string | number;
+  /** 타이틀(라벨) 텍스트 스타일 */
+  titleTextStyle?: keyof typeof textStyles;
+  /** 설명 텍스트 스타일 */
+  descriptionTextStyle?: keyof typeof textStyles;
+  /** 타이틀(라벨) 폰트 웨이트 */
+  titleFontWeight?: keyof typeof fontWeight;
+  /** 설명 폰트 웨이트 */
+  descriptionFontWeight?: keyof typeof fontWeight;
+  /** 타이틀(라벨) 색상 */
+  titleColor?: string;
+  /** 설명 색상 */
+  descriptionColor?: string;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -26,20 +40,26 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   disabled = false,
   label,
   description,
-  labelPosition = 'right',
+  labelPosition = 'left',
   onChange,
   onClick,
   className = '',
+  checkboxWidth = '24px',
+  titleTextStyle = 'body1',
+  descriptionTextStyle = 'body2',
+  titleFontWeight = 'medium',
+  descriptionFontWeight = 'regular',
+  titleColor,
+  descriptionColor,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const checkboxSize = '24px';
   const gap = '8px';
 
   const getCheckboxStyles = (): React.CSSProperties => {
     const baseStyles = {
-      width: checkboxSize,
-      height: checkboxSize,
+      width: checkboxWidth,
+      height: checkboxWidth,
       borderRadius: '4px',
       display: 'flex',
       alignItems: 'center',
@@ -119,19 +139,27 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   }, [checked, disabled, isHovered]);
 
   const getLabelStyles = (): React.CSSProperties => {
+    const defaultColor = disabled
+      ? colors.semantic.disabled.foreground
+      : colors.primary.coolGray[800];
+
     return {
-      ...textStyles.body1,
-      fontWeight: fontWeight.medium,
-      color: disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800],
+      ...textStyles[titleTextStyle],
+      fontWeight: fontWeight[titleFontWeight],
+      color: titleColor || defaultColor,
       cursor: disabled ? 'not-allowed' : 'pointer',
     };
   };
 
   const getDescriptionStyles = (): React.CSSProperties => {
+    const defaultColor = disabled
+      ? colors.semantic.disabled.foreground
+      : colors.primary.coolGray[300];
+
     return {
-      ...textStyles.body2,
-      fontWeight: fontWeight.regular,
-      color: disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[300],
+      ...textStyles[descriptionTextStyle],
+      fontWeight: fontWeight[descriptionFontWeight],
+      color: descriptionColor || defaultColor,
       lineHeight: '1.3',
       marginTop: '2px',
       cursor: disabled ? 'not-allowed' : 'pointer',
