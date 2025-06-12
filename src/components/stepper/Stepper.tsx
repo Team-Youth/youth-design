@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { Icon } from '../icon/Icon';
 import { Font } from '../font/Font';
 import { colors } from '../../tokens/colors';
@@ -225,7 +225,15 @@ export const Stepper: React.FC<StepperProps> = ({
   });
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const currentValue = internalValue;
+  // value prop이 변경될 때 internalValue 동기화
+  useEffect(() => {
+    setInternalValue(value);
+  }, [value]);
+
+  // value prop을 기반으로 currentValue 계산 (외부에서 제어되는 경우와 내부에서 제어되는 경우 구분)
+  const currentValue = useMemo(() => {
+    return internalValue;
+  }, [internalValue]);
 
   // stepCount 기반으로 실제 값 계산
   const getActualValue = (count: number): number => {
@@ -233,8 +241,14 @@ export const Stepper: React.FC<StepperProps> = ({
     return Math.max(min, Math.min(max, stepValue));
   };
 
-  const isMinReached = currentValue <= min;
-  const isMaxReached = currentValue >= max;
+  // min/max 도달 상태를 useMemo로 계산
+  const { isMinReached, isMaxReached } = useMemo(
+    () => ({
+      isMinReached: currentValue <= min,
+      isMaxReached: currentValue >= max,
+    }),
+    [currentValue, min, max],
+  );
 
   useEffect(() => {
     if (!isEditing) {
@@ -402,14 +416,14 @@ export const Stepper: React.FC<StepperProps> = ({
   };
 
   // 표시할 값 계산
-  const displayValue = () => {
+  const displayValue = useMemo(() => {
     if (isTime) {
       return formatTime(currentValue, timeBaseUnit);
     } else if (unit) {
       return `${currentValue}${unit}`;
     }
     return String(currentValue);
-  };
+  }, [currentValue, isTime, timeBaseUnit, unit]);
 
   // 스타일 계산
   const containerStyle: React.CSSProperties = {
@@ -511,7 +525,7 @@ export const Stepper: React.FC<StepperProps> = ({
                 userSelect: 'none',
               }}
             >
-              {displayValue()}
+              {displayValue}
             </Font>
           )}
         </div>

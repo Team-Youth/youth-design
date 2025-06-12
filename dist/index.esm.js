@@ -21055,35 +21055,36 @@ var Popup = function (_a) {
 };
 
 var Modal = function (_a) {
+  var _b, _c;
   var title = _a.title,
     description = _a.description,
     children = _a.children,
-    _b = _a.contentMaxHeight,
-    contentMaxHeight = _b === void 0 ? 500 : _b,
-    _c = _a.showScrollbar,
-    showScrollbar = _c === void 0 ? false : _c,
-    _d = _a.showCloseButton,
-    showCloseButton = _d === void 0 ? true : _d,
+    _d = _a.contentMaxHeight,
+    contentMaxHeight = _d === void 0 ? 500 : _d,
+    _e = _a.showScrollbar,
+    showScrollbar = _e === void 0 ? false : _e,
+    _f = _a.showCloseButton,
+    showCloseButton = _f === void 0 ? true : _f,
     width = _a.width,
     primaryButton = _a.primaryButton,
     secondaryButton = _a.secondaryButton,
     isOpen = _a.isOpen,
     onClose = _a.onClose,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e,
-    _f = _a.style,
-    style = _f === void 0 ? {} : _f,
-    _g = _a.overlayStyle,
-    overlayStyle = _g === void 0 ? {} : _g;
-  var _h = React.useState(false),
-    isContentOverflowing = _h[0],
-    setIsContentOverflowing = _h[1];
-  var _j = React.useState(true),
-    isPrimaryDisabled = _j[0],
-    setIsPrimaryDisabled = _j[1];
-  var _k = React.useState(true),
-    isSecondaryDisabled = _k[0],
-    setIsSecondaryDisabled = _k[1];
+    _g = _a.className,
+    className = _g === void 0 ? '' : _g,
+    _h = _a.style,
+    style = _h === void 0 ? {} : _h,
+    _j = _a.overlayStyle,
+    overlayStyle = _j === void 0 ? {} : _j;
+  var _k = React.useState(false),
+    isContentOverflowing = _k[0],
+    setIsContentOverflowing = _k[1];
+  var _l = React.useState((_b = primaryButton.disabled) !== null && _b !== void 0 ? _b : false),
+    isPrimaryDisabled = _l[0],
+    setIsPrimaryDisabled = _l[1];
+  var _m = React.useState((_c = secondaryButton === null || secondaryButton === void 0 ? void 0 : secondaryButton.disabled) !== null && _c !== void 0 ? _c : false);
+    _m[0];
+    _m[1];
   var contentRef = React.useRef(null);
   useEffect(function () {
     if (children && contentRef.current) {
@@ -21098,11 +21099,6 @@ var Modal = function (_a) {
       setIsPrimaryDisabled(primaryButton.disabled);
     }
   }, [primaryButton.disabled]);
-  useEffect(function () {
-    if ((secondaryButton === null || secondaryButton === void 0 ? void 0 : secondaryButton.disabled) !== undefined) {
-      setIsSecondaryDisabled(secondaryButton.disabled);
-    }
-  }, [secondaryButton === null || secondaryButton === void 0 ? void 0 : secondaryButton.disabled]);
   if (!isOpen) return null;
   var overlayStyleConfig = __assign({
     position: 'fixed',
@@ -21239,7 +21235,6 @@ var Modal = function (_a) {
           type: "outlined",
           size: "l",
           width: "fill",
-          disabled: isSecondaryDisabled,
           onClick: secondaryButton.onClick
         }, function (_a) {
           _a.text;
@@ -23370,14 +23365,28 @@ var Stepper = function (_a) {
     _w[0];
     var setStepCount = _w[1];
   var inputRef = useRef(null);
-  var currentValue = internalValue;
+  // value prop이 변경될 때 internalValue 동기화
+  useEffect(function () {
+    setInternalValue(value);
+  }, [value]);
+  // value prop을 기반으로 currentValue 계산 (외부에서 제어되는 경우와 내부에서 제어되는 경우 구분)
+  var currentValue = useMemo(function () {
+    return internalValue;
+  }, [internalValue]);
   // stepCount 기반으로 실제 값 계산
   var getActualValue = function (count) {
     var stepValue = count * step;
     return Math.max(min, Math.min(max, stepValue));
   };
-  var isMinReached = currentValue <= min;
-  var isMaxReached = currentValue >= max;
+  // min/max 도달 상태를 useMemo로 계산
+  var _x = useMemo(function () {
+      return {
+        isMinReached: currentValue <= min,
+        isMaxReached: currentValue >= max
+      };
+    }, [currentValue, min, max]),
+    isMinReached = _x.isMinReached,
+    isMaxReached = _x.isMaxReached;
   useEffect(function () {
     if (!isEditing) {
       if (isTime) {
@@ -23520,14 +23529,14 @@ var Stepper = function (_a) {
     }
   };
   // 표시할 값 계산
-  var displayValue = function () {
+  var displayValue = useMemo(function () {
     if (isTime) {
       return formatTime(currentValue, timeBaseUnit);
     } else if (unit) {
       return "".concat(currentValue).concat(unit);
     }
     return String(currentValue);
-  };
+  }, [currentValue, isTime, timeBaseUnit, unit]);
   // 스타일 계산
   var containerStyle = __assign({
     display: 'flex',
@@ -23606,7 +23615,7 @@ var Stepper = function (_a) {
           style: {
             userSelect: 'none'
           },
-          children: displayValue()
+          children: displayValue
         })
       }), jsx(Icon, {
         type: "add-circle-filled",
