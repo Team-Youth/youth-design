@@ -22,7 +22,7 @@ export interface ModalProps {
   /** 모달 너비 (기본값: 480px) */
   width?: string | number;
   /** 메인 버튼 props */
-  primaryButton: {
+  primaryButton?: {
     text: string;
     onClick: () => void;
   } & Partial<Omit<ButtonProps, 'onClick'>>;
@@ -41,6 +41,11 @@ export interface ModalProps {
   style?: React.CSSProperties;
   /** 오버레이 추가 스타일 */
   overlayStyle?: React.CSSProperties;
+
+  primaryDefaultDisabledButton?: {
+    text: string;
+    onClick: () => void;
+  } & Partial<Omit<ButtonProps, 'onClick'>>;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -52,6 +57,7 @@ export const Modal: React.FC<ModalProps> = ({
   showCloseButton = true,
   width,
   primaryButton,
+  primaryDefaultDisabledButton,
   secondaryButton,
   isOpen,
   onClose,
@@ -60,10 +66,7 @@ export const Modal: React.FC<ModalProps> = ({
   overlayStyle = {},
 }) => {
   const [isContentOverflowing, setIsContentOverflowing] = React.useState(false);
-  const [isPrimaryDisabled, setIsPrimaryDisabled] = React.useState(primaryButton.disabled ?? false);
-  const [isSecondaryDisabled, setIsSecondaryDisabled] = React.useState(
-    secondaryButton?.disabled ?? false,
-  );
+  const [isPrimaryDefaultDisabled, setIsPrimaryDefaultDisabled] = React.useState(true);
 
   const contentRef = React.useRef<HTMLDivElement>(null);
 
@@ -75,10 +78,14 @@ export const Modal: React.FC<ModalProps> = ({
   }, [children, contentMaxHeight]);
 
   useEffect(() => {
-    if (primaryButton.disabled !== undefined) {
-      setIsPrimaryDisabled(primaryButton.disabled);
+    if (!primaryDefaultDisabledButton) {
+      return;
     }
-  }, [primaryButton.disabled]);
+
+    if (primaryDefaultDisabledButton.disabled !== undefined) {
+      setIsPrimaryDefaultDisabled(primaryDefaultDisabledButton.disabled);
+    }
+  }, [primaryDefaultDisabledButton?.disabled]);
 
   if (!isOpen) return null;
 
@@ -235,16 +242,30 @@ export const Modal: React.FC<ModalProps> = ({
               {secondaryButton.text}
             </Button>
           )}
-          <Button
-            type="solid"
-            size="l"
-            width="fill"
-            disabled={isPrimaryDisabled}
-            onClick={primaryButton.onClick}
-            {...(({ text, onClick, disabled, ...rest }) => rest)(primaryButton)}
-          >
-            {primaryButton.text}
-          </Button>
+          {primaryDefaultDisabledButton && (
+            <Button
+              type="solid"
+              size="l"
+              width="fill"
+              disabled={isPrimaryDefaultDisabled}
+              onClick={primaryDefaultDisabledButton.onClick}
+              {...(({ text, onClick, disabled, ...rest }) => rest)(primaryDefaultDisabledButton)}
+            >
+              {primaryDefaultDisabledButton.text}
+            </Button>
+          )}
+          {primaryButton && (
+            <Button
+              type="solid"
+              size="l"
+              width="fill"
+              disabled={primaryButton.disabled}
+              onClick={primaryButton.onClick}
+              {...(({ text, onClick, disabled, ...rest }) => rest)(primaryButton)}
+            >
+              {primaryButton.text}
+            </Button>
+          )}
         </div>
       </div>
     </div>

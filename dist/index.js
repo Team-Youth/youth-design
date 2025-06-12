@@ -21057,36 +21057,33 @@ var Popup = function (_a) {
 };
 
 var Modal = function (_a) {
-  var _b, _c;
   var title = _a.title,
     description = _a.description,
     children = _a.children,
-    _d = _a.contentMaxHeight,
-    contentMaxHeight = _d === void 0 ? 500 : _d,
-    _e = _a.showScrollbar,
-    showScrollbar = _e === void 0 ? false : _e,
-    _f = _a.showCloseButton,
-    showCloseButton = _f === void 0 ? true : _f,
+    _b = _a.contentMaxHeight,
+    contentMaxHeight = _b === void 0 ? 500 : _b,
+    _c = _a.showScrollbar,
+    showScrollbar = _c === void 0 ? false : _c,
+    _d = _a.showCloseButton,
+    showCloseButton = _d === void 0 ? true : _d,
     width = _a.width,
     primaryButton = _a.primaryButton,
+    primaryDefaultDisabledButton = _a.primaryDefaultDisabledButton,
     secondaryButton = _a.secondaryButton,
     isOpen = _a.isOpen,
     onClose = _a.onClose,
-    _g = _a.className,
-    className = _g === void 0 ? '' : _g,
-    _h = _a.style,
-    style = _h === void 0 ? {} : _h,
-    _j = _a.overlayStyle,
-    overlayStyle = _j === void 0 ? {} : _j;
-  var _k = React.useState(false),
-    isContentOverflowing = _k[0],
-    setIsContentOverflowing = _k[1];
-  var _l = React.useState((_b = primaryButton.disabled) !== null && _b !== void 0 ? _b : false),
-    isPrimaryDisabled = _l[0],
-    setIsPrimaryDisabled = _l[1];
-  var _m = React.useState((_c = secondaryButton === null || secondaryButton === void 0 ? void 0 : secondaryButton.disabled) !== null && _c !== void 0 ? _c : false);
-    _m[0];
-    _m[1];
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.style,
+    style = _f === void 0 ? {} : _f,
+    _g = _a.overlayStyle,
+    overlayStyle = _g === void 0 ? {} : _g;
+  var _h = React.useState(false),
+    isContentOverflowing = _h[0],
+    setIsContentOverflowing = _h[1];
+  var _j = React.useState(true),
+    isPrimaryDefaultDisabled = _j[0],
+    setIsPrimaryDefaultDisabled = _j[1];
   var contentRef = React.useRef(null);
   React.useEffect(function () {
     if (children && contentRef.current) {
@@ -21097,10 +21094,13 @@ var Modal = function (_a) {
     }
   }, [children, contentMaxHeight]);
   React.useEffect(function () {
-    if (primaryButton.disabled !== undefined) {
-      setIsPrimaryDisabled(primaryButton.disabled);
+    if (!primaryDefaultDisabledButton) {
+      return;
     }
-  }, [primaryButton.disabled]);
+    if (primaryDefaultDisabledButton.disabled !== undefined) {
+      setIsPrimaryDefaultDisabled(primaryDefaultDisabledButton.disabled);
+    }
+  }, [primaryDefaultDisabledButton === null || primaryDefaultDisabledButton === void 0 ? void 0 : primaryDefaultDisabledButton.disabled]);
   if (!isOpen) return null;
   var overlayStyleConfig = __assign({
     position: 'fixed',
@@ -21246,11 +21246,25 @@ var Modal = function (_a) {
           return rest;
         }(secondaryButton), {
           children: secondaryButton.text
-        })), jsxRuntime.jsx(Button, __assign({
+        })), primaryDefaultDisabledButton && jsxRuntime.jsx(Button, __assign({
           type: "solid",
           size: "l",
           width: "fill",
-          disabled: isPrimaryDisabled,
+          disabled: isPrimaryDefaultDisabled,
+          onClick: primaryDefaultDisabledButton.onClick
+        }, function (_a) {
+          _a.text;
+            _a.onClick;
+            _a.disabled;
+            var rest = __rest(_a, ["text", "onClick", "disabled"]);
+          return rest;
+        }(primaryDefaultDisabledButton), {
+          children: primaryDefaultDisabledButton.text
+        })), primaryButton && jsxRuntime.jsx(Button, __assign({
+          type: "solid",
+          size: "l",
+          width: "fill",
+          disabled: primaryButton.disabled,
           onClick: primaryButton.onClick
         }, function (_a) {
           _a.text;

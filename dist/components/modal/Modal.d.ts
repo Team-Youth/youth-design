@@ -17,7 +17,7 @@ export interface ModalProps {
     /** 모달 너비 (기본값: 480px) */
     width?: string | number;
     /** 메인 버튼 props */
-    primaryButton: {
+    primaryButton?: {
         text: string;
         onClick: () => void;
     } & Partial<Omit<ButtonProps, 'onClick'>>;
@@ -36,5 +36,9 @@ export interface ModalProps {
     style?: React.CSSProperties;
     /** 오버레이 추가 스타일 */
     overlayStyle?: React.CSSProperties;
+    primaryDefaultDisabledButton?: {
+        text: string;
+        onClick: () => void;
+    } & Partial<Omit<ButtonProps, 'onClick'>>;
 }
 export declare const Modal: React.FC<ModalProps>;
