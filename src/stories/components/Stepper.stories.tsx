@@ -11,15 +11,15 @@ const meta: Meta<typeof Stepper> = {
     docs: {
       description: {
         component:
-          '숫자 값을 증감시킬 수 있는 Stepper 컴포넌트입니다. 단위 표시와 시간 형식을 지원합니다.',
+          '숫자 값을 증감시킬 수 있는 Stepper 컴포넌트입니다. 단위 표시와 시간 형식을 지원하며, 문자열 값을 전달하면 표시 전용으로 사용할 수 있습니다.',
       },
     },
   },
   tags: ['autodocs'],
   argTypes: {
     value: {
-      control: 'number',
-      description: '현재 값',
+      control: 'text',
+      description: '현재 값 (숫자 또는 문자열)',
     },
     min: {
       control: 'number',
@@ -447,6 +447,110 @@ export const CustomWidth: Story = {
   },
 };
 
+// String value (표시 전용)
+export const StringValue: Story = {
+  args: {
+    value: '무제한',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'value로 string을 전달하면 자동으로 disabled 처리되어 표시 전용으로 사용할 수 있습니다. 증감 버튼은 비활성화됩니다.',
+      },
+    },
+  },
+};
+
+// String value 다양한 예시
+export const StringValueVariations: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '400px' }}>
+      <div>
+        <h3>무제한 표시</h3>
+        <Stepper value="무제한" />
+      </div>
+
+      <div>
+        <h3>운영 미정</h3>
+        <Stepper value="운영 미정" />
+      </div>
+
+      <div>
+        <h3>N/A</h3>
+        <Stepper value="N/A" />
+      </div>
+
+      <div>
+        <h3>별도 문의</h3>
+        <Stepper value="별도 문의" />
+      </div>
+
+      <div>
+        <h3>매월 갱신</h3>
+        <Stepper value="매월 갱신" />
+      </div>
+    </div>
+  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '다양한 문자열 값들을 표시하는 예시입니다. 모두 자동으로 disabled 처리되어 표시 전용으로 사용됩니다.',
+      },
+    },
+  },
+};
+
+// 동적 전환 (string ↔ number)
+const DynamicValueTemplate = () => {
+  const [isStringMode, setIsStringMode] = useState(false);
+  const [numValue, setNumValue] = useState(10);
+
+  const currentValue = isStringMode ? '무제한' : numValue;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '400px' }}>
+      <div>
+        <button
+          onClick={() => setIsStringMode(!isStringMode)}
+          style={{
+            padding: '8px 16px',
+            borderRadius: '4px',
+            border: '1px solid #ddd',
+            background: '#fff',
+            cursor: 'pointer',
+          }}
+        >
+          {isStringMode ? 'Number로 전환' : 'String으로 전환'}
+        </button>
+      </div>
+
+      <div>
+        <h3>현재 상태: {isStringMode ? 'String Mode' : 'Number Mode'}</h3>
+        <Stepper value={currentValue} min={0} max={100} onChange={setNumValue} unit="회" />
+        <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
+          {isStringMode
+            ? 'String 값이 전달되어 자동으로 disabled 처리됩니다.'
+            : 'Number 값이 전달되어 정상적으로 stepper 기능이 동작합니다.'}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export const DynamicValue: Story = {
+  render: DynamicValueTemplate,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'value가 string에서 number로, 또는 number에서 string으로 동적으로 변경될 때의 동작을 확인할 수 있습니다. String일 때는 자동으로 disabled되고, number로 바뀌면 다시 조절 가능해집니다.',
+      },
+    },
+  },
+};
+
 // 다양한 범위
 export const LargeRange: Story = {
   render: ControlledTemplate,
@@ -620,6 +724,11 @@ export const AllStates: Story = {
       <div>
         <h3>가득찬 너비</h3>
         <Stepper value={5} min={0} max={10} width="fill" />
+      </div>
+
+      <div>
+        <h3>문자열 값 (표시 전용)</h3>
+        <Stepper value="무제한" />
       </div>
     </div>
   ),

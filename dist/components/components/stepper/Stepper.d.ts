@@ -1,7 +1,7 @@
 import React from 'react';
 export interface StepperProps {
     /** 초기 값 */
-    value?: number;
+    value?: number | string;
     /** 최소값 */
     min?: number;
     /** 최대값 */

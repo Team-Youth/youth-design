@@ -6,7 +6,7 @@ import { fontWeight, textStyles } from '../../tokens';
 
 export interface StepperProps {
   /** 초기 값 */
-  value?: number;
+  value?: number | string;
   /** 최소값 */
   min?: number;
   /** 최대값 */
@@ -215,25 +215,35 @@ export const Stepper: React.FC<StepperProps> = ({
   timeBaseUnit = 'min',
   autoRound = false,
 }) => {
-  const [internalValue, setInternalValue] = useState(value);
+  // value가 string인지 체크
+  const isStringValue = typeof value === 'string';
+  // string이면 자동으로 disabled 처리
+  const isDisabled = disabled || isStringValue;
+
+  // 숫자 값만 관리 (string일 때는 0으로 초기화하되 실제로는 사용하지 않음)
+  const numericValue = typeof value === 'number' ? value : 0;
+
+  const [internalValue, setInternalValue] = useState(numericValue);
   const [isFocused, setIsFocused] = useState(focused);
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState(String(value));
+  const [editValue, setEditValue] = useState(String(numericValue));
   const [stepCount, setStepCount] = useState(() => {
     // 초기 stepCount 계산 - value를 step으로 나눈 값의 반올림
-    return step > 0 ? Math.round(value / step) : 0;
+    return step > 0 ? Math.round(numericValue / step) : 0;
   });
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // value prop이 변경될 때 internalValue 동기화
+  // value prop이 변경될 때 internalValue 동기화 (숫자일 때만)
   useEffect(() => {
-    setInternalValue(value);
+    if (typeof value === 'number') {
+      setInternalValue(value);
+    }
   }, [value]);
 
   // value prop을 기반으로 currentValue 계산 (외부에서 제어되는 경우와 내부에서 제어되는 경우 구분)
   const currentValue = useMemo(() => {
-    return internalValue;
-  }, [internalValue]);
+    return typeof value === 'number' ? internalValue : 0;
+  }, [internalValue, value]);
 
   // stepCount 기반으로 실제 값 계산
   const getActualValue = (count: number): number => {
@@ -267,7 +277,7 @@ export const Stepper: React.FC<StepperProps> = ({
   }, [currentValue, step]);
 
   const handleIncrement = () => {
-    if (disabled || isMaxReached) return;
+    if (isDisabled || isMaxReached) return;
 
     let newValue: number;
     const isExactStepValue = currentValue % step === 0;
@@ -292,7 +302,7 @@ export const Stepper: React.FC<StepperProps> = ({
   };
 
   const handleDecrement = () => {
-    if (disabled || isMinReached) return;
+    if (isDisabled || isMinReached) return;
 
     let newValue: number;
     const isExactStepValue = currentValue % step === 0;
@@ -317,7 +327,7 @@ export const Stepper: React.FC<StepperProps> = ({
   };
 
   const handleValueClick = () => {
-    if (editable && !disabled && !error) {
+    if (editable && !isDisabled && !error && !isStringValue) {
       setIsEditing(true);
       setIsFocused(true);
       if (isTime) {
@@ -417,13 +427,18 @@ export const Stepper: React.FC<StepperProps> = ({
 
   // 표시할 값 계산
   const displayValue = useMemo(() => {
+    // string 값이면 그대로 표시
+    if (isStringValue) {
+      return String(value);
+    }
+
     if (isTime) {
       return formatTime(currentValue, timeBaseUnit);
     } else if (unit) {
       return `${currentValue}${unit}`;
     }
     return String(currentValue);
-  }, [currentValue, isTime, timeBaseUnit, unit]);
+  }, [currentValue, isTime, timeBaseUnit, unit, isStringValue, value]);
 
   // 스타일 계산
   const containerStyle: React.CSSProperties = {
@@ -449,7 +464,7 @@ export const Stepper: React.FC<StepperProps> = ({
           ? colors.primary.coolGray[800]
           : colors.primary.coolGray[300]
     }`,
-    backgroundColor: disabled ? colors.primary.coolGray[50] : colors.primary.gray.white,
+    backgroundColor: isDisabled ? colors.primary.coolGray[50] : colors.primary.gray.white,
     width: '100%',
     boxSizing: 'border-box',
     transition: 'all 0.2s ease',
@@ -463,7 +478,7 @@ export const Stepper: React.FC<StepperProps> = ({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    cursor: editable && !disabled && !error ? 'text' : 'default',
+    cursor: editable && !isDisabled && !error && !isStringValue ? 'text' : 'default',
     userSelect: 'none',
   };
 
@@ -488,12 +503,12 @@ export const Stepper: React.FC<StepperProps> = ({
           type="minus-circle-filled"
           size={24}
           color={
-            disabled || isMinReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800]
+            isDisabled || isMinReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800]
           }
           onClick={handleDecrement}
           style={{
-            cursor: disabled || isMinReached ? 'not-allowed' : 'pointer',
-            opacity: disabled || isMinReached ? 0.5 : 1,
+            cursor: isDisabled || isMinReached ? 'not-allowed' : 'pointer',
+            opacity: isDisabled || isMinReached ? 0.5 : 1,
             userSelect: 'none',
           }}
         />
@@ -514,7 +529,7 @@ export const Stepper: React.FC<StepperProps> = ({
               type="heading3"
               fontWeight="semibold"
               color={
-                disabled
+                isDisabled
                   ? colors.primary.coolGray[400]
                   : error
                     ? colors.semantic.state.error
@@ -534,12 +549,12 @@ export const Stepper: React.FC<StepperProps> = ({
           type="add-circle-filled"
           size={24}
           color={
-            disabled || isMaxReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800]
+            isDisabled || isMaxReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800]
           }
           onClick={handleIncrement}
           style={{
-            cursor: disabled || isMaxReached ? 'not-allowed' : 'pointer',
-            opacity: disabled || isMaxReached ? 0.5 : 1,
+            cursor: isDisabled || isMaxReached ? 'not-allowed' : 'pointer',
+            opacity: isDisabled || isMaxReached ? 0.5 : 1,
             userSelect: 'none',
           }}
         />
