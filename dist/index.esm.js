@@ -20954,8 +20954,10 @@ var Popup = function (_a) {
     onClose = _a.onClose,
     _b = _a.className,
     className = _b === void 0 ? '' : _b,
-    _c = _a.style,
-    style = _c === void 0 ? {} : _c;
+    _c = _a.width,
+    width = _c === void 0 ? '480px' : _c,
+    _d = _a.style,
+    style = _d === void 0 ? {} : _d;
   if (!isOpen) return null;
   var overlayStyle = __assign({
     position: 'fixed',
@@ -20974,7 +20976,7 @@ var Popup = function (_a) {
     borderRadius: '16px',
     padding: '32px',
     minWidth: '480px',
-    maxWidth: '90vw',
+    width: typeof width === 'number' ? "".concat(width, "px") : width,
     maxHeight: '90vh',
     boxShadow: shadows.s,
     display: 'flex',
@@ -20992,7 +20994,8 @@ var Popup = function (_a) {
   });
   var descriptionStyle = __assign(__assign({}, textStyles.body1), {
     color: colors.semantic.text.secondary,
-    margin: 0
+    margin: 0,
+    whiteSpace: 'pre-wrap'
   });
   var buttonContainerStyle = {
     display: 'flex',

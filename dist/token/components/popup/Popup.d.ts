@@ -23,5 +23,7 @@ export interface PopupProps {
     className?: string;
     /** 추가 스타일 */
     style?: React.CSSProperties;
+    /** 팝업 너비 */
+    width?: string | number;
 }
 export declare const Popup: React.FC<PopupProps>;

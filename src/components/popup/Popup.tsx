@@ -27,6 +27,8 @@ export interface PopupProps {
   className?: string;
   /** 추가 스타일 */
   style?: React.CSSProperties;
+  /** 팝업 너비 */
+  width?: string | number;
 }
 
 export const Popup: React.FC<PopupProps> = ({
@@ -37,6 +39,7 @@ export const Popup: React.FC<PopupProps> = ({
   isOpen,
   onClose,
   className = '',
+  width = '480px',
   style = {},
 }) => {
   if (!isOpen) return null;
@@ -60,7 +63,7 @@ export const Popup: React.FC<PopupProps> = ({
     borderRadius: '16px',
     padding: '32px',
     minWidth: '480px',
-    maxWidth: '90vw',
+    width: typeof width === 'number' ? `${width}px` : width,
     maxHeight: '90vh',
     boxShadow: shadows.s,
     display: 'flex',
@@ -84,6 +87,7 @@ export const Popup: React.FC<PopupProps> = ({
     ...textStyles.body1,
     color: colors.semantic.text.secondary,
     margin: 0,
+    whiteSpace: 'pre-wrap',
   };
 
   const buttonContainerStyle: React.CSSProperties = {
