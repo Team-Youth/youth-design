@@ -60,6 +60,8 @@ export const Modal: React.FC<ModalProps> = ({
   overlayStyle = {},
 }) => {
   const [isContentOverflowing, setIsContentOverflowing] = React.useState(false);
+  const [isPrimaryDisabled, setIsPrimaryDisabled] = React.useState(true);
+  const [isSecondaryDisabled, setIsSecondaryDisabled] = React.useState(true);
   const contentRef = React.useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -68,6 +70,18 @@ export const Modal: React.FC<ModalProps> = ({
       setIsContentOverflowing(scrollHeight > clientHeight);
     }
   }, [children, contentMaxHeight]);
+
+  useEffect(() => {
+    if (primaryButton.disabled !== undefined) {
+      setIsPrimaryDisabled(primaryButton.disabled);
+    }
+  }, [primaryButton.disabled]);
+
+  useEffect(() => {
+    if (secondaryButton?.disabled !== undefined) {
+      setIsSecondaryDisabled(secondaryButton.disabled);
+    }
+  }, [secondaryButton?.disabled]);
 
   if (!isOpen) return null;
 
@@ -218,7 +232,7 @@ export const Modal: React.FC<ModalProps> = ({
               type="outlined"
               size="l"
               width="fill"
-              disabled={secondaryButton.disabled ?? true}
+              disabled={isSecondaryDisabled}
               onClick={secondaryButton.onClick}
               {...(({ text, onClick, disabled, ...rest }) => rest)(secondaryButton)}
             >
@@ -229,7 +243,7 @@ export const Modal: React.FC<ModalProps> = ({
             type="solid"
             size="l"
             width="fill"
-            disabled={primaryButton.disabled ?? true}
+            disabled={isPrimaryDisabled}
             onClick={primaryButton.onClick}
             {...(({ text, onClick, disabled, ...rest }) => rest)(primaryButton)}
           >
