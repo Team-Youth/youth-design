@@ -218,8 +218,9 @@ export const Modal: React.FC<ModalProps> = ({
               type="outlined"
               size="l"
               width="fill"
+              disabled={secondaryButton.disabled ?? true}
               onClick={secondaryButton.onClick}
-              {...(({ text, onClick, ...rest }) => rest)(secondaryButton)}
+              {...(({ text, onClick, disabled, ...rest }) => rest)(secondaryButton)}
             >
               {secondaryButton.text}
             </Button>
@@ -228,8 +229,9 @@ export const Modal: React.FC<ModalProps> = ({
             type="solid"
             size="l"
             width="fill"
+            disabled={primaryButton.disabled ?? true}
             onClick={primaryButton.onClick}
-            {...(({ text, onClick, ...rest }) => rest)(primaryButton)}
+            {...(({ text, onClick, disabled, ...rest }) => rest)(primaryButton)}
           >
             {primaryButton.text}
           </Button>

@@ -20090,7 +20090,7 @@ var Checkbox = function (_a) {
     label = _a.label,
     description = _a.description,
     _d = _a.labelPosition,
-    labelPosition = _d === void 0 ? 'left' : _d,
+    labelPosition = _d === void 0 ? 'right' : _d,
     onChange = _a.onChange,
     onClick = _a.onClick,
     _e = _a.className,
@@ -20950,29 +20950,30 @@ var Popup = function (_a) {
 };
 
 var Modal = function (_a) {
+  var _b, _c;
   var title = _a.title,
     description = _a.description,
     children = _a.children,
-    _b = _a.contentMaxHeight,
-    contentMaxHeight = _b === void 0 ? 500 : _b,
-    _c = _a.showScrollbar,
-    showScrollbar = _c === void 0 ? false : _c,
-    _d = _a.showCloseButton,
-    showCloseButton = _d === void 0 ? true : _d,
+    _d = _a.contentMaxHeight,
+    contentMaxHeight = _d === void 0 ? 500 : _d,
+    _e = _a.showScrollbar,
+    showScrollbar = _e === void 0 ? false : _e,
+    _f = _a.showCloseButton,
+    showCloseButton = _f === void 0 ? true : _f,
     width = _a.width,
     primaryButton = _a.primaryButton,
     secondaryButton = _a.secondaryButton,
     isOpen = _a.isOpen,
     onClose = _a.onClose,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e,
-    _f = _a.style,
-    style = _f === void 0 ? {} : _f,
-    _g = _a.overlayStyle,
-    overlayStyle = _g === void 0 ? {} : _g;
-  var _h = React.useState(false),
-    isContentOverflowing = _h[0],
-    setIsContentOverflowing = _h[1];
+    _g = _a.className,
+    className = _g === void 0 ? '' : _g,
+    _h = _a.style,
+    style = _h === void 0 ? {} : _h,
+    _j = _a.overlayStyle,
+    overlayStyle = _j === void 0 ? {} : _j;
+  var _k = React.useState(false),
+    isContentOverflowing = _k[0],
+    setIsContentOverflowing = _k[1];
   var contentRef = React.useRef(null);
   useEffect(function () {
     if (children && contentRef.current) {
@@ -21111,11 +21112,13 @@ var Modal = function (_a) {
           type: "outlined",
           size: "l",
           width: "fill",
+          disabled: (_b = secondaryButton.disabled) !== null && _b !== void 0 ? _b : true,
           onClick: secondaryButton.onClick
         }, function (_a) {
           _a.text;
             _a.onClick;
-            var rest = __rest(_a, ["text", "onClick"]);
+            _a.disabled;
+            var rest = __rest(_a, ["text", "onClick", "disabled"]);
           return rest;
         }(secondaryButton), {
           children: secondaryButton.text
@@ -21123,11 +21126,13 @@ var Modal = function (_a) {
           type: "solid",
           size: "l",
           width: "fill",
+          disabled: (_c = primaryButton.disabled) !== null && _c !== void 0 ? _c : true,
           onClick: primaryButton.onClick
         }, function (_a) {
           _a.text;
             _a.onClick;
-            var rest = __rest(_a, ["text", "onClick"]);
+            _a.disabled;
+            var rest = __rest(_a, ["text", "onClick", "disabled"]);
           return rest;
         }(primaryButton), {
           children: primaryButton.text
