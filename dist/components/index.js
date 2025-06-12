@@ -23253,7 +23253,13 @@ var Stepper = function (_a) {
     timeBaseUnit = _q === void 0 ? 'min' : _q,
     _r = _a.autoRound,
     autoRound = _r === void 0 ? false : _r;
-  var _s = React.useState(value),
+  // value가 string인지 체크
+  var isStringValue = typeof value === 'string';
+  // string이면 자동으로 disabled 처리
+  var isDisabled = disabled || isStringValue;
+  // 숫자 값만 관리 (string일 때는 0으로 초기화하되 실제로는 사용하지 않음)
+  var numericValue = typeof value === 'number' ? value : 0;
+  var _s = React.useState(numericValue),
     internalValue = _s[0],
     setInternalValue = _s[1];
   var _t = React.useState(focused),
@@ -23262,24 +23268,26 @@ var Stepper = function (_a) {
   var _u = React.useState(false),
     isEditing = _u[0],
     setIsEditing = _u[1];
-  var _v = React.useState(String(value)),
+  var _v = React.useState(String(numericValue)),
     editValue = _v[0],
     setEditValue = _v[1];
   var _w = React.useState(function () {
       // 초기 stepCount 계산 - value를 step으로 나눈 값의 반올림
-      return step > 0 ? Math.round(value / step) : 0;
+      return step > 0 ? Math.round(numericValue / step) : 0;
     });
     _w[0];
     var setStepCount = _w[1];
   var inputRef = React.useRef(null);
-  // value prop이 변경될 때 internalValue 동기화
+  // value prop이 변경될 때 internalValue 동기화 (숫자일 때만)
   React.useEffect(function () {
-    setInternalValue(value);
+    if (typeof value === 'number') {
+      setInternalValue(value);
+    }
   }, [value]);
   // value prop을 기반으로 currentValue 계산 (외부에서 제어되는 경우와 내부에서 제어되는 경우 구분)
   var currentValue = React.useMemo(function () {
-    return internalValue;
-  }, [internalValue]);
+    return typeof value === 'number' ? internalValue : 0;
+  }, [internalValue, value]);
   // stepCount 기반으로 실제 값 계산
   var getActualValue = function (count) {
     var stepValue = count * step;
@@ -23309,7 +23317,7 @@ var Stepper = function (_a) {
     setStepCount(newStepCount);
   }, [currentValue, step]);
   var handleIncrement = function () {
-    if (disabled || isMaxReached) return;
+    if (isDisabled || isMaxReached) return;
     var newValue;
     var isExactStepValue = currentValue % step === 0;
     if (isExactStepValue) {
@@ -23328,7 +23336,7 @@ var Stepper = function (_a) {
     setInternalValue(newValue);
   };
   var handleDecrement = function () {
-    if (disabled || isMinReached) return;
+    if (isDisabled || isMinReached) return;
     var newValue;
     var isExactStepValue = currentValue % step === 0;
     if (isExactStepValue) {
@@ -23347,7 +23355,7 @@ var Stepper = function (_a) {
     setInternalValue(newValue);
   };
   var handleValueClick = function () {
-    if (editable && !disabled && !error) {
+    if (editable && !isDisabled && !error && !isStringValue) {
       setIsEditing(true);
       setIsFocused(true);
       if (isTime) {
@@ -23437,13 +23445,17 @@ var Stepper = function (_a) {
   };
   // 표시할 값 계산
   var displayValue = React.useMemo(function () {
+    // string 값이면 그대로 표시
+    if (isStringValue) {
+      return String(value);
+    }
     if (isTime) {
       return formatTime(currentValue, timeBaseUnit);
     } else if (unit) {
       return "".concat(currentValue).concat(unit);
     }
     return String(currentValue);
-  }, [currentValue, isTime, timeBaseUnit, unit]);
+  }, [currentValue, isTime, timeBaseUnit, unit, isStringValue, value]);
   // 스타일 계산
   var containerStyle = __assign({
     display: 'flex',
@@ -23460,7 +23472,7 @@ var Stepper = function (_a) {
     padding: '12px 16px',
     borderRadius: '8px',
     border: "1px solid ".concat(error ? colors.semantic.state.error : isFocused ? colors.primary.coolGray[800] : colors.primary.coolGray[300]),
-    backgroundColor: disabled ? colors.primary.coolGray[50] : colors.primary.gray.white,
+    backgroundColor: isDisabled ? colors.primary.coolGray[50] : colors.primary.gray.white,
     width: '100%',
     boxSizing: 'border-box',
     transition: 'all 0.2s ease',
@@ -23473,7 +23485,7 @@ var Stepper = function (_a) {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
-    cursor: editable && !disabled && !error ? 'text' : 'default',
+    cursor: editable && !isDisabled && !error && !isStringValue ? 'text' : 'default',
     userSelect: 'none'
   };
   var inputStyle = __assign(__assign({}, textStyles.heading3), {
@@ -23496,11 +23508,11 @@ var Stepper = function (_a) {
       children: [jsxRuntime.jsx(Icon, {
         type: "minus-circle-filled",
         size: 24,
-        color: disabled || isMinReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800],
+        color: isDisabled || isMinReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800],
         onClick: handleDecrement,
         style: {
-          cursor: disabled || isMinReached ? 'not-allowed' : 'pointer',
-          opacity: disabled || isMinReached ? 0.5 : 1,
+          cursor: isDisabled || isMinReached ? 'not-allowed' : 'pointer',
+          opacity: isDisabled || isMinReached ? 0.5 : 1,
           userSelect: 'none'
         }
       }), jsxRuntime.jsx("div", {
@@ -23517,7 +23529,7 @@ var Stepper = function (_a) {
         }) : jsxRuntime.jsx(Font, {
           type: "heading3",
           fontWeight: "semibold",
-          color: disabled ? colors.primary.coolGray[400] : error ? colors.semantic.state.error : colors.primary.coolGray[800],
+          color: isDisabled ? colors.primary.coolGray[400] : error ? colors.semantic.state.error : colors.primary.coolGray[800],
           align: "center",
           style: {
             userSelect: 'none'
@@ -23527,11 +23539,11 @@ var Stepper = function (_a) {
       }), jsxRuntime.jsx(Icon, {
         type: "add-circle-filled",
         size: 24,
-        color: disabled || isMaxReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800],
+        color: isDisabled || isMaxReached ? colors.primary.coolGray[400] : colors.primary.coolGray[800],
         onClick: handleIncrement,
         style: {
-          cursor: disabled || isMaxReached ? 'not-allowed' : 'pointer',
-          opacity: disabled || isMaxReached ? 0.5 : 1,
+          cursor: isDisabled || isMaxReached ? 'not-allowed' : 'pointer',
+          opacity: isDisabled || isMaxReached ? 0.5 : 1,
           userSelect: 'none'
         }
       })]
