@@ -174,12 +174,6 @@ export const Tab: React.FC<TabProps> = ({
     fontSize: config.fontSize,
     fontWeight: config.fontWeight,
     borderRadius: config.borderRadius,
-    borderBottom:
-      type === 'underline' && selected
-        ? `2px solid ${colorScheme.border}`
-        : type === 'underline'
-          ? '2px solid transparent'
-          : 'none',
     border: type === 'capsule' ? `1px solid ${colorScheme.border}` : 'none',
     background: colorScheme.background,
     color: colorScheme.text,
@@ -199,7 +193,6 @@ export const Tab: React.FC<TabProps> = ({
       case 'underline':
         return {
           color: colors.primary.coolGray[600],
-          borderBottomColor: colors.primary.coolGray[300],
         };
       case 'capsule':
         return {
@@ -254,18 +247,45 @@ export const Tab: React.FC<TabProps> = ({
     );
   };
 
+  // underline용 ::after 스타일을 위한 unique id 생성
+  const uniqueId = React.useId();
+  const buttonId = `tab-${uniqueId}`;
+
   return (
-    <button
-      style={getBaseStyles()}
-      onClick={handleClick}
-      disabled={disabled}
-      className={className}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {renderIcon()}
-      <span>{children}</span>
-      {renderNumber()}
-    </button>
+    <>
+      {/* underline 타입일 때만 CSS 스타일 추가 */}
+      {type === 'underline' && (
+        <style>
+          {`
+            #${buttonId}::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              height: 2px;
+              background-color: ${selected ? colorScheme.border : 'transparent'};
+              transition: background-color 0.2s ease;
+            }
+            #${buttonId}:hover:not(:disabled)::after {
+              background-color: ${!selected && !disabled ? colors.primary.coolGray[300] : selected ? colorScheme.border : 'transparent'};
+            }
+          `}
+        </style>
+      )}
+      <button
+        id={buttonId}
+        style={getBaseStyles()}
+        onClick={handleClick}
+        disabled={disabled}
+        className={className}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {renderIcon()}
+        <span>{children}</span>
+        {renderNumber()}
+      </button>
+    </>
   );
 };

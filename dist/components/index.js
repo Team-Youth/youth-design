@@ -19518,7 +19518,6 @@ var Tab = function (_a) {
       fontSize: config.fontSize,
       fontWeight: config.fontWeight,
       borderRadius: config.borderRadius,
-      borderBottom: type === 'underline' && selected ? "2px solid ".concat(colorScheme.border) : type === 'underline' ? '2px solid transparent' : 'none',
       border: type === 'capsule' ? "1px solid ".concat(colorScheme.border) : 'none',
       background: colorScheme.background,
       color: colorScheme.text,
@@ -19535,8 +19534,7 @@ var Tab = function (_a) {
     switch (type) {
       case 'underline':
         return {
-          color: colors.primary.coolGray[600],
-          borderBottomColor: colors.primary.coolGray[300]
+          color: colors.primary.coolGray[600]
         };
       case 'capsule':
         return {
@@ -19586,16 +19584,24 @@ var Tab = function (_a) {
       children: number
     });
   };
-  return jsxRuntime.jsxs("button", {
-    style: getBaseStyles(),
-    onClick: handleClick,
-    disabled: disabled,
-    className: className,
-    onMouseEnter: handleMouseEnter,
-    onMouseLeave: handleMouseLeave,
-    children: [renderIcon(), jsxRuntime.jsx("span", {
-      children: children
-    }), renderNumber()]
+  // underline용 ::after 스타일을 위한 unique id 생성
+  var uniqueId = React.useId();
+  var buttonId = "tab-".concat(uniqueId);
+  return jsxRuntime.jsxs(jsxRuntime.Fragment, {
+    children: [type === 'underline' && jsxRuntime.jsx("style", {
+      children: "\n            #".concat(buttonId, "::after {\n              content: '';\n              position: absolute;\n              bottom: 0;\n              left: 0;\n              right: 0;\n              height: 2px;\n              background-color: ").concat(selected ? colorScheme.border : 'transparent', ";\n              transition: background-color 0.2s ease;\n            }\n            #").concat(buttonId, ":hover:not(:disabled)::after {\n              background-color: ").concat(!selected && !disabled ? colors.primary.coolGray[300] : selected ? colorScheme.border : 'transparent', ";\n            }\n          ")
+    }), jsxRuntime.jsxs("button", {
+      id: buttonId,
+      style: getBaseStyles(),
+      onClick: handleClick,
+      disabled: disabled,
+      className: className,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      children: [renderIcon(), jsxRuntime.jsx("span", {
+        children: children
+      }), renderNumber()]
+    })]
   });
 };
 
