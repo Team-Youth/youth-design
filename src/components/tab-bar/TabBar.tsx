@@ -8,6 +8,8 @@ export interface TabBarProps {
   size?: 'l' | 'm' | 's';
   /** 너비 설정 */
   width?: 'fill' | (string & {});
+  /** 줄바꿈 허용 여부 */
+  wrap?: boolean;
   defaultSelectedIndex?: number;
   selectedIndex?: number;
   onTabChange?: (index: number) => void;
@@ -24,6 +26,7 @@ export const TabBar: React.FC<TabBarProps> = ({
   type = 'underline',
   size = 'm',
   width,
+  wrap = true,
   defaultSelectedIndex = 0,
   selectedIndex,
   onTabChange,
@@ -49,6 +52,8 @@ export const TabBar: React.FC<TabBarProps> = ({
       alignItems: 'center',
       gap: type === 'toggle' ? '0px' : type === 'capsule' ? '12px' : '8px',
       flexDirection: 'row',
+      flexWrap: wrap ? 'wrap' : 'nowrap',
+      rowGap: wrap ? (type === 'toggle' ? '4px' : type === 'capsule' ? '12px' : '8px') : undefined,
       width: width === 'fill' ? '100%' : width || 'fit-content',
       borderBottom: type === 'underline' ? `1px solid ${colors.semantic.border.default}` : 'none',
       background: type === 'toggle' ? colors.primary.coolGray[50] : 'transparent',

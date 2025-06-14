@@ -19609,16 +19609,18 @@ var TabBar = function (_a) {
     _c = _a.size,
     size = _c === void 0 ? 'm' : _c,
     width = _a.width,
-    _d = _a.defaultSelectedIndex,
-    defaultSelectedIndex = _d === void 0 ? 0 : _d,
+    _d = _a.wrap,
+    wrap = _d === void 0 ? true : _d,
+    _e = _a.defaultSelectedIndex,
+    defaultSelectedIndex = _e === void 0 ? 0 : _e,
     selectedIndex = _a.selectedIndex,
     onTabChange = _a.onTabChange,
     tabs = _a.tabs,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e;
-  var _f = useState(defaultSelectedIndex),
-    internalSelectedIndex = _f[0],
-    setInternalSelectedIndex = _f[1];
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f;
+  var _g = useState(defaultSelectedIndex),
+    internalSelectedIndex = _g[0],
+    setInternalSelectedIndex = _g[1];
   var currentSelectedIndex = selectedIndex !== undefined ? selectedIndex : internalSelectedIndex;
   var handleTabClick = function (index) {
     var _a;
@@ -19634,6 +19636,8 @@ var TabBar = function (_a) {
       alignItems: 'center',
       gap: type === 'toggle' ? '0px' : type === 'capsule' ? '12px' : '8px',
       flexDirection: 'row',
+      flexWrap: wrap ? 'wrap' : 'nowrap',
+      rowGap: wrap ? type === 'toggle' ? '4px' : type === 'capsule' ? '12px' : '8px' : undefined,
       width: width === 'fill' ? '100%' : width || 'fit-content',
       borderBottom: type === 'underline' ? "1px solid ".concat(colors.semantic.border.default) : 'none',
       background: type === 'toggle' ? colors.primary.coolGray[50] : 'transparent',

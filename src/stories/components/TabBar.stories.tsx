@@ -24,6 +24,9 @@ const meta: Meta<typeof TabBar> = {
       control: { type: 'select' },
       options: ['fill', 'fit-content'],
     },
+    wrap: {
+      control: { type: 'boolean' },
+    },
     defaultSelectedIndex: {
       control: { type: 'number', min: 0 },
     },
@@ -415,4 +418,158 @@ export const MultipleTypesComparison: Story = {
       </div>
     );
   },
+};
+
+// 많은 탭들을 위한 데이터
+const manyTabs = [
+  { label: 'Dashboard', icon: 'home' as const },
+  { label: 'Analytics', icon: 'bookmark-stroke' as const, number: 15 },
+  { label: 'Users', icon: 'my-page' as const, number: 124 },
+  { label: 'Products', icon: 'search' as const },
+  { label: 'Orders', icon: 'heart' as const, number: 8 },
+  { label: 'Messages', icon: 'mail-stroke' as const, number: 3 },
+  { label: 'Notifications', icon: 'bell-stroke' as const, number: 12 },
+  { label: 'Settings', icon: 'settings-stroke' as const },
+  { label: 'Help', icon: 'home' as const },
+  { label: 'Profile', icon: 'my-page' as const },
+];
+
+export const WithWrap: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div style={{ maxWidth: '400px' }}>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          줄바꿈 없음 (기본값) - 너비 400px
+        </h3>
+        <TabBar
+          type="underline"
+          size="m"
+          width="400px"
+          wrap={false}
+          tabs={manyTabs.slice(0, 6)}
+          defaultSelectedIndex={0}
+          onTabChange={action('no-wrap-changed')}
+        />
+      </div>
+
+      <div style={{ maxWidth: '400px' }}>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          줄바꿈 허용 - 너비 400px
+        </h3>
+        <TabBar
+          type="underline"
+          size="m"
+          width="400px"
+          wrap={true}
+          tabs={manyTabs.slice(0, 6)}
+          defaultSelectedIndex={0}
+          onTabChange={action('wrap-changed')}
+        />
+      </div>
+    </div>
+  ),
+};
+
+export const WrapAllTypes: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div style={{ maxWidth: '350px' }}>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Underline 타입 - 줄바꿈
+        </h3>
+        <TabBar
+          type="underline"
+          size="m"
+          width="350px"
+          wrap={true}
+          tabs={manyTabs.slice(0, 8)}
+          defaultSelectedIndex={0}
+          onTabChange={action('underline-wrap-changed')}
+        />
+      </div>
+
+      <div style={{ maxWidth: '350px' }}>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Capsule 타입 - 줄바꿈
+        </h3>
+        <TabBar
+          type="capsule"
+          size="m"
+          width="350px"
+          wrap={true}
+          tabs={manyTabs.slice(0, 8)}
+          defaultSelectedIndex={1}
+          onTabChange={action('capsule-wrap-changed')}
+        />
+      </div>
+
+      <div
+        style={{ maxWidth: '350px', background: '#f3f4f6', padding: '16px', borderRadius: '8px' }}
+      >
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Toggle 타입 - 줄바꿈
+        </h3>
+        <TabBar
+          type="toggle"
+          size="m"
+          width="350px"
+          wrap={true}
+          tabs={manyTabs.slice(0, 6)}
+          defaultSelectedIndex={2}
+          onTabChange={action('toggle-wrap-changed')}
+        />
+      </div>
+    </div>
+  ),
+};
+
+export const WrapWithDifferentSizes: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div style={{ maxWidth: '300px' }}>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Large 사이즈 - 줄바꿈
+        </h3>
+        <TabBar
+          type="underline"
+          size="l"
+          width="300px"
+          wrap={true}
+          tabs={manyTabs.slice(0, 5)}
+          defaultSelectedIndex={0}
+          onTabChange={action('large-wrap-changed')}
+        />
+      </div>
+
+      <div style={{ maxWidth: '300px' }}>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Medium 사이즈 - 줄바꿈
+        </h3>
+        <TabBar
+          type="underline"
+          size="m"
+          width="300px"
+          wrap={true}
+          tabs={manyTabs.slice(0, 6)}
+          defaultSelectedIndex={1}
+          onTabChange={action('medium-wrap-changed')}
+        />
+      </div>
+
+      <div style={{ maxWidth: '300px' }}>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Small 사이즈 - 줄바꿈
+        </h3>
+        <TabBar
+          type="underline"
+          size="s"
+          width="300px"
+          wrap={true}
+          tabs={manyTabs.slice(0, 7)}
+          defaultSelectedIndex={2}
+          onTabChange={action('small-wrap-changed')}
+        />
+      </div>
+    </div>
+  ),
 };

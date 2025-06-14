@@ -5,6 +5,8 @@ export interface TabBarProps {
     size?: 'l' | 'm' | 's';
     /** 너비 설정 */
     width?: 'fill' | (string & {});
+    /** 줄바꿈 허용 여부 */
+    wrap?: boolean;
     defaultSelectedIndex?: number;
     selectedIndex?: number;
     onTabChange?: (index: number) => void;
