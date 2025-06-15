@@ -24672,5 +24672,131 @@ var Cell = memo(function (_a) {
   });
 });
 
-export { ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, Label, Modal, Popup, Radio, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
+// 타입별 설정
+var typeConfig = {
+  normal: {
+    iconType: 'info-filled',
+    iconColor: colors.primary.tint.blue[400],
+    backgroundColor: colors.primary.coolGray[50],
+    textColor: colors.primary.coolGray[800]
+  },
+  success: {
+    iconType: 'check-circle-filled',
+    iconColor: colors.primary.gray.white,
+    backgroundColor: colors.primary.tint.green[500],
+    textColor: colors.primary.gray.white
+  },
+  warning: {
+    iconType: 'info-filled',
+    iconColor: colors.primary.tint.red[400],
+    backgroundColor: colors.primary.tint.red[50],
+    textColor: colors.primary.tint.red[500]
+  }
+};
+// 사이즈별 설정
+var sizeConfig = {
+  s: {
+    padding: '8px 12px',
+    iconSize: 20,
+    textStyle: textStyles.body2,
+    fontWeight: fontWeight.regular,
+    gap: '8px'
+  },
+  m: {
+    padding: '12px 16px',
+    iconSize: 24,
+    textStyle: textStyles.body2,
+    fontWeight: fontWeight.medium,
+    gap: '12px'
+  }
+};
+/**
+ * 인라인 알림 컴포넌트
+ *
+ * 페이지 내에서 사용자에게 중요한 정보나 상태를 알려주는 컴포넌트입니다.
+ * 피그마 디자인에 따라 크기(s, m)와 타입(normal, success, warning)을 지원합니다.
+ */
+var InlineNotification = React.memo(function (_a) {
+  var type = _a.type,
+    message = _a.message,
+    _b = _a.size,
+    size = _b === void 0 ? 'm' : _b,
+    _c = _a.isButton,
+    isButton = _c === void 0 ? false : _c,
+    onClick = _a.onClick,
+    _d = _a.borderRadius,
+    borderRadius = _d === void 0 ? false : _d,
+    textStyle = _a.textStyle,
+    customFontWeight = _a.fontWeight,
+    _e = _a.width,
+    width = _e === void 0 ? '480px' : _e,
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f;
+  var typeConf = typeConfig[type];
+  var sizeConf = sizeConfig[size];
+  var handleClick = useCallback(function () {
+    if (isButton && onClick) {
+      onClick();
+    }
+  }, [isButton, onClick]);
+  var notificationStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: sizeConf.gap,
+    padding: sizeConf.padding,
+    backgroundColor: typeConf.backgroundColor,
+    borderRadius: borderRadius ? '8px' : 0,
+    width: width === 'fill' ? '100%' : width,
+    flex: width === 'fill' ? 1 : undefined,
+    minHeight: 'fit-content',
+    cursor: isButton ? 'pointer' : 'default',
+    transition: isButton ? 'background-color 0.2s ease' : 'none'
+  };
+  var contentStyle = __assign(__assign({}, textStyle || sizeConf.textStyle), {
+    fontWeight: customFontWeight || sizeConf.fontWeight,
+    color: typeConf.textColor,
+    margin: 0,
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center'
+  });
+  return jsxs("div", {
+    className: "inline-notification inline-notification--".concat(type, " inline-notification--").concat(size, " ").concat(className),
+    style: notificationStyle,
+    role: isButton ? 'button' : 'alert',
+    "aria-live": isButton ? undefined : 'polite',
+    onClick: isButton ? handleClick : undefined,
+    children: [jsx("div", {
+      className: "inline-notification__icon",
+      style: {
+        display: 'flex',
+        alignItems: 'center'
+      },
+      children: jsx(Icon, {
+        type: typeConf.iconType,
+        size: sizeConf.iconSize,
+        color: typeConf.iconColor
+      })
+    }), jsx("div", {
+      className: "inline-notification__content",
+      style: contentStyle,
+      children: message
+    }), isButton && jsx("div", {
+      className: "inline-notification__arrow",
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      },
+      children: jsx(Icon, {
+        type: "chevron-right",
+        size: sizeConf.iconSize,
+        color: typeConf.textColor
+      })
+    })]
+  });
+});
+InlineNotification.displayName = 'InlineNotification';
+
+export { ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Popup, Radio, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
 //# sourceMappingURL=index.esm.js.map

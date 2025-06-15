@@ -50,3 +50,5 @@ export { Stepper } from './stepper';
 export type { StepperProps } from './stepper';
 export { Table } from './table';
 export type { TableProps } from './table';
+export { InlineNotification } from './inline-notification';
+export type { InlineNotificationProps, InlineNotificationStatus, InlineNotificationSize, } from './inline-notification';
