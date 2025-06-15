@@ -21179,7 +21179,7 @@ var Modal = function (_a) {
   });
   var imageContainerStyle = {
     width: '100%',
-    borderRadius: '8px',
+    // borderRadius: '8px',
     overflow: 'hidden',
     maxHeight: "".concat(contentMaxHeight, "px"),
     overflowY: 'auto',

@@ -167,7 +167,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   const imageContainerStyle: React.CSSProperties = {
     width: '100%',
-    borderRadius: '8px',
+    // borderRadius: '8px',
     overflow: 'hidden',
     maxHeight: `${contentMaxHeight}px`,
     overflowY: 'auto',

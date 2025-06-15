@@ -551,7 +551,7 @@ export const WithLargeContentHeight = {
     const [isOpen, setIsOpen] = useState(false);
 
     const MediumContentComponent = () => (
-      <div style={{ padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+      <div style={{ padding: '20px', backgroundColor: '#f8f9fa' }}>
         <h3 style={{ margin: '0 0 16px 0' }}>중간 길이 콘텐츠</h3>
         {Array.from({ length: 15 }, (_, i) => (
           <p key={i} style={{ margin: '0 0 12px 0', lineHeight: '1.5' }}>
