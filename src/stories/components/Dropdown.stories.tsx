@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import { DropdownOption, Dropdown } from '../../components';
+import { Dropdown } from '../../components';
+import type { DropdownOption } from '../../components/dropdown/Dropdown';
 import React from 'react';
 
 // Sample options
@@ -33,6 +34,8 @@ const roleOptions: DropdownOption[] = [
   { value: 'designer', label: '디자이너' },
   { value: 'user', label: '일반 사용자', disabled: true },
   { value: 'guest', label: '게스트' },
+  { value: 'viewer', label: '뷰어', disabled: true },
+  { value: 'restricted', label: '제한된 사용자', disabled: true },
 ];
 
 // Controlled Dropdown component for interactive stories
@@ -50,6 +53,12 @@ const meta: Meta<typeof Dropdown> = {
       description: {
         component: `
 드롭다운(Dropdown)은 사용자가 여러 옵션 중 하나를 선택할 수 있는 선택형 입력 컴포넌트입니다.
+
+## ✨ 최신 업데이트 (Figma 디자인 스펙 반영)
+- **Size 옵션 추가**: 'l' (기본, 48px height), 'm' (40px height) 지원
+- **디자인 토큰 활용**: typography.textStyles.body1/body2 + fontWeight.medium 사용
+- **비활성화 옵션 Lock 아이콘**: disabled 옵션에 자동으로 lock 아이콘 표시
+- **정확한 색상 스펙**: 최신 color 토큰 사용으로 피그마 디자인과 완벽 일치
 
 ## 주요 기능
 - **Figma 디자인 스펙 완벽 구현**: 정확한 크기, 패딩, 색상, 그림자 적용
@@ -78,7 +87,15 @@ const meta: Meta<typeof Dropdown> = {
     },
     options: {
       control: { type: 'object' },
-      description: '드롭다운 옵션 리스트입니다.',
+      description:
+        '드롭다운 옵션 리스트입니다. disabled: true인 옵션은 자동으로 lock 아이콘이 표시됩니다.',
+    },
+    size: {
+      control: { type: 'select' },
+      options: ['l', 'm'],
+      description:
+        '드롭다운 크기를 설정합니다. l: 48px height (body1 + medium), m: 40px height (body2 + medium)',
+      defaultValue: 'l',
     },
     disabled: {
       control: { type: 'boolean' },
@@ -122,6 +139,7 @@ const meta: Meta<typeof Dropdown> = {
         'chevron-up',
         'chevron-down',
         'check',
+        'lock',
       ],
       description: 'Leading 아이콘 타입을 설정합니다. Icon 컴포넌트를 사용합니다.',
       mapping: {
@@ -144,6 +162,7 @@ const meta: Meta<typeof Dropdown> = {
         'chevron-up': 'chevron-up',
         'chevron-down': 'chevron-down',
         check: 'check',
+        lock: 'lock',
       },
     },
     enableSearch: {
@@ -194,6 +213,119 @@ export const Selected: Story = {
   render: (args) => <ControlledDropdown {...args} />,
 };
 
+// 새로운 Size 옵션 시연
+export const SizeComparison: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '32px' }}>
+      <div>
+        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
+          📏 Size 옵션 비교 (최신 Figma 스펙)
+        </h2>
+        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
+          size 옵션으로 드롭다운의 크기를 조정할 수 있습니다. 각 크기별로 적절한 텍스트 스타일이
+          자동 적용됩니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            Size Large (기본값)
+          </h3>
+          <p style={{ marginBottom: '12px', color: '#8D97A5', fontSize: '12px' }}>
+            Height: 48px | Text: body1 + medium | Padding: 12px 16px
+          </p>
+          <ControlledDropdown
+            size="l"
+            placeholder="Size Large"
+            options={cityOptions}
+            leadingIconType="location-stroke"
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            Size Medium (새로 추가)
+          </h3>
+          <p style={{ marginBottom: '12px', color: '#8D97A5', fontSize: '12px' }}>
+            Height: 40px | Text: body2 + medium | Padding: 9px 16px
+          </p>
+          <ControlledDropdown
+            size="m"
+            placeholder="Size Medium"
+            options={cityOptions}
+            leadingIconType="location-stroke"
+          />
+        </div>
+      </div>
+
+      <div style={{ padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '8px' }}>
+        <h4 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}>
+          🎨 디자인 토큰 활용
+        </h4>
+        <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
+          <li>Size L: typography.textStyles.body1 + typography.fontWeight.medium</li>
+          <li>Size M: typography.textStyles.body2 + typography.fontWeight.medium</li>
+          <li>기존 인라인 폰트 스타일 제거, 일관된 디자인 토큰 사용</li>
+        </ul>
+      </div>
+    </div>
+  ),
+};
+
+// Lock 아이콘이 있는 비활성화 옵션 시연
+export const DisabledOptionsWithLockIcon: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '32px' }}>
+      <div>
+        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
+          🔒 비활성화 옵션 & Lock 아이콘 (Figma 스펙)
+        </h2>
+        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
+          disabled: true인 옵션들은 자동으로 lock 아이콘이 표시되고 선택할 수 없습니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', gap: '24px' }}>
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            역할 선택 (비활성화 옵션 포함)
+          </h3>
+          <ControlledDropdown
+            placeholder="역할을 선택해주세요..."
+            options={roleOptions}
+            leadingIconType="person-stroke"
+          />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            Size Medium으로도 확인
+          </h3>
+          <ControlledDropdown
+            size="m"
+            placeholder="역할을 선택해주세요..."
+            options={roleOptions}
+            leadingIconType="person-stroke"
+          />
+        </div>
+      </div>
+
+      <div style={{ padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '8px' }}>
+        <h4 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}>
+          🎯 구현 세부사항
+        </h4>
+        <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
+          <li>disabled: true 옵션은 자동으로 우측에 lock 아이콘 표시</li>
+          <li>비활성화 옵션 색상: colors.semantic.disabled.foreground (#D1D5DB)</li>
+          <li>클릭해도 선택되지 않음 (cursor: not-allowed)</li>
+          <li>선택된 옵션이 있으면 체크 아이콘, 비활성화면 lock 아이콘 우선 표시</li>
+        </ul>
+      </div>
+    </div>
+  ),
+};
+
 export const WithLeadingIcon: Story = {
   args: {
     placeholder: '위치를 선택해주세요...',
@@ -210,6 +342,13 @@ export const WithDisabledOptions: Story = {
     leadingIconType: 'person-stroke',
   },
   render: (args) => <ControlledDropdown {...args} />,
+  parameters: {
+    docs: {
+      description: {
+        story: 'disabled: true인 옵션들은 자동으로 lock 아이콘이 표시되고 선택할 수 없습니다.',
+      },
+    },
+  },
 };
 
 export const ErrorState: Story = {
@@ -295,17 +434,27 @@ export const AllFeatures: Story = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '32px' }}>
       <div>
         <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          🚀 모든 기능 시연
+          🚀 모든 기능 시연 (업데이트됨)
         </h2>
         <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          Dropdown 컴포넌트의 모든 기능과 상태를 확인할 수 있습니다.
+          Dropdown 컴포넌트의 모든 기능과 상태를 확인할 수 있습니다. Size 옵션과 Lock 아이콘 기능이
+          추가되었습니다.
         </p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
         <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>기본 상태</h3>
-          <ControlledDropdown placeholder="기본 드롭다운" options={cityOptions} />
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            Size L (기본)
+          </h3>
+          <ControlledDropdown size="l" placeholder="기본 사이즈" options={cityOptions} />
+        </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            Size M (새로운)
+          </h3>
+          <ControlledDropdown size="m" placeholder="작은 사이즈" options={cityOptions} />
         </div>
 
         <div>
@@ -338,7 +487,7 @@ export const AllFeatures: Story = {
 
         <div>
           <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            비활성화된 옵션 포함
+            🔒 Lock 아이콘
           </h3>
           <ControlledDropdown
             placeholder="역할 선택..."
@@ -383,6 +532,45 @@ export const AllFeatures: Story = {
             leadingIconType="location-stroke"
           />
         </div>
+
+        <div>
+          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+            Size M + Lock 아이콘
+          </h3>
+          <ControlledDropdown
+            size="m"
+            placeholder="작은 사이즈 + Lock"
+            options={roleOptions}
+            leadingIconType="person-stroke"
+          />
+        </div>
+      </div>
+
+      <div
+        style={{
+          padding: '16px',
+          backgroundColor: '#F8F9FA',
+          borderRadius: '8px',
+          marginTop: '16px',
+        }}
+      >
+        <h4 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}>
+          ✨ 최신 업데이트 사항
+        </h4>
+        <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
+          <li>
+            <strong>Size 옵션:</strong> 'l' (48px) / 'm' (40px) 지원
+          </li>
+          <li>
+            <strong>텍스트 스타일:</strong> 디자인 토큰 (body1/body2 + medium) 사용
+          </li>
+          <li>
+            <strong>Lock 아이콘:</strong> disabled 옵션에 자동 표시
+          </li>
+          <li>
+            <strong>색상 업데이트:</strong> 최신 semantic color 토큰 적용
+          </li>
+        </ul>
       </div>
     </div>
   ),
@@ -394,46 +582,87 @@ export const FigmaDesignShowcase: Story = {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '32px' }}>
       <div>
         <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          🎨 Figma 디자인 스펙 구현
+          🎨 Figma 디자인 스펙 구현 (업데이트됨)
         </h2>
         <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          실제 Figma 디자인과 동일한 스펙으로 구현된 드롭다운 컴포넌트입니다.
+          실제 Figma 디자인과 동일한 스펙으로 구현된 드롭다운 컴포넌트입니다. 새로운 size 옵션과
+          lock 아이콘이 포함되어 있습니다.
         </p>
       </div>
 
-      <div style={{ display: 'flex', gap: '24px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div>
           <h3
             style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
           >
-            기본 상태
+            Size L (기본값) - 48px Height
           </h3>
-          <ControlledDropdown
-            placeholder="Placeholder"
-            options={[
-              { value: 'option1', label: 'Option1' },
-              { value: 'option2', label: 'Option2' },
-              { value: 'option3', label: 'Option3' },
-              { value: 'option4', label: 'Option4' },
-            ]}
-          />
+          <div style={{ display: 'flex', gap: '24px' }}>
+            <ControlledDropdown
+              size="l"
+              placeholder="Placeholder"
+              options={[
+                { value: 'option1', label: 'Option1' },
+                { value: 'option2', label: 'Option2' },
+                { value: 'option3', label: 'Option3' },
+                { value: 'option4', label: 'Option4' },
+              ]}
+            />
+            <ControlledDropdown
+              size="l"
+              placeholder="OptionName"
+              value="option1"
+              options={[
+                { value: 'option1', label: 'Option1' },
+                { value: 'option2', label: 'Option2' },
+                { value: 'option3', label: 'Option3' },
+                { value: 'option4', label: 'Option4' },
+              ]}
+            />
+          </div>
         </div>
 
         <div>
           <h3
             style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
           >
-            선택됨 (체크 아이콘)
+            Size M (새로 추가) - 40px Height
+          </h3>
+          <div style={{ display: 'flex', gap: '24px' }}>
+            <ControlledDropdown
+              size="m"
+              placeholder="Placeholder"
+              options={[
+                { value: 'option1', label: 'Option1' },
+                { value: 'option2', label: 'Option2' },
+                { value: 'option3', label: 'Option3' },
+                { value: 'option4', label: 'Option4' },
+              ]}
+            />
+            <ControlledDropdown
+              size="m"
+              placeholder="OptionName"
+              value="option1"
+              options={[
+                { value: 'option1', label: 'Option1' },
+                { value: 'option2', label: 'Option2' },
+                { value: 'option3', label: 'Option3' },
+                { value: 'option4', label: 'Option4' },
+              ]}
+            />
+          </div>
+        </div>
+
+        <div>
+          <h3
+            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
+          >
+            비활성화 옵션 with Lock 아이콘
           </h3>
           <ControlledDropdown
-            placeholder="OptionName"
-            value="option1"
-            options={[
-              { value: 'option1', label: 'Option1' },
-              { value: 'option2', label: 'Option2' },
-              { value: 'option3', label: 'Option3' },
-              { value: 'option4', label: 'Option4' },
-            ]}
+            placeholder="역할을 선택해주세요..."
+            options={roleOptions}
+            leadingIconType="person-stroke"
           />
         </div>
       </div>

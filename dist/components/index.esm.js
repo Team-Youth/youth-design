@@ -685,6 +685,15 @@ var textStyles = {
     fontFamily: fontFamily.primary
   }
 };
+// All typography export
+var typography = {
+  fontFamily: fontFamily,
+  fontSize: fontSize,
+  fontWeight: fontWeight,
+  lineHeight: lineHeight,
+  letterSpacing: letterSpacing,
+  textStyles: textStyles
+};
 
 var Font = function (_a) {
   var type = _a.type,
@@ -21230,7 +21239,7 @@ var Dropdown = function (_a) {
     if (width) {
       return width;
     }
-    return size === 'm' ? '140px' : '320px';
+    return '335px';
   }, [width, size]);
   // 검색 텍스트에 따른 옵션 필터링
   var filteredOptions = useMemo(function () {
@@ -21348,6 +21357,14 @@ var Dropdown = function (_a) {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen]);
+  // 텍스트 스타일 계산 (size에 따라 body1/body2 + medium)
+  var getTextStyle = useCallback(function () {
+    var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
+    return __assign(__assign({}, baseStyle), {
+      fontWeight: typography.fontWeight.medium
+    });
+  }, [size]);
+  // 컨테이너 스타일
   var getContainerStyles = useCallback(function () {
     var borderColor = colors.semantic.border.strong; // #D6D6D6
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
@@ -21359,12 +21376,14 @@ var Dropdown = function (_a) {
     } else if (isOpen) {
       borderColor = colors.semantic.text.primary; // #25282D
     }
+    // size에 따른 패딩 설정
+    var padding = size === 'l' ? '12px 16px' : '9px 16px';
     return __assign({
       display: 'flex',
       alignItems: 'center',
       gap: spacing.xs,
-      padding: '13px 16px',
-      // Figma 스펙에 맞춤
+      // 8px
+      padding: padding,
       backgroundColor: backgroundColor,
       border: "1px solid ".concat(borderColor),
       borderRadius: '8px',
@@ -21376,7 +21395,7 @@ var Dropdown = function (_a) {
     }, hideOption && {
       userSelect: 'none'
     });
-  }, [disabled, error, isOpen, finalWidth, hideOption, enableSearch]);
+  }, [disabled, error, isOpen, finalWidth, hideOption, enableSearch, size]);
   var getTextStyles = useCallback(function () {
     var textColor;
     if (disabled) {
@@ -21388,34 +21407,24 @@ var Dropdown = function (_a) {
     } else {
       textColor = '#AFB6C0'; // Figma 스펙의 placeholder 색상
     }
-    return {
+    var textStyle = getTextStyle();
+    return __assign(__assign({}, textStyle), {
       flex: 1,
-      fontSize: '14px',
-      fontWeight: 500,
-      lineHeight: '22px',
-      // 1.5714285714285714em = 22px
-      letterSpacing: '-0.28px',
-      // -2%
-      fontFamily: 'Pretendard',
       color: textColor,
-      userSelect: !enableSearch || hideOption ? 'none' : 'auto' // hideOption도 고려하여 user-select 설정
-    };
-  }, [disabled, error, hasSelectedOption, enableSearch, hideOption]);
+      userSelect: !enableSearch || hideOption ? 'none' : 'auto'
+    });
+  }, [disabled, error, hasSelectedOption, enableSearch, hideOption, getTextStyle]);
   var getInputStyles = useCallback(function () {
-    return {
+    var textStyle = getTextStyle();
+    return __assign(__assign({}, textStyle), {
       flex: 1,
-      fontSize: '14px',
-      fontWeight: 500,
-      lineHeight: '22px',
-      letterSpacing: '-0.28px',
-      fontFamily: 'Pretendard',
       color: colors.semantic.text.primary,
       backgroundColor: 'transparent',
       border: 'none',
       outline: 'none',
       width: '100%'
-    };
-  }, []);
+    });
+  }, [getTextStyle]);
   var getIconColor = useCallback(function () {
     if (disabled) {
       return colors.semantic.disabled.foreground; // #D1D5DB
@@ -21486,24 +21495,19 @@ var Dropdown = function (_a) {
     } else if (hoveredOptionIndex === index) {
       backgroundColor = colors.semantic.disabled.background; // #F3F5F6
     }
-    return {
+    var textStyle = getTextStyle();
+    return __assign(__assign({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '13px 16px',
-      // Figma 스펙에 맞춘 패딩
-      fontSize: '14px',
-      fontWeight: 500,
-      lineHeight: '22px',
-      letterSpacing: '-0.28px',
-      // -2%
-      fontFamily: 'Pretendard',
+      padding: '13px 16px'
+    }, textStyle), {
       color: textColor,
       backgroundColor: backgroundColor,
       cursor: option.disabled ? 'not-allowed' : 'pointer',
       transition: 'background-color 0.2s ease'
-    };
-  }, [hoveredOptionIndex]);
+    });
+  }, [hoveredOptionIndex, getTextStyle]);
   var dropdownOptionsStyle = useMemo(function () {
     return {
       position: 'absolute',
@@ -21513,12 +21517,9 @@ var Dropdown = function (_a) {
       backgroundColor: colors.semantic.background.primary,
       border: "1px solid ".concat(colors.semantic.border.strong),
       borderRadius: '8px',
-      // Figma 스펙에 맞춤
       boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
-      // Figma 스펙의 그림자
       zIndex: 1000,
       marginTop: '8px',
-      // Figma 스펙에 맞춘 간격
       maxHeight: '200px',
       overflowY: 'auto',
       // 애니메이션 스타일
@@ -21526,13 +21527,19 @@ var Dropdown = function (_a) {
       transform: isAnimating ? 'translateY(0) scaleY(1)' : 'translateY(-8px) scaleY(0.95)',
       transformOrigin: 'top center',
       transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-      // 자연스러운 easing
-      userSelect: !enableSearch ? 'none' : 'auto' // 검색 기능이 비활성화된 경우 user-select none
+      userSelect: !enableSearch ? 'none' : 'auto'
     };
   }, [isAnimating, enableSearch]);
   var getCheckIcon = function () {
     return jsx(Icon, {
       type: "check",
+      size: 20,
+      color: "currentColor"
+    });
+  };
+  var getLockIcon = function () {
+    return jsx(Icon, {
+      type: "lock",
       size: 20,
       color: "currentColor"
     });
@@ -21607,16 +21614,13 @@ var Dropdown = function (_a) {
       role: "listbox",
       ref: optionsContainerRef,
       children: filteredOptions.length === 0 ? jsx("div", {
-        style: {
-          padding: '13px 16px',
-          fontSize: '14px',
-          fontWeight: 500,
-          lineHeight: '22px',
+        style: __assign(__assign({
+          padding: '13px 16px'
+        }, getTextStyle()), {
           color: colors.semantic.disabled.foreground,
-          fontFamily: 'Pretendard',
           textAlign: 'center',
-          userSelect: !enableSearch ? 'none' : 'auto' // 검색 기능이 비활성화된 경우 user-select none
-        },
+          userSelect: !enableSearch ? 'none' : 'auto'
+        }),
         children: enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'
       }) : filteredOptions.map(function (option, index) {
         var isSelected = value === option.value;
@@ -21638,17 +21642,27 @@ var Dropdown = function (_a) {
           "aria-disabled": option.disabled,
           children: [jsx("span", {
             children: option.label
-          }), isSelected && jsx("div", {
+          }), isSelected ? jsx("div", {
             style: {
               width: '20px',
               height: '20px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#7248D9' // Figma 스펙의 체크 아이콘 색상
+              color: '#7248D9'
             },
             children: getCheckIcon()
-          })]
+          }) : option.disabled ? jsx("div", {
+            style: {
+              width: '20px',
+              height: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: colors.semantic.disabled.foreground
+            },
+            children: getLockIcon()
+          }) : null]
         }, option.value);
       })
     }), error && errorMessage && jsx("div", {
@@ -21660,13 +21674,9 @@ var Dropdown = function (_a) {
         marginTop: spacing.xxs // 4px
       },
       children: jsx("span", {
-        style: {
-          fontSize: '14px',
-          fontWeight: 500,
-          lineHeight: '22px',
-          color: colors.semantic.state.error,
-          fontFamily: 'Pretendard'
-        },
+        style: __assign(__assign({}, getTextStyle()), {
+          color: colors.semantic.state.error
+        }),
         children: errorMessage
       })
     })]
