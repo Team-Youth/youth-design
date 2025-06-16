@@ -24496,15 +24496,21 @@ var Table = function (_a) {
     rowAccordion = _a.rowAccordion,
     _b = _a.type,
     type = _b === void 0 ? 'parent' : _b,
-    isLoading = _a.isLoading;
+    isLoading = _a.isLoading,
+    emptyIcon = _a.emptyIcon,
+    _c = _a.emptyIconSize,
+    emptyIconSize = _c === void 0 ? 32 : _c,
+    _d = _a.emptyIconColor,
+    emptyIconColor = _d === void 0 ? colors.primary.coolGray[300] : _d,
+    emptyText = _a.emptyText;
   // 각 열의 최대 너비를 저장하는 상태
-  var _c = useState({}),
-    columnLayouts = _c[0],
-    setColumnLayouts = _c[1];
+  var _e = useState({}),
+    columnLayouts = _e[0],
+    setColumnLayouts = _e[1];
   // 너비 계산이 완료되었는지 추적하는 상태
-  var _d = useState(false),
-    isWidthCalculationComplete = _d[0],
-    setIsWidthCalculationComplete = _d[1];
+  var _f = useState(false),
+    isWidthCalculationComplete = _f[0],
+    setIsWidthCalculationComplete = _f[1];
   // 헤더 셀의 참조를 저장할 배열
   var headerRefs = useRef([]);
   // 열 너비를 업데이트하는 함수
@@ -24601,7 +24607,7 @@ var Table = function (_a) {
           ref: function (el) {
             headerRefs.current[index] = el;
           },
-          style: __assign(__assign({
+          style: __assign(__assign(__assign({
             display: 'flex',
             alignItems: 'center',
             borderBottom: '1px solid #eee',
@@ -24612,7 +24618,11 @@ var Table = function (_a) {
             boxSizing: 'border-box',
             overflow: 'visible',
             height: 48
-          }, isWidthCalculationComplete && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
+          }, data.length === 0 && {
+            flex: 1,
+            minWidth: 0,
+            width: 'auto'
+          }), isWidthCalculationComplete && data.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
             flex: 1,
             minWidth: 0,
             width: 'auto'
@@ -24641,7 +24651,27 @@ var Table = function (_a) {
         flexDirection: 'column',
         flexWrap: 'nowrap'
       },
-      children: data.map(function (rowData, rowIndex) {
+      children: data.length === 0 ? jsxs("div", {
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: 200,
+          gap: 10
+        },
+        children: [emptyIcon && jsx(Icon, {
+          type: emptyIcon,
+          size: emptyIconSize,
+          color: emptyIconColor
+        }), emptyText && jsx(Font, {
+          type: "body2",
+          fontWeight: "medium",
+          color: colors.primary.coolGray[300],
+          children: emptyText
+        })]
+      }) : data.map(function (rowData, rowIndex) {
         return jsx(Row, {
           data: rowData,
           columns: formattedColumns,

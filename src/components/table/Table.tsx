@@ -3,6 +3,7 @@ import { useEffectOnceWhen } from 'rooks';
 import { YouthLottie } from '../lottie/Lottie';
 import Font from '../font/Font';
 import { colors } from '../../tokens/colors';
+import { Icon, IconType } from '../icon';
 import loadingSpinnerData from './loadingSpinner.json';
 
 interface Column<T> {
@@ -17,6 +18,10 @@ export interface TableProps<T> {
   isLoading: boolean;
   rowAccordion?: (rowData: T) => JSX.Element;
   type?: 'parent' | 'child';
+  emptyIcon?: IconType;
+  emptyIconSize?: number;
+  emptyIconColor?: string;
+  emptyText?: string;
 }
 
 export const Table = <T,>({
@@ -25,6 +30,10 @@ export const Table = <T,>({
   rowAccordion,
   type = 'parent',
   isLoading,
+  emptyIcon,
+  emptyIconSize = 32,
+  emptyIconColor = colors.primary.coolGray[300],
+  emptyText,
 }: TableProps<T>) => {
   // 각 열의 최대 너비를 저장하는 상태
   const [columnLayouts, setColumnLayouts] = useState<{ [key: number]: number }>({});
@@ -146,21 +155,28 @@ export const Table = <T,>({
                 boxSizing: 'border-box',
                 overflow: 'visible',
                 height: 48,
-                ...(isWidthCalculationComplete && {
-                  ...(type === 'parent'
-                    ? index === formattedColumns.length - 2 && {
-                        flex: 1,
-                        minWidth: 0,
-                        width: 'auto',
-                      }
-                    : index === formattedColumns.length - 1 && {
-                        flex: 2,
-                        minWidth: 0,
-                        width: 'auto',
-                      }),
-                  ...(type === 'child' &&
-                    index !== formattedColumns.length - 1 && { flex: 1, width: 'auto' }),
+                // 데이터가 없을 때 컬럼이 100%, 고르게 분배되도록 설정
+                ...(data.length === 0 && {
+                  flex: 1,
+                  minWidth: 0,
+                  width: 'auto',
                 }),
+                ...(isWidthCalculationComplete &&
+                  data.length > 0 && {
+                    ...(type === 'parent'
+                      ? index === formattedColumns.length - 2 && {
+                          flex: 1,
+                          minWidth: 0,
+                          width: 'auto',
+                        }
+                      : index === formattedColumns.length - 1 && {
+                          flex: 2,
+                          minWidth: 0,
+                          width: 'auto',
+                        }),
+                    ...(type === 'child' &&
+                      index !== formattedColumns.length - 1 && { flex: 1, width: 'auto' }),
+                  }),
                 ...column.style,
               }}
             >
@@ -189,18 +205,39 @@ export const Table = <T,>({
           flexWrap: 'nowrap',
         }}
       >
-        {data.map((rowData, rowIndex) => (
-          <Row
-            key={`row-${rowIndex}`}
-            data={rowData}
-            columns={formattedColumns}
-            updateColumnWidth={updateColumnWidth}
-            columnLayouts={columnLayouts}
-            isWidthCalculationComplete={isWidthCalculationComplete}
-            rowAccordion={rowAccordion}
-            tableType={type}
-          />
-        ))}
+        {data.length === 0 ? (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: 200,
+              gap: 10,
+            }}
+          >
+            {emptyIcon && <Icon type={emptyIcon} size={emptyIconSize} color={emptyIconColor} />}
+            {emptyText && (
+              <Font type="body2" fontWeight="medium" color={colors.primary.coolGray[300]}>
+                {emptyText}
+              </Font>
+            )}
+          </div>
+        ) : (
+          data.map((rowData, rowIndex) => (
+            <Row
+              key={`row-${rowIndex}`}
+              data={rowData}
+              columns={formattedColumns}
+              updateColumnWidth={updateColumnWidth}
+              columnLayouts={columnLayouts}
+              isWidthCalculationComplete={isWidthCalculationComplete}
+              rowAccordion={rowAccordion}
+              tableType={type}
+            />
+          ))
+        )}
       </div>
     </div>
   );
