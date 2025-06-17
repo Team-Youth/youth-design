@@ -52,7 +52,7 @@ export const Chips: React.FC<ChipsProps> = ({
     },
     m: {
       paddingX: type === 'capsule' ? '16px' : '12px',
-      paddingY: '6px',
+      paddingY: '7px',
       paddingWithLeadingIcon: type === 'capsule' ? '12px' : '8px',
       paddingWithTrailingIcon: type === 'capsule' ? '12px' : '8px',
       borderRadius: type === 'capsule' ? '100px' : '6px',

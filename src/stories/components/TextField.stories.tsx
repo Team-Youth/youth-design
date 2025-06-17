@@ -88,7 +88,10 @@ const meta: Meta<typeof TextField> = {
 - **아이콘**: Leading Icon, Trailing Icon 지원
 - **에러 처리**: 에러 상태 및 에러 메시지 표시
 - **커서 애니메이션**: 포커스 시 깜빡이는 커서 효과
-- **타입 지원**: text, password, email, number 타입 지원
+- **타입별 기능**: 
+  - **password**: 자동 show/hide 토글 기능
+  - **tel**: 전화번호 자동 포맷팅 (000-0000-0000)
+  - **text, email, number**: 기본 입력 기능
         `,
       },
     },
@@ -282,10 +285,125 @@ export const InputTypes: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
       <TextField type="text" placeholder="Text input" />
-      <TextField type="password" placeholder="Password input" trailingIcon={<EyeIcon />} />
+      <TextField type="password" placeholder="Password input" />
       <TextField type="email" placeholder="Email input" />
       <TextField type="number" placeholder="Number input" />
       <TextField type="tel" placeholder="Phone input" />
+    </div>
+  ),
+};
+
+// 새로운 password 기능을 위한 스토리
+export const PasswordField: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
+      <div>
+        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+          자동 Show/Hide 기능
+        </h3>
+        <ControlledTextField type="password" placeholder="비밀번호를 입력하세요" />
+        <p style={{ fontSize: '12px', color: '#8D97A5', marginTop: '4px' }}>
+          password 타입은 자동으로 show/hide 버튼이 추가됩니다
+        </p>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+          커스텀 Trailing Icon과 함께
+        </h3>
+        <ControlledTextField type="password" placeholder="비밀번호" trailingIcon={<EyeIcon />} />
+        <p style={{ fontSize: '12px', color: '#8D97A5', marginTop: '4px' }}>
+          trailingIcon이 있으면 자동 show/hide는 비활성화됩니다
+        </p>
+      </div>
+    </div>
+  ),
+};
+
+// 새로운 전화번호 포맷팅 기능을 위한 스토리
+export const PhoneField: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}>
+      <div>
+        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+          전화번호 자동 포맷팅
+        </h3>
+        <ControlledTextField type="tel" placeholder="전화번호를 입력하세요" />
+        <p style={{ fontSize: '12px', color: '#8D97A5', marginTop: '4px' }}>
+          숫자를 입력하면 자동으로 000-0000-0000 형식으로 포맷팅됩니다
+        </p>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
+          전화번호 + Leading Icon
+        </h3>
+        <ControlledTextField
+          type="tel"
+          placeholder="010-0000-0000"
+          leadingIcon={
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path
+                d="M18.308 15.2167L16.0747 12.9833C15.2997 12.2083 14.0997 12.2083 13.3247 12.9833L12.683 13.625C12.333 13.975 11.8247 14.1333 11.2747 13.9833C10.1163 13.6583 8.49967 12.1 7.04967 10.65C5.59967 9.2 4.04134 7.58333 3.71634 6.425C3.56634 5.875 3.72467 5.36667 4.07467 5.01667L4.71634 4.375C5.49134 3.6 5.49134 2.4 4.71634 1.625L2.48301 0.391667C1.70801 -0.383333 0.508008 -0.383333 -0.266992 0.391667L-0.833659 0.958333C-1.63366 1.75833 -1.91699 2.95 -1.58366 4.03333C-0.916992 6.19167 0.341675 8.71667 2.39967 11.3583C4.45767 14 6.62467 15.5917 8.79134 16.5833C9.87467 17.0833 11.108 16.8667 11.983 16L12.583 15.4C13.358 14.625 13.358 13.425 12.583 12.65L12.158 12.225"
+                stroke="currentColor"
+                strokeWidth="1.67"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          }
+        />
+      </div>
+    </div>
+  ),
+};
+
+// 모든 타입별 기능을 한 번에 보여주는 스토리
+export const TypeFeatures: Story = {
+  render: () => (
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '32px',
+        padding: '24px',
+      }}
+    >
+      <div>
+        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>
+          🔒 Password Type
+        </h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <ControlledTextField type="password" placeholder="비밀번호" />
+          <p style={{ fontSize: '12px', color: '#8D97A5' }}>자동 show/hide 토글 기능</p>
+        </div>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>📞 Tel Type</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <ControlledTextField type="tel" placeholder="전화번호" />
+          <p style={{ fontSize: '12px', color: '#8D97A5' }}>자동 포맷팅 (000-0000-0000)</p>
+        </div>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>✉️ Email Type</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <ControlledTextField type="email" placeholder="이메일" />
+          <p style={{ fontSize: '12px', color: '#8D97A5' }}>이메일 형식 입력</p>
+        </div>
+      </div>
+
+      <div>
+        <h3 style={{ marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>
+          🔢 Number Type
+        </h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <ControlledTextField type="number" placeholder="숫자" />
+          <p style={{ fontSize: '12px', color: '#8D97A5' }}>숫자만 입력 가능</p>
+        </div>
+      </div>
     </div>
   ),
 };

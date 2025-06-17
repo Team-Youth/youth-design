@@ -19729,7 +19729,7 @@ var Chips = function (_a) {
     },
     m: {
       paddingX: type === 'capsule' ? '16px' : '12px',
-      paddingY: '6px',
+      paddingY: '7px',
       paddingWithLeadingIcon: type === 'capsule' ? '12px' : '8px',
       paddingWithTrailingIcon: type === 'capsule' ? '12px' : '8px',
       borderRadius: type === 'capsule' ? '100px' : '6px',
@@ -21914,6 +21914,19 @@ var TextArea = forwardRef(function (_a, ref) {
 });
 TextArea.displayName = 'TextArea';
 
+// 전화번호 포맷팅 함수
+var formatPhoneNumber = function (value) {
+  // 숫자만 추출
+  var numbers = value.replace(/\D/g, '');
+  // 길이에 따라 포맷팅
+  if (numbers.length <= 3) {
+    return numbers;
+  } else if (numbers.length <= 7) {
+    return "".concat(numbers.slice(0, 3), "-").concat(numbers.slice(3));
+  } else {
+    return "".concat(numbers.slice(0, 3), "-").concat(numbers.slice(3, 7), "-").concat(numbers.slice(7, 11));
+  }
+};
 var TextField = forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
@@ -21952,9 +21965,18 @@ var TextField = forwardRef(function (_a, ref) {
   var _l = useState(defaultValue || ''),
     internalValue = _l[0],
     setInternalValue = _l[1];
+  var _m = useState(false),
+    showPassword = _m[0],
+    setShowPassword = _m[1];
   var currentValue = value !== undefined ? value : internalValue;
   var isEmpty = !currentValue || currentValue.length === 0;
   var actualStatus = status || (isEmpty ? 'empty' : 'filled');
+  // password 타입일 때 실제 input type 결정
+  var inputType = type === 'password' ? showPassword ? 'text' : 'password' : type;
+  // password 토글 핸들러
+  var handlePasswordToggle = useCallback(function () {
+    setShowPassword(!showPassword);
+  }, [showPassword]);
   var getContainerStyles = useCallback(function () {
     var borderColor = colors.semantic.border.strong; // #D6D6D6
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
@@ -22034,11 +22056,15 @@ var TextField = forwardRef(function (_a, ref) {
   var handleChange = useCallback(function (e) {
     if (readOnly) return; // readOnly일 때 값 변경 방지
     var newValue = e.target.value;
+    // tel 타입일 때 전화번호 포맷팅 적용
+    if (type === 'tel') {
+      newValue = formatPhoneNumber(newValue);
+    }
     if (value === undefined) {
       setInternalValue(newValue);
     }
     onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
-  }, [value, onChange, readOnly]);
+  }, [value, onChange, readOnly, type]);
   var handleMouseEnter = useCallback(function () {
     if (!disabled && !readOnly && !isFocused) {
       setIsHovered(true);
@@ -22075,6 +22101,75 @@ var TextField = forwardRef(function (_a, ref) {
   };
   // Trailing 아이콘 렌더링
   var renderTrailingIcon = function () {
+    // password 타입일 때 자동으로 show/hide 아이콘 추가
+    if (type === 'password' && !trailingIcon && !trailingIconType) {
+      return jsx("div", {
+        style: {
+          width: '20px',
+          height: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: iconColor,
+          cursor: 'pointer'
+        },
+        onClick: handlePasswordToggle,
+        children: showPassword ?
+        // 숨기기 아이콘 (eye-slash)
+        jsxs("svg", {
+          width: "20",
+          height: "20",
+          viewBox: "0 0 20 20",
+          fill: "none",
+          children: [jsx("path", {
+            d: "M1.66699 10S4.16699 4.16667 10.0003 4.16667s8.33331 5.83333 8.33331 5.83333-2.5 5.8333-8.33331 5.8333S1.66699 10 1.66699 10Z",
+            stroke: "currentColor",
+            strokeWidth: "1.67",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          }), jsx("circle", {
+            cx: "10",
+            cy: "10",
+            r: "2.5",
+            stroke: "currentColor",
+            strokeWidth: "1.67",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          }), jsx("line", {
+            x1: "2",
+            y1: "2",
+            x2: "18",
+            y2: "18",
+            stroke: "currentColor",
+            strokeWidth: "1.67",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          })]
+        }) :
+        // 보기 아이콘 (eye)
+        jsxs("svg", {
+          width: "20",
+          height: "20",
+          viewBox: "0 0 20 20",
+          fill: "none",
+          children: [jsx("path", {
+            d: "M1.66699 10S4.16699 4.16667 10.0003 4.16667s8.33331 5.83333 8.33331 5.83333-2.5 5.8333-8.33331 5.8333S1.66699 10 1.66699 10Z",
+            stroke: "currentColor",
+            strokeWidth: "1.67",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          }), jsx("circle", {
+            cx: "10",
+            cy: "10",
+            r: "2.5",
+            stroke: "currentColor",
+            strokeWidth: "1.67",
+            strokeLinecap: "round",
+            strokeLinejoin: "round"
+          })]
+        })
+      });
+    }
     if (trailingIconType) {
       return jsx(Icon, {
         type: trailingIconType,
@@ -22109,7 +22204,7 @@ var TextField = forwardRef(function (_a, ref) {
       onMouseLeave: handleMouseLeave,
       children: [renderLeadingIcon(), jsx("input", __assign({
         ref: ref,
-        type: type,
+        type: inputType,
         value: currentValue,
         placeholder: placeholder,
         onChange: handleChange,

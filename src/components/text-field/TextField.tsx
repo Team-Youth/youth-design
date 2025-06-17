@@ -47,6 +47,21 @@ export interface TextFieldProps
   width?: 'fill' | (string & {}) | number;
 }
 
+// 전화번호 포맷팅 함수
+const formatPhoneNumber = (value: string): string => {
+  // 숫자만 추출
+  const numbers = value.replace(/\D/g, '');
+
+  // 길이에 따라 포맷팅
+  if (numbers.length <= 3) {
+    return numbers;
+  } else if (numbers.length <= 7) {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3)}`;
+  } else {
+    return `${numbers.slice(0, 3)}-${numbers.slice(3, 7)}-${numbers.slice(7, 11)}`;
+  }
+};
+
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
@@ -77,10 +92,19 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const [isFocused, setIsFocused] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [internalValue, setInternalValue] = useState(defaultValue || '');
+    const [showPassword, setShowPassword] = useState(false);
 
     const currentValue = value !== undefined ? value : internalValue;
     const isEmpty = !currentValue || currentValue.length === 0;
     const actualStatus = status || (isEmpty ? 'empty' : 'filled');
+
+    // password 타입일 때 실제 input type 결정
+    const inputType = type === 'password' ? (showPassword ? 'text' : 'password') : type;
+
+    // password 토글 핸들러
+    const handlePasswordToggle = useCallback(() => {
+      setShowPassword(!showPassword);
+    }, [showPassword]);
 
     const getContainerStyles = useCallback((): React.CSSProperties => {
       let borderColor: string = colors.semantic.border.strong; // #D6D6D6
@@ -172,13 +196,19 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         if (readOnly) return; // readOnly일 때 값 변경 방지
 
-        const newValue = e.target.value;
+        let newValue = e.target.value;
+
+        // tel 타입일 때 전화번호 포맷팅 적용
+        if (type === 'tel') {
+          newValue = formatPhoneNumber(newValue);
+        }
+
         if (value === undefined) {
           setInternalValue(newValue);
         }
         onChange?.(newValue);
       },
-      [value, onChange, readOnly],
+      [value, onChange, readOnly, type],
     );
 
     const handleMouseEnter = useCallback(() => {
@@ -221,6 +251,76 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
     // Trailing 아이콘 렌더링
     const renderTrailingIcon = () => {
+      // password 타입일 때 자동으로 show/hide 아이콘 추가
+      if (type === 'password' && !trailingIcon && !trailingIconType) {
+        return (
+          <div
+            style={{
+              width: '20px',
+              height: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: iconColor,
+              cursor: 'pointer',
+            }}
+            onClick={handlePasswordToggle}
+          >
+            {showPassword ? (
+              // 숨기기 아이콘 (eye-slash)
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M1.66699 10S4.16699 4.16667 10.0003 4.16667s8.33331 5.83333 8.33331 5.83333-2.5 5.8333-8.33331 5.8333S1.66699 10 1.66699 10Z"
+                  stroke="currentColor"
+                  strokeWidth="1.67"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle
+                  cx="10"
+                  cy="10"
+                  r="2.5"
+                  stroke="currentColor"
+                  strokeWidth="1.67"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <line
+                  x1="2"
+                  y1="2"
+                  x2="18"
+                  y2="18"
+                  stroke="currentColor"
+                  strokeWidth="1.67"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            ) : (
+              // 보기 아이콘 (eye)
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M1.66699 10S4.16699 4.16667 10.0003 4.16667s8.33331 5.83333 8.33331 5.83333-2.5 5.8333-8.33331 5.8333S1.66699 10 1.66699 10Z"
+                  stroke="currentColor"
+                  strokeWidth="1.67"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle
+                  cx="10"
+                  cy="10"
+                  r="2.5"
+                  stroke="currentColor"
+                  strokeWidth="1.67"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
+          </div>
+        );
+      }
+
       if (trailingIconType) {
         return (
           <Icon type={trailingIconType} size={20} color={iconColor} onClick={onTrailingIconClick} />
@@ -259,7 +359,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
           <input
             ref={ref}
-            type={type}
+            type={inputType}
             value={currentValue}
             placeholder={placeholder}
             onChange={handleChange}
