@@ -20,5 +20,9 @@ export interface ChipsProps {
     onClick?: () => void;
     /** 추가 CSS 클래스 */
     className?: string;
+    /** 수평 패딩 (기본값을 덮어쓸 때 사용) */
+    paddingX?: string | number;
+    /** 수직 패딩 (기본값을 덮어쓸 때 사용) */
+    paddingY?: string | number;
 }
 export declare const Chips: React.FC<ChipsProps>;

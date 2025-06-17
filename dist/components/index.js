@@ -19713,7 +19713,9 @@ var Chips = function (_a) {
     text = _a.text,
     onClick = _a.onClick,
     _f = _a.className,
-    className = _f === void 0 ? '' : _f;
+    className = _f === void 0 ? '' : _f,
+    paddingX = _a.paddingX,
+    paddingY = _a.paddingY;
   var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
@@ -19744,8 +19746,16 @@ var Chips = function (_a) {
     var config = sizeConfig[size];
     var hasLeadingIcon = leadingIcon !== undefined;
     var hasTrailingIcon = trailingIcon !== undefined;
-    var paddingLeft = config.paddingX;
-    var paddingRight = config.paddingX;
+    // padding 값을 CSS 값으로 변환하는 헬퍼 함수
+    var toCssValue = function (value, defaultValue) {
+      if (value === undefined) return defaultValue;
+      return typeof value === 'number' ? "".concat(value, "px") : value;
+    };
+    // props로 전달받은 padding이 있으면 그것을 사용, 없으면 기본값 사용
+    var finalPaddingX = toCssValue(paddingX, config.paddingX);
+    var finalPaddingY = toCssValue(paddingY, config.paddingY);
+    var paddingLeft = finalPaddingX;
+    var paddingRight = finalPaddingX;
     if (hasLeadingIcon) {
       paddingLeft = config.paddingWithLeadingIcon;
     }
@@ -19756,7 +19766,7 @@ var Chips = function (_a) {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: "".concat(config.paddingY, " ").concat(paddingRight, " ").concat(config.paddingY, " ").concat(paddingLeft),
+      padding: "".concat(finalPaddingY, " ").concat(paddingRight, " ").concat(finalPaddingY, " ").concat(paddingLeft),
       borderRadius: config.borderRadius,
       height: config.height,
       border: '1px solid transparent',

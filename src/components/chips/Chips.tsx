@@ -23,6 +23,10 @@ export interface ChipsProps {
   onClick?: () => void;
   /** 추가 CSS 클래스 */
   className?: string;
+  /** 수평 패딩 (기본값을 덮어쓸 때 사용) */
+  paddingX?: string | number;
+  /** 수직 패딩 (기본값을 덮어쓸 때 사용) */
+  paddingY?: string | number;
 }
 
 export const Chips: React.FC<ChipsProps> = ({
@@ -35,6 +39,8 @@ export const Chips: React.FC<ChipsProps> = ({
   text,
   onClick,
   className = '',
+  paddingX,
+  paddingY,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -67,8 +73,18 @@ export const Chips: React.FC<ChipsProps> = ({
     const hasLeadingIcon = leadingIcon !== undefined;
     const hasTrailingIcon = trailingIcon !== undefined;
 
-    let paddingLeft = config.paddingX;
-    let paddingRight = config.paddingX;
+    // padding 값을 CSS 값으로 변환하는 헬퍼 함수
+    const toCssValue = (value: string | number | undefined, defaultValue: string): string => {
+      if (value === undefined) return defaultValue;
+      return typeof value === 'number' ? `${value}px` : value;
+    };
+
+    // props로 전달받은 padding이 있으면 그것을 사용, 없으면 기본값 사용
+    const finalPaddingX = toCssValue(paddingX, config.paddingX);
+    const finalPaddingY = toCssValue(paddingY, config.paddingY);
+
+    let paddingLeft = finalPaddingX;
+    let paddingRight = finalPaddingX;
 
     if (hasLeadingIcon) {
       paddingLeft = config.paddingWithLeadingIcon;
@@ -81,7 +97,7 @@ export const Chips: React.FC<ChipsProps> = ({
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: `${config.paddingY} ${paddingRight} ${config.paddingY} ${paddingLeft}`,
+      padding: `${finalPaddingY} ${paddingRight} ${finalPaddingY} ${paddingLeft}`,
       borderRadius: config.borderRadius,
       height: config.height,
       border: '1px solid transparent',
