@@ -21194,7 +21194,7 @@ var Modal = function (_a) {
 
 var Dropdown = function (_a) {
   var _b = _a.placeholder,
-    placeholder = _b === void 0 ? 'Placeholder' : _b,
+    placeholder = _b === void 0 ? '' : _b,
     value = _a.value,
     _c = _a.options,
     options = _c === void 0 ? [] : _c,
@@ -21213,22 +21213,24 @@ var Dropdown = function (_a) {
     _h = _a.enableSearch,
     enableSearch = _h === void 0 ? false : _h,
     _j = _a.hideOption,
-    hideOption = _j === void 0 ? false : _j;
-  var _k = React.useState(false),
-    isOpen = _k[0],
-    setIsOpen = _k[1];
+    hideOption = _j === void 0 ? false : _j,
+    _k = _a.disablePopulatedDisabled,
+    disablePopulatedDisabled = _k === void 0 ? false : _k;
   var _l = React.useState(false),
-    isAnimating = _l[0],
-    setIsAnimating = _l[1];
+    isOpen = _l[0],
+    setIsOpen = _l[1];
   var _m = React.useState(false),
-    shouldRender = _m[0],
-    setShouldRender = _m[1];
-  var _o = React.useState(null),
-    hoveredOptionIndex = _o[0],
-    setHoveredOptionIndex = _o[1];
-  var _p = React.useState(''),
-    searchText = _p[0],
-    setSearchText = _p[1];
+    isAnimating = _m[0],
+    setIsAnimating = _m[1];
+  var _o = React.useState(false),
+    shouldRender = _o[0],
+    setShouldRender = _o[1];
+  var _p = React.useState(null),
+    hoveredOptionIndex = _p[0],
+    setHoveredOptionIndex = _p[1];
+  var _q = React.useState(''),
+    searchText = _q[0],
+    setSearchText = _q[1];
   var dropdownRef = React.useRef(null);
   var optionsContainerRef = React.useRef(null);
   var inputRef = React.useRef(null);
@@ -21238,6 +21240,27 @@ var Dropdown = function (_a) {
     });
   }, [options, value]);
   var hasSelectedOption = !!selectedOption;
+  // populated disabled 상태 체크: 옵션이 하나뿐일 때
+  var isPopulatedDisabled = React.useMemo(function () {
+    if (disablePopulatedDisabled) return false;
+    var enabledOptions = options.filter(function (option) {
+      return !option.disabled;
+    });
+    return enabledOptions.length === 1;
+  }, [options, disablePopulatedDisabled]);
+  // 옵션이 하나뿐일 때 자동으로 선택
+  React.useEffect(function () {
+    if (isPopulatedDisabled && !value && onChange) {
+      var enabledOptions = options.filter(function (option) {
+        return !option.disabled;
+      });
+      if (enabledOptions.length === 1) {
+        onChange(enabledOptions[0].value);
+      }
+    }
+  }, [isPopulatedDisabled, value, onChange, options]);
+  // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
+  var actuallyDisabled = disabled || isPopulatedDisabled;
   // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
   var finalWidth = React.useMemo(function () {
     if (width) {
@@ -21372,7 +21395,7 @@ var Dropdown = function (_a) {
   var getContainerStyles = React.useCallback(function () {
     var borderColor = colors.semantic.border.strong; // #D6D6D6
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
-    if (disabled) {
+    if (actuallyDisabled) {
       borderColor = colors.semantic.border.strong;
       backgroundColor = colors.semantic.disabled.background; // #F3F5F6
     } else if (error) {
@@ -21392,18 +21415,23 @@ var Dropdown = function (_a) {
       border: "1px solid ".concat(borderColor),
       borderRadius: '8px',
       transition: 'all 0.2s ease',
-      cursor: disabled ? 'not-allowed' : 'pointer',
+      cursor: actuallyDisabled ? 'not-allowed' : 'pointer',
       width: finalWidth === 'fill' ? '100%' : finalWidth,
       boxSizing: 'border-box',
       userSelect: !enableSearch ? 'none' : 'auto'
     }, hideOption && {
       userSelect: 'none'
     });
-  }, [disabled, error, isOpen, finalWidth, hideOption, enableSearch, size]);
+  }, [actuallyDisabled, error, isOpen, finalWidth, hideOption, enableSearch, size]);
   var getTextStyles = React.useCallback(function () {
     var textColor;
-    if (disabled) {
-      textColor = colors.semantic.disabled.foreground; // #D1D5DB
+    if (actuallyDisabled) {
+      // populated disabled 상태에서는 선택된 값이 있으면 일반 텍스트 색상, 없으면 비활성화 색상
+      if (isPopulatedDisabled && hasSelectedOption) {
+        textColor = colors.semantic.text.primary; // #25282D
+      } else {
+        textColor = colors.semantic.disabled.foreground; // #D1D5DB
+      }
     } else if (error) {
       textColor = colors.semantic.state.error; // #FF2E2E
     } else if (hasSelectedOption) {
@@ -21417,7 +21445,7 @@ var Dropdown = function (_a) {
       color: textColor,
       userSelect: !enableSearch || hideOption ? 'none' : 'auto'
     });
-  }, [disabled, error, hasSelectedOption, enableSearch, hideOption, getTextStyle]);
+  }, [actuallyDisabled, isPopulatedDisabled, error, hasSelectedOption, enableSearch, hideOption, getTextStyle]);
   var getInputStyles = React.useCallback(function () {
     var textStyle = getTextStyle();
     return __assign(__assign({}, textStyle), {
@@ -21430,14 +21458,15 @@ var Dropdown = function (_a) {
     });
   }, [getTextStyle]);
   var getIconColor = React.useCallback(function () {
-    if (disabled) {
+    if (actuallyDisabled) {
+      // populated disabled 상태에서는 chevron 아이콘을 비활성화 색상으로 표시
       return colors.semantic.disabled.foreground; // #D1D5DB
     } else if (error) {
       return colors.semantic.state.error; // #FF2E2E
     } else {
       return colors.semantic.text.primary; // #25282D
     }
-  }, [disabled, error]);
+  }, [actuallyDisabled, error]);
   var getChevronIcon = React.useCallback(function () {
     return jsxRuntime.jsx(Icon, {
       type: isOpen ? 'chevron-up' : 'chevron-down',
@@ -21446,16 +21475,16 @@ var Dropdown = function (_a) {
     });
   }, [isOpen]);
   var handleClick = React.useCallback(function () {
-    if (!disabled && !hideOption) {
+    if (!actuallyDisabled && !hideOption) {
       setIsOpen(!isOpen);
     }
-  }, [disabled, hideOption, isOpen]);
+  }, [actuallyDisabled, hideOption, isOpen]);
   var handleOptionClick = React.useCallback(function (optionValue) {
-    if (!disabled) {
+    if (!actuallyDisabled) {
       onChange === null || onChange === void 0 ? void 0 : onChange(optionValue);
       setIsOpen(false);
     }
-  }, [disabled, onChange]);
+  }, [actuallyDisabled, onChange]);
   var handleKeyDown = React.useCallback(function (event) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -21565,10 +21594,13 @@ var Dropdown = function (_a) {
   // Leading 아이콘 렌더링
   var renderLeadingIcon = function () {
     if (!leadingIconType) return null;
+    // populated disabled 상태에서는 leading icon 색상을 별도 처리
+    var leadingIconColor = actuallyDisabled && isPopulatedDisabled && hasSelectedOption ? colors.semantic.text.primary // populated disabled에서 선택된 값이 있으면 일반 색상
+    : getIconColor();
     return jsxRuntime.jsx(Icon, {
       type: leadingIconType,
       size: 20,
-      color: getIconColor()
+      color: leadingIconColor
     });
   };
   return jsxRuntime.jsxs("div", {
@@ -21582,11 +21614,11 @@ var Dropdown = function (_a) {
       style: getContainerStyles(),
       onClick: !isOpen || !enableSearch ? handleClick : undefined,
       onKeyDown: !isOpen || !enableSearch ? handleKeyDown : undefined,
-      tabIndex: disabled || isOpen && enableSearch ? -1 : 0,
+      tabIndex: actuallyDisabled || isOpen && enableSearch ? -1 : 0,
       role: "combobox",
       "aria-expanded": isOpen,
       "aria-haspopup": "listbox",
-      "aria-disabled": disabled,
+      "aria-disabled": actuallyDisabled,
       children: [renderLeadingIcon(), isOpen && enableSearch ? jsxRuntime.jsx("input", {
         ref: inputRef,
         type: "text",
@@ -21595,7 +21627,7 @@ var Dropdown = function (_a) {
         onKeyDown: handleInputKeyDown,
         placeholder: getPlaceholderText(),
         style: getInputStyles(),
-        disabled: disabled
+        disabled: actuallyDisabled
       }) : jsxRuntime.jsx("div", {
         style: getTextStyles(),
         children: getDisplayText()

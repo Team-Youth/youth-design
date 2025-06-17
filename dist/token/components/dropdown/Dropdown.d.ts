@@ -32,5 +32,7 @@ export interface DropdownProps {
     enableSearch?: boolean;
     /** 모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음) */
     hideOption?: boolean;
+    /** populated disabled 기능 비활성화 여부 (기본값: false) */
+    disablePopulatedDisabled?: boolean;
 }
 export declare const Dropdown: React.FC<DropdownProps>;

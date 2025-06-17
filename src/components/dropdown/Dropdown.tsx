@@ -35,10 +35,12 @@ export interface DropdownProps {
   enableSearch?: boolean;
   /** 모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음) */
   hideOption?: boolean;
+  /** populated disabled 기능 비활성화 여부 (기본값: false) */
+  disablePopulatedDisabled?: boolean;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
-  placeholder = 'Placeholder',
+  placeholder = '',
   value,
   options = [],
   onChange,
@@ -51,6 +53,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   width,
   enableSearch = false,
   hideOption = false,
+  disablePopulatedDisabled = false,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -66,6 +69,26 @@ export const Dropdown: React.FC<DropdownProps> = ({
     [options, value],
   );
   const hasSelectedOption = !!selectedOption;
+
+  // populated disabled 상태 체크: 옵션이 하나뿐일 때
+  const isPopulatedDisabled = useMemo(() => {
+    if (disablePopulatedDisabled) return false;
+    const enabledOptions = options.filter((option) => !option.disabled);
+    return enabledOptions.length === 1;
+  }, [options, disablePopulatedDisabled]);
+
+  // 옵션이 하나뿐일 때 자동으로 선택
+  useEffect(() => {
+    if (isPopulatedDisabled && !value && onChange) {
+      const enabledOptions = options.filter((option) => !option.disabled);
+      if (enabledOptions.length === 1) {
+        onChange(enabledOptions[0].value);
+      }
+    }
+  }, [isPopulatedDisabled, value, onChange, options]);
+
+  // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
+  const actuallyDisabled = disabled || isPopulatedDisabled;
 
   // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
   const finalWidth = useMemo(() => {
@@ -223,7 +246,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     let borderColor: string = colors.semantic.border.strong; // #D6D6D6
     let backgroundColor: string = colors.semantic.background.primary; // #FFFFFF
 
-    if (disabled) {
+    if (actuallyDisabled) {
       borderColor = colors.semantic.border.strong;
       backgroundColor = colors.semantic.disabled.background; // #F3F5F6
     } else if (error) {
@@ -244,19 +267,24 @@ export const Dropdown: React.FC<DropdownProps> = ({
       border: `1px solid ${borderColor}`,
       borderRadius: '8px',
       transition: 'all 0.2s ease',
-      cursor: disabled ? 'not-allowed' : 'pointer',
+      cursor: actuallyDisabled ? 'not-allowed' : 'pointer',
       width: finalWidth === 'fill' ? '100%' : finalWidth,
       boxSizing: 'border-box',
       userSelect: !enableSearch ? 'none' : 'auto',
       ...(hideOption && { userSelect: 'none' }),
     };
-  }, [disabled, error, isOpen, finalWidth, hideOption, enableSearch, size]);
+  }, [actuallyDisabled, error, isOpen, finalWidth, hideOption, enableSearch, size]);
 
   const getTextStyles = useCallback((): React.CSSProperties => {
     let textColor: string;
 
-    if (disabled) {
-      textColor = colors.semantic.disabled.foreground; // #D1D5DB
+    if (actuallyDisabled) {
+      // populated disabled 상태에서는 선택된 값이 있으면 일반 텍스트 색상, 없으면 비활성화 색상
+      if (isPopulatedDisabled && hasSelectedOption) {
+        textColor = colors.semantic.text.primary; // #25282D
+      } else {
+        textColor = colors.semantic.disabled.foreground; // #D1D5DB
+      }
     } else if (error) {
       textColor = colors.semantic.state.error; // #FF2E2E
     } else if (hasSelectedOption) {
@@ -273,7 +301,15 @@ export const Dropdown: React.FC<DropdownProps> = ({
       color: textColor,
       userSelect: !enableSearch || hideOption ? 'none' : 'auto',
     };
-  }, [disabled, error, hasSelectedOption, enableSearch, hideOption, getTextStyle]);
+  }, [
+    actuallyDisabled,
+    isPopulatedDisabled,
+    error,
+    hasSelectedOption,
+    enableSearch,
+    hideOption,
+    getTextStyle,
+  ]);
 
   const getInputStyles = useCallback((): React.CSSProperties => {
     const textStyle = getTextStyle();
@@ -290,14 +326,15 @@ export const Dropdown: React.FC<DropdownProps> = ({
   }, [getTextStyle]);
 
   const getIconColor = useCallback(() => {
-    if (disabled) {
+    if (actuallyDisabled) {
+      // populated disabled 상태에서는 chevron 아이콘을 비활성화 색상으로 표시
       return colors.semantic.disabled.foreground; // #D1D5DB
     } else if (error) {
       return colors.semantic.state.error; // #FF2E2E
     } else {
       return colors.semantic.text.primary; // #25282D
     }
-  }, [disabled, error]);
+  }, [actuallyDisabled, error]);
 
   const getChevronIcon = useCallback(
     () => <Icon type={isOpen ? 'chevron-up' : 'chevron-down'} size={20} color="currentColor" />,
@@ -305,19 +342,19 @@ export const Dropdown: React.FC<DropdownProps> = ({
   );
 
   const handleClick = useCallback(() => {
-    if (!disabled && !hideOption) {
+    if (!actuallyDisabled && !hideOption) {
       setIsOpen(!isOpen);
     }
-  }, [disabled, hideOption, isOpen]);
+  }, [actuallyDisabled, hideOption, isOpen]);
 
   const handleOptionClick = useCallback(
     (optionValue: string) => {
-      if (!disabled) {
+      if (!actuallyDisabled) {
         onChange?.(optionValue);
         setIsOpen(false);
       }
     },
-    [disabled, onChange],
+    [actuallyDisabled, onChange],
   );
 
   const handleKeyDown = useCallback(
@@ -443,7 +480,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const renderLeadingIcon = () => {
     if (!leadingIconType) return null;
 
-    return <Icon type={leadingIconType} size={20} color={getIconColor()} />;
+    // populated disabled 상태에서는 leading icon 색상을 별도 처리
+    const leadingIconColor =
+      actuallyDisabled && isPopulatedDisabled && hasSelectedOption
+        ? colors.semantic.text.primary // populated disabled에서 선택된 값이 있으면 일반 색상
+        : getIconColor();
+
+    return <Icon type={leadingIconType} size={20} color={leadingIconColor} />;
   };
 
   return (
@@ -456,11 +499,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
         style={getContainerStyles()}
         onClick={!isOpen || !enableSearch ? handleClick : undefined}
         onKeyDown={!isOpen || !enableSearch ? handleKeyDown : undefined}
-        tabIndex={disabled || (isOpen && enableSearch) ? -1 : 0}
+        tabIndex={actuallyDisabled || (isOpen && enableSearch) ? -1 : 0}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-disabled={disabled}
+        aria-disabled={actuallyDisabled}
       >
         {renderLeadingIcon()}
         {isOpen && enableSearch ? (
@@ -472,7 +515,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             onKeyDown={handleInputKeyDown}
             placeholder={getPlaceholderText()}
             style={getInputStyles()}
-            disabled={disabled}
+            disabled={actuallyDisabled}
           />
         ) : (
           <div style={getTextStyles()}>{getDisplayText()}</div>
