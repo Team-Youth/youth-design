@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import { colors } from '../../tokens/colors';
 import { Font } from '../font/Font';
+import { Icon, IconType } from '../icon';
 import './Chips.css';
 
 export interface ChipsProps {
   /** 칩의 크기 */
-  size?: 'large' | 'medium';
+  size?: 'l' | 'm';
   /** 칩의 모양 */
   type?: 'square' | 'capsule';
-  /** 칩의 상태 */
-  state?: 'hover' | 'selected' | 'disabled' | 'resting';
-  /** 아이콘 위치 */
-  iconPosition?: 'leading' | 'trailing';
-  /** 아이콘 요소 */
-  icon?: React.ReactNode;
-  /** 아이콘 색상 */
-  iconColor?: string;
+  /** 선택 상태 */
+  selected?: boolean;
+  /** 비활성화 상태 */
+  disabled?: boolean;
+  /** 앞쪽 아이콘 */
+  leadingIcon?: IconType;
+  /** 뒤쪽 아이콘 */
+  trailingIcon?: IconType;
   /** 텍스트 내용 */
-  children?: React.ReactNode;
+  text?: string;
   /** 클릭 이벤트 핸들러 */
   onClick?: () => void;
   /** 추가 CSS 클래스 */
@@ -25,149 +26,174 @@ export interface ChipsProps {
 }
 
 export const Chips: React.FC<ChipsProps> = ({
-  size = 'medium',
+  size = 'l',
   type = 'capsule',
-  state = 'resting',
-  iconPosition = 'leading',
-  icon,
-  iconColor,
-  children,
+  selected = false,
+  disabled = false,
+  leadingIcon,
+  trailingIcon,
+  text,
   onClick,
   className = '',
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Size configurations
+  // Size configurations (Figma 디자인 기준)
   const sizeConfig = {
-    large: {
-      paddingX: '16px',
+    l: {
+      paddingX: type === 'capsule' ? '20px' : '16px',
       paddingY: '9px',
+      paddingWithLeadingIcon: type === 'capsule' ? '16px' : '12px',
+      paddingWithTrailingIcon: type === 'capsule' ? '16px' : '12px',
       borderRadius: type === 'capsule' ? '100px' : '8px',
       height: '40px',
       gap: '4px',
+      iconSize: 16,
     },
-    medium: {
-      paddingX: '12px',
+    m: {
+      paddingX: type === 'capsule' ? '16px' : '12px',
       paddingY: '6px',
+      paddingWithLeadingIcon: type === 'capsule' ? '12px' : '8px',
+      paddingWithTrailingIcon: type === 'capsule' ? '12px' : '8px',
       borderRadius: type === 'capsule' ? '100px' : '6px',
       height: '32px',
       gap: '4px',
+      iconSize: 16,
     },
   };
 
   const getStyles = (): React.CSSProperties => {
     const config = sizeConfig[size];
+    const hasLeadingIcon = leadingIcon !== undefined;
+    const hasTrailingIcon = trailingIcon !== undefined;
+
+    let paddingLeft = config.paddingX;
+    let paddingRight = config.paddingX;
+
+    if (hasLeadingIcon) {
+      paddingLeft = config.paddingWithLeadingIcon;
+    }
+    if (hasTrailingIcon) {
+      paddingRight = config.paddingWithTrailingIcon;
+    }
 
     let styles: React.CSSProperties = {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: `${config.paddingY} ${config.paddingX}`,
+      padding: `${config.paddingY} ${paddingRight} ${config.paddingY} ${paddingLeft}`,
       borderRadius: config.borderRadius,
       height: config.height,
       border: '1px solid transparent',
-      cursor: state === 'disabled' ? 'not-allowed' : 'pointer',
+      cursor: disabled ? 'not-allowed' : onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
       gap: config.gap,
       whiteSpace: 'nowrap',
+      boxSizing: 'border-box',
     };
 
-    // State에 따른 스타일링
-    switch (state) {
-      case 'selected':
-        if (type === 'square') {
-          styles = {
-            ...styles,
-            backgroundColor: colors.primary.gray.white,
-            border: `1px solid ${colors.primary.mainviolet}`,
-          };
-        } else {
-          styles = {
-            ...styles,
-            backgroundColor: colors.primary.mainviolet,
-            border: `1px solid ${colors.primary.mainviolet}`,
-          };
-        }
-        break;
-
-      case 'hover':
+    // State에 따른 스타일링 (Figma 디자인 기준)
+    if (disabled) {
+      // Disabled state
+      styles = {
+        ...styles,
+        backgroundColor: colors.primary.coolGray[50], // F3F5F6
+        border: `1px solid ${colors.semantic.border.default}`, // D6D6D6
+        cursor: 'not-allowed',
+      };
+    } else if (selected) {
+      // Selected state
+      if (type === 'square') {
         styles = {
           ...styles,
-          backgroundColor: colors.primary.coolGray[50],
-          border: `1px solid ${colors.primary.coolGray[200]}`,
+          backgroundColor: '#F8F4FE', // Figma에서 확인한 selected square 배경색
+          border: `1px solid #7248D9`, // Figma에서 확인한 border 색상
         };
-        break;
-
-      case 'disabled':
+      } else {
+        // Capsule selected
         styles = {
           ...styles,
-          backgroundColor: colors.semantic.disabled.background,
-          border: `1px solid ${colors.semantic.disabled.background}`,
-          cursor: 'not-allowed',
+          backgroundColor: '#25282D', // Figma에서 확인한 검은색 배경
+          border: 'none',
         };
-        break;
-
-      case 'resting':
-      default:
-        if (isHovered) {
-          styles = {
-            ...styles,
-            backgroundColor: colors.primary.coolGray[50],
-            border: `1px solid ${colors.primary.coolGray[200]}`,
-          };
-        } else {
-          styles = {
-            ...styles,
-            backgroundColor: colors.primary.gray.white,
-            border: `1px solid ${colors.semantic.border.default}`,
-          };
-        }
-        break;
+      }
+    } else if (isHovered) {
+      // Hover state
+      styles = {
+        ...styles,
+        backgroundColor: type === 'capsule' ? '#F9FAFA' : colors.primary.coolGray[50], // F3F5F6
+        border: `1px solid ${colors.semantic.border.default}`, // D6D6D6
+      };
+    } else {
+      // Resting state
+      if (type === 'square') {
+        styles = {
+          ...styles,
+          backgroundColor: colors.primary.gray.white,
+          border: `1px solid ${colors.semantic.border.default}`, // D6D6D6
+        };
+      } else {
+        // Capsule resting
+        styles = {
+          ...styles,
+          backgroundColor: colors.primary.gray.white,
+          border: `1px solid ${colors.semantic.border.default}`, // D6D6D6
+        };
+      }
     }
 
     return styles;
   };
 
   const getTextColor = () => {
-    switch (state) {
-      case 'selected':
-        if (type === 'square') {
-          return colors.primary.coolGray[800];
-        }
-        return colors.primary.gray.white;
-      case 'disabled':
-        return colors.semantic.disabled.foreground;
-      default:
-        return colors.primary.coolGray[800];
+    if (disabled) {
+      return colors.semantic.disabled.foreground; // D1D5DB
     }
+
+    if (selected) {
+      if (type === 'square') {
+        return '#5B27C4'; // Figma에서 확인한 selected square 텍스트 색상
+      } else {
+        // Capsule selected
+        return '#FFFFFF'; // Figma에서 확인한 selected capsule 텍스트 색상
+      }
+    }
+
+    // Default text color
+    return colors.primary.coolGray[800]; // 25282D
   };
 
   const getIconColor = () => {
-    if (iconColor) {
-      return iconColor;
+    if (disabled) {
+      return colors.semantic.disabled.foreground; // D1D5DB
     }
 
-    switch (state) {
-      case 'selected':
-        if (type === 'square') {
-          return colors.primary.mainviolet;
-        }
-        return colors.primary.gray.white;
-      case 'disabled':
-        return colors.semantic.disabled.foreground;
-      default:
-        return colors.primary.coolGray[800];
+    if (selected) {
+      if (type === 'square') {
+        return '#5B27C4'; // Figma에서 확인한 selected square 아이콘 색상
+      } else {
+        // Capsule selected
+        return '#FFFFFF'; // Figma에서 확인한 selected capsule 아이콘 색상
+      }
     }
+
+    // Default icon color
+    return colors.primary.coolGray[800]; // 25282D
+  };
+
+  const getFontWeight = (): 'regular' | 'medium' | 'semibold' | 'bold' => {
+    // Figma에서 확인한 fontWeight: 400 (regular)
+    return 'regular';
   };
 
   const handleClick = () => {
-    if (state !== 'disabled' && onClick) {
+    if (!disabled && onClick) {
       onClick();
     }
   };
 
   const handleMouseEnter = () => {
-    if (state === 'resting') {
+    if (!disabled && !selected) {
       setIsHovered(true);
     }
   };
@@ -177,51 +203,35 @@ export const Chips: React.FC<ChipsProps> = ({
   };
 
   const renderContent = () => {
-    if (!icon) {
-      return (
-        <Font type="body2" fontWeight="medium" color={getTextColor()}>
-          {children}
-        </Font>
-      );
-    }
+    const textColor = getTextColor();
+    const iconColor = getIconColor();
+    const fontWeight = getFontWeight();
 
-    if (iconPosition === 'leading') {
-      return (
-        <>
-          <span className="chips-icon" style={{ color: getIconColor() }}>
-            {icon}
-          </span>
-          {children && (
-            <Font type="body2" fontWeight="medium" color={getTextColor()}>
-              {children}
-            </Font>
-          )}
-        </>
-      );
-    } else {
-      return (
-        <>
-          {children && (
-            <Font type="body2" fontWeight="medium" color={getTextColor()}>
-              {children}
-            </Font>
-          )}
-          <span className="chips-icon" style={{ color: getIconColor() }}>
-            {icon}
-          </span>
-        </>
-      );
-    }
+    return (
+      <>
+        {leadingIcon && (
+          <Icon type={leadingIcon} size={sizeConfig[size].iconSize} color={iconColor} />
+        )}
+        {text && (
+          <Font type="body2" fontWeight={fontWeight} color={textColor}>
+            {text}
+          </Font>
+        )}
+        {trailingIcon && (
+          <Icon type={trailingIcon} size={sizeConfig[size].iconSize} color={iconColor} />
+        )}
+      </>
+    );
   };
 
   return (
     <button
-      className={`chips chips--${size} chips--${type} chips--${state} ${className}`}
+      className={`chips chips--${size} chips--${type} ${selected ? 'chips--selected' : ''} ${disabled ? 'chips--disabled' : ''} ${className}`}
       style={getStyles()}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      disabled={state === 'disabled'}
+      disabled={disabled}
       type="button"
     >
       {renderContent()}

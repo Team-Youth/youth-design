@@ -1,7 +1,7 @@
 export {
   InlineNotification,
   type InlineNotificationProps,
-  type InlineNotificationStatus,
   type InlineNotificationSize,
+  type InlineNotificationType,
 } from './InlineNotification';
 export { default } from './InlineNotification';

@@ -42,7 +42,7 @@ const meta: Meta<typeof Chips> = {
   argTypes: {
     size: {
       control: { type: 'select' },
-      options: ['large', 'medium'],
+      options: ['l', 'm'],
       description: '칩의 크기',
     },
     type: {
@@ -50,17 +50,34 @@ const meta: Meta<typeof Chips> = {
       options: ['square', 'capsule'],
       description: '칩의 모양',
     },
-    state: {
-      control: { type: 'select' },
-      options: ['hover', 'selected', 'disabled', 'resting'],
-      description: '칩의 상태',
+    selected: {
+      control: { type: 'boolean' },
+      description: '선택 상태',
     },
-    iconPosition: {
-      control: { type: 'select' },
-      options: ['leading', 'trailing'],
-      description: '아이콘의 위치',
+    disabled: {
+      control: { type: 'boolean' },
+      description: '비활성화 상태',
     },
-    children: {
+    leadingIcon: {
+      control: { type: 'select' },
+      options: [
+        undefined,
+        'location-filled',
+        'check-circle-filled',
+        'add-circle-filled',
+        'heart-filled',
+        'star',
+        'search',
+        'close',
+      ],
+      description: '앞쪽 아이콘',
+    },
+    trailingIcon: {
+      control: { type: 'select' },
+      options: [undefined, 'chevron-right', 'close', 'arrow-right', 'more'],
+      description: '뒤쪽 아이콘',
+    },
+    text: {
       control: { type: 'text' },
       description: '칩 텍스트',
     },
@@ -77,107 +94,114 @@ type Story = StoryObj<typeof meta>;
 // 기본 스토리
 export const Default: Story = {
   args: {
-    children: 'Chip',
-    size: 'medium',
+    text: 'Chip',
+    size: 'm',
     type: 'capsule',
-    state: 'resting',
+    selected: false,
+    disabled: false,
   },
 };
 
 // 크기별 스토리
 export const Large: Story = {
   args: {
-    children: 'Large Chip',
-    size: 'large',
+    text: 'Large Chip',
+    size: 'l',
     type: 'capsule',
-    state: 'resting',
+    selected: false,
+    disabled: false,
   },
 };
 
 export const Medium: Story = {
   args: {
-    children: 'Medium Chip',
-    size: 'medium',
+    text: 'Medium Chip',
+    size: 'm',
     type: 'capsule',
-    state: 'resting',
+    selected: false,
+    disabled: false,
   },
 };
 
 // 타입별 스토리
 export const Capsule: Story = {
   args: {
-    children: 'Capsule Chip',
+    text: 'Capsule Chip',
     type: 'capsule',
-    state: 'resting',
+    selected: false,
+    disabled: false,
   },
 };
 
 export const Square: Story = {
   args: {
-    children: 'Square Chip',
+    text: 'Square Chip',
     type: 'square',
-    state: 'resting',
+    selected: false,
+    disabled: false,
   },
 };
 
 // 상태별 스토리
 export const Resting: Story = {
   args: {
-    children: 'Resting',
-    state: 'resting',
-  },
-};
-
-export const Hover: Story = {
-  args: {
-    children: 'Hover',
-    state: 'hover',
+    text: 'Resting',
+    selected: false,
+    disabled: false,
   },
 };
 
 export const Selected: Story = {
   args: {
-    children: 'Selected',
-    state: 'selected',
+    text: 'Selected',
+    selected: true,
+    disabled: false,
   },
 };
 
 export const Disabled: Story = {
   args: {
-    children: 'Disabled',
-    state: 'disabled',
+    text: 'Disabled',
+    selected: false,
+    disabled: true,
   },
 };
 
 // 아이콘이 있는 스토리
 export const WithLeadingIcon: Story = {
   args: {
-    children: 'Tag',
-    icon: <TagIcon />,
-    iconPosition: 'leading',
+    text: 'Location',
+    leadingIcon: 'location-filled',
+    selected: false,
+    disabled: false,
   },
 };
 
 export const WithTrailingIcon: Story = {
   args: {
-    children: 'Remove',
-    icon: <CloseIcon />,
-    iconPosition: 'trailing',
+    text: 'More',
+    trailingIcon: 'chevron-right',
+    selected: false,
+    disabled: false,
   },
 };
 
 export const SelectedWithIcon: Story = {
   args: {
-    children: 'Selected',
-    icon: <CheckIcon />,
-    iconPosition: 'leading',
-    state: 'selected',
+    text: 'Selected',
+    leadingIcon: 'check-circle-filled',
+    selected: true,
+    disabled: false,
   },
 };
 
-export const IconOnly: Story = {
+export const WithBothIcons: Story = {
   args: {
-    icon: <StarIcon />,
+    text: 'Both Icons',
+    leadingIcon: 'location-filled',
+    trailingIcon: 'chevron-right',
+    selected: false,
+    disabled: false,
   },
 };
 
@@ -186,95 +210,126 @@ export const AllStates: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
       <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-        <Chips state="resting">Resting</Chips>
-        <Chips state="hover">Hover</Chips>
-        <Chips state="selected">Selected</Chips>
-        <Chips state="disabled">Disabled</Chips>
+        <Chips text="Resting" selected={false} disabled={false} />
+        <Chips text="Selected" selected={true} disabled={false} />
+        <Chips text="Disabled" selected={false} disabled={true} />
       </div>
       <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-        <Chips state="resting" icon={<TagIcon />} iconPosition="leading">
-          With Icon
-        </Chips>
-        <Chips state="selected" icon={<CheckIcon />} iconPosition="leading">
-          Selected + Icon
-        </Chips>
-        <Chips state="disabled" icon={<CloseIcon />} iconPosition="trailing">
-          Disabled + Icon
-        </Chips>
+        <Chips text="With Icon" leadingIcon="location-filled" selected={false} disabled={false} />
+        <Chips
+          text="Selected + Icon"
+          leadingIcon="check-circle-filled"
+          selected={true}
+          disabled={false}
+        />
+        <Chips
+          text="Trailing Icon"
+          trailingIcon="chevron-right"
+          selected={false}
+          disabled={false}
+        />
       </div>
     </div>
   ),
 };
 
 // 크기와 타입 조합
-export const AllSizesAndTypes: Story = {
+export const SizeAndTypeVariations: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
-      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-        <Chips size="large" type="capsule">
-          Large Capsule
-        </Chips>
-        <Chips size="large" type="square">
-          Large Square
-        </Chips>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', alignItems: 'center' }}>
+      <div>
+        <h3 style={{ margin: '0 0 12px 0', textAlign: 'center' }}>Large Size</h3>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <Chips text="Capsule" size="l" type="capsule" />
+          <Chips text="Square" size="l" type="square" />
+          <Chips text="With Icon" size="l" type="capsule" leadingIcon="location-filled" />
+          <Chips text="Selected" size="l" type="capsule" selected={true} />
+        </div>
       </div>
-      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-        <Chips size="medium" type="capsule">
-          Medium Capsule
-        </Chips>
-        <Chips size="medium" type="square">
-          Medium Square
-        </Chips>
+      <div>
+        <h3 style={{ margin: '0 0 12px 0', textAlign: 'center' }}>Medium Size</h3>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <Chips text="Capsule" size="m" type="capsule" />
+          <Chips text="Square" size="m" type="square" />
+          <Chips text="With Icon" size="m" type="capsule" leadingIcon="location-filled" />
+          <Chips text="Selected" size="m" type="capsule" selected={true} />
+        </div>
       </div>
     </div>
   ),
 };
 
-// 필터링 예시
-export const FilterExample: Story = {
-  render: () => {
-    const categories = ['전체', '의료진', '환자', '관리자', '시스템'];
-    const selectedCategory = '의료진';
-
-    return (
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        {categories.map((category) => (
+// 완전한 예시 (Figma 디자인 기준)
+export const FigmaDesignShowcase: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '20px' }}>
+      <div>
+        <h3>Large Capsule</h3>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+          <Chips size="l" type="capsule" text="Resting" />
+          <Chips size="l" type="capsule" text="Selected" selected={true} />
+          <Chips size="l" type="capsule" text="Disabled" disabled={true} />
+          <Chips size="l" type="capsule" text="With Icon" leadingIcon="add-circle-filled" />
           <Chips
-            key={category}
-            state={category === selectedCategory ? 'selected' : 'resting'}
-            onClick={() => console.log(`${category} 선택됨`)}
-          >
-            {category}
-          </Chips>
-        ))}
+            size="l"
+            type="capsule"
+            text="Both Icons"
+            leadingIcon="add-circle-filled"
+            trailingIcon="chevron-right"
+          />
+        </div>
       </div>
-    );
-  },
-};
 
-// 태그 예시
-export const TagExample: Story = {
-  render: () => {
-    const tags = [
-      { label: '긴급', removable: true },
-      { label: '중요', removable: true },
-      { label: '일반', removable: false },
-      { label: '완료', removable: true },
-    ];
-
-    return (
-      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-        {tags.map((tag) => (
+      <div>
+        <h3>Large Square</h3>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+          <Chips size="l" type="square" text="Resting" />
+          <Chips size="l" type="square" text="Selected" selected={true} />
+          <Chips size="l" type="square" text="Disabled" disabled={true} />
+          <Chips size="l" type="square" text="With Icon" leadingIcon="location-filled" />
           <Chips
-            key={tag.label}
-            icon={tag.removable ? <CloseIcon /> : undefined}
-            iconPosition="trailing"
-            onClick={() => console.log(`${tag.label} ${tag.removable ? '삭제' : '클릭'}됨`)}
-          >
-            {tag.label}
-          </Chips>
-        ))}
+            size="l"
+            type="square"
+            text="Both Icons"
+            leadingIcon="location-filled"
+            trailingIcon="chevron-right"
+          />
+        </div>
       </div>
-    );
-  },
+
+      <div>
+        <h3>Medium Capsule</h3>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+          <Chips size="m" type="capsule" text="Resting" />
+          <Chips size="m" type="capsule" text="Selected" selected={true} />
+          <Chips size="m" type="capsule" text="Disabled" disabled={true} />
+          <Chips size="m" type="capsule" text="With Icon" leadingIcon="check-circle-filled" />
+          <Chips
+            size="m"
+            type="capsule"
+            text="Both Icons"
+            leadingIcon="check-circle-filled"
+            trailingIcon="chevron-right"
+          />
+        </div>
+      </div>
+
+      <div>
+        <h3>Medium Square</h3>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
+          <Chips size="m" type="square" text="Resting" />
+          <Chips size="m" type="square" text="Selected" selected={true} />
+          <Chips size="m" type="square" text="Disabled" disabled={true} />
+          <Chips size="m" type="square" text="With Icon" leadingIcon="location-filled" />
+          <Chips
+            size="m"
+            type="square"
+            text="Both Icons"
+            leadingIcon="location-filled"
+            trailingIcon="chevron-right"
+          />
+        </div>
+      </div>
+    </div>
+  ),
 };

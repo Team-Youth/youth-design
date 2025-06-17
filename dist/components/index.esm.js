@@ -19699,135 +19699,157 @@ var TabBar = function (_a) {
 
 var Chips = function (_a) {
   var _b = _a.size,
-    size = _b === void 0 ? 'medium' : _b,
+    size = _b === void 0 ? 'l' : _b,
     _c = _a.type,
     type = _c === void 0 ? 'capsule' : _c,
-    _d = _a.state,
-    state = _d === void 0 ? 'resting' : _d,
-    _e = _a.iconPosition,
-    iconPosition = _e === void 0 ? 'leading' : _e,
-    icon = _a.icon,
-    iconColor = _a.iconColor,
-    children = _a.children,
+    _d = _a.selected,
+    selected = _d === void 0 ? false : _d,
+    _e = _a.disabled,
+    disabled = _e === void 0 ? false : _e,
+    leadingIcon = _a.leadingIcon,
+    trailingIcon = _a.trailingIcon,
+    text = _a.text,
     onClick = _a.onClick,
     _f = _a.className,
     className = _f === void 0 ? '' : _f;
   var _g = useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
-  // Size configurations
+  // Size configurations (Figma 디자인 기준)
   var sizeConfig = {
-    large: {
-      paddingX: '16px',
+    l: {
+      paddingX: type === 'capsule' ? '20px' : '16px',
       paddingY: '9px',
+      paddingWithLeadingIcon: type === 'capsule' ? '16px' : '12px',
+      paddingWithTrailingIcon: type === 'capsule' ? '16px' : '12px',
       borderRadius: type === 'capsule' ? '100px' : '8px',
       height: '40px',
-      gap: '4px'
+      gap: '4px',
+      iconSize: 16
     },
-    medium: {
-      paddingX: '12px',
+    m: {
+      paddingX: type === 'capsule' ? '16px' : '12px',
       paddingY: '6px',
+      paddingWithLeadingIcon: type === 'capsule' ? '12px' : '8px',
+      paddingWithTrailingIcon: type === 'capsule' ? '12px' : '8px',
       borderRadius: type === 'capsule' ? '100px' : '6px',
       height: '32px',
-      gap: '4px'
+      gap: '4px',
+      iconSize: 16
     }
   };
   var getStyles = function () {
     var config = sizeConfig[size];
+    var hasLeadingIcon = leadingIcon !== undefined;
+    var hasTrailingIcon = trailingIcon !== undefined;
+    var paddingLeft = config.paddingX;
+    var paddingRight = config.paddingX;
+    if (hasLeadingIcon) {
+      paddingLeft = config.paddingWithLeadingIcon;
+    }
+    if (hasTrailingIcon) {
+      paddingRight = config.paddingWithTrailingIcon;
+    }
     var styles = {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
+      padding: "".concat(config.paddingY, " ").concat(paddingRight, " ").concat(config.paddingY, " ").concat(paddingLeft),
       borderRadius: config.borderRadius,
       height: config.height,
       border: '1px solid transparent',
-      cursor: state === 'disabled' ? 'not-allowed' : 'pointer',
+      cursor: disabled ? 'not-allowed' : onClick ? 'pointer' : 'default',
       transition: 'all 0.2s ease',
       gap: config.gap,
-      whiteSpace: 'nowrap'
+      whiteSpace: 'nowrap',
+      boxSizing: 'border-box'
     };
-    // State에 따른 스타일링
-    switch (state) {
-      case 'selected':
-        if (type === 'square') {
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.gray.white,
-            border: "1px solid ".concat(colors.primary.mainviolet)
-          });
-        } else {
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.mainviolet,
-            border: "1px solid ".concat(colors.primary.mainviolet)
-          });
-        }
-        break;
-      case 'hover':
+    // State에 따른 스타일링 (Figma 디자인 기준)
+    if (disabled) {
+      // Disabled state
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: colors.primary.coolGray[50],
+        border: "1px solid ".concat(colors.semantic.border.default),
+        cursor: 'not-allowed'
+      });
+    } else if (selected) {
+      // Selected state
+      if (type === 'square') {
         styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.primary.coolGray[50],
-          border: "1px solid ".concat(colors.primary.coolGray[200])
+          backgroundColor: '#F8F4FE',
+          border: "1px solid #7248D9"
         });
-        break;
-      case 'disabled':
+      } else {
+        // Capsule selected
         styles = __assign(__assign({}, styles), {
-          backgroundColor: colors.semantic.disabled.background,
-          border: "1px solid ".concat(colors.semantic.disabled.background),
-          cursor: 'not-allowed'
+          backgroundColor: '#25282D',
+          border: 'none'
         });
-        break;
-      case 'resting':
-      default:
-        if (isHovered) {
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.coolGray[50],
-            border: "1px solid ".concat(colors.primary.coolGray[200])
-          });
-        } else {
-          styles = __assign(__assign({}, styles), {
-            backgroundColor: colors.primary.gray.white,
-            border: "1px solid ".concat(colors.semantic.border.default)
-          });
-        }
-        break;
+      }
+    } else if (isHovered) {
+      // Hover state
+      styles = __assign(__assign({}, styles), {
+        backgroundColor: type === 'capsule' ? '#F9FAFA' : colors.primary.coolGray[50],
+        border: "1px solid ".concat(colors.semantic.border.default)
+      });
+    } else {
+      // Resting state
+      if (type === 'square') {
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.primary.gray.white,
+          border: "1px solid ".concat(colors.semantic.border.default)
+        });
+      } else {
+        // Capsule resting
+        styles = __assign(__assign({}, styles), {
+          backgroundColor: colors.primary.gray.white,
+          border: "1px solid ".concat(colors.semantic.border.default)
+        });
+      }
     }
     return styles;
   };
   var getTextColor = function () {
-    switch (state) {
-      case 'selected':
-        if (type === 'square') {
-          return colors.primary.coolGray[800];
-        }
-        return colors.primary.gray.white;
-      case 'disabled':
-        return colors.semantic.disabled.foreground;
-      default:
-        return colors.primary.coolGray[800];
+    if (disabled) {
+      return colors.semantic.disabled.foreground; // D1D5DB
     }
+    if (selected) {
+      if (type === 'square') {
+        return '#5B27C4'; // Figma에서 확인한 selected square 텍스트 색상
+      } else {
+        // Capsule selected
+        return '#FFFFFF'; // Figma에서 확인한 selected capsule 텍스트 색상
+      }
+    }
+    // Default text color
+    return colors.primary.coolGray[800]; // 25282D
   };
   var getIconColor = function () {
-    if (iconColor) {
-      return iconColor;
+    if (disabled) {
+      return colors.semantic.disabled.foreground; // D1D5DB
     }
-    switch (state) {
-      case 'selected':
-        if (type === 'square') {
-          return colors.primary.mainviolet;
-        }
-        return colors.primary.gray.white;
-      case 'disabled':
-        return colors.semantic.disabled.foreground;
-      default:
-        return colors.primary.coolGray[800];
+    if (selected) {
+      if (type === 'square') {
+        return '#5B27C4'; // Figma에서 확인한 selected square 아이콘 색상
+      } else {
+        // Capsule selected
+        return '#FFFFFF'; // Figma에서 확인한 selected capsule 아이콘 색상
+      }
     }
+    // Default icon color
+    return colors.primary.coolGray[800]; // 25282D
+  };
+  var getFontWeight = function () {
+    // Figma에서 확인한 fontWeight: 400 (regular)
+    return 'regular';
   };
   var handleClick = function () {
-    if (state !== 'disabled' && onClick) {
+    if (!disabled && onClick) {
       onClick();
     }
   };
   var handleMouseEnter = function () {
-    if (state === 'resting') {
+    if (!disabled && !selected) {
       setIsHovered(true);
     }
   };
@@ -19835,53 +19857,33 @@ var Chips = function (_a) {
     setIsHovered(false);
   };
   var renderContent = function () {
-    if (!icon) {
-      return jsx(Font, {
+    var textColor = getTextColor();
+    var iconColor = getIconColor();
+    var fontWeight = getFontWeight();
+    return jsxs(Fragment, {
+      children: [leadingIcon && jsx(Icon, {
+        type: leadingIcon,
+        size: sizeConfig[size].iconSize,
+        color: iconColor
+      }), text && jsx(Font, {
         type: "body2",
-        fontWeight: "medium",
-        color: getTextColor(),
-        children: children
-      });
-    }
-    if (iconPosition === 'leading') {
-      return jsxs(Fragment, {
-        children: [jsx("span", {
-          className: "chips-icon",
-          style: {
-            color: getIconColor()
-          },
-          children: icon
-        }), children && jsx(Font, {
-          type: "body2",
-          fontWeight: "medium",
-          color: getTextColor(),
-          children: children
-        })]
-      });
-    } else {
-      return jsxs(Fragment, {
-        children: [children && jsx(Font, {
-          type: "body2",
-          fontWeight: "medium",
-          color: getTextColor(),
-          children: children
-        }), jsx("span", {
-          className: "chips-icon",
-          style: {
-            color: getIconColor()
-          },
-          children: icon
-        })]
-      });
-    }
+        fontWeight: fontWeight,
+        color: textColor,
+        children: text
+      }), trailingIcon && jsx(Icon, {
+        type: trailingIcon,
+        size: sizeConfig[size].iconSize,
+        color: iconColor
+      })]
+    });
   };
   return jsx("button", {
-    className: "chips chips--".concat(size, " chips--").concat(type, " chips--").concat(state, " ").concat(className),
+    className: "chips chips--".concat(size, " chips--").concat(type, " ").concat(selected ? 'chips--selected' : '', " ").concat(disabled ? 'chips--disabled' : '', " ").concat(className),
     style: getStyles(),
     onClick: handleClick,
     onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave,
-    disabled: state === 'disabled',
+    disabled: disabled,
     type: "button",
     children: renderContent()
   });
@@ -24507,7 +24509,6 @@ var Table = function (_a) {
           style: __assign(__assign(__assign({
             display: 'flex',
             alignItems: 'center',
-            borderBottom: '1px solid #eee',
             backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
             whiteSpace: 'nowrap',
             padding: '8px 12px',
@@ -24546,7 +24547,8 @@ var Table = function (_a) {
       style: {
         display: 'flex',
         flexDirection: 'column',
-        flexWrap: 'nowrap'
+        flexWrap: 'nowrap',
+        borderBottom: "1px solid ".concat(colors.semantic.border.default)
       },
       children: data.length === 0 ? jsxs("div", {
         style: {

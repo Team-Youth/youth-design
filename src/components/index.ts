@@ -79,6 +79,6 @@ export type { TableProps } from './table';
 export { InlineNotification } from './inline-notification';
 export type {
   InlineNotificationProps,
-  InlineNotificationStatus,
+  InlineNotificationType,
   InlineNotificationSize,
 } from './inline-notification';
