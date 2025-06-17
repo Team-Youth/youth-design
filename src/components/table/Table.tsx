@@ -147,7 +147,6 @@ export const Table = <T,>({
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                borderBottom: '1px solid #eee',
                 backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
                 whiteSpace: 'nowrap',
                 padding: '8px 12px',
@@ -203,6 +202,7 @@ export const Table = <T,>({
           display: 'flex',
           flexDirection: 'column',
           flexWrap: 'nowrap',
+          borderBottom: `1px solid ${colors.semantic.border.default}`,
         }}
       >
         {data.length === 0 ? (
