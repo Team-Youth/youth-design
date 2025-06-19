@@ -82,3 +82,6 @@ export type {
   InlineNotificationType,
   InlineNotificationSize,
 } from './inline-notification';
+
+export { Pagination } from './pagination';
+export type { PaginationProps } from './pagination';

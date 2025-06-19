@@ -24220,6 +24220,181 @@ function useEffectOnceWhen(callback, when = true) {
   }, [when]);
 }
 
+var Pagination = function (_a) {
+  var currentPage = _a.currentPage,
+    totalPages = _a.totalPages,
+    onPageChange = _a.onPageChange,
+    _b = _a.maxVisiblePages,
+    maxVisiblePages = _b === void 0 ? 5 : _b,
+    _c = _a.disabled,
+    disabled = _c === void 0 ? false : _c;
+  // 표시할 페이지 번호들을 계산
+  var visiblePages = React.useMemo(function () {
+    if (totalPages <= maxVisiblePages) {
+      return Array.from({
+        length: totalPages
+      }, function (_, i) {
+        return i + 1;
+      });
+    }
+    var half = Math.floor(maxVisiblePages / 2);
+    var start = Math.max(1, currentPage - half);
+    var end = Math.min(totalPages, start + maxVisiblePages - 1);
+    // 끝에서 시작 위치 조정
+    if (end - start + 1 < maxVisiblePages) {
+      start = Math.max(1, end - maxVisiblePages + 1);
+    }
+    var pages = [];
+    // 첫 페이지와 생략 표시
+    if (start > 1) {
+      pages.push(1);
+      if (start > 2) {
+        pages.push('ellipsis');
+      }
+    }
+    // 중간 페이지들
+    for (var i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    // 마지막 페이지와 생략 표시
+    if (end < totalPages) {
+      if (end < totalPages - 1) {
+        pages.push('ellipsis');
+      }
+      pages.push(totalPages);
+    }
+    return pages;
+  }, [currentPage, totalPages, maxVisiblePages]);
+  var handlePrevious = function () {
+    if (!disabled && currentPage > 1) {
+      onPageChange(currentPage - 1);
+    }
+  };
+  var handleNext = function () {
+    if (!disabled && currentPage < totalPages) {
+      onPageChange(currentPage + 1);
+    }
+  };
+  var handlePageClick = function (page) {
+    if (!disabled && page !== currentPage) {
+      onPageChange(page);
+    }
+  };
+  var baseButtonStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '40px',
+    height: '40px',
+    borderRadius: radius.s,
+    border: 'none',
+    background: 'transparent',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    transition: 'all 0.2s ease-in-out'
+  };
+  var pageButtonStyle = function (isSelected, isDisabled) {
+    return __assign(__assign({}, baseButtonStyle), {
+      backgroundColor: isSelected ? colors.primary.mainviolet : 'transparent',
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+      opacity: isDisabled ? 0.5 : 1
+    });
+  };
+  var controlButtonStyle = function (isDisabled) {
+    return __assign(__assign({}, baseButtonStyle), {
+      cursor: isDisabled ? 'not-allowed' : 'pointer',
+      opacity: isDisabled ? 0.5 : 1
+    });
+  };
+  return jsxRuntime.jsxs("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '6px'
+    },
+    children: [jsxRuntime.jsx("button", {
+      onClick: handlePrevious,
+      disabled: disabled || currentPage <= 1,
+      style: controlButtonStyle(disabled || currentPage <= 1),
+      onMouseEnter: function (e) {
+        if (!disabled && currentPage > 1) {
+          e.currentTarget.style.backgroundColor = colors.primary.coolGray[50];
+        }
+      },
+      onMouseLeave: function (e) {
+        if (!disabled && currentPage > 1) {
+          e.currentTarget.style.backgroundColor = 'transparent';
+        }
+      },
+      "aria-label": "\uC774\uC804 \uD398\uC774\uC9C0",
+      children: jsxRuntime.jsx(Icon, {
+        type: "chevron-left",
+        size: 24,
+        color: disabled || currentPage <= 1 ? colors.primary.coolGray[200] : colors.primary.coolGray[300]
+      })
+    }), visiblePages.map(function (page, index) {
+      if (page === 'ellipsis') {
+        return jsxRuntime.jsx("div", {
+          style: __assign(__assign({}, baseButtonStyle), {
+            cursor: 'default'
+          }),
+          children: jsxRuntime.jsx(Font, {
+            type: "body2",
+            fontWeight: "medium",
+            color: colors.primary.coolGray[200],
+            children: "\u22EF"
+          })
+        }, "ellipsis-".concat(index));
+      }
+      var isSelected = page === currentPage;
+      return jsxRuntime.jsx("button", {
+        onClick: function () {
+          return handlePageClick(page);
+        },
+        disabled: disabled,
+        style: pageButtonStyle(isSelected, disabled),
+        onMouseEnter: function (e) {
+          if (!disabled && !isSelected) {
+            e.currentTarget.style.backgroundColor = colors.primary.coolGray[50];
+          }
+        },
+        onMouseLeave: function (e) {
+          if (!disabled && !isSelected) {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }
+        },
+        "aria-label": "".concat(page, "\uD398\uC774\uC9C0\uB85C \uC774\uB3D9"),
+        "aria-current": isSelected ? 'page' : undefined,
+        children: jsxRuntime.jsx(Font, {
+          type: "body2",
+          fontWeight: "medium",
+          color: isSelected ? colors.primary.gray.white : disabled ? colors.primary.coolGray[200] : colors.primary.coolGray[300],
+          children: page
+        })
+      }, page);
+    }), jsxRuntime.jsx("button", {
+      onClick: handleNext,
+      disabled: disabled || currentPage >= totalPages,
+      style: controlButtonStyle(disabled || currentPage >= totalPages),
+      onMouseEnter: function (e) {
+        if (!disabled && currentPage < totalPages) {
+          e.currentTarget.style.backgroundColor = colors.primary.coolGray[50];
+        }
+      },
+      onMouseLeave: function (e) {
+        if (!disabled && currentPage < totalPages) {
+          e.currentTarget.style.backgroundColor = 'transparent';
+        }
+      },
+      "aria-label": "\uB2E4\uC74C \uD398\uC774\uC9C0",
+      children: jsxRuntime.jsx(Icon, {
+        type: "chevron-right",
+        size: 24,
+        color: disabled || currentPage >= totalPages ? colors.primary.coolGray[200] : colors.primary.coolGray[300]
+      })
+    })]
+  });
+};
+
 var assets = [
 ];
 var ddd = 0;
@@ -24693,17 +24868,62 @@ var Table = function (_a) {
     emptyIconSize = _c === void 0 ? 32 : _c,
     _d = _a.emptyIconColor,
     emptyIconColor = _d === void 0 ? colors.primary.coolGray[300] : _d,
-    emptyText = _a.emptyText;
+    emptyText = _a.emptyText,
+    // 페이지네이션 관련 props
+    _e = _a.pagination,
+    // 페이지네이션 관련 props
+    pagination = _e === void 0 ? false : _e,
+    _f = _a.pageSize,
+    pageSize = _f === void 0 ? 10 : _f,
+    _g = _a.initialPage,
+    initialPage = _g === void 0 ? 1 : _g,
+    _h = _a.maxVisiblePages,
+    maxVisiblePages = _h === void 0 ? 5 : _h,
+    _j = _a.paginationDisabled,
+    paginationDisabled = _j === void 0 ? false : _j,
+    onPageChange = _a.onPageChange;
   // 각 열의 최대 너비를 저장하는 상태
-  var _e = React.useState({}),
-    columnLayouts = _e[0],
-    setColumnLayouts = _e[1];
+  var _k = React.useState({}),
+    columnLayouts = _k[0],
+    setColumnLayouts = _k[1];
   // 너비 계산이 완료되었는지 추적하는 상태
-  var _f = React.useState(false),
-    isWidthCalculationComplete = _f[0],
-    setIsWidthCalculationComplete = _f[1];
+  var _l = React.useState(false),
+    isWidthCalculationComplete = _l[0],
+    setIsWidthCalculationComplete = _l[1];
   // 헤더 셀의 참조를 저장할 배열
   var headerRefs = React.useRef([]);
+  // 페이지네이션 상태
+  var _m = React.useState(initialPage),
+    currentPage = _m[0],
+    setCurrentPage = _m[1];
+  // 페이지네이션이 활성화된 경우 총 페이지 수 계산
+  var totalPages = React.useMemo(function () {
+    if (!pagination) return 1;
+    return Math.ceil(data.length / pageSize);
+  }, [pagination, data.length, pageSize]);
+  // 현재 페이지에 표시할 데이터 계산
+  var currentPageData = React.useMemo(function () {
+    if (!pagination) return data;
+    var startIndex = (currentPage - 1) * pageSize;
+    var endIndex = startIndex + pageSize;
+    return data.slice(startIndex, endIndex);
+  }, [data, pagination, currentPage, pageSize]);
+  // 페이지 변경 핸들러
+  var handlePageChange = React.useCallback(function (page) {
+    setCurrentPage(page);
+    if (onPageChange) {
+      var startIndex = (page - 1) * pageSize;
+      var endIndex = startIndex + pageSize;
+      var pageData = data.slice(startIndex, endIndex);
+      onPageChange(page, pageData, totalPages);
+    }
+  }, [data, pageSize, totalPages, onPageChange]);
+  // 데이터가 변경되면 첫 페이지로 리셋
+  React.useEffect(function () {
+    if (pagination) {
+      setCurrentPage(1);
+    }
+  }, [data, pagination]);
   // 열 너비를 업데이트하는 함수
   var updateColumnWidth = function (index, width) {
     setColumnLayouts(function (prevLayouts) {
@@ -24754,10 +24974,10 @@ var Table = function (_a) {
     measureHeaderWidths();
     // 약간의 지연 후 재측정 (레이아웃이 완전히 안정화된 후)
     setTimeout(measureHeaderWidths, 30);
-  }, [formattedColumns, data]);
+  }, [formattedColumns, currentPageData]);
   // 모든 컬럼의 너비 계산이 완료되었는지 확인
   React.useEffect(function () {
-    if (data.length > 0 && formattedColumns.length > 0) {
+    if (currentPageData.length > 0 && formattedColumns.length > 0) {
       // 모든 컬럼에 너비가 설정되었는지 확인
       var allColumnsHaveWidth = formattedColumns.every(function (_, index) {
         return columnLayouts[index] > 0;
@@ -24769,7 +24989,7 @@ var Table = function (_a) {
         }, 50);
       }
     }
-  }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
+  }, [columnLayouts, currentPageData.length, formattedColumns.length, isWidthCalculationComplete]);
   // 데이터나 컬럼이 변경되면 계산 완료 상태와 컬럼 레이아웃 리셋
   React.useEffect(function () {
     resetColumnLayouts();
@@ -24808,94 +25028,126 @@ var Table = function (_a) {
     style: {
       display: 'flex',
       flexDirection: 'column',
-      flex: 1,
-      opacity: isWidthCalculationComplete || data.length === 0 ? 1 : 0.7,
-      transition: 'opacity 0.3s ease-in-out'
+      flex: 1
     },
-    children: [jsxRuntime.jsx("div", {
+    children: [jsxRuntime.jsxs("div", {
       style: {
-        display: 'flex'
+        opacity: isWidthCalculationComplete || currentPageData.length === 0 ? 1 : 0.7,
+        transition: 'opacity 0.3s ease-in-out'
       },
-      children: formattedColumns.map(function (column, index) {
-        return jsxRuntime.jsx("div", {
-          ref: function (el) {
-            headerRefs.current[index] = el;
-          },
-          style: __assign(__assign(__assign({
-            display: 'flex',
-            alignItems: 'center',
-            backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
-            whiteSpace: 'nowrap',
-            padding: '8px 12px',
-            width: columnLayouts[index] ? "".concat(columnLayouts[index], "px") : 'auto',
-            boxSizing: 'border-box',
-            overflow: 'visible',
-            height: 48,
-            transition: 'width 0.2s ease-out, flex 0.2s ease-out'
-          }, data.length === 0 && {
-            flex: 1,
-            minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
-            width: 'auto'
-          }), data.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
-            flex: 1,
-            minWidth: 0,
-            width: 'auto'
-          } : index === formattedColumns.length - 1 && {
-            flex: 2,
-            minWidth: 0,
-            width: 'auto'
-          }), type === 'child' && index !== formattedColumns.length - 1 && {
-            flex: 1,
-            width: 'auto'
-          })), column.style),
-          children: jsxRuntime.jsx(Font, __assign({}, type === 'parent' && {
-            hide: index === 0 || column.header === 'empty'
-          }, {
-            type: "body2",
-            fontWeight: "medium",
-            color: type === 'parent' ? colors.primary.coolGray[800] : colors.primary.coolGray[500],
-            noWhiteSpace: true,
-            children: column.header
-          }))
-        }, "header-".concat(index));
-      })
-    }), jsxRuntime.jsx("div", {
-      style: {
-        display: 'flex',
-        flexDirection: 'column',
-        flexWrap: 'nowrap',
-        borderBottom: "1px solid ".concat(colors.semantic.border.default)
-      },
-      children: data.length === 0 ? jsxRuntime.jsxs("div", {
+      children: [jsxRuntime.jsx("div", {
+        style: {
+          display: 'flex'
+        },
+        children: formattedColumns.map(function (column, index) {
+          return jsxRuntime.jsx("div", {
+            ref: function (el) {
+              headerRefs.current[index] = el;
+            },
+            style: __assign(__assign(__assign({
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
+              whiteSpace: 'nowrap',
+              padding: '8px 12px',
+              width: columnLayouts[index] ? "".concat(columnLayouts[index], "px") : 'auto',
+              boxSizing: 'border-box',
+              overflow: 'visible',
+              height: 48,
+              transition: 'width 0.2s ease-out, flex 0.2s ease-out'
+            }, currentPageData.length === 0 && {
+              flex: 1,
+              minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
+              width: 'auto'
+            }), currentPageData.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
+              flex: 1,
+              minWidth: 0,
+              width: 'auto'
+            } : index === formattedColumns.length - 1 && {
+              flex: 2,
+              minWidth: 0,
+              width: 'auto'
+            }), type === 'child' && index !== formattedColumns.length - 1 && {
+              flex: 1,
+              width: 'auto'
+            })), column.style),
+            children: jsxRuntime.jsx(Font, __assign({}, type === 'parent' && {
+              hide: index === 0 || column.header === 'empty'
+            }, {
+              type: "body2",
+              fontWeight: "medium",
+              color: type === 'parent' ? colors.primary.coolGray[800] : colors.primary.coolGray[500],
+              noWhiteSpace: true,
+              children: column.header
+            }))
+          }, "header-".concat(index));
+        })
+      }), jsxRuntime.jsx("div", {
         style: {
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-          height: 200,
-          gap: 10
+          flexWrap: 'nowrap',
+          borderBottom: "1px solid ".concat(colors.semantic.border.default)
         },
-        children: [emptyIcon && jsxRuntime.jsx(Icon, {
-          type: emptyIcon,
-          size: emptyIconSize,
-          color: emptyIconColor
-        }), emptyText && jsxRuntime.jsx(Font, {
-          type: "body2",
-          fontWeight: "medium",
-          color: colors.primary.coolGray[300],
-          children: emptyText
-        })]
-      }) : data.map(function (rowData, rowIndex) {
-        return jsxRuntime.jsx(Row, {
-          data: rowData,
-          columns: formattedColumns,
-          updateColumnWidth: updateColumnWidth,
-          columnLayouts: columnLayouts,
-          isWidthCalculationComplete: isWidthCalculationComplete,
-          rowAccordion: rowAccordion,
-          tableType: type
-        }, "row-".concat(rowIndex));
+        children: currentPageData.length === 0 ? jsxRuntime.jsxs("div", {
+          style: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+            height: 200,
+            gap: 10
+          },
+          children: [emptyIcon && jsxRuntime.jsx(Icon, {
+            type: emptyIcon,
+            size: emptyIconSize,
+            color: emptyIconColor
+          }), emptyText && jsxRuntime.jsx(Font, {
+            type: "body2",
+            fontWeight: "medium",
+            color: colors.primary.coolGray[300],
+            children: emptyText
+          })]
+        }) : currentPageData.map(function (rowData, rowIndex) {
+          return jsxRuntime.jsx(Row, {
+            data: rowData,
+            columns: formattedColumns,
+            updateColumnWidth: updateColumnWidth,
+            columnLayouts: columnLayouts,
+            isWidthCalculationComplete: isWidthCalculationComplete,
+            rowAccordion: rowAccordion,
+            tableType: type
+          }, "row-".concat((currentPage - 1) * pageSize + rowIndex));
+        })
+      })]
+    }), pagination && data.length > 0 && totalPages > 1 && jsxRuntime.jsx("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '16px 0',
+        marginTop: '8px'
+      },
+      children: jsxRuntime.jsx(Pagination, {
+        currentPage: currentPage,
+        totalPages: totalPages,
+        onPageChange: handlePageChange,
+        maxVisiblePages: maxVisiblePages,
+        disabled: paginationDisabled || isLoading
+      })
+    }), pagination && data.length > 0 && jsxRuntime.jsx("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '8px 0'
+      },
+      children: jsxRuntime.jsxs(Font, {
+        type: "caption",
+        fontWeight: "medium",
+        color: colors.primary.coolGray[400],
+        children: ["\uCD1D ", data.length, "\uAC1C \uD56D\uBAA9 \uC911 ", (currentPage - 1) * pageSize + 1, "-", Math.min(currentPage * pageSize, data.length), "\uBC88\uC9F8 \uD45C\uC2DC"]
       })
     })]
   });
@@ -25171,6 +25423,7 @@ exports.Illust = Illust;
 exports.InlineNotification = InlineNotification;
 exports.Label = Label;
 exports.Modal = Modal;
+exports.Pagination = Pagination;
 exports.Popup = Popup;
 exports.Radio = Radio;
 exports.Stepper = Stepper;

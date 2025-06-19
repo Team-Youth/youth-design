@@ -13,6 +13,7 @@ import { YouthLottie } from '../lottie/Lottie';
 import Font from '../font/Font';
 import { colors } from '../../tokens/colors';
 import { Icon, IconType } from '../icon';
+import { Pagination } from '../pagination';
 import loadingSpinnerData from './loadingSpinner.json';
 
 interface Column<T> {
@@ -31,6 +32,13 @@ export interface TableProps<T> {
   emptyIconSize?: number;
   emptyIconColor?: string;
   emptyText?: string;
+  // 페이지네이션 관련 props
+  pagination?: boolean;
+  pageSize?: number;
+  initialPage?: number;
+  maxVisiblePages?: number;
+  paginationDisabled?: boolean;
+  onPageChange?: (page: number, pageData: T[], totalPages: number) => void;
 }
 
 export const Table = <T,>({
@@ -43,6 +51,13 @@ export const Table = <T,>({
   emptyIconSize = 32,
   emptyIconColor = colors.primary.coolGray[300],
   emptyText,
+  // 페이지네이션 관련 props
+  pagination = false,
+  pageSize = 10,
+  initialPage = 1,
+  maxVisiblePages = 5,
+  paginationDisabled = false,
+  onPageChange,
 }: TableProps<T>) => {
   // 각 열의 최대 너비를 저장하는 상태
   const [columnLayouts, setColumnLayouts] = useState<{ [key: number]: number }>({});
@@ -52,6 +67,46 @@ export const Table = <T,>({
 
   // 헤더 셀의 참조를 저장할 배열
   const headerRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // 페이지네이션 상태
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  // 페이지네이션이 활성화된 경우 총 페이지 수 계산
+  const totalPages = useMemo(() => {
+    if (!pagination) return 1;
+    return Math.ceil(data.length / pageSize);
+  }, [pagination, data.length, pageSize]);
+
+  // 현재 페이지에 표시할 데이터 계산
+  const currentPageData = useMemo(() => {
+    if (!pagination) return data;
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return data.slice(startIndex, endIndex);
+  }, [data, pagination, currentPage, pageSize]);
+
+  // 페이지 변경 핸들러
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+
+      if (onPageChange) {
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const pageData = data.slice(startIndex, endIndex);
+        onPageChange(page, pageData, totalPages);
+      }
+    },
+    [data, pageSize, totalPages, onPageChange],
+  );
+
+  // 데이터가 변경되면 첫 페이지로 리셋
+  useEffect(() => {
+    if (pagination) {
+      setCurrentPage(1);
+    }
+  }, [data, pagination]);
 
   // 열 너비를 업데이트하는 함수
   const updateColumnWidth = (index: number, width: number) => {
@@ -110,11 +165,11 @@ export const Table = <T,>({
 
     // 약간의 지연 후 재측정 (레이아웃이 완전히 안정화된 후)
     setTimeout(measureHeaderWidths, 30);
-  }, [formattedColumns, data]);
+  }, [formattedColumns, currentPageData]);
 
   // 모든 컬럼의 너비 계산이 완료되었는지 확인
   useEffect(() => {
-    if (data.length > 0 && formattedColumns.length > 0) {
+    if (currentPageData.length > 0 && formattedColumns.length > 0) {
       // 모든 컬럼에 너비가 설정되었는지 확인
       const allColumnsHaveWidth = formattedColumns.every((_, index) => columnLayouts[index] > 0);
       if (allColumnsHaveWidth && !isWidthCalculationComplete) {
@@ -124,7 +179,7 @@ export const Table = <T,>({
         }, 50);
       }
     }
-  }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
+  }, [columnLayouts, currentPageData.length, formattedColumns.length, isWidthCalculationComplete]);
 
   // 데이터나 컬럼이 변경되면 계산 완료 상태와 컬럼 레이아웃 리셋
   useEffect(() => {
@@ -169,114 +224,158 @@ export const Table = <T,>({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
-        opacity: isWidthCalculationComplete || data.length === 0 ? 1 : 0.7,
-        transition: 'opacity 0.3s ease-in-out',
       }}
     >
-      {/* 헤더 */}
-      <div style={{ display: 'flex' }}>
-        {formattedColumns.map((column, index) => {
-          return (
-            <div
-              key={`header-${index}`}
-              ref={(el) => {
-                headerRefs.current[index] = el;
-              }}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
-                whiteSpace: 'nowrap',
-                padding: '8px 12px',
-                width: columnLayouts[index] ? `${columnLayouts[index]}px` : 'auto',
-                boxSizing: 'border-box',
-                overflow: 'visible',
-                height: 48,
-                transition: 'width 0.2s ease-out, flex 0.2s ease-out',
-                // 데이터가 없을 때 컬럼에 적절한 최소 너비 설정
-                ...(data.length === 0 && {
-                  flex: 1,
-                  minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
-                  width: 'auto',
-                }),
-                ...(data.length > 0 && {
-                  ...(type === 'parent'
-                    ? index === formattedColumns.length - 2 && {
-                        flex: 1,
-                        minWidth: 0,
-                        width: 'auto',
-                      }
-                    : index === formattedColumns.length - 1 && {
-                        flex: 2,
-                        minWidth: 0,
-                        width: 'auto',
-                      }),
-                  ...(type === 'child' &&
-                    index !== formattedColumns.length - 1 && { flex: 1, width: 'auto' }),
-                }),
-                ...column.style,
-              }}
-            >
-              <Font
-                {...(type === 'parent' && {
-                  hide: index === 0 || column.header === 'empty',
-                })}
-                type="body2"
-                fontWeight="medium"
-                color={
-                  type === 'parent' ? colors.primary.coolGray[800] : colors.primary.coolGray[500]
-                }
-                noWhiteSpace
-              >
-                {column.header}
-              </Font>
-            </div>
-          );
-        })}
-      </div>
-      {/* 본문 */}
+      {/* 테이블 컨테이너 */}
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flexWrap: 'nowrap',
-          borderBottom: `1px solid ${colors.semantic.border.default}`,
+          opacity: isWidthCalculationComplete || currentPageData.length === 0 ? 1 : 0.7,
+          transition: 'opacity 0.3s ease-in-out',
         }}
       >
-        {data.length === 0 ? (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-              height: 200,
-              gap: 10,
-            }}
-          >
-            {emptyIcon && <Icon type={emptyIcon} size={emptyIconSize} color={emptyIconColor} />}
-            {emptyText && (
-              <Font type="body2" fontWeight="medium" color={colors.primary.coolGray[300]}>
-                {emptyText}
-              </Font>
-            )}
-          </div>
-        ) : (
-          data.map((rowData, rowIndex) => (
-            <Row
-              key={`row-${rowIndex}`}
-              data={rowData}
-              columns={formattedColumns}
-              updateColumnWidth={updateColumnWidth}
-              columnLayouts={columnLayouts}
-              isWidthCalculationComplete={isWidthCalculationComplete}
-              rowAccordion={rowAccordion}
-              tableType={type}
-            />
-          ))
-        )}
+        {/* 헤더 */}
+        <div style={{ display: 'flex' }}>
+          {formattedColumns.map((column, index) => {
+            return (
+              <div
+                key={`header-${index}`}
+                ref={(el) => {
+                  headerRefs.current[index] = el;
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
+                  whiteSpace: 'nowrap',
+                  padding: '8px 12px',
+                  width: columnLayouts[index] ? `${columnLayouts[index]}px` : 'auto',
+                  boxSizing: 'border-box',
+                  overflow: 'visible',
+                  height: 48,
+                  transition: 'width 0.2s ease-out, flex 0.2s ease-out',
+                  // 데이터가 없을 때 컬럼에 적절한 최소 너비 설정
+                  ...(currentPageData.length === 0 && {
+                    flex: 1,
+                    minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
+                    width: 'auto',
+                  }),
+                  ...(currentPageData.length > 0 && {
+                    ...(type === 'parent'
+                      ? index === formattedColumns.length - 2 && {
+                          flex: 1,
+                          minWidth: 0,
+                          width: 'auto',
+                        }
+                      : index === formattedColumns.length - 1 && {
+                          flex: 2,
+                          minWidth: 0,
+                          width: 'auto',
+                        }),
+                    ...(type === 'child' &&
+                      index !== formattedColumns.length - 1 && { flex: 1, width: 'auto' }),
+                  }),
+                  ...column.style,
+                }}
+              >
+                <Font
+                  {...(type === 'parent' && {
+                    hide: index === 0 || column.header === 'empty',
+                  })}
+                  type="body2"
+                  fontWeight="medium"
+                  color={
+                    type === 'parent' ? colors.primary.coolGray[800] : colors.primary.coolGray[500]
+                  }
+                  noWhiteSpace
+                >
+                  {column.header}
+                </Font>
+              </div>
+            );
+          })}
+        </div>
+        {/* 본문 */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flexWrap: 'nowrap',
+            borderBottom: `1px solid ${colors.semantic.border.default}`,
+          }}
+        >
+          {currentPageData.length === 0 ? (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: 200,
+                gap: 10,
+              }}
+            >
+              {emptyIcon && <Icon type={emptyIcon} size={emptyIconSize} color={emptyIconColor} />}
+              {emptyText && (
+                <Font type="body2" fontWeight="medium" color={colors.primary.coolGray[300]}>
+                  {emptyText}
+                </Font>
+              )}
+            </div>
+          ) : (
+            currentPageData.map((rowData, rowIndex) => (
+              <Row
+                key={`row-${(currentPage - 1) * pageSize + rowIndex}`}
+                data={rowData}
+                columns={formattedColumns}
+                updateColumnWidth={updateColumnWidth}
+                columnLayouts={columnLayouts}
+                isWidthCalculationComplete={isWidthCalculationComplete}
+                rowAccordion={rowAccordion}
+                tableType={type}
+              />
+            ))
+          )}
+        </div>
       </div>
+
+      {/* 페이지네이션 */}
+      {pagination && data.length > 0 && totalPages > 1 && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '16px 0',
+            marginTop: '8px',
+          }}
+        >
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+            maxVisiblePages={maxVisiblePages}
+            disabled={paginationDisabled || isLoading}
+          />
+        </div>
+      )}
+
+      {/* 페이지네이션 정보 (선택사항) */}
+      {pagination && data.length > 0 && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: '8px 0',
+          }}
+        >
+          <Font type="caption" fontWeight="medium" color={colors.primary.coolGray[400]}>
+            총 {data.length}개 항목 중 {(currentPage - 1) * pageSize + 1}-
+            {Math.min(currentPage * pageSize, data.length)}번째 표시
+          </Font>
+        </div>
+      )}
     </div>
   );
 };

@@ -52,3 +52,5 @@ export { Table } from './table';
 export type { TableProps } from './table';
 export { InlineNotification } from './inline-notification';
 export type { InlineNotificationProps, InlineNotificationType, InlineNotificationSize, } from './inline-notification';
+export { Pagination } from './pagination';
+export type { PaginationProps } from './pagination';

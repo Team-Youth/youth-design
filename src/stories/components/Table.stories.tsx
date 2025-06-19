@@ -102,6 +102,30 @@ const meta: Meta<typeof Table> = {
       description: '데이터가 없을 때 표시할 텍스트',
       control: 'text',
     },
+    pagination: {
+      description: '페이지네이션 사용 여부',
+      control: 'boolean',
+    },
+    pageSize: {
+      description: '페이지당 표시할 항목 수',
+      control: { type: 'number', min: 1, max: 50, step: 1 },
+    },
+    initialPage: {
+      description: '초기 페이지 번호',
+      control: { type: 'number', min: 1 },
+    },
+    maxVisiblePages: {
+      description: '페이지네이션에서 최대 표시할 페이지 수',
+      control: { type: 'number', min: 3, max: 10 },
+    },
+    paginationDisabled: {
+      description: '페이지네이션 비활성화 여부',
+      control: 'boolean',
+    },
+    onPageChange: {
+      description: '페이지 변경 시 호출되는 콜백 함수',
+      action: 'pageChanged',
+    },
   },
 };
 
@@ -809,5 +833,448 @@ export const ResponsiveTable: Story = {
     ],
     isLoading: false,
     type: 'parent',
+  },
+};
+
+// 대량 데이터를 위한 샘플 생성
+const generateLargeDataset = (count: number) => {
+  const roles = ['관리자', '사용자', '에디터', '뷰어', '매니저'];
+  const statuses = ['등록 완료', '미등록', '대기중', '승인 대기', '비활성'];
+  const names = [
+    '김영희',
+    '박철수',
+    '이미영',
+    '최민수',
+    '정수진',
+    '한지민',
+    '오성훈',
+    '윤세라',
+    '강태준',
+    '임나영',
+  ];
+
+  return Array.from({ length: count }, (_, i) => ({
+    id: i + 1,
+    name: names[i % names.length] + ` ${Math.floor(i / names.length) + 1}`,
+    email: `user${i + 1}@example.com`,
+    role: roles[i % roles.length],
+    status: statuses[i % statuses.length],
+    createdAt: new Date(2024, 0, 1 + (i % 365)).toISOString().split('T')[0],
+    lastLogin: new Date(2024, 0, 1 + (i % 30)).toISOString().split('T')[0],
+  }));
+};
+
+const largeDataset = generateLargeDataset(47);
+
+// 기본 페이지네이션 테이블
+export const WithPagination: Story = {
+  args: {
+    data: largeDataset,
+    columns: [
+      {
+        header: '선택',
+        cell: () => <div style={{ fontSize: '16px', cursor: 'pointer' }}>▼</div>,
+      },
+      {
+        header: 'ID',
+        cell: (user: any) => (
+          <Font type="body3" color="text/black">
+            {user.id}
+          </Font>
+        ),
+      },
+      {
+        header: '이름',
+        cell: (user: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            {user.name}
+          </Font>
+        ),
+      },
+      {
+        header: '이메일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.email}
+          </Font>
+        ),
+      },
+      {
+        header: '역할',
+        cell: (user: any) => (
+          <Font type="body3" color="text/black">
+            {user.role}
+          </Font>
+        ),
+      },
+      {
+        header: '상태',
+        cell: (user: any) => (
+          <div
+            style={{
+              padding: '4px 8px',
+              borderRadius: '12px',
+              backgroundColor:
+                user.status === '등록 완료'
+                  ? '#E7F5FF'
+                  : user.status === '미등록'
+                    ? '#FFE8E8'
+                    : '#FFF4E6',
+              display: 'inline-block',
+            }}
+          >
+            <Font
+              type="caption"
+              color={
+                user.status === '등록 완료'
+                  ? 'blue/500'
+                  : user.status === '미등록'
+                    ? 'red/500'
+                    : 'orange/500'
+              }
+            >
+              {user.status}
+            </Font>
+          </div>
+        ),
+      },
+      {
+        header: '가입일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.createdAt}
+          </Font>
+        ),
+      },
+    ],
+    isLoading: false,
+    type: 'parent',
+    pagination: true,
+    pageSize: 10,
+    initialPage: 1,
+    maxVisiblePages: 5,
+    onPageChange: action('page-changed'),
+  },
+};
+
+// 페이지 크기가 작은 페이지네이션
+export const SmallPageSize: Story = {
+  args: {
+    data: largeDataset,
+    columns: [
+      {
+        header: 'ID',
+        cell: (user: any) => (
+          <Font type="body3" color="text/black">
+            {user.id}
+          </Font>
+        ),
+      },
+      {
+        header: '이름',
+        cell: (user: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            {user.name}
+          </Font>
+        ),
+      },
+      {
+        header: '이메일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.email}
+          </Font>
+        ),
+      },
+      {
+        header: '상태',
+        cell: (user: any) => (
+          <div
+            style={{
+              padding: '4px 8px',
+              borderRadius: '12px',
+              backgroundColor:
+                user.status === '등록 완료'
+                  ? '#E7F5FF'
+                  : user.status === '미등록'
+                    ? '#FFE8E8'
+                    : '#FFF4E6',
+              display: 'inline-block',
+            }}
+          >
+            <Font
+              type="caption"
+              color={
+                user.status === '등록 완료'
+                  ? 'blue/500'
+                  : user.status === '미등록'
+                    ? 'red/500'
+                    : 'orange/500'
+              }
+            >
+              {user.status}
+            </Font>
+          </div>
+        ),
+      },
+    ],
+    isLoading: false,
+    type: 'parent',
+    pagination: true,
+    pageSize: 5,
+    initialPage: 1,
+    maxVisiblePages: 5,
+    onPageChange: action('page-changed'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '페이지당 5개 항목을 표시하는 작은 페이지 크기 예시입니다.',
+      },
+    },
+  },
+};
+
+// 큰 페이지 크기 페이지네이션
+export const LargePageSize: Story = {
+  args: {
+    data: generateLargeDataset(100),
+    columns: [
+      {
+        header: 'ID',
+        cell: (user: any) => (
+          <Font type="body3" color="text/black">
+            {user.id}
+          </Font>
+        ),
+      },
+      {
+        header: '이름',
+        cell: (user: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            {user.name}
+          </Font>
+        ),
+      },
+      {
+        header: '이메일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.email}
+          </Font>
+        ),
+      },
+      {
+        header: '역할',
+        cell: (user: any) => (
+          <Font type="body3" color="text/black">
+            {user.role}
+          </Font>
+        ),
+      },
+    ],
+    isLoading: false,
+    type: 'parent',
+    pagination: true,
+    pageSize: 20,
+    initialPage: 1,
+    maxVisiblePages: 7,
+    onPageChange: action('page-changed'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '페이지당 20개 항목을 표시하고 더 많은 페이지 버튼을 보여주는 예시입니다.',
+      },
+    },
+  },
+};
+
+// 비활성화된 페이지네이션
+export const DisabledPagination: Story = {
+  args: {
+    data: largeDataset,
+    columns: [
+      {
+        header: 'ID',
+        cell: (user: any) => (
+          <Font type="body3" color="text/black">
+            {user.id}
+          </Font>
+        ),
+      },
+      {
+        header: '이름',
+        cell: (user: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            {user.name}
+          </Font>
+        ),
+      },
+      {
+        header: '이메일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.email}
+          </Font>
+        ),
+      },
+    ],
+    isLoading: false,
+    type: 'parent',
+    pagination: true,
+    pageSize: 10,
+    initialPage: 1,
+    maxVisiblePages: 5,
+    paginationDisabled: true,
+    onPageChange: action('page-changed'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '페이지네이션이 비활성화된 상태의 예시입니다.',
+      },
+    },
+  },
+};
+
+// 아코디언과 페이지네이션 함께 사용
+export const PaginationWithAccordion: Story = {
+  args: {
+    data: largeDataset,
+    columns: [
+      {
+        header: '확장',
+        cell: () => <div style={{ fontSize: '16px', cursor: 'pointer' }}>▼</div>,
+      },
+      {
+        header: '이름',
+        cell: (user: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            {user.name}
+          </Font>
+        ),
+      },
+      {
+        header: '이메일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.email}
+          </Font>
+        ),
+      },
+      {
+        header: '상태',
+        cell: (user: any) => (
+          <div
+            style={{
+              padding: '4px 8px',
+              borderRadius: '12px',
+              backgroundColor:
+                user.status === '등록 완료'
+                  ? '#E7F5FF'
+                  : user.status === '미등록'
+                    ? '#FFE8E8'
+                    : '#FFF4E6',
+              display: 'inline-block',
+            }}
+          >
+            <Font
+              type="caption"
+              color={
+                user.status === '등록 완료'
+                  ? 'blue/500'
+                  : user.status === '미등록'
+                    ? 'red/500'
+                    : 'orange/500'
+              }
+            >
+              {user.status}
+            </Font>
+          </div>
+        ),
+      },
+      {
+        header: '액션',
+        cell: () => (
+          <button
+            style={{
+              padding: '6px 12px',
+              border: '1px solid #007bff',
+              borderRadius: '4px',
+              background: '#007bff',
+              color: 'white',
+              cursor: 'pointer',
+            }}
+            onClick={() => action('view-details')()}
+          >
+            상세보기
+          </button>
+        ),
+      },
+    ],
+    rowAccordion: (user: any) => (
+      <div
+        style={{
+          padding: '20px',
+          backgroundColor: '#f8f9fa',
+          borderTop: '1px solid #dee2e6',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Font type="heading5" color="text/black">
+            사용자 상세 정보
+          </Font>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <Font type="body3" color="text/gray" style={{ marginBottom: '4px' }}>
+                사용자 ID
+              </Font>
+              <Font type="body2" color="text/black">
+                {user.id}
+              </Font>
+            </div>
+            <div>
+              <Font type="body3" color="text/gray" style={{ marginBottom: '4px' }}>
+                역할
+              </Font>
+              <Font type="body2" color="text/black">
+                {user.role}
+              </Font>
+            </div>
+            <div>
+              <Font type="body3" color="text/gray" style={{ marginBottom: '4px' }}>
+                가입일
+              </Font>
+              <Font type="body2" color="text/black">
+                {user.createdAt}
+              </Font>
+            </div>
+            <div>
+              <Font type="body3" color="text/gray" style={{ marginBottom: '4px' }}>
+                최근 접속
+              </Font>
+              <Font type="body2" color="text/black">
+                {user.lastLogin}
+              </Font>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    isLoading: false,
+    type: 'parent',
+    pagination: true,
+    pageSize: 8,
+    initialPage: 1,
+    maxVisiblePages: 5,
+    onPageChange: action('page-changed'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '아코디언 기능과 페이지네이션을 함께 사용하는 예시입니다.',
+      },
+    },
   },
 };
