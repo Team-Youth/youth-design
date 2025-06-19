@@ -55,6 +55,12 @@ export const Table = <T,>({
     });
   };
 
+  // 컬럼 레이아웃을 완전히 리셋하는 함수
+  const resetColumnLayouts = () => {
+    setColumnLayouts({});
+    setIsWidthCalculationComplete(false);
+  };
+
   const formattedColumns = useMemo(() => {
     if (type === 'child') return columns;
     return [...columns];
@@ -85,28 +91,31 @@ export const Table = <T,>({
     }
   }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
 
-  // 데이터나 컬럼이 변경되면 계산 완료 상태 리셋
+  // 데이터나 컬럼이 변경되면 계산 완료 상태와 컬럼 레이아웃 리셋
   useEffect(() => {
-    setIsWidthCalculationComplete(false);
+    resetColumnLayouts();
   }, [data, columns]);
 
   // 창 크기 변경 시 열 너비를 재측정하도록 초기화
   useEffect(() => {
     const handleResize = () => {
-      setIsWidthCalculationComplete(false);
-      formattedColumns.forEach((column, index) => {
-        const headerEl = headerRefs.current[index];
-        if (headerEl) {
-          const width = Math.ceil(headerEl.getBoundingClientRect().width);
-          updateColumnWidth(index, width);
-        }
-      });
+      resetColumnLayouts();
+      // 약간의 지연 후 헤더 너비 재측정
+      setTimeout(() => {
+        formattedColumns.forEach((column, index) => {
+          const headerEl = headerRefs.current[index];
+          if (headerEl) {
+            const width = Math.ceil(headerEl.getBoundingClientRect().width);
+            updateColumnWidth(index, width);
+          }
+        });
+      }, 50);
     };
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [formattedColumns]);
 
   if (isLoading) {
     return (
@@ -154,10 +163,10 @@ export const Table = <T,>({
                 boxSizing: 'border-box',
                 overflow: 'visible',
                 height: 48,
-                // 데이터가 없을 때 컬럼이 100%, 고르게 분배되도록 설정
+                // 데이터가 없을 때 컬럼에 적절한 최소 너비 설정
                 ...(data.length === 0 && {
                   flex: 1,
-                  minWidth: 0,
+                  minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
                   width: 'auto',
                 }),
                 ...(isWidthCalculationComplete &&

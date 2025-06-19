@@ -24663,6 +24663,11 @@ var Table = function (_a) {
       return prevLayouts;
     });
   };
+  // 컬럼 레이아웃을 완전히 리셋하는 함수
+  var resetColumnLayouts = function () {
+    setColumnLayouts({});
+    setIsWidthCalculationComplete(false);
+  };
   var formattedColumns = useMemo(function () {
     if (type === 'child') return columns;
     return __spreadArray([], columns, true);
@@ -24692,27 +24697,30 @@ var Table = function (_a) {
       }
     }
   }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
-  // 데이터나 컬럼이 변경되면 계산 완료 상태 리셋
+  // 데이터나 컬럼이 변경되면 계산 완료 상태와 컬럼 레이아웃 리셋
   useEffect(function () {
-    setIsWidthCalculationComplete(false);
+    resetColumnLayouts();
   }, [data, columns]);
   // 창 크기 변경 시 열 너비를 재측정하도록 초기화
   useEffect(function () {
     var handleResize = function () {
-      setIsWidthCalculationComplete(false);
-      formattedColumns.forEach(function (column, index) {
-        var headerEl = headerRefs.current[index];
-        if (headerEl) {
-          var width = Math.ceil(headerEl.getBoundingClientRect().width);
-          updateColumnWidth(index, width);
-        }
-      });
+      resetColumnLayouts();
+      // 약간의 지연 후 헤더 너비 재측정
+      setTimeout(function () {
+        formattedColumns.forEach(function (column, index) {
+          var headerEl = headerRefs.current[index];
+          if (headerEl) {
+            var width = Math.ceil(headerEl.getBoundingClientRect().width);
+            updateColumnWidth(index, width);
+          }
+        });
+      }, 50);
     };
     window.addEventListener('resize', handleResize);
     return function () {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [formattedColumns]);
   if (isLoading) {
     return jsx("div", {
       style: {
@@ -24758,7 +24766,7 @@ var Table = function (_a) {
             height: 48
           }, data.length === 0 && {
             flex: 1,
-            minWidth: 0,
+            minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
             width: 'auto'
           }), isWidthCalculationComplete && data.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
             flex: 1,
