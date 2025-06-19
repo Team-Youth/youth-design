@@ -1,7 +1,7 @@
 import React, { useState, forwardRef, useCallback } from 'react';
 
 import { Icon, IconType } from '../icon/Icon';
-import { colors, spacing, radius, textStyles } from '../../tokens';
+import { colors, spacing, radius, textStyles, fontWeight } from '../../tokens';
 
 export interface TextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'> {
@@ -43,6 +43,8 @@ export interface TextFieldProps
   onTrailingIconClick?: () => void;
   /** 상태 (filled/empty) */
   status?: 'filled' | 'empty';
+  /** 크기 */
+  size?: 'm' | 'l';
   /** 너비 */
   width?: 'fill' | (string & {}) | number;
 }
@@ -84,6 +86,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       onLeadingIconClick,
       onTrailingIconClick,
       status,
+      size = 'l',
       width = '320px',
       ...restProps
     },
@@ -131,18 +134,21 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         return typeof width === 'number' ? `${width}px` : width;
       };
 
+      // size에 따른 패딩 설정
+      const padding = size === 'm' ? `9px ${spacing.m}` : `13px ${spacing.m}`; // m: 9px 16px, l: 13px 16px
+
       return {
         display: 'flex',
         alignItems: 'center',
         gap: spacing.xs, // 8px
-        padding: `13px ${spacing.m}`, // 13px 16px
+        padding,
         backgroundColor,
         border: `1px solid ${borderColor}`,
         borderRadius: radius.s, // 8px
         transition: 'all 0.2s ease',
         width: getWidth(),
       };
-    }, [disabled, readOnly, error, isFocused, isHovered, width]);
+    }, [disabled, readOnly, error, isFocused, isHovered, width, size]);
 
     const getInputStyles = useCallback((): React.CSSProperties => {
       let textColor: string = colors.semantic.text.tertiary; // #8D97A5 for placeholder
@@ -158,6 +164,9 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       // readOnly일 때 커서 스타일 변경
       const cursorStyle = readOnly ? 'default' : 'text';
 
+      // size에 따른 폰트 스타일 설정
+      const textStyle = size === 'm' ? textStyles.body2 : textStyles.body1;
+
       return {
         flex: 1,
         border: 'none',
@@ -165,10 +174,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         backgroundColor: 'transparent',
         color: textColor,
         cursor: cursorStyle,
-        // body1 regular 스타일 적용
-        ...textStyles.body1,
+        // size에 따른 텍스트 스타일 적용
+        ...textStyle,
       };
-    }, [disabled, error, actualStatus, readOnly]);
+    }, [disabled, error, actualStatus, readOnly, size]);
 
     const getIconColor = useCallback(() => {
       if (disabled) {
@@ -386,11 +395,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             <Icon type="dialog" size={16} color={colors.semantic.state.error} />
             <span
               style={{
-                fontSize: '12px',
-                fontWeight: 500,
-                lineHeight: '18px',
                 color: colors.semantic.state.error,
-                fontFamily: 'Pretendard',
+                // size에 따른 텍스트 스타일 적용
+                ...(size === 'm' ? textStyles.body3 : textStyles.body2),
+                fontWeight: fontWeight.regular,
               }}
             >
               {errorMessage}

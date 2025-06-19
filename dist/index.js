@@ -22068,21 +22068,23 @@ var TextField = React.forwardRef(function (_a, ref) {
     onLeadingIconClick = _a.onLeadingIconClick,
     onTrailingIconClick = _a.onTrailingIconClick,
     status = _a.status,
-    _h = _a.width,
-    width = _h === void 0 ? '320px' : _h,
-    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "readOnly", "error", "errorMessage", "className", "type", "leadingIcon", "trailingIcon", "leadingIconType", "trailingIconType", "onLeadingIconClick", "onTrailingIconClick", "status", "width"]);
-  var _j = React.useState(false),
-    isFocused = _j[0],
-    setIsFocused = _j[1];
+    _h = _a.size,
+    size = _h === void 0 ? 'l' : _h,
+    _j = _a.width,
+    width = _j === void 0 ? '320px' : _j,
+    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "readOnly", "error", "errorMessage", "className", "type", "leadingIcon", "trailingIcon", "leadingIconType", "trailingIconType", "onLeadingIconClick", "onTrailingIconClick", "status", "size", "width"]);
   var _k = React.useState(false),
-    isHovered = _k[0],
-    setIsHovered = _k[1];
-  var _l = React.useState(defaultValue || ''),
-    internalValue = _l[0],
-    setInternalValue = _l[1];
-  var _m = React.useState(false),
-    showPassword = _m[0],
-    setShowPassword = _m[1];
+    isFocused = _k[0],
+    setIsFocused = _k[1];
+  var _l = React.useState(false),
+    isHovered = _l[0],
+    setIsHovered = _l[1];
+  var _m = React.useState(defaultValue || ''),
+    internalValue = _m[0],
+    setInternalValue = _m[1];
+  var _o = React.useState(false),
+    showPassword = _o[0],
+    setShowPassword = _o[1];
   var currentValue = value !== undefined ? value : internalValue;
   var isEmpty = !currentValue || currentValue.length === 0;
   var actualStatus = status || (isEmpty ? 'empty' : 'filled');
@@ -22114,13 +22116,14 @@ var TextField = React.forwardRef(function (_a, ref) {
       }
       return typeof width === 'number' ? "".concat(width, "px") : width;
     };
+    // size에 따른 패딩 설정
+    var padding = size === 'm' ? "9px ".concat(spacing.m) : "13px ".concat(spacing.m); // m: 9px 16px, l: 13px 16px
     return {
       display: 'flex',
       alignItems: 'center',
       gap: spacing.xs,
       // 8px
-      padding: "13px ".concat(spacing.m),
-      // 13px 16px
+      padding: padding,
       backgroundColor: backgroundColor,
       border: "1px solid ".concat(borderColor),
       borderRadius: radius.s,
@@ -22128,7 +22131,7 @@ var TextField = React.forwardRef(function (_a, ref) {
       transition: 'all 0.2s ease',
       width: getWidth()
     };
-  }, [disabled, readOnly, error, isFocused, isHovered, width]);
+  }, [disabled, readOnly, error, isFocused, isHovered, width, size]);
   var getInputStyles = React.useCallback(function () {
     var textColor = colors.semantic.text.tertiary; // #8D97A5 for placeholder
     if (disabled) {
@@ -22140,6 +22143,8 @@ var TextField = React.forwardRef(function (_a, ref) {
     }
     // readOnly일 때 커서 스타일 변경
     var cursorStyle = readOnly ? 'default' : 'text';
+    // size에 따른 폰트 스타일 설정
+    var textStyle = size === 'm' ? textStyles.body2 : textStyles.body1;
     return __assign({
       flex: 1,
       border: 'none',
@@ -22147,8 +22152,8 @@ var TextField = React.forwardRef(function (_a, ref) {
       backgroundColor: 'transparent',
       color: textColor,
       cursor: cursorStyle
-    }, textStyles.body1);
-  }, [disabled, error, actualStatus, readOnly]);
+    }, textStyle);
+  }, [disabled, error, actualStatus, readOnly, size]);
   var getIconColor = React.useCallback(function () {
     if (disabled) {
       return colors.semantic.disabled.foreground; // #D1D5DB
@@ -22342,13 +22347,11 @@ var TextField = React.forwardRef(function (_a, ref) {
         size: 16,
         color: colors.semantic.state.error
       }), jsxRuntime.jsx("span", {
-        style: {
-          fontSize: '12px',
-          fontWeight: 500,
-          lineHeight: '18px',
-          color: colors.semantic.state.error,
-          fontFamily: 'Pretendard'
-        },
+        style: __assign(__assign({
+          color: colors.semantic.state.error
+        }, size === 'm' ? textStyles.body3 : textStyles.body2), {
+          fontWeight: fontWeight.regular
+        }),
         children: errorMessage
       })]
     }), jsxRuntime.jsx("style", {
