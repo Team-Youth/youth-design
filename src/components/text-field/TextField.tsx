@@ -1,7 +1,7 @@
 import React, { useState, forwardRef, useCallback } from 'react';
 
 import { Icon, IconType } from '../icon/Icon';
-import { colors, spacing, radius, textStyles } from '../../tokens';
+import { colors, spacing, radius, textStyles, fontWeight } from '../../tokens';
 
 export interface TextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'> {
@@ -395,11 +395,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             <Icon type="dialog" size={16} color={colors.semantic.state.error} />
             <span
               style={{
-                fontSize: '12px',
-                fontWeight: 500,
-                lineHeight: '18px',
                 color: colors.semantic.state.error,
-                fontFamily: 'Pretendard',
+                // size에 따른 텍스트 스타일 적용
+                ...(size === 'm' ? textStyles.body3 : textStyles.body2),
+                fontWeight: fontWeight.regular,
               }}
             >
               {errorMessage}

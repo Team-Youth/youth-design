@@ -22347,13 +22347,11 @@ var TextField = React.forwardRef(function (_a, ref) {
         size: 16,
         color: colors.semantic.state.error
       }), jsxRuntime.jsx("span", {
-        style: {
-          fontSize: '12px',
-          fontWeight: 500,
-          lineHeight: '18px',
-          color: colors.semantic.state.error,
-          fontFamily: 'Pretendard'
-        },
+        style: __assign(__assign({
+          color: colors.semantic.state.error
+        }, size === 'm' ? textStyles.body3 : textStyles.body2), {
+          fontWeight: fontWeight.regular
+        }),
         children: errorMessage
       })]
     }), jsxRuntime.jsx("style", {
