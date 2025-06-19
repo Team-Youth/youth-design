@@ -1,4 +1,13 @@
-import React, { JSX, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  JSX,
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useEffectOnceWhen } from 'rooks';
 import { YouthLottie } from '../lottie/Lottie';
 import Font from '../font/Font';
@@ -66,15 +75,41 @@ export const Table = <T,>({
     return [...columns];
   }, [columns]);
 
-  // 컴포넌트 마운트 시 헤더 셀의 너비를 측정하여 초기화
-  useLayoutEffect(() => {
+  // 헤더 너비를 정확하게 측정하는 함수
+  const measureHeaderWidths = useCallback(() => {
     formattedColumns.forEach((column, index) => {
       const headerEl = headerRefs.current[index];
       if (headerEl) {
-        const width = Math.ceil(headerEl.getBoundingClientRect().width);
-        updateColumnWidth(index, width);
+        // 실제 텍스트 컨텐츠의 너비를 측정하기 위해 임시 요소 생성
+        const tempEl = document.createElement('div');
+        tempEl.style.position = 'absolute';
+        tempEl.style.visibility = 'hidden';
+        tempEl.style.whiteSpace = 'nowrap';
+        tempEl.style.fontSize = window.getComputedStyle(headerEl).fontSize;
+        tempEl.style.fontWeight = window.getComputedStyle(headerEl).fontWeight;
+        tempEl.style.fontFamily = window.getComputedStyle(headerEl).fontFamily;
+        tempEl.textContent = column.header;
+        document.body.appendChild(tempEl);
+
+        const textWidth = tempEl.getBoundingClientRect().width;
+        document.body.removeChild(tempEl);
+
+        // 패딩을 포함한 실제 필요한 너비 계산 (padding: 8px 12px = 24px)
+        const totalWidth = Math.ceil(textWidth + 24);
+        const currentWidth = Math.ceil(headerEl.getBoundingClientRect().width);
+
+        updateColumnWidth(index, Math.max(totalWidth, currentWidth));
       }
     });
+  }, [formattedColumns, updateColumnWidth]);
+
+  // 컴포넌트 마운트 시 헤더 셀의 너비를 측정하여 초기화
+  useLayoutEffect(() => {
+    // 즉시 실행
+    measureHeaderWidths();
+
+    // 약간의 지연 후 재측정 (레이아웃이 완전히 안정화된 후)
+    setTimeout(measureHeaderWidths, 50);
   }, [formattedColumns, data]);
 
   // 모든 컬럼의 너비 계산이 완료되었는지 확인
@@ -101,21 +136,13 @@ export const Table = <T,>({
     const handleResize = () => {
       resetColumnLayouts();
       // 약간의 지연 후 헤더 너비 재측정
-      setTimeout(() => {
-        formattedColumns.forEach((column, index) => {
-          const headerEl = headerRefs.current[index];
-          if (headerEl) {
-            const width = Math.ceil(headerEl.getBoundingClientRect().width);
-            updateColumnWidth(index, width);
-          }
-        });
-      }, 50);
+      setTimeout(measureHeaderWidths, 50);
     };
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [formattedColumns]);
+  }, [measureHeaderWidths]);
 
   if (isLoading) {
     return (
