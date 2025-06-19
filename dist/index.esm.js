@@ -916,51 +916,59 @@ var Button = function (_a) {
   // Size configurations
   var sizeConfig = {
     l: {
-      paddingX: '8px',
-      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '12px',
-      borderRadius: '16px',
+      paddingX: isIconOnlyButton ? '16px' : '16px',
+      paddingY: isIconOnlyButton ? '12px' : '12px',
+      borderRadius: '12px',
       width: 'auto',
-      height: type === 'text' ? '32px' : '48px',
+      height: '48px',
       fontSize: '16px',
       fontWeight: '500',
-      iconSize: isIconOnlyButton ? 24 : 20
+      iconSize: isIconOnlyButton ? 24 : 20,
+      gap: '4px'
     },
     m: {
-      paddingX: '8px',
-      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '8px',
-      borderRadius: '16px',
+      paddingX: isIconOnlyButton ? '16px' : type === 'text' ? '12px' : '12px',
+      paddingY: isIconOnlyButton ? '12px' : type === 'text' ? '0px' : '8px',
+      borderRadius: isIconOnlyButton ? '12px' : type === 'text' ? '12px' : '8px',
       width: 'auto',
-      height: type === 'text' ? '24px' : '40px',
+      height: isIconOnlyButton ? '40px' : type === 'text' ? '24px' : '40px',
       fontSize: '14px',
       fontWeight: '500',
-      iconSize: 16
+      iconSize: 16,
+      gap: '4px'
     },
     s: {
-      paddingX: '8px',
-      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '8px' : '6px',
-      borderRadius: '16px',
+      paddingX: isIconOnlyButton ? '16px' : type === 'text' ? '8px' : '8px',
+      paddingY: isIconOnlyButton ? '12px' : type === 'text' ? '0px' : '6px',
+      borderRadius: isIconOnlyButton ? '12px' : type === 'text' ? '12px' : '4px',
       width: 'auto',
-      height: type === 'text' ? '20px' : '32px',
+      height: isIconOnlyButton ? '40px' : type === 'text' ? '20px' : '32px',
       fontSize: '12px',
       fontWeight: '500',
-      iconSize: type === 'text' ? 14 : 16
+      iconSize: type === 'text' ? 14 : 16,
+      gap: '4px'
     },
     // textButton 전용 사이즈
     xs: {
-      paddingX: '8px',
+      paddingX: '4px',
       paddingY: '0px',
-      borderRadius: '16px',
+      borderRadius: '12px',
       width: 'auto',
       height: '20px',
       fontSize: '12px',
       fontWeight: leftIcon || rightIcon ? '500' : '400',
-      iconSize: 14
+      iconSize: 14,
+      gap: '4px'
     }
   };
   var getStyles = function () {
     // xs 사이즈는 text 타입에서만 사용 가능
     if (size === 'xs' && type !== 'text') {
       throw new Error('xs size is only available for text type buttons');
+    }
+    // text 타입에서는 large 사이즈 사용 불가
+    if (type === 'text' && size === 'l') {
+      throw new Error('large size is not available for text type buttons');
     }
     var config = sizeConfig[size];
     // width 동적 설정
@@ -1178,7 +1186,7 @@ var Button = function (_a) {
       style: {
         display: 'flex',
         alignItems: 'center',
-        gap: leftIcon && rightIcon ? '4px' : leftIcon ? '6px' : rightIcon ? '6px' : '0'
+        gap: leftIcon || rightIcon ? config.gap : '0'
       },
       children: [leftIcon && jsx(Icon, {
         type: leftIcon,
