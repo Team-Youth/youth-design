@@ -24711,19 +24711,45 @@ var Table = function (_a) {
       return prevLayouts;
     });
   };
+  // 컬럼 레이아웃을 완전히 리셋하는 함수
+  var resetColumnLayouts = function () {
+    setColumnLayouts({});
+    setIsWidthCalculationComplete(false);
+  };
   var formattedColumns = useMemo(function () {
     if (type === 'child') return columns;
     return __spreadArray([], columns, true);
   }, [columns]);
-  // 컴포넌트 마운트 시 헤더 셀의 너비를 측정하여 초기화
-  useLayoutEffect(function () {
+  // 헤더 너비를 정확하게 측정하는 함수
+  var measureHeaderWidths = useCallback(function () {
     formattedColumns.forEach(function (column, index) {
       var headerEl = headerRefs.current[index];
       if (headerEl) {
-        var width = Math.ceil(headerEl.getBoundingClientRect().width);
-        updateColumnWidth(index, width);
+        // 실제 텍스트 컨텐츠의 너비를 측정하기 위해 임시 요소 생성
+        var tempEl = document.createElement('div');
+        tempEl.style.position = 'absolute';
+        tempEl.style.visibility = 'hidden';
+        tempEl.style.whiteSpace = 'nowrap';
+        tempEl.style.fontSize = window.getComputedStyle(headerEl).fontSize;
+        tempEl.style.fontWeight = window.getComputedStyle(headerEl).fontWeight;
+        tempEl.style.fontFamily = window.getComputedStyle(headerEl).fontFamily;
+        tempEl.textContent = column.header;
+        document.body.appendChild(tempEl);
+        var textWidth = tempEl.getBoundingClientRect().width;
+        document.body.removeChild(tempEl);
+        // 패딩을 포함한 실제 필요한 너비 계산 (padding: 8px 12px = 24px)
+        var totalWidth = Math.ceil(textWidth + 24);
+        var currentWidth = Math.ceil(headerEl.getBoundingClientRect().width);
+        updateColumnWidth(index, Math.max(totalWidth, currentWidth));
       }
     });
+  }, [formattedColumns, updateColumnWidth]);
+  // 컴포넌트 마운트 시 헤더 셀의 너비를 측정하여 초기화
+  useLayoutEffect(function () {
+    // 즉시 실행
+    measureHeaderWidths();
+    // 약간의 지연 후 재측정 (레이아웃이 완전히 안정화된 후)
+    setTimeout(measureHeaderWidths, 30);
   }, [formattedColumns, data]);
   // 모든 컬럼의 너비 계산이 완료되었는지 확인
   useEffect(function () {
@@ -24736,31 +24762,26 @@ var Table = function (_a) {
         // 약간의 지연을 주어 모든 셀의 너비 계산이 완료되도록 함
         setTimeout(function () {
           setIsWidthCalculationComplete(true);
-        }, 100);
+        }, 50);
       }
     }
   }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
-  // 데이터나 컬럼이 변경되면 계산 완료 상태 리셋
+  // 데이터나 컬럼이 변경되면 계산 완료 상태와 컬럼 레이아웃 리셋
   useEffect(function () {
-    setIsWidthCalculationComplete(false);
+    resetColumnLayouts();
   }, [data, columns]);
   // 창 크기 변경 시 열 너비를 재측정하도록 초기화
   useEffect(function () {
     var handleResize = function () {
-      setIsWidthCalculationComplete(false);
-      formattedColumns.forEach(function (column, index) {
-        var headerEl = headerRefs.current[index];
-        if (headerEl) {
-          var width = Math.ceil(headerEl.getBoundingClientRect().width);
-          updateColumnWidth(index, width);
-        }
-      });
+      resetColumnLayouts();
+      // 약간의 지연 후 헤더 너비 재측정
+      setTimeout(measureHeaderWidths, 30);
     };
     window.addEventListener('resize', handleResize);
     return function () {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [measureHeaderWidths]);
   if (isLoading) {
     return jsx("div", {
       style: {
@@ -24783,7 +24804,9 @@ var Table = function (_a) {
     style: {
       display: 'flex',
       flexDirection: 'column',
-      flex: 1
+      flex: 1,
+      opacity: isWidthCalculationComplete || data.length === 0 ? 1 : 0.7,
+      transition: 'opacity 0.3s ease-in-out'
     },
     children: [jsx("div", {
       style: {
@@ -24803,12 +24826,13 @@ var Table = function (_a) {
             width: columnLayouts[index] ? "".concat(columnLayouts[index], "px") : 'auto',
             boxSizing: 'border-box',
             overflow: 'visible',
-            height: 48
+            height: 48,
+            transition: 'width 0.2s ease-out, flex 0.2s ease-out'
           }, data.length === 0 && {
             flex: 1,
-            minWidth: 0,
+            minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
             width: 'auto'
-          }), isWidthCalculationComplete && data.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
+          }), data.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
             flex: 1,
             minWidth: 0,
             width: 'auto'
@@ -24946,9 +24970,9 @@ var Cell = memo(function (_a) {
     columnLength = _a.columnLength,
     isRowAccordionOpen = _a.isRowAccordionOpen,
     tableType = _a.tableType,
-    style = _a.style,
-    isWidthCalculationComplete = _a.isWidthCalculationComplete,
-    hasRowAccordion = _a.hasRowAccordion;
+    style = _a.style;
+    _a.isWidthCalculationComplete;
+    var hasRowAccordion = _a.hasRowAccordion;
   var cellRef = useRef(null);
   useLayoutEffect(function () {
     if (cellRef.current) {
@@ -24967,7 +24991,7 @@ var Cell = memo(function (_a) {
   return jsx("div", {
     ref: cellRef,
     onClick: handleClick,
-    style: __assign(__assign({
+    style: __assign(__assign(__assign({
       display: 'flex',
       borderBottom: tableType === 'parent' ? '1px solid #eee' : 'none',
       padding: tableType === 'parent' && columnIndex === columnLength - 1 ? '16px 12px' : '8px 12px',
@@ -24975,8 +24999,9 @@ var Cell = memo(function (_a) {
       boxSizing: 'border-box',
       minWidth: columnIndex === 1 ? 84 : columnWidth ? "".concat(columnWidth, "px") : '0',
       width: columnWidth ? "".concat(columnWidth, "px") : 'auto',
-      overflow: 'visible'
-    }, isWidthCalculationComplete && __assign(__assign({}, tableType === 'parent' ? columnIndex === columnLength - 2 && {
+      overflow: 'visible',
+      transition: 'width 0.2s ease-out, flex 0.2s ease-out'
+    }, tableType === 'parent' ? columnIndex === columnLength - 2 && {
       flex: 1,
       minWidth: 0
     } : columnIndex === columnLength - 1 && {
@@ -24984,7 +25009,7 @@ var Cell = memo(function (_a) {
       minWidth: 0
     }), tableType === 'child' && columnIndex !== columnLength - 1 && {
       flex: 1
-    })), style),
+    }), style),
     children: columnIndex === 0 ? jsx("div", {
       style: __assign({
         display: 'flex'

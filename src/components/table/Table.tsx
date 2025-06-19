@@ -1,4 +1,13 @@
-import React, { JSX, memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  JSX,
+  memo,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useEffectOnceWhen } from 'rooks';
 import { YouthLottie } from '../lottie/Lottie';
 import Font from '../font/Font';
@@ -55,20 +64,52 @@ export const Table = <T,>({
     });
   };
 
+  // 컬럼 레이아웃을 완전히 리셋하는 함수
+  const resetColumnLayouts = () => {
+    setColumnLayouts({});
+    setIsWidthCalculationComplete(false);
+  };
+
   const formattedColumns = useMemo(() => {
     if (type === 'child') return columns;
     return [...columns];
   }, [columns]);
 
-  // 컴포넌트 마운트 시 헤더 셀의 너비를 측정하여 초기화
-  useLayoutEffect(() => {
+  // 헤더 너비를 정확하게 측정하는 함수
+  const measureHeaderWidths = useCallback(() => {
     formattedColumns.forEach((column, index) => {
       const headerEl = headerRefs.current[index];
       if (headerEl) {
-        const width = Math.ceil(headerEl.getBoundingClientRect().width);
-        updateColumnWidth(index, width);
+        // 실제 텍스트 컨텐츠의 너비를 측정하기 위해 임시 요소 생성
+        const tempEl = document.createElement('div');
+        tempEl.style.position = 'absolute';
+        tempEl.style.visibility = 'hidden';
+        tempEl.style.whiteSpace = 'nowrap';
+        tempEl.style.fontSize = window.getComputedStyle(headerEl).fontSize;
+        tempEl.style.fontWeight = window.getComputedStyle(headerEl).fontWeight;
+        tempEl.style.fontFamily = window.getComputedStyle(headerEl).fontFamily;
+        tempEl.textContent = column.header;
+        document.body.appendChild(tempEl);
+
+        const textWidth = tempEl.getBoundingClientRect().width;
+        document.body.removeChild(tempEl);
+
+        // 패딩을 포함한 실제 필요한 너비 계산 (padding: 8px 12px = 24px)
+        const totalWidth = Math.ceil(textWidth + 24);
+        const currentWidth = Math.ceil(headerEl.getBoundingClientRect().width);
+
+        updateColumnWidth(index, Math.max(totalWidth, currentWidth));
       }
     });
+  }, [formattedColumns, updateColumnWidth]);
+
+  // 컴포넌트 마운트 시 헤더 셀의 너비를 측정하여 초기화
+  useLayoutEffect(() => {
+    // 즉시 실행
+    measureHeaderWidths();
+
+    // 약간의 지연 후 재측정 (레이아웃이 완전히 안정화된 후)
+    setTimeout(measureHeaderWidths, 30);
   }, [formattedColumns, data]);
 
   // 모든 컬럼의 너비 계산이 완료되었는지 확인
@@ -80,33 +121,28 @@ export const Table = <T,>({
         // 약간의 지연을 주어 모든 셀의 너비 계산이 완료되도록 함
         setTimeout(() => {
           setIsWidthCalculationComplete(true);
-        }, 100);
+        }, 50);
       }
     }
   }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
 
-  // 데이터나 컬럼이 변경되면 계산 완료 상태 리셋
+  // 데이터나 컬럼이 변경되면 계산 완료 상태와 컬럼 레이아웃 리셋
   useEffect(() => {
-    setIsWidthCalculationComplete(false);
+    resetColumnLayouts();
   }, [data, columns]);
 
   // 창 크기 변경 시 열 너비를 재측정하도록 초기화
   useEffect(() => {
     const handleResize = () => {
-      setIsWidthCalculationComplete(false);
-      formattedColumns.forEach((column, index) => {
-        const headerEl = headerRefs.current[index];
-        if (headerEl) {
-          const width = Math.ceil(headerEl.getBoundingClientRect().width);
-          updateColumnWidth(index, width);
-        }
-      });
+      resetColumnLayouts();
+      // 약간의 지연 후 헤더 너비 재측정
+      setTimeout(measureHeaderWidths, 30);
     };
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [measureHeaderWidths]);
 
   if (isLoading) {
     return (
@@ -133,6 +169,8 @@ export const Table = <T,>({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
+        opacity: isWidthCalculationComplete || data.length === 0 ? 1 : 0.7,
+        transition: 'opacity 0.3s ease-in-out',
       }}
     >
       {/* 헤더 */}
@@ -154,28 +192,28 @@ export const Table = <T,>({
                 boxSizing: 'border-box',
                 overflow: 'visible',
                 height: 48,
-                // 데이터가 없을 때 컬럼이 100%, 고르게 분배되도록 설정
+                transition: 'width 0.2s ease-out, flex 0.2s ease-out',
+                // 데이터가 없을 때 컬럼에 적절한 최소 너비 설정
                 ...(data.length === 0 && {
                   flex: 1,
-                  minWidth: 0,
+                  minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
                   width: 'auto',
                 }),
-                ...(isWidthCalculationComplete &&
-                  data.length > 0 && {
-                    ...(type === 'parent'
-                      ? index === formattedColumns.length - 2 && {
-                          flex: 1,
-                          minWidth: 0,
-                          width: 'auto',
-                        }
-                      : index === formattedColumns.length - 1 && {
-                          flex: 2,
-                          minWidth: 0,
-                          width: 'auto',
-                        }),
-                    ...(type === 'child' &&
-                      index !== formattedColumns.length - 1 && { flex: 1, width: 'auto' }),
-                  }),
+                ...(data.length > 0 && {
+                  ...(type === 'parent'
+                    ? index === formattedColumns.length - 2 && {
+                        flex: 1,
+                        minWidth: 0,
+                        width: 'auto',
+                      }
+                    : index === formattedColumns.length - 1 && {
+                        flex: 2,
+                        minWidth: 0,
+                        width: 'auto',
+                      }),
+                  ...(type === 'child' &&
+                    index !== formattedColumns.length - 1 && { flex: 1, width: 'auto' }),
+                }),
                 ...column.style,
               }}
             >
@@ -376,12 +414,13 @@ const Cell = memo(
           minWidth: columnIndex === 1 ? 84 : columnWidth ? `${columnWidth}px` : '0',
           width: columnWidth ? `${columnWidth}px` : 'auto',
           overflow: 'visible',
-          ...(isWidthCalculationComplete && {
-            ...(tableType === 'parent'
-              ? columnIndex === columnLength - 2 && { flex: 1, minWidth: 0 }
-              : columnIndex === columnLength - 1 && { flex: 2, minWidth: 0 }),
-            ...(tableType === 'child' && columnIndex !== columnLength - 1 && { flex: 1 }),
-          }),
+          transition: 'width 0.2s ease-out, flex 0.2s ease-out',
+
+          ...(tableType === 'parent'
+            ? columnIndex === columnLength - 2 && { flex: 1, minWidth: 0 }
+            : columnIndex === columnLength - 1 && { flex: 2, minWidth: 0 }),
+          ...(tableType === 'child' && columnIndex !== columnLength - 1 && { flex: 1 }),
+
           ...style,
         }}
       >
