@@ -24706,7 +24706,7 @@ var Table = function (_a) {
     // 즉시 실행
     measureHeaderWidths();
     // 약간의 지연 후 재측정 (레이아웃이 완전히 안정화된 후)
-    setTimeout(measureHeaderWidths, 50);
+    setTimeout(measureHeaderWidths, 30);
   }, [formattedColumns, data]);
   // 모든 컬럼의 너비 계산이 완료되었는지 확인
   React.useEffect(function () {
@@ -24719,7 +24719,7 @@ var Table = function (_a) {
         // 약간의 지연을 주어 모든 셀의 너비 계산이 완료되도록 함
         setTimeout(function () {
           setIsWidthCalculationComplete(true);
-        }, 100);
+        }, 50);
       }
     }
   }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
@@ -24732,7 +24732,7 @@ var Table = function (_a) {
     var handleResize = function () {
       resetColumnLayouts();
       // 약간의 지연 후 헤더 너비 재측정
-      setTimeout(measureHeaderWidths, 50);
+      setTimeout(measureHeaderWidths, 30);
     };
     window.addEventListener('resize', handleResize);
     return function () {
@@ -24761,7 +24761,9 @@ var Table = function (_a) {
     style: {
       display: 'flex',
       flexDirection: 'column',
-      flex: 1
+      flex: 1,
+      opacity: isWidthCalculationComplete || data.length === 0 ? 1 : 0.7,
+      transition: 'opacity 0.3s ease-in-out'
     },
     children: [jsxRuntime.jsx("div", {
       style: {
@@ -24781,12 +24783,13 @@ var Table = function (_a) {
             width: columnLayouts[index] ? "".concat(columnLayouts[index], "px") : 'auto',
             boxSizing: 'border-box',
             overflow: 'visible',
-            height: 48
+            height: 48,
+            transition: 'width 0.2s ease-out, flex 0.2s ease-out'
           }, data.length === 0 && {
             flex: 1,
             minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
             width: 'auto'
-          }), isWidthCalculationComplete && data.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
+          }), data.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
             flex: 1,
             minWidth: 0,
             width: 'auto'
@@ -24924,9 +24927,9 @@ var Cell = React.memo(function (_a) {
     columnLength = _a.columnLength,
     isRowAccordionOpen = _a.isRowAccordionOpen,
     tableType = _a.tableType,
-    style = _a.style,
-    isWidthCalculationComplete = _a.isWidthCalculationComplete,
-    hasRowAccordion = _a.hasRowAccordion;
+    style = _a.style;
+    _a.isWidthCalculationComplete;
+    var hasRowAccordion = _a.hasRowAccordion;
   var cellRef = React.useRef(null);
   React.useLayoutEffect(function () {
     if (cellRef.current) {
@@ -24945,7 +24948,7 @@ var Cell = React.memo(function (_a) {
   return jsxRuntime.jsx("div", {
     ref: cellRef,
     onClick: handleClick,
-    style: __assign(__assign({
+    style: __assign(__assign(__assign({
       display: 'flex',
       borderBottom: tableType === 'parent' ? '1px solid #eee' : 'none',
       padding: tableType === 'parent' && columnIndex === columnLength - 1 ? '16px 12px' : '8px 12px',
@@ -24953,8 +24956,9 @@ var Cell = React.memo(function (_a) {
       boxSizing: 'border-box',
       minWidth: columnIndex === 1 ? 84 : columnWidth ? "".concat(columnWidth, "px") : '0',
       width: columnWidth ? "".concat(columnWidth, "px") : 'auto',
-      overflow: 'visible'
-    }, isWidthCalculationComplete && __assign(__assign({}, tableType === 'parent' ? columnIndex === columnLength - 2 && {
+      overflow: 'visible',
+      transition: 'width 0.2s ease-out, flex 0.2s ease-out'
+    }, tableType === 'parent' ? columnIndex === columnLength - 2 && {
       flex: 1,
       minWidth: 0
     } : columnIndex === columnLength - 1 && {
@@ -24962,7 +24966,7 @@ var Cell = React.memo(function (_a) {
       minWidth: 0
     }), tableType === 'child' && columnIndex !== columnLength - 1 && {
       flex: 1
-    })), style),
+    }), style),
     children: columnIndex === 0 ? jsxRuntime.jsx("div", {
       style: __assign({
         display: 'flex'

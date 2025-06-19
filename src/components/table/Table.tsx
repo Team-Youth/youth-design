@@ -109,7 +109,7 @@ export const Table = <T,>({
     measureHeaderWidths();
 
     // 약간의 지연 후 재측정 (레이아웃이 완전히 안정화된 후)
-    setTimeout(measureHeaderWidths, 50);
+    setTimeout(measureHeaderWidths, 30);
   }, [formattedColumns, data]);
 
   // 모든 컬럼의 너비 계산이 완료되었는지 확인
@@ -121,7 +121,7 @@ export const Table = <T,>({
         // 약간의 지연을 주어 모든 셀의 너비 계산이 완료되도록 함
         setTimeout(() => {
           setIsWidthCalculationComplete(true);
-        }, 100);
+        }, 50);
       }
     }
   }, [columnLayouts, data.length, formattedColumns.length, isWidthCalculationComplete]);
@@ -136,7 +136,7 @@ export const Table = <T,>({
     const handleResize = () => {
       resetColumnLayouts();
       // 약간의 지연 후 헤더 너비 재측정
-      setTimeout(measureHeaderWidths, 50);
+      setTimeout(measureHeaderWidths, 30);
     };
     window.addEventListener('resize', handleResize);
     return () => {
@@ -169,6 +169,8 @@ export const Table = <T,>({
         display: 'flex',
         flexDirection: 'column',
         flex: 1,
+        opacity: isWidthCalculationComplete || data.length === 0 ? 1 : 0.7,
+        transition: 'opacity 0.3s ease-in-out',
       }}
     >
       {/* 헤더 */}
@@ -190,28 +192,28 @@ export const Table = <T,>({
                 boxSizing: 'border-box',
                 overflow: 'visible',
                 height: 48,
+                transition: 'width 0.2s ease-out, flex 0.2s ease-out',
                 // 데이터가 없을 때 컬럼에 적절한 최소 너비 설정
                 ...(data.length === 0 && {
                   flex: 1,
                   minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
                   width: 'auto',
                 }),
-                ...(isWidthCalculationComplete &&
-                  data.length > 0 && {
-                    ...(type === 'parent'
-                      ? index === formattedColumns.length - 2 && {
-                          flex: 1,
-                          minWidth: 0,
-                          width: 'auto',
-                        }
-                      : index === formattedColumns.length - 1 && {
-                          flex: 2,
-                          minWidth: 0,
-                          width: 'auto',
-                        }),
-                    ...(type === 'child' &&
-                      index !== formattedColumns.length - 1 && { flex: 1, width: 'auto' }),
-                  }),
+                ...(data.length > 0 && {
+                  ...(type === 'parent'
+                    ? index === formattedColumns.length - 2 && {
+                        flex: 1,
+                        minWidth: 0,
+                        width: 'auto',
+                      }
+                    : index === formattedColumns.length - 1 && {
+                        flex: 2,
+                        minWidth: 0,
+                        width: 'auto',
+                      }),
+                  ...(type === 'child' &&
+                    index !== formattedColumns.length - 1 && { flex: 1, width: 'auto' }),
+                }),
                 ...column.style,
               }}
             >
@@ -412,12 +414,13 @@ const Cell = memo(
           minWidth: columnIndex === 1 ? 84 : columnWidth ? `${columnWidth}px` : '0',
           width: columnWidth ? `${columnWidth}px` : 'auto',
           overflow: 'visible',
-          ...(isWidthCalculationComplete && {
-            ...(tableType === 'parent'
-              ? columnIndex === columnLength - 2 && { flex: 1, minWidth: 0 }
-              : columnIndex === columnLength - 1 && { flex: 2, minWidth: 0 }),
-            ...(tableType === 'child' && columnIndex !== columnLength - 1 && { flex: 1 }),
-          }),
+          transition: 'width 0.2s ease-out, flex 0.2s ease-out',
+
+          ...(tableType === 'parent'
+            ? columnIndex === columnLength - 2 && { flex: 1, minWidth: 0 }
+            : columnIndex === columnLength - 1 && { flex: 2, minWidth: 0 }),
+          ...(tableType === 'child' && columnIndex !== columnLength - 1 && { flex: 1 }),
+
           ...style,
         }}
       >
