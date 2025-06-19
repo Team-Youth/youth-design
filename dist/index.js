@@ -893,56 +893,55 @@ var Button = function (_a) {
     level = _c === void 0 ? 'CTA' : _c,
     _d = _a.size,
     size = _d === void 0 ? 'l' : _d,
-    _e = _a.width,
-    width = _e === void 0 ? '320px' : _e,
-    _f = _a.disabled,
-    disabled = _f === void 0 ? false : _f,
+    width = _a.width,
+    _e = _a.disabled,
+    disabled = _e === void 0 ? false : _e,
     leftIcon = _a.leftIcon,
     rightIcon = _a.rightIcon,
     iconOnly = _a.iconOnly,
     children = _a.children,
     onClick = _a.onClick,
-    _g = _a.className,
-    className = _g === void 0 ? '' : _g,
-    _h = _a.isLoading,
-    isLoading = _h === void 0 ? false : _h,
-    _j = _a.underline,
-    underline = _j === void 0 ? false : _j;
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f,
+    _g = _a.isLoading,
+    isLoading = _g === void 0 ? false : _g,
+    _h = _a.underline,
+    underline = _h === void 0 ? false : _h;
+  var _j = React.useState(false),
+    isHovered = _j[0],
+    setIsHovered = _j[1];
   var _k = React.useState(false),
-    isHovered = _k[0],
-    setIsHovered = _k[1];
-  var _l = React.useState(false),
-    isPressed = _l[0],
-    setIsPressed = _l[1];
+    isPressed = _k[0],
+    setIsPressed = _k[1];
   // 아이콘만 있는 버튼인지 확인
   var isIconOnlyButton = Boolean(iconOnly && !children);
   // Size configurations
   var sizeConfig = {
     l: {
-      paddingX: type === 'text' ? '12px' : isIconOnlyButton ? '12px' : '16px',
+      paddingX: '8px',
       paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '12px',
-      borderRadius: type === 'text' ? '12px' : '12px',
-      width: isIconOnlyButton ? '48px' : '320px',
+      borderRadius: '16px',
+      width: 'auto',
       height: type === 'text' ? '32px' : '48px',
       fontSize: '16px',
       fontWeight: '500',
       iconSize: isIconOnlyButton ? 24 : 20
     },
     m: {
-      paddingX: type === 'text' ? '8px' : isIconOnlyButton ? '12px' : '12px',
+      paddingX: '8px',
       paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '8px',
-      borderRadius: type === 'text' ? '12px' : '8px',
-      width: isIconOnlyButton ? '40px' : '320px',
+      borderRadius: '16px',
+      width: 'auto',
       height: type === 'text' ? '24px' : '40px',
       fontSize: '14px',
       fontWeight: '500',
       iconSize: 16
     },
     s: {
-      paddingX: type === 'text' ? '6px' : isIconOnlyButton ? '8px' : '8px',
+      paddingX: '8px',
       paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '8px' : '6px',
-      borderRadius: type === 'text' ? '8px' : '4px',
-      width: isIconOnlyButton ? '32px' : '320px',
+      borderRadius: '16px',
+      width: 'auto',
       height: type === 'text' ? '20px' : '32px',
       fontSize: '12px',
       fontWeight: '500',
@@ -950,10 +949,10 @@ var Button = function (_a) {
     },
     // textButton 전용 사이즈
     xs: {
-      paddingX: '4px',
+      paddingX: '8px',
       paddingY: '0px',
       borderRadius: '16px',
-      width: '320px',
+      width: 'auto',
       height: '20px',
       fontSize: '12px',
       fontWeight: leftIcon || rightIcon ? '500' : '400',
@@ -974,7 +973,10 @@ var Button = function (_a) {
       if (isIconOnlyButton) {
         return config.width;
       }
-      return width;
+      if (width) {
+        return width;
+      }
+      return 'fit-content';
     };
     var styles = {
       display: 'flex',

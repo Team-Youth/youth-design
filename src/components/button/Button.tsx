@@ -37,7 +37,7 @@ export const Button: React.FC<ButtonProps> = ({
   type = 'solid',
   level = 'CTA',
   size = 'l',
-  width = '320px',
+  width,
   disabled = false,
   leftIcon,
   rightIcon,
@@ -57,30 +57,30 @@ export const Button: React.FC<ButtonProps> = ({
   // Size configurations
   const sizeConfig = {
     l: {
-      paddingX: type === 'text' ? '12px' : isIconOnlyButton ? '12px' : '16px',
+      paddingX: '8px',
       paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '12px',
-      borderRadius: type === 'text' ? '12px' : '12px',
-      width: isIconOnlyButton ? '48px' : '320px',
+      borderRadius: '16px',
+      width: 'auto',
       height: type === 'text' ? '32px' : '48px',
       fontSize: '16px',
       fontWeight: '500',
       iconSize: isIconOnlyButton ? 24 : 20,
     },
     m: {
-      paddingX: type === 'text' ? '8px' : isIconOnlyButton ? '12px' : '12px',
+      paddingX: '8px',
       paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '8px',
-      borderRadius: type === 'text' ? '12px' : '8px',
-      width: isIconOnlyButton ? '40px' : '320px',
+      borderRadius: '16px',
+      width: 'auto',
       height: type === 'text' ? '24px' : '40px',
       fontSize: '14px',
       fontWeight: '500',
       iconSize: 16,
     },
     s: {
-      paddingX: type === 'text' ? '6px' : isIconOnlyButton ? '8px' : '8px',
+      paddingX: '8px',
       paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '8px' : '6px',
-      borderRadius: type === 'text' ? '8px' : '4px',
-      width: isIconOnlyButton ? '32px' : '320px',
+      borderRadius: '16px',
+      width: 'auto',
       height: type === 'text' ? '20px' : '32px',
       fontSize: '12px',
       fontWeight: '500',
@@ -88,10 +88,10 @@ export const Button: React.FC<ButtonProps> = ({
     },
     // textButton 전용 사이즈
     xs: {
-      paddingX: '4px',
+      paddingX: '8px',
       paddingY: '0px',
       borderRadius: '16px',
-      width: '320px',
+      width: 'auto',
       height: '20px',
       fontSize: '12px',
       fontWeight: leftIcon || rightIcon ? '500' : '400',
@@ -115,7 +115,10 @@ export const Button: React.FC<ButtonProps> = ({
       if (isIconOnlyButton) {
         return config.width;
       }
-      return width;
+      if (width) {
+        return width;
+      }
+      return 'fit-content';
     };
 
     let styles: React.CSSProperties = {
