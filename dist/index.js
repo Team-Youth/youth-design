@@ -573,366 +573,6 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
-var LoadingIcon = function () {
-  return jsxRuntime.jsx("svg", {
-    width: "16",
-    height: "16",
-    viewBox: "0 0 50 50",
-    className: "loading-icon",
-    children: jsxRuntime.jsx("circle", {
-      cx: "25",
-      cy: "25",
-      r: "20",
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: "4",
-      strokeLinecap: "round"
-    })
-  });
-};
-var Button = function (_a) {
-  var _b = _a.type,
-    type = _b === void 0 ? 'solid' : _b,
-    _c = _a.level,
-    level = _c === void 0 ? 'CTA' : _c,
-    _d = _a.size,
-    size = _d === void 0 ? 'l' : _d,
-    _e = _a.width,
-    width = _e === void 0 ? '320px' : _e,
-    _f = _a.disabled,
-    disabled = _f === void 0 ? false : _f,
-    icon = _a.icon,
-    children = _a.children,
-    onClick = _a.onClick,
-    _g = _a.className,
-    className = _g === void 0 ? '' : _g,
-    _h = _a.isLoading,
-    isLoading = _h === void 0 ? false : _h,
-    _j = _a.underline,
-    underline = _j === void 0 ? false : _j;
-  var _k = React.useState(false),
-    isHovered = _k[0],
-    setIsHovered = _k[1];
-  var _l = React.useState(false),
-    isPressed = _l[0],
-    setIsPressed = _l[1];
-  // Size configurations
-  var sizeConfig = {
-    l: {
-      paddingX: type === 'text' ? '12px' : '16px',
-      paddingY: type === 'text' ? '0px' : '12px',
-      borderRadius: type === 'text' ? '12px' : '12px',
-      width: '320px',
-      height: type === 'text' ? '32px' : '48px',
-      fontSize: '16px',
-      fontWeight: '500',
-      iconSize: '20px'
-    },
-    m: {
-      paddingX: type === 'text' ? '8px' : '12px',
-      paddingY: type === 'text' ? '0px' : '8px',
-      borderRadius: type === 'text' ? '12px' : '8px',
-      width: '320px',
-      height: type === 'text' ? '24px' : '40px',
-      fontSize: '14px',
-      fontWeight: '500',
-      iconSize: '16px'
-    },
-    s: {
-      paddingX: type === 'text' ? '8px' : '8px',
-      paddingY: type === 'text' ? '0px' : '6px',
-      borderRadius: type === 'text' ? '12px' : '4px',
-      width: '320px',
-      height: type === 'text' ? '20px' : '32px',
-      fontSize: '12px',
-      fontWeight: '500',
-      iconSize: type === 'text' ? '14px' : '16px'
-    }
-  };
-  var getStyles = function () {
-    var config = sizeConfig[size];
-    // width 동적 설정
-    var getWidth = function () {
-      if (width === 'fill') {
-        return '100%';
-      }
-      return width;
-    };
-    var styles = {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
-      borderRadius: config.borderRadius,
-      width: getWidth(),
-      height: config.height,
-      border: type === 'text' ? 'none' : '1px solid transparent',
-      cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
-      transition: 'all 0.2s ease',
-      fontSize: config.fontSize,
-      fontWeight: config.fontWeight,
-      textDecoration: type === 'text' && underline ? 'underline' : 'none',
-      background: 'none'
-    };
-    // Type별 스타일 적용
-    if (type === 'solid') {
-      styles = __assign(__assign({}, styles), getSolidStyles(level, disabled, isLoading, isPressed, isHovered));
-    } else if (type === 'outlined') {
-      styles = __assign(__assign({}, styles), getOutlinedStyles(disabled, isLoading, isPressed, isHovered));
-    } else if (type === 'text') {
-      styles = __assign(__assign({}, styles), getTextStyles(disabled));
-    }
-    return styles;
-  };
-  var getSolidStyles = function (level, disabled, isLoading, isPressed, isHovered) {
-    if (disabled) {
-      return {
-        backgroundColor: colors.semantic.disabled.background,
-        color: colors.semantic.disabled.foreground,
-        border: "1px solid ".concat(colors.semantic.disabled.background)
-      };
-    }
-    if (isLoading) {
-      if (level === 'CTA') {
-        return {
-          backgroundColor: colors.primary.mainviolet,
-          color: colors.semantic.background.primary,
-          border: "1px solid ".concat(colors.primary.mainviolet)
-        };
-      } else if (level === 'secondary') {
-        return {
-          backgroundColor: colors.primary.tint.violet[200],
-          color: colors.primary.mainviolet,
-          border: "1px solid ".concat(colors.primary.tint.violet[200])
-        };
-      } else if (level === 'tertiary') {
-        return {
-          backgroundColor: colors.semantic.disabled.background,
-          color: colors.semantic.text.primary,
-          border: "1px solid ".concat(colors.semantic.disabled.background)
-        };
-      }
-    }
-    // Level별 색상 정의
-    var levelColors = {
-      CTA: {
-        normal: {
-          bg: colors.primary.mainviolet,
-          text: colors.semantic.background.primary
-        },
-        hovered: {
-          bg: colors.primary.tint.violet[600],
-          text: colors.semantic.background.primary
-        },
-        pressed: {
-          bg: colors.primary.tint.violet[700],
-          text: colors.semantic.background.primary
-        }
-      },
-      secondary: {
-        normal: {
-          bg: colors.primary.tint.violet[100],
-          text: colors.primary.mainviolet
-        },
-        hovered: {
-          bg: colors.primary.tint.violet[200],
-          text: colors.primary.mainviolet
-        },
-        pressed: {
-          bg: colors.primary.tint.violet[300],
-          text: colors.primary.tint.violet[600]
-        }
-      },
-      tertiary: {
-        normal: {
-          bg: colors.semantic.disabled.background,
-          text: colors.semantic.text.primary
-        },
-        hovered: {
-          bg: colors.primary.coolGray[100],
-          text: colors.semantic.text.primary
-        },
-        pressed: {
-          bg: colors.semantic.disabled.foreground,
-          text: colors.semantic.text.primary
-        }
-      }
-    };
-    var currentLevel = levelColors[level];
-    var currentState = currentLevel.normal;
-    if (isPressed) {
-      currentState = currentLevel.pressed;
-    } else if (isHovered) {
-      currentState = currentLevel.hovered;
-    }
-    return {
-      backgroundColor: currentState.bg,
-      color: currentState.text,
-      border: "1px solid ".concat(currentState.bg)
-    };
-  };
-  var getOutlinedStyles = function (disabled, isLoading, isPressed, isHovered) {
-    if (disabled) {
-      return {
-        backgroundColor: colors.semantic.background.primary,
-        color: colors.semantic.disabled.foreground,
-        border: "1px solid ".concat(colors.semantic.disabled.foreground)
-      };
-    }
-    if (isLoading) {
-      return {
-        backgroundColor: colors.semantic.background.primary,
-        color: colors.semantic.text.primary,
-        border: "1px solid ".concat(colors.semantic.border.strong)
-      };
-    }
-    if (isPressed) {
-      return {
-        backgroundColor: colors.primary.coolGray[100],
-        color: colors.semantic.text.primary,
-        border: "1px solid ".concat(colors.semantic.border.strong)
-      };
-    } else if (isHovered) {
-      return {
-        backgroundColor: colors.semantic.disabled.background,
-        color: colors.semantic.text.primary,
-        border: "1px solid ".concat(colors.semantic.border.strong)
-      };
-    } else {
-      return {
-        backgroundColor: colors.semantic.background.primary,
-        color: colors.semantic.text.primary,
-        border: "1px solid ".concat(colors.semantic.border.strong)
-      };
-    }
-  };
-  var getTextStyles = function (disabled, isPressed, isHovered) {
-    if (disabled) {
-      return {
-        color: colors.semantic.disabled.foreground,
-        backgroundColor: 'transparent'
-      };
-    }
-    // text 버튼은 배경색 변화 없이 텍스트 색상만 변경
-    return {
-      color: colors.semantic.text.primary,
-      backgroundColor: 'transparent'
-    };
-  };
-  var handleClick = function () {
-    if (!disabled && !isLoading && onClick) {
-      onClick();
-    }
-  };
-  var handleMouseEnter = function () {
-    if (!disabled && !isLoading) {
-      setIsHovered(true);
-    }
-  };
-  var handleMouseLeave = function () {
-    setIsHovered(false);
-    setIsPressed(false);
-  };
-  var handleMouseDown = function () {
-    if (!disabled && !isLoading) {
-      setIsPressed(true);
-    }
-  };
-  var handleMouseUp = function () {
-    setIsPressed(false);
-  };
-  var renderContent = function () {
-    if (isLoading) {
-      return jsxRuntime.jsx(LoadingIcon, {});
-    }
-    var config = sizeConfig[size];
-    var iconStyle = {
-      width: config.iconSize,
-      height: config.iconSize,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    };
-    return jsxRuntime.jsxs("div", {
-      style: {
-        display: 'flex',
-        alignItems: 'center',
-        gap: '4px'
-      },
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && jsxRuntime.jsx("div", {
-        style: iconStyle,
-        children: icon.left
-      }), children && jsxRuntime.jsx("span", {
-        children: children
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && jsxRuntime.jsx("div", {
-        style: iconStyle,
-        children: icon.right
-      })]
-    });
-  };
-  return jsxRuntime.jsx("button", {
-    style: getStyles(),
-    onClick: handleClick,
-    onMouseEnter: handleMouseEnter,
-    onMouseLeave: handleMouseLeave,
-    onMouseDown: handleMouseDown,
-    onMouseUp: handleMouseUp,
-    disabled: disabled || isLoading,
-    className: className,
-    children: renderContent()
-  });
-};
-
-var Font = function (_a) {
-  var type = _a.type,
-    fontWeight$1 = _a.fontWeight,
-    _b = _a.color,
-    color = _b === void 0 ? colors.semantic.text.primary : _b,
-    hoverColor = _a.hoverColor,
-    _c = _a.align,
-    align = _c === void 0 ? 'left' : _c,
-    whiteSpace = _a.whiteSpace,
-    _d = _a.noWhiteSpace,
-    noWhiteSpace = _d === void 0 ? false : _d,
-    _e = _a.underline,
-    underline = _e === void 0 ? false : _e,
-    className = _a.className,
-    style = _a.style,
-    children = _a.children;
-  var baseStyle = textStyles[type];
-  var fontStyles = __assign(__assign(__assign(__assign({}, baseStyle), fontWeight$1 && {
-    fontWeight: fontWeight[fontWeight$1]
-  }), {
-    color: color,
-    textAlign: align,
-    whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
-    wordBreak: 'keep-all',
-    textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
-    overflow: noWhiteSpace ? 'hidden' : undefined,
-    textDecoration: underline ? 'underline' : 'none',
-    margin: 0,
-    padding: 0,
-    transition: 'color 0.2s ease'
-  }), style);
-  var handleMouseEnter = function (e) {
-    if (hoverColor) {
-      e.currentTarget.style.color = hoverColor;
-    }
-  };
-  var handleMouseLeave = function (e) {
-    if (hoverColor) {
-      e.currentTarget.style.color = color;
-    }
-  };
-  return jsxRuntime.jsx("span", {
-    style: fontStyles,
-    className: className,
-    onMouseEnter: handleMouseEnter,
-    onMouseLeave: handleMouseLeave,
-    children: children
-  });
-};
-
 var Lock = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M6.5 6.5C6.5 3.46243 8.96243 1 12 1C15.0376 1 17.5 3.46243 17.5 6.5V8.5H18C19.6569 8.5 21 9.84315 21 11.5V20C21 21.6569 19.6569 23 18 23H6C4.34315 23 3 21.6569 3 20V11.5C3 9.84315 4.34315 8.5 6 8.5H6.5V6.5ZM9 8.5H15V6.5C15 4.84315 13.6569 3.5 12 3.5C10.3431 3.5 9 4.84315 9 6.5V8.5ZM11 14.5C11 13.9477 11.4477 13.5 12 13.5C12.5523 13.5 13 13.9477 13 14.5V17.5C13 18.0523 12.5523 18.5 12 18.5C11.4477 18.5 11 18.0523 11 17.5V14.5Z\" fill=\"#25282D\"/></svg>";
 var New = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"11\" fill=\"#25282D\"/><path d=\"M15.2337 7.19995C15.786 7.19995 16.2337 7.64767 16.2337 8.19995V16.3812C16.2337 16.9335 15.786 17.3812 15.2337 17.3812H14.93C14.6016 17.3812 14.2942 17.22 14.1074 16.9499L9.93374 10.9125H9.84936V16.3812C9.84936 16.9335 9.40165 17.3812 8.84937 17.3812H8.73999C8.18771 17.3812 7.73999 16.9335 7.73999 16.3812V8.19995C7.73999 7.64767 8.18771 7.19995 8.73999 7.19995H9.06997C9.3994 7.19995 9.7077 7.3622 9.89422 7.63373L14.04 13.6687H14.1384V8.19995C14.1384 7.64767 14.5861 7.19995 15.1384 7.19995H15.2337Z\" fill=\"white\"/></svg>";
 var Truncation = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"5.5\" cy=\"20.5\" r=\"1.5\" fill=\"#25282D\"/><circle cx=\"18.5\" cy=\"20.5\" r=\"1.5\" fill=\"#25282D\"/><circle cx=\"12\" cy=\"20.5\" r=\"1.5\" fill=\"#25282D\"/></svg>";
@@ -1226,6 +866,397 @@ var Icon = function (_a) {
     dangerouslySetInnerHTML: {
       __html: processedSvg
     }
+  });
+};
+
+var LoadingIcon = function () {
+  return jsxRuntime.jsx("svg", {
+    width: "16",
+    height: "16",
+    viewBox: "0 0 50 50",
+    className: "loading-icon",
+    children: jsxRuntime.jsx("circle", {
+      cx: "25",
+      cy: "25",
+      r: "20",
+      fill: "none",
+      stroke: "currentColor",
+      strokeWidth: "4",
+      strokeLinecap: "round"
+    })
+  });
+};
+var Button = function (_a) {
+  var _b = _a.type,
+    type = _b === void 0 ? 'solid' : _b,
+    _c = _a.level,
+    level = _c === void 0 ? 'CTA' : _c,
+    _d = _a.size,
+    size = _d === void 0 ? 'l' : _d,
+    _e = _a.width,
+    width = _e === void 0 ? '320px' : _e,
+    _f = _a.disabled,
+    disabled = _f === void 0 ? false : _f,
+    leftIcon = _a.leftIcon,
+    rightIcon = _a.rightIcon,
+    iconOnly = _a.iconOnly,
+    children = _a.children,
+    onClick = _a.onClick,
+    _g = _a.className,
+    className = _g === void 0 ? '' : _g,
+    _h = _a.isLoading,
+    isLoading = _h === void 0 ? false : _h,
+    _j = _a.underline,
+    underline = _j === void 0 ? false : _j;
+  var _k = React.useState(false),
+    isHovered = _k[0],
+    setIsHovered = _k[1];
+  var _l = React.useState(false),
+    isPressed = _l[0],
+    setIsPressed = _l[1];
+  // 아이콘만 있는 버튼인지 확인
+  var isIconOnlyButton = Boolean(iconOnly && !children);
+  // Size configurations
+  var sizeConfig = {
+    l: {
+      paddingX: type === 'text' ? '12px' : isIconOnlyButton ? '12px' : '16px',
+      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '12px',
+      borderRadius: type === 'text' ? '12px' : '12px',
+      width: isIconOnlyButton ? '48px' : '320px',
+      height: type === 'text' ? '32px' : '48px',
+      fontSize: '16px',
+      fontWeight: '500',
+      iconSize: isIconOnlyButton ? 24 : 20
+    },
+    m: {
+      paddingX: type === 'text' ? '8px' : isIconOnlyButton ? '12px' : '12px',
+      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '8px',
+      borderRadius: type === 'text' ? '12px' : '8px',
+      width: isIconOnlyButton ? '40px' : '320px',
+      height: type === 'text' ? '24px' : '40px',
+      fontSize: '14px',
+      fontWeight: '500',
+      iconSize: 16
+    },
+    s: {
+      paddingX: type === 'text' ? '6px' : isIconOnlyButton ? '8px' : '8px',
+      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '8px' : '6px',
+      borderRadius: type === 'text' ? '8px' : '4px',
+      width: isIconOnlyButton ? '32px' : '320px',
+      height: type === 'text' ? '20px' : '32px',
+      fontSize: '12px',
+      fontWeight: '500',
+      iconSize: type === 'text' ? 14 : 16
+    },
+    // textButton 전용 사이즈
+    xs: {
+      paddingX: '4px',
+      paddingY: '0px',
+      borderRadius: '16px',
+      width: '320px',
+      height: '20px',
+      fontSize: '12px',
+      fontWeight: leftIcon || rightIcon ? '500' : '400',
+      iconSize: 14
+    }
+  };
+  var getStyles = function () {
+    // xs 사이즈는 text 타입에서만 사용 가능
+    if (size === 'xs' && type !== 'text') {
+      throw new Error('xs size is only available for text type buttons');
+    }
+    var config = sizeConfig[size];
+    // width 동적 설정
+    var getWidth = function () {
+      if (width === 'fill') {
+        return '100%';
+      }
+      if (isIconOnlyButton) {
+        return config.width;
+      }
+      return width;
+    };
+    var styles = {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: "".concat(config.paddingY, " ").concat(config.paddingX),
+      borderRadius: config.borderRadius,
+      width: getWidth(),
+      height: config.height,
+      border: type === 'text' ? 'none' : '1px solid transparent',
+      cursor: disabled || isLoading ? 'not-allowed' : 'pointer',
+      transition: 'all 0.2s ease',
+      fontSize: config.fontSize,
+      fontWeight: config.fontWeight,
+      textDecoration: type === 'text' && underline ? 'underline' : 'none',
+      background: 'none'
+    };
+    // Type별 스타일 적용
+    if (type === 'solid') {
+      styles = __assign(__assign({}, styles), getSolidStyles(level, disabled, isLoading, isPressed, isHovered));
+    } else if (type === 'outlined') {
+      styles = __assign(__assign({}, styles), getOutlinedStyles(disabled, isLoading, isPressed, isHovered));
+    } else if (type === 'text') {
+      styles = __assign(__assign({}, styles), getTextStyles(disabled));
+    }
+    return styles;
+  };
+  var getSolidStyles = function (level, disabled, isLoading, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.disabled.foreground,
+        border: "1px solid ".concat(colors.semantic.disabled.background)
+      };
+    }
+    if (isLoading) {
+      if (level === 'CTA') {
+        return {
+          backgroundColor: colors.primary.mainviolet,
+          color: colors.semantic.background.primary,
+          border: "1px solid ".concat(colors.primary.mainviolet)
+        };
+      } else if (level === 'secondary') {
+        return {
+          backgroundColor: colors.primary.tint.violet[200],
+          color: colors.primary.mainviolet,
+          border: "1px solid ".concat(colors.primary.tint.violet[200])
+        };
+      } else if (level === 'tertiary') {
+        return {
+          backgroundColor: colors.semantic.disabled.background,
+          color: colors.semantic.text.primary,
+          border: "1px solid ".concat(colors.semantic.disabled.background)
+        };
+      }
+    }
+    // Level별 색상 정의
+    var levelColors = {
+      CTA: {
+        normal: {
+          bg: colors.primary.mainviolet,
+          text: colors.semantic.background.primary
+        },
+        hovered: {
+          bg: colors.primary.tint.violet[600],
+          text: colors.semantic.background.primary
+        },
+        pressed: {
+          bg: colors.primary.tint.violet[700],
+          text: colors.semantic.background.primary
+        }
+      },
+      secondary: {
+        normal: {
+          bg: colors.primary.tint.violet[100],
+          text: colors.primary.mainviolet
+        },
+        hovered: {
+          bg: colors.primary.tint.violet[200],
+          text: colors.primary.mainviolet
+        },
+        pressed: {
+          bg: colors.primary.tint.violet[300],
+          text: colors.primary.tint.violet[600]
+        }
+      },
+      tertiary: {
+        normal: {
+          bg: colors.semantic.disabled.background,
+          text: colors.semantic.text.primary
+        },
+        hovered: {
+          bg: colors.primary.coolGray[100],
+          text: colors.semantic.text.primary
+        },
+        pressed: {
+          bg: colors.semantic.disabled.foreground,
+          text: colors.semantic.text.primary
+        }
+      }
+    };
+    var currentLevel = levelColors[level];
+    var currentState = currentLevel.normal;
+    if (isPressed) {
+      currentState = currentLevel.pressed;
+    } else if (isHovered) {
+      currentState = currentLevel.hovered;
+    }
+    return {
+      backgroundColor: currentState.bg,
+      color: currentState.text,
+      border: "1px solid ".concat(currentState.bg)
+    };
+  };
+  var getOutlinedStyles = function (disabled, isLoading, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.disabled.foreground,
+        border: "1px solid ".concat(colors.semantic.disabled.foreground)
+      };
+    }
+    if (isLoading) {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    }
+    if (isPressed) {
+      return {
+        backgroundColor: colors.primary.coolGray[100],
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    } else if (isHovered) {
+      return {
+        backgroundColor: colors.semantic.disabled.background,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    } else {
+      return {
+        backgroundColor: colors.semantic.background.primary,
+        color: colors.semantic.text.primary,
+        border: "1px solid ".concat(colors.semantic.border.strong)
+      };
+    }
+  };
+  var getTextStyles = function (disabled, isPressed, isHovered) {
+    if (disabled) {
+      return {
+        color: colors.semantic.disabled.foreground,
+        backgroundColor: 'transparent'
+      };
+    }
+    // text 버튼은 배경색 변화 없이 텍스트 색상만 변경
+    return {
+      color: colors.semantic.text.primary,
+      backgroundColor: 'transparent'
+    };
+  };
+  var handleClick = function () {
+    if (!disabled && !isLoading && onClick) {
+      onClick();
+    }
+  };
+  var handleMouseEnter = function () {
+    if (!disabled && !isLoading) {
+      setIsHovered(true);
+    }
+  };
+  var handleMouseLeave = function () {
+    setIsHovered(false);
+    setIsPressed(false);
+  };
+  var handleMouseDown = function () {
+    if (!disabled && !isLoading) {
+      setIsPressed(true);
+    }
+  };
+  var handleMouseUp = function () {
+    setIsPressed(false);
+  };
+  var renderContent = function () {
+    if (isLoading) {
+      return jsxRuntime.jsx(LoadingIcon, {});
+    }
+    var config = sizeConfig[size];
+    var iconColor = getIconColor();
+    // iconOnly 버튼인 경우
+    if (isIconOnlyButton && iconOnly) {
+      return jsxRuntime.jsx(Icon, {
+        type: iconOnly,
+        size: config.iconSize,
+        color: iconColor
+      });
+    }
+    // 일반 버튼인 경우
+    return jsxRuntime.jsxs("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: leftIcon && rightIcon ? '4px' : leftIcon ? '6px' : rightIcon ? '6px' : '0'
+      },
+      children: [leftIcon && jsxRuntime.jsx(Icon, {
+        type: leftIcon,
+        size: config.iconSize,
+        color: iconColor
+      }), children && jsxRuntime.jsx("span", {
+        children: children
+      }), rightIcon && jsxRuntime.jsx(Icon, {
+        type: rightIcon,
+        size: config.iconSize,
+        color: iconColor
+      })]
+    });
+  };
+  var getIconColor = function () {
+    var styles = getStyles();
+    return styles.color || colors.semantic.text.primary;
+  };
+  return jsxRuntime.jsx("button", {
+    style: getStyles(),
+    onClick: handleClick,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    onMouseDown: handleMouseDown,
+    onMouseUp: handleMouseUp,
+    disabled: disabled || isLoading,
+    className: className,
+    children: renderContent()
+  });
+};
+
+var Font = function (_a) {
+  var type = _a.type,
+    fontWeight$1 = _a.fontWeight,
+    _b = _a.color,
+    color = _b === void 0 ? colors.semantic.text.primary : _b,
+    hoverColor = _a.hoverColor,
+    _c = _a.align,
+    align = _c === void 0 ? 'left' : _c,
+    whiteSpace = _a.whiteSpace,
+    _d = _a.noWhiteSpace,
+    noWhiteSpace = _d === void 0 ? false : _d,
+    _e = _a.underline,
+    underline = _e === void 0 ? false : _e,
+    className = _a.className,
+    style = _a.style,
+    children = _a.children;
+  var baseStyle = textStyles[type];
+  var fontStyles = __assign(__assign(__assign(__assign({}, baseStyle), fontWeight$1 && {
+    fontWeight: fontWeight[fontWeight$1]
+  }), {
+    color: color,
+    textAlign: align,
+    whiteSpace: noWhiteSpace ? 'nowrap' : whiteSpace || 'normal',
+    wordBreak: 'keep-all',
+    textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
+    overflow: noWhiteSpace ? 'hidden' : undefined,
+    textDecoration: underline ? 'underline' : 'none',
+    margin: 0,
+    padding: 0,
+    transition: 'color 0.2s ease'
+  }), style);
+  var handleMouseEnter = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = hoverColor;
+    }
+  };
+  var handleMouseLeave = function (e) {
+    if (hoverColor) {
+      e.currentTarget.style.color = color;
+    }
+  };
+  return jsxRuntime.jsx("span", {
+    style: fontStyles,
+    className: className,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    children: children
   });
 };
 
@@ -19398,7 +19429,8 @@ var TextButton = function (_a) {
     disabled = _c === void 0 ? false : _c,
     _d = _a.underline,
     underline = _d === void 0 ? false : _d,
-    icon = _a.icon,
+    leftIcon = _a.leftIcon,
+    rightIcon = _a.rightIcon,
     children = _a.children,
     onClick = _a.onClick,
     _e = _a.className,
@@ -19412,15 +19444,18 @@ var TextButton = function (_a) {
   var sizeConfig = {
     m: __assign(__assign({}, textStyles.body1), {
       fontWeight: fontWeight.medium,
-      padding: '4px 8px'
+      padding: '4px 8px',
+      iconSize: 16
     }),
     s: __assign(__assign({}, textStyles.body2), {
       fontWeight: fontWeight.medium,
-      padding: '3px 6px'
+      padding: '3px 6px',
+      iconSize: 14
     }),
     xs: __assign(__assign({}, textStyles.body3), {
-      fontWeight: fontWeight.medium,
-      padding: '2px 4px'
+      fontWeight: fontWeight.regular,
+      padding: '2px 4px',
+      iconSize: 12
     })
   };
   var getTextColor = function () {
@@ -19433,7 +19468,7 @@ var TextButton = function (_a) {
     var config = sizeConfig[size];
     var textColor = getTextColor();
     // 아이콘이 있는지 확인
-    var hasIcons = (icon === null || icon === void 0 ? void 0 : icon.left) || (icon === null || icon === void 0 ? void 0 : icon.right);
+    var hasIcons = leftIcon || rightIcon || chevron;
     return {
       display: 'inline-flex',
       alignItems: 'center',
@@ -19452,7 +19487,7 @@ var TextButton = function (_a) {
       height: height || 'auto',
       minWidth: 'fit-content',
       minHeight: 'fit-content',
-      gap: hasIcons ? '4px' : '0px',
+      gap: hasIcons ? leftIcon && rightIcon ? '4px' : '6px' : '0px',
       transition: 'all 0.2s ease'
     };
   };
@@ -19463,20 +19498,30 @@ var TextButton = function (_a) {
   };
   var renderContent = function () {
     var textColor = getTextColor();
+    var config = sizeConfig[size];
     return jsxRuntime.jsxs(jsxRuntime.Fragment, {
-      children: [(icon === null || icon === void 0 ? void 0 : icon.left) && icon.left, jsxRuntime.jsxs("div", {
+      children: [leftIcon && jsxRuntime.jsx(Icon, {
+        type: leftIcon,
+        size: config.iconSize,
+        color: textColor
+      }), jsxRuntime.jsxs("div", {
         style: {
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          gap: chevron ? '4px' : '0'
         },
         children: [children && jsxRuntime.jsx("span", {
           children: children
         }), chevron && jsxRuntime.jsx(Icon, {
-          type: "arrow-right",
-          size: 20,
+          type: "chevron-right",
+          size: config.iconSize,
           color: textColor
         })]
-      }), (icon === null || icon === void 0 ? void 0 : icon.right) && !chevron && icon.right]
+      }), rightIcon && !chevron && jsxRuntime.jsx(Icon, {
+        type: rightIcon,
+        size: config.iconSize,
+        color: textColor
+      })]
     });
   };
   return jsxRuntime.jsx("button", {

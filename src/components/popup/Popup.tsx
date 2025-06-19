@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, ButtonProps } from '../box-button';
+import { Button, ButtonProps } from '../button';
 import { colors } from '../../tokens/colors';
 import { textStyles } from '../../tokens/typography';
 import { shadows } from '../../tokens/shadows';

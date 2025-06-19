@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, ButtonProps } from '../box-button';
+import { Button, ButtonProps } from '../button';
 import { Icon } from '../icon';
 import { colors } from '../../tokens/colors';
 import { textStyles } from '../../tokens/typography';

@@ -1,15 +1,13 @@
 import { fontWeight, textStyles } from '../../tokens';
 import { colors } from '../../tokens/colors';
-import { Icon } from '../icon/Icon';
+import { Icon, IconType } from '../icon/Icon';
 
 export interface TextButtonProps {
   size?: 'm' | 's' | 'xs';
   disabled?: boolean;
   underline?: boolean;
-  icon?: {
-    left?: React.ReactNode;
-    right?: React.ReactNode;
-  };
+  leftIcon?: IconType;
+  rightIcon?: IconType;
   children?: React.ReactNode;
   onClick?: () => void;
   className?: string;
@@ -23,7 +21,8 @@ export const TextButton: React.FC<TextButtonProps> = ({
   size = 'm',
   disabled = false,
   underline = false,
-  icon,
+  leftIcon,
+  rightIcon,
   children,
   onClick,
   className = '',
@@ -38,16 +37,19 @@ export const TextButton: React.FC<TextButtonProps> = ({
       ...textStyles.body1,
       fontWeight: fontWeight.medium,
       padding: '4px 8px',
+      iconSize: 16,
     },
     s: {
       ...textStyles.body2,
       fontWeight: fontWeight.medium,
       padding: '3px 6px',
+      iconSize: 14,
     },
     xs: {
       ...textStyles.body3,
-      fontWeight: fontWeight.medium,
+      fontWeight: fontWeight.regular, // xs 크기에서는 regular weight 사용
       padding: '2px 4px',
+      iconSize: 12,
     },
   };
 
@@ -63,7 +65,7 @@ export const TextButton: React.FC<TextButtonProps> = ({
     const textColor = getTextColor();
 
     // 아이콘이 있는지 확인
-    const hasIcons = icon?.left || icon?.right;
+    const hasIcons = leftIcon || rightIcon || chevron;
 
     return {
       display: 'inline-flex',
@@ -83,7 +85,7 @@ export const TextButton: React.FC<TextButtonProps> = ({
       height: height || 'auto',
       minWidth: 'fit-content',
       minHeight: 'fit-content',
-      gap: hasIcons ? '4px' : '0px',
+      gap: hasIcons ? (leftIcon && rightIcon ? '4px' : '6px') : '0px',
       transition: 'all 0.2s ease',
     };
   };
@@ -96,15 +98,18 @@ export const TextButton: React.FC<TextButtonProps> = ({
 
   const renderContent = () => {
     const textColor = getTextColor();
+    const config = sizeConfig[size];
 
     return (
       <>
-        {icon?.left && icon.left}
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        {leftIcon && <Icon type={leftIcon} size={config.iconSize} color={textColor} />}
+        <div style={{ display: 'flex', alignItems: 'center', gap: chevron ? '4px' : '0' }}>
           {children && <span>{children}</span>}
-          {chevron && <Icon type="arrow-right" size={20} color={textColor} />}
+          {chevron && <Icon type="chevron-right" size={config.iconSize} color={textColor} />}
         </div>
-        {icon?.right && !chevron && icon.right}
+        {rightIcon && !chevron && (
+          <Icon type={rightIcon} size={config.iconSize} color={textColor} />
+        )}
       </>
     );
   };

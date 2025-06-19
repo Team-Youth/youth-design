@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonProps } from '../box-button';
+import { ButtonProps } from '../button';
 import './Modal.css';
 export interface ModalProps {
     /** 모달 제목 */

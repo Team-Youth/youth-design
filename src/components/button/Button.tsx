@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { colors } from '../../tokens/colors';
+import { Icon, IconType } from '../icon/Icon';
 import './Button.css';
 
 export interface ButtonProps {
   type?: 'solid' | 'outlined' | 'text';
   level?: 'CTA' | 'secondary' | 'tertiary';
-  size?: 'l' | 'm' | 's';
+  size?: 'l' | 'm' | 's' | 'xs';
   width?: 'fill' | (string & {});
   disabled?: boolean;
-  icon?: {
-    left?: React.ReactNode;
-    right?: React.ReactNode;
-  };
+  leftIcon?: IconType;
+  rightIcon?: IconType;
+  iconOnly?: IconType; // 아이콘만 있는 버튼
   children?: React.ReactNode;
   onClick?: () => void;
   className?: string;
@@ -39,7 +39,9 @@ export const Button: React.FC<ButtonProps> = ({
   size = 'l',
   width = '320px',
   disabled = false,
-  icon,
+  leftIcon,
+  rightIcon,
+  iconOnly,
   children,
   onClick,
   className = '',
@@ -49,47 +51,69 @@ export const Button: React.FC<ButtonProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
 
+  // 아이콘만 있는 버튼인지 확인
+  const isIconOnlyButton = Boolean(iconOnly && !children);
+
   // Size configurations
   const sizeConfig = {
     l: {
-      paddingX: type === 'text' ? '12px' : '16px',
-      paddingY: type === 'text' ? '0px' : '12px',
+      paddingX: type === 'text' ? '12px' : isIconOnlyButton ? '12px' : '16px',
+      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '12px',
       borderRadius: type === 'text' ? '12px' : '12px',
-      width: '320px',
+      width: isIconOnlyButton ? '48px' : '320px',
       height: type === 'text' ? '32px' : '48px',
       fontSize: '16px',
       fontWeight: '500',
-      iconSize: '20px',
+      iconSize: isIconOnlyButton ? 24 : 20,
     },
     m: {
-      paddingX: type === 'text' ? '8px' : '12px',
-      paddingY: type === 'text' ? '0px' : '8px',
+      paddingX: type === 'text' ? '8px' : isIconOnlyButton ? '12px' : '12px',
+      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '12px' : '8px',
       borderRadius: type === 'text' ? '12px' : '8px',
-      width: '320px',
+      width: isIconOnlyButton ? '40px' : '320px',
       height: type === 'text' ? '24px' : '40px',
       fontSize: '14px',
       fontWeight: '500',
-      iconSize: '16px',
+      iconSize: 16,
     },
     s: {
-      paddingX: type === 'text' ? '8px' : '8px',
-      paddingY: type === 'text' ? '0px' : '6px',
-      borderRadius: type === 'text' ? '12px' : '4px',
-      width: '320px',
+      paddingX: type === 'text' ? '6px' : isIconOnlyButton ? '8px' : '8px',
+      paddingY: type === 'text' ? '0px' : isIconOnlyButton ? '8px' : '6px',
+      borderRadius: type === 'text' ? '8px' : '4px',
+      width: isIconOnlyButton ? '32px' : '320px',
       height: type === 'text' ? '20px' : '32px',
       fontSize: '12px',
       fontWeight: '500',
-      iconSize: type === 'text' ? '14px' : '16px',
+      iconSize: type === 'text' ? 14 : 16,
+    },
+    // textButton 전용 사이즈
+    xs: {
+      paddingX: '4px',
+      paddingY: '0px',
+      borderRadius: '16px',
+      width: '320px',
+      height: '20px',
+      fontSize: '12px',
+      fontWeight: leftIcon || rightIcon ? '500' : '400',
+      iconSize: 14,
     },
   };
 
   const getStyles = (): React.CSSProperties => {
+    // xs 사이즈는 text 타입에서만 사용 가능
+    if (size === 'xs' && type !== 'text') {
+      throw new Error('xs size is only available for text type buttons');
+    }
+
     const config = sizeConfig[size];
 
     // width 동적 설정
     const getWidth = () => {
       if (width === 'fill') {
         return '100%';
+      }
+      if (isIconOnlyButton) {
+        return config.width;
       }
       return width;
     };
@@ -289,21 +313,32 @@ export const Button: React.FC<ButtonProps> = ({
     }
 
     const config = sizeConfig[size];
-    const iconStyle = {
-      width: config.iconSize,
-      height: config.iconSize,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    };
+    const iconColor = getIconColor();
 
+    // iconOnly 버튼인 경우
+    if (isIconOnlyButton && iconOnly) {
+      return <Icon type={iconOnly} size={config.iconSize} color={iconColor} />;
+    }
+
+    // 일반 버튼인 경우
     return (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-        {icon?.left && <div style={iconStyle}>{icon.left}</div>}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: leftIcon && rightIcon ? '4px' : leftIcon ? '6px' : rightIcon ? '6px' : '0',
+        }}
+      >
+        {leftIcon && <Icon type={leftIcon} size={config.iconSize} color={iconColor} />}
         {children && <span>{children}</span>}
-        {icon?.right && <div style={iconStyle}>{icon.right}</div>}
+        {rightIcon && <Icon type={rightIcon} size={config.iconSize} color={iconColor} />}
       </div>
     );
+  };
+
+  const getIconColor = (): string => {
+    const styles = getStyles();
+    return (styles.color as string) || colors.semantic.text.primary;
   };
 
   return (

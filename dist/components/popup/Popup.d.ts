@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonProps } from '../box-button';
+import { ButtonProps } from '../button';
 export interface PopupProps {
     /** 팝업 제목 */
     title: string;

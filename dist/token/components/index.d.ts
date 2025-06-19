@@ -1,5 +1,5 @@
-export { Button } from './box-button';
-export type { ButtonProps } from './box-button';
+export { Button } from './button';
+export type { ButtonProps } from './button';
 export { Font } from './font';
 export type { FontProps, FontType, FontWeight } from './font';
 export { Icon } from './icon';
