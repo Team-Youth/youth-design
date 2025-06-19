@@ -39,6 +39,8 @@ export interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInput
     onTrailingIconClick?: () => void;
     /** 상태 (filled/empty) */
     status?: 'filled' | 'empty';
+    /** 크기 */
+    size?: 'm' | 'l';
     /** 너비 */
     width?: 'fill' | (string & {}) | number;
 }
