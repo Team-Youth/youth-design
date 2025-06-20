@@ -21487,7 +21487,11 @@ var Dropdown = function (_a) {
   var _q = useState(''),
     searchText = _q[0],
     setSearchText = _q[1];
+  var _r = useState('bottom'),
+    dropdownPosition = _r[0],
+    setDropdownPosition = _r[1];
   var dropdownRef = useRef(null);
+  var triggerRef = useRef(null);
   var optionsContainerRef = useRef(null);
   var inputRef = useRef(null);
   var selectedOption = useMemo(function () {
@@ -21533,6 +21537,24 @@ var Dropdown = function (_a) {
       return option.label.toLowerCase().includes(searchText.toLowerCase());
     });
   }, [options, searchText, enableSearch]);
+  // 드롭다운 위치 계산 함수
+  var calculateDropdownPosition = useCallback(function () {
+    if (!triggerRef.current) return 'bottom';
+    var triggerRect = triggerRef.current.getBoundingClientRect();
+    var viewportHeight = window.innerHeight;
+    var dropdownMaxHeight = 200; // maxHeight와 동일
+    var margin = 8; // marginTop과 동일
+    var spaceBelow = viewportHeight - triggerRect.bottom - margin;
+    var spaceAbove = triggerRect.top - margin;
+    // 아래쪽 공간이 충분하면 아래로, 아니면 위쪽 공간과 비교해서 더 넓은 쪽으로
+    if (spaceBelow >= dropdownMaxHeight) {
+      return 'bottom';
+    } else if (spaceAbove >= dropdownMaxHeight) {
+      return 'top';
+    } else {
+      return spaceBelow >= spaceAbove ? 'bottom' : 'top';
+    }
+  }, []);
   // 선택된 옵션의 인덱스를 찾기 위한 함수
   var getSelectedOptionIndex = useCallback(function () {
     if (!hasSelectedOption) return -1;
@@ -21578,6 +21600,9 @@ var Dropdown = function (_a) {
   // 드롭다운 열기/닫기 애니메이션 관리
   useEffect(function () {
     if (isOpen) {
+      // 드롭다운 위치 계산
+      var position = calculateDropdownPosition();
+      setDropdownPosition(position);
       // 열기: 먼저 DOM에 마운트하고 애니메이션 시작
       setShouldRender(true);
       // hover 상태 초기화
@@ -21611,7 +21636,7 @@ var Dropdown = function (_a) {
         return clearTimeout(timer_1);
       };
     }
-  }, [isOpen, enableSearch, scrollToSelectedOption]);
+  }, [isOpen, enableSearch, scrollToSelectedOption, calculateDropdownPosition]);
   // 외부 클릭 시 드롭다운 닫기
   useEffect(function () {
     var handleClickOutside = function (event) {
@@ -21798,27 +21823,31 @@ var Dropdown = function (_a) {
     });
   }, [hoveredOptionIndex, getTextStyle]);
   var dropdownOptionsStyle = useMemo(function () {
-    return {
-      position: 'absolute',
-      top: '100%',
-      left: 0,
-      right: 0,
+    return __assign(__assign({
+      position: 'fixed',
+      left: triggerRef.current ? triggerRef.current.getBoundingClientRect().left : 0,
+      width: triggerRef.current ? triggerRef.current.getBoundingClientRect().width : finalWidth
+    }, dropdownPosition === 'bottom' ? {
+      top: triggerRef.current ? triggerRef.current.getBoundingClientRect().bottom + 8 : 0
+    } : {
+      bottom: triggerRef.current ? window.innerHeight - triggerRef.current.getBoundingClientRect().top + 8 : 0
+    }), {
       backgroundColor: colors.semantic.background.primary,
       border: "1px solid ".concat(colors.semantic.border.strong),
       borderRadius: '8px',
       boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
       zIndex: 1000,
-      marginTop: '8px',
       maxHeight: '200px',
       overflowY: 'auto',
       // 애니메이션 스타일
       opacity: isAnimating ? 1 : 0,
-      transform: isAnimating ? 'translateY(0) scaleY(1)' : 'translateY(-8px) scaleY(0.95)',
-      transformOrigin: 'top center',
+      transform: isAnimating ? 'translateY(0) scaleY(1)' : dropdownPosition === 'bottom' ? 'translateY(-8px) scaleY(0.95)' : 'translateY(8px) scaleY(0.95)',
+      transformOrigin: dropdownPosition === 'bottom' ? 'top center' : 'bottom center',
       transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-      userSelect: !enableSearch ? 'none' : 'auto'
-    };
-  }, [isAnimating, enableSearch]);
+      userSelect: !enableSearch ? 'none' : 'auto',
+      boxSizing: 'border-box'
+    });
+  }, [isAnimating, enableSearch, dropdownPosition, finalWidth]);
   var getCheckIcon = function () {
     return jsx(Icon, {
       type: "check",
@@ -21864,9 +21893,12 @@ var Dropdown = function (_a) {
     ref: dropdownRef,
     style: {
       position: 'relative',
-      width: finalWidth === 'fill' ? '100%' : finalWidth
+      width: finalWidth === 'fill' ? '100%' : finalWidth,
+      // 드롭다운이 열려도 높이에 영향을 주지 않도록 설정
+      zIndex: isOpen ? 1001 : 'auto'
     },
     children: [jsxs("div", {
+      ref: triggerRef,
       style: getContainerStyles(),
       onClick: !isOpen || !enableSearch ? handleClick : undefined,
       onKeyDown: !isOpen || !enableSearch ? handleKeyDown : undefined,
