@@ -19793,7 +19793,7 @@ var TabBar = function (_a) {
       flexDirection: 'row',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       rowGap: wrap ? type === 'toggle' ? '4px' : type === 'capsule' ? '12px' : '8px' : undefined,
-      width: type === 'toggle' ? '335px' : width === 'fill' ? '100%' : width || 'fit-content',
+      width: width === 'fill' ? '100%' : width || 'fit-content',
       height: type === 'toggle' ? size === 'l' ? '48px' : size === 's' ? '38px' : '48px' : 'auto',
       borderBottom: type === 'underline' ? "1px solid ".concat(colors.semantic.border.default) : 'none',
       background: type === 'toggle' ? colors.primary.coolGray[50] : 'transparent',
