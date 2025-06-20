@@ -49,12 +49,13 @@ export const TabBar: React.FC<TabBarProps> = ({
   const getContainerStyles = (): React.CSSProperties => {
     const baseStyles: React.CSSProperties = {
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'stretch',
       gap: type === 'toggle' ? '0px' : type === 'capsule' ? '12px' : '8px',
       flexDirection: 'row',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       rowGap: wrap ? (type === 'toggle' ? '4px' : type === 'capsule' ? '12px' : '8px') : undefined,
-      width: width === 'fill' ? '100%' : width || 'fit-content',
+      width: type === 'toggle' ? '335px' : width === 'fill' ? '100%' : width || 'fit-content',
+      height: type === 'toggle' ? (size === 'l' ? '48px' : size === 's' ? '38px' : '48px') : 'auto',
       borderBottom: type === 'underline' ? `1px solid ${colors.semantic.border.default}` : 'none',
       background: type === 'toggle' ? colors.primary.coolGray[50] : 'transparent',
       borderRadius: type === 'toggle' ? (size === 'l' ? '12px' : '8px') : '0px',
@@ -65,13 +66,11 @@ export const TabBar: React.FC<TabBarProps> = ({
   };
 
   const getTabStyles = (index: number): Partial<TabProps> => {
-    const isSelected = index === currentSelectedIndex;
-
     if (type === 'toggle') {
       return {
-        width: width === 'fill' ? 'fill' : undefined,
+        width: 'fill',
         style: {
-          flex: width === 'fill' ? '1' : 'none',
+          flex: '1',
           minWidth: '0',
         } as React.CSSProperties,
       };

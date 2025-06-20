@@ -103,10 +103,9 @@ export const Capsule: Story = {
 export const Toggle: Story = {
   args: {
     type: 'toggle',
-    size: 'm',
-    width: 'fit-content',
-    defaultSelectedIndex: 2,
-    tabs: basicTabs,
+    size: 'l',
+    defaultSelectedIndex: 0,
+    tabs: [{ label: 'Menu' }, { label: 'Menu' }],
     onTabChange: action('tab-changed'),
   },
 };
@@ -572,4 +571,134 @@ export const WrapWithDifferentSizes: Story = {
       </div>
     </div>
   ),
+};
+
+// Figma 디자인에 맞는 새로운 Toggle 예제들
+export const ToggleDesignExamples: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+      <div>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Toggle Large - 2 Tabs (335px 고정)
+        </h3>
+        <TabBar
+          type="toggle"
+          size="l"
+          tabs={[{ label: 'Menu' }, { label: 'Menu' }]}
+          defaultSelectedIndex={0}
+          onTabChange={action('toggle-large-2-changed')}
+        />
+      </div>
+
+      <div>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Toggle Large - 3 Tabs (335px 고정)
+        </h3>
+        <TabBar
+          type="toggle"
+          size="l"
+          tabs={[{ label: 'Menu' }, { label: 'Menu' }, { label: 'Menu' }]}
+          defaultSelectedIndex={1}
+          onTabChange={action('toggle-large-3-changed')}
+        />
+      </div>
+
+      <div>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Toggle Large - 4 Tabs (335px 고정)
+        </h3>
+        <TabBar
+          type="toggle"
+          size="l"
+          tabs={[{ label: 'Menu' }, { label: 'Menu' }, { label: 'Menu' }, { label: 'Menu' }]}
+          defaultSelectedIndex={2}
+          onTabChange={action('toggle-large-4-changed')}
+        />
+      </div>
+
+      <div>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Toggle Small - 2 Tabs (335px 고정)
+        </h3>
+        <TabBar
+          type="toggle"
+          size="s"
+          tabs={[{ label: 'Menu' }, { label: 'Menu' }]}
+          defaultSelectedIndex={0}
+          onTabChange={action('toggle-small-2-changed')}
+        />
+      </div>
+
+      <div>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Toggle Small - 3 Tabs (335px 고정)
+        </h3>
+        <TabBar
+          type="toggle"
+          size="s"
+          tabs={[{ label: 'Menu' }, { label: 'Menu' }, { label: 'Menu' }]}
+          defaultSelectedIndex={1}
+          onTabChange={action('toggle-small-3-changed')}
+        />
+      </div>
+
+      <div>
+        <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+          Toggle Small - 4 Tabs (335px 고정)
+        </h3>
+        <TabBar
+          type="toggle"
+          size="s"
+          tabs={[{ label: 'Menu' }, { label: 'Menu' }, { label: 'Menu' }, { label: 'Menu' }]}
+          defaultSelectedIndex={2}
+          onTabChange={action('toggle-small-4-changed')}
+        />
+      </div>
+    </div>
+  ),
+};
+
+export const ToggleInteractive: Story = {
+  render: () => {
+    const [selectedLarge, setSelectedLarge] = useState(0);
+    const [selectedSmall, setSelectedSmall] = useState(1);
+
+    const toggleTabs = [{ label: '홈' }, { label: '프로필' }, { label: '설정' }];
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+        <div>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+            Toggle Large - Interactive (현재: {toggleTabs[selectedLarge].label})
+          </h3>
+          <TabBar
+            type="toggle"
+            size="l"
+            tabs={toggleTabs}
+            selectedIndex={selectedLarge}
+            onTabChange={(index) => {
+              setSelectedLarge(index);
+              action('toggle-large-interactive-changed')(index);
+            }}
+          />
+        </div>
+
+        <div>
+          <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600' }}>
+            Toggle Small - Interactive (현재: {toggleTabs[selectedSmall].label})
+          </h3>
+          <TabBar
+            type="toggle"
+            size="s"
+            tabs={toggleTabs}
+            selectedIndex={selectedSmall}
+            onTabChange={(index) => {
+              setSelectedSmall(index);
+              action('toggle-small-interactive-changed')(index);
+            }}
+          />
+        </div>
+      </div>
+    );
+  },
 };

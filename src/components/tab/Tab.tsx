@@ -41,40 +41,65 @@ export const Tab: React.FC<TabProps> = ({
       return fontWeight.semibold;
     };
 
+    const getTextStyle = () => {
+      if (type === 'toggle') {
+        if (size === 'l') {
+          return {
+            ...textStyles.body1,
+            fontWeight: getFontWeight(),
+          };
+        } else if (size === 's') {
+          return {
+            ...textStyles.body2,
+            fontWeight: getFontWeight(),
+          };
+        } else {
+          // size === 'm'
+          return {
+            ...textStyles.body3,
+            fontWeight: getFontWeight(),
+          };
+        }
+      }
+
+      // 기존 로직 유지
+      if (type === 'underline') {
+        return {
+          ...textStyles.heading4,
+          fontWeight: getFontWeight(),
+        };
+      } else if (type === 'capsule') {
+        return {
+          ...textStyles.heading4,
+          fontWeight: getFontWeight(),
+        };
+      } else {
+        return {
+          ...textStyles.body3,
+          fontWeight: getFontWeight(),
+        };
+      }
+    };
+
     const configs = {
       l: {
-        ...(type === 'underline'
-          ? textStyles.heading4
-          : type === 'capsule'
-            ? textStyles.heading4
-            : textStyles.body1),
+        ...getTextStyle(),
         height: type === 'underline' ? 64 : type === 'capsule' ? 42 : 40,
         padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '10px 16px' : '0 8px',
-        fontWeight: getFontWeight(),
         iconSize: 20,
         borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 8 : 0,
       },
       m: {
-        ...(type === 'underline'
-          ? textStyles.heading4
-          : type === 'capsule'
-            ? textStyles.heading4
-            : textStyles.body3),
+        ...getTextStyle(),
         height: type === 'underline' ? 48 : type === 'capsule' ? 36 : 32,
         padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '6px 12px' : '0 8px',
-        fontWeight: getFontWeight(),
         iconSize: 16,
         borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 6 : 0,
       },
       s: {
-        ...(type === 'underline'
-          ? textStyles.heading5
-          : type === 'capsule'
-            ? textStyles.body3
-            : textStyles.body2),
-        height: type === 'underline' ? 40 : type === 'capsule' ? 30 : 28,
+        ...getTextStyle(),
+        height: type === 'underline' ? 40 : type === 'capsule' ? 30 : 'auto',
         padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '5px 12px' : '4px 8px',
-        fontWeight: getFontWeight(),
         iconSize: 16,
         borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 4 : 0,
       },
@@ -145,7 +170,7 @@ export const Tab: React.FC<TabProps> = ({
           };
         }
         return {
-          text: colors.primary.coolGray[400],
+          text: colors.primary.coolGray[400], // Figma에서 확인한 #AFB6C0
           background: 'transparent',
           border: 'transparent',
           number: colors.primary.coolGray[200],
@@ -164,12 +189,27 @@ export const Tab: React.FC<TabProps> = ({
   const config = getSizeConfig();
   const colorScheme = getColors();
 
+  const getJustifyContent = () => {
+    if (type === 'toggle') {
+      return selected ? 'center' : 'stretch';
+    }
+    return 'center';
+  };
+
+  const getAlignItems = () => {
+    if (type === 'toggle') {
+      return selected ? 'center' : 'stretch';
+    }
+    return 'center';
+  };
+
   const getBaseStyles = (): React.CSSProperties => ({
     display: width === 'fill' ? 'flex' : 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: getAlignItems(),
+    justifyContent: getJustifyContent(),
     gap: '4px',
-    height: config.height,
+    height: type === 'toggle' && size === 's' ? 'auto' : config.height,
+    minHeight: type === 'toggle' && size === 's' ? '30px' : undefined,
     padding: config.padding,
     fontSize: config.fontSize,
     fontWeight: config.fontWeight,
@@ -178,7 +218,10 @@ export const Tab: React.FC<TabProps> = ({
     background: colorScheme.background,
     color: colorScheme.text,
     cursor: disabled ? 'not-allowed' : 'pointer',
-    transition: 'all 0.2s ease',
+    transition:
+      type === 'toggle'
+        ? 'background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease'
+        : 'all 0.2s ease',
     boxShadow: type === 'toggle' && selected ? '0px 1px 8px 0px rgba(21, 23, 25, 0.08)' : 'none',
     position: 'relative',
     minWidth: width === 'fill' ? '0' : 'fit-content',
@@ -201,7 +244,7 @@ export const Tab: React.FC<TabProps> = ({
         };
       case 'toggle':
         return {
-          backgroundColor: colors.primary.coolGray[100],
+          backgroundColor: 'rgba(175, 182, 192, 0.1)', // coolGray[400]의 10% 투명도
         };
       default:
         return {};
@@ -247,44 +290,162 @@ export const Tab: React.FC<TabProps> = ({
     );
   };
 
+  const renderContent = () => {
+    if (type === 'toggle' && !selected) {
+      // toggle 타입이고 선택되지 않은 경우, 스트레치 레이아웃
+      return (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%',
+            gap: '4px',
+          }}
+        >
+          {renderIcon()}
+          <span>{children}</span>
+          {renderNumber()}
+        </div>
+      );
+    }
+
+    // 기본 레이아웃
+    return (
+      <>
+        {renderIcon()}
+        <span>{children}</span>
+        {renderNumber()}
+      </>
+    );
+  };
+
   // underline용 ::after 스타일을 위한 unique id 생성
   const uniqueId = React.useId();
   const buttonId = `tab-${uniqueId}`;
 
+  // toggle 타입의 CSS 클래스 생성
+  const getToggleClasses = () => {
+    if (type !== 'toggle') return '';
+
+    const sizeClass =
+      size === 'l' ? 'toggle-large' : size === 's' ? 'toggle-small' : 'toggle-medium';
+    const stateClass = selected ? 'toggle-selected' : 'toggle-unselected';
+
+    return `${sizeClass} ${stateClass}`;
+  };
+
+  const getToggleBaseStyles = (): React.CSSProperties => ({
+    display: width === 'fill' ? 'flex' : 'inline-flex',
+    alignItems: getAlignItems(),
+    justifyContent: getJustifyContent(),
+    gap: '4px',
+    height: type === 'toggle' && size === 's' ? 'auto' : config.height,
+    minHeight: type === 'toggle' && size === 's' ? '30px' : undefined,
+    padding: config.padding,
+    borderRadius: config.borderRadius,
+    border: type === 'capsule' ? `1px solid ${colorScheme.border}` : 'none',
+    cursor: disabled ? 'not-allowed' : 'pointer',
+    position: 'relative',
+    minWidth: width === 'fill' ? '0' : 'fit-content',
+    width: getTabWidth(),
+    ...style,
+  });
+
   return (
     <>
-      {/* underline 타입일 때만 CSS 스타일 추가 */}
-      {type === 'underline' && (
-        <style>
-          {`
-            #${buttonId}::after {
-              content: '';
-              position: absolute;
-              bottom: 0;
-              left: 0;
-              right: 0;
-              height: 2px;
-              background-color: ${selected ? colorScheme.border : 'transparent'};
-              transition: background-color 0.2s ease;
-            }
-            #${buttonId}:hover:not(:disabled)::after {
-              background-color: ${!selected && !disabled ? colors.primary.coolGray[300] : selected ? colorScheme.border : 'transparent'};
-            }
-          `}
-        </style>
-      )}
+      {/* CSS 스타일 정의 */}
+      <style>
+        {`
+          /* Toggle 타입 스타일 */
+          .toggle-large.toggle-selected {
+            font-size: ${textStyles.body1.fontSize};
+            font-weight: ${fontWeight.semibold};
+            color: ${colors.primary.coolGray[800]};
+            background: ${colors.primary.gray.white};
+            box-shadow: 0px 1px 8px 0px rgba(21, 23, 25, 0.08);
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          }
+          
+          .toggle-large.toggle-unselected {
+            font-size: ${textStyles.body1.fontSize};
+            font-weight: ${fontWeight.medium};
+            color: ${colors.primary.coolGray[400]};
+            background: transparent;
+            box-shadow: none;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          }
+          
+          .toggle-small.toggle-selected {
+            font-size: ${textStyles.body2.fontSize};
+            font-weight: ${fontWeight.semibold};
+            color: ${colors.primary.coolGray[800]};
+            background: ${colors.primary.gray.white};
+            box-shadow: 0px 1px 8px 0px rgba(21, 23, 25, 0.08);
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          }
+          
+          .toggle-small.toggle-unselected {
+            font-size: ${textStyles.body2.fontSize};
+            font-weight: ${fontWeight.medium};
+            color: ${colors.primary.coolGray[400]};
+            background: transparent;
+            box-shadow: none;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          }
+          
+          .toggle-medium.toggle-selected {
+            font-size: ${textStyles.body3.fontSize};
+            font-weight: ${fontWeight.semibold};
+            color: ${colors.primary.coolGray[800]};
+            background: ${colors.primary.gray.white};
+            box-shadow: 0px 1px 8px 0px rgba(21, 23, 25, 0.08);
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          }
+          
+          .toggle-medium.toggle-unselected {
+            font-size: ${textStyles.body3.fontSize};
+            font-weight: ${fontWeight.medium};
+            color: ${colors.primary.coolGray[400]};
+            background: transparent;
+            box-shadow: none;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+          }
+          
+          /* 호버 효과 */
+          .toggle-unselected:hover:not(:disabled) {
+            background-color: rgba(175, 182, 192, 0.1) !important;
+          }
+        `}
+        {/* underline 타입일 때만 CSS 스타일 추가 */}
+        {type === 'underline' &&
+          `
+          #${buttonId}::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: ${selected ? colorScheme.border : 'transparent'};
+            transition: background-color 0.2s ease;
+          }
+          #${buttonId}:hover:not(:disabled)::after {
+            background-color: ${!selected && !disabled ? colors.primary.coolGray[300] : selected ? colorScheme.border : 'transparent'};
+          }
+        `}
+      </style>
       <button
         id={buttonId}
-        style={getBaseStyles()}
+        style={type === 'toggle' ? getToggleBaseStyles() : getBaseStyles()}
         onClick={handleClick}
         disabled={disabled}
-        className={className}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        className={`${className} ${type === 'toggle' ? getToggleClasses() : ''}`}
+        onMouseEnter={type === 'toggle' ? undefined : handleMouseEnter}
+        onMouseLeave={type === 'toggle' ? undefined : handleMouseLeave}
       >
-        {renderIcon()}
-        <span>{children}</span>
-        {renderNumber()}
+        {renderContent()}
       </button>
     </>
   );
