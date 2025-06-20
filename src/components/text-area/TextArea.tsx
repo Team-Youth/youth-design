@@ -112,7 +112,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
 
       return {
         width: '100%',
-        minHeight: '160px',
+        minHeight: '120px',
         padding: `14px ${spacing.m}`, // 14px 16px
         border: 'none',
         outline: 'none',
