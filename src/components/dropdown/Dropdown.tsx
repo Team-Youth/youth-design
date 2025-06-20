@@ -61,6 +61,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
   const [searchText, setSearchText] = useState('');
   const [dropdownPosition, setDropdownPosition] = useState<'bottom' | 'top'>('bottom');
+  const [positionCalculated, setPositionCalculated] = useState(false);
+  const [dropdownCoordinates, setDropdownCoordinates] = useState<{
+    top?: number;
+    bottom?: number;
+    left: number;
+    width: number;
+  } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const optionsContainerRef = useRef<HTMLDivElement>(null);
@@ -132,6 +139,51 @@ export const Dropdown: React.FC<DropdownProps> = ({
     }
   }, []);
 
+  // 옵션 리스트의 최적 너비 계산 함수
+  const calculateOptimalWidth = useCallback((): number => {
+    if (!triggerRef.current) {
+      // finalWidth가 문자열인 경우 숫자로 변환하거나 기본값 사용
+      if (typeof finalWidth === 'number') return finalWidth;
+      if (typeof finalWidth === 'string' && finalWidth !== 'fill') {
+        const numWidth = parseFloat(finalWidth);
+        if (!isNaN(numWidth)) return numWidth;
+      }
+      return 335; // 기본값
+    }
+
+    const triggerWidth = triggerRef.current.getBoundingClientRect().width;
+    const minWidth = triggerWidth;
+
+    // 뷰포트 너비의 80% 또는 600px 중 작은 값을 최대 너비로 설정
+    const maxWidth = Math.min(window.innerWidth * 0.8, 600);
+
+    // 간단한 텍스트 너비 측정을 위한 임시 element 생성
+    const measureText = (text: string) => {
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      if (!context) return 0;
+
+      // 텍스트 스타일을 직접 계산
+      const baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
+      const fontSize = baseStyle.fontSize || 16;
+      const fontWeight = typography.fontWeight.medium || 500;
+
+      context.font = `${fontWeight} ${fontSize}px system-ui, -apple-system, sans-serif`;
+      return context.measureText(text).width;
+    };
+
+    // 옵션이 없으면 최소 너비 반환
+    if (filteredOptions.length === 0) return minWidth;
+
+    // 모든 옵션 텍스트의 최대 너비 계산 (패딩 + 아이콘 공간 포함)
+    const maxTextWidth = Math.max(...filteredOptions.map((option) => measureText(option.label)));
+
+    // 패딩(32px) + 아이콘 공간(20px) + 여유 공간(16px) = 68px
+    const optimalWidth = Math.min(Math.max(minWidth, maxTextWidth + 68), maxWidth);
+
+    return optimalWidth;
+  }, [triggerRef, finalWidth, filteredOptions, size]);
+
   // 선택된 옵션의 인덱스를 찾기 위한 함수
   const getSelectedOptionIndex = useCallback(() => {
     if (!hasSelectedOption) return -1;
@@ -188,17 +240,34 @@ export const Dropdown: React.FC<DropdownProps> = ({
   // 드롭다운 열기/닫기 애니메이션 관리
   useEffect(() => {
     if (isOpen) {
-      // 드롭다운 위치 계산
-      const position = calculateDropdownPosition();
-      setDropdownPosition(position);
+      // 먼저 위치와 좌표를 완전히 계산
+      if (!triggerRef.current) return;
 
-      // 열기: 먼저 DOM에 마운트하고 애니메이션 시작
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const position = calculateDropdownPosition();
+      const optimalWidth = calculateOptimalWidth();
+
+      // 좌표 미리 계산
+      const coordinates = {
+        left: triggerRect.left,
+        width: optimalWidth,
+        ...(position === 'bottom'
+          ? { top: triggerRect.bottom + 8 }
+          : { bottom: window.innerHeight - triggerRect.top + 8 }),
+      };
+
+      // 위치 상태 설정
+      setDropdownPosition(position);
+      setDropdownCoordinates(coordinates);
+
+      // 이제 렌더링 시작 (위치가 이미 계산되어 있음)
       setShouldRender(true);
+      setPositionCalculated(true); // 위치 계산 완료로 즉시 설정
       // hover 상태 초기화
       setHoveredOptionIndex(null);
-      // 첫 번째 requestAnimationFrame으로 DOM 렌더링 대기
+
+      // requestAnimationFrame으로 애니메이션 시작
       requestAnimationFrame(() => {
-        // 두 번째 requestAnimationFrame으로 스크롤 설정 후 애니메이션 시작
         requestAnimationFrame(() => {
           // 스크롤 위치를 애니메이션 시작 직전에 설정
           scrollToSelectedOption();
@@ -212,6 +281,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
     } else {
       // 닫기: 애니메이션 시작하고 완료 후 DOM에서 제거
       setIsAnimating(false);
+      setPositionCalculated(false);
+      setDropdownCoordinates(null);
       // hover 상태 초기화
       setHoveredOptionIndex(null);
       // 검색 텍스트 초기화 (검색이 활성화된 경우에만)
@@ -224,7 +295,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
       return () => clearTimeout(timer);
     }
-  }, [isOpen, enableSearch, scrollToSelectedOption, calculateDropdownPosition]);
+  }, [
+    isOpen,
+    enableSearch,
+    scrollToSelectedOption,
+    calculateDropdownPosition,
+    calculateOptimalWidth,
+  ]);
 
   // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
@@ -328,6 +405,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
       flex: 1,
       color: textColor,
       userSelect: !enableSearch || hideOption ? 'none' : 'auto',
+      // 말줄임 처리
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
     };
   }, [
     actuallyDisabled,
@@ -464,16 +545,14 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const dropdownOptionsStyle: React.CSSProperties = useMemo(
     () => ({
       position: 'fixed',
-      left: triggerRef.current ? triggerRef.current.getBoundingClientRect().left : 0,
-      width: triggerRef.current ? triggerRef.current.getBoundingClientRect().width : finalWidth,
+      left: dropdownCoordinates?.left || 0,
+      width: dropdownCoordinates?.width || 0,
       ...(dropdownPosition === 'bottom'
         ? {
-            top: triggerRef.current ? triggerRef.current.getBoundingClientRect().bottom + 8 : 0,
+            top: dropdownCoordinates?.top || 0,
           }
         : {
-            bottom: triggerRef.current
-              ? window.innerHeight - triggerRef.current.getBoundingClientRect().top + 8
-              : 0,
+            bottom: dropdownCoordinates?.bottom || 0,
           }),
       backgroundColor: colors.semantic.background.primary,
       border: `1px solid ${colors.semantic.border.strong}`,
@@ -482,6 +561,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
       zIndex: 1000,
       maxHeight: '200px',
       overflowY: 'auto',
+      // 위치 계산이 완료되기 전에는 보이지 않게 함
+      visibility: positionCalculated ? 'visible' : 'hidden',
       // 애니메이션 스타일
       opacity: isAnimating ? 1 : 0,
       transform: isAnimating
@@ -490,11 +571,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
           ? 'translateY(-8px) scaleY(0.95)'
           : 'translateY(8px) scaleY(0.95)',
       transformOrigin: dropdownPosition === 'bottom' ? 'top center' : 'bottom center',
-      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+      transition: positionCalculated ? 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
       userSelect: !enableSearch ? 'none' : 'auto',
       boxSizing: 'border-box',
     }),
-    [isAnimating, enableSearch, dropdownPosition, finalWidth],
+    [isAnimating, enableSearch, dropdownPosition, positionCalculated, dropdownCoordinates],
   );
 
   const getCheckIcon = () => <Icon type="check" size={20} color="currentColor" />;
@@ -584,7 +665,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         </div>
       </div>
 
-      {shouldRender && !hideOption && (
+      {shouldRender && !hideOption && dropdownCoordinates && (
         <div style={dropdownOptionsStyle} role="listbox" ref={optionsContainerRef}>
           {filteredOptions.length === 0 ? (
             <div

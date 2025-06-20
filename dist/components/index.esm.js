@@ -21387,6 +21387,12 @@ var Dropdown = function (_a) {
   var _r = useState('bottom'),
     dropdownPosition = _r[0],
     setDropdownPosition = _r[1];
+  var _s = useState(false),
+    positionCalculated = _s[0],
+    setPositionCalculated = _s[1];
+  var _t = useState(null),
+    dropdownCoordinates = _t[0],
+    setDropdownCoordinates = _t[1];
   var dropdownRef = useRef(null);
   var triggerRef = useRef(null);
   var optionsContainerRef = useRef(null);
@@ -21452,6 +21458,43 @@ var Dropdown = function (_a) {
       return spaceBelow >= spaceAbove ? 'bottom' : 'top';
     }
   }, []);
+  // 옵션 리스트의 최적 너비 계산 함수
+  var calculateOptimalWidth = useCallback(function () {
+    if (!triggerRef.current) {
+      // finalWidth가 문자열인 경우 숫자로 변환하거나 기본값 사용
+      if (typeof finalWidth === 'number') return finalWidth;
+      if (typeof finalWidth === 'string' && finalWidth !== 'fill') {
+        var numWidth = parseFloat(finalWidth);
+        if (!isNaN(numWidth)) return numWidth;
+      }
+      return 335; // 기본값
+    }
+    var triggerWidth = triggerRef.current.getBoundingClientRect().width;
+    var minWidth = triggerWidth;
+    // 뷰포트 너비의 80% 또는 600px 중 작은 값을 최대 너비로 설정
+    var maxWidth = Math.min(window.innerWidth * 0.8, 600);
+    // 간단한 텍스트 너비 측정을 위한 임시 element 생성
+    var measureText = function (text) {
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      if (!context) return 0;
+      // 텍스트 스타일을 직접 계산
+      var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
+      var fontSize = baseStyle.fontSize || 16;
+      var fontWeight = typography.fontWeight.medium ;
+      context.font = "".concat(fontWeight, " ").concat(fontSize, "px system-ui, -apple-system, sans-serif");
+      return context.measureText(text).width;
+    };
+    // 옵션이 없으면 최소 너비 반환
+    if (filteredOptions.length === 0) return minWidth;
+    // 모든 옵션 텍스트의 최대 너비 계산 (패딩 + 아이콘 공간 포함)
+    var maxTextWidth = Math.max.apply(Math, filteredOptions.map(function (option) {
+      return measureText(option.label);
+    }));
+    // 패딩(32px) + 아이콘 공간(20px) + 여유 공간(16px) = 68px
+    var optimalWidth = Math.min(Math.max(minWidth, maxTextWidth + 68), maxWidth);
+    return optimalWidth;
+  }, [triggerRef, finalWidth, filteredOptions, size]);
   // 선택된 옵션의 인덱스를 찾기 위한 함수
   var getSelectedOptionIndex = useCallback(function () {
     if (!hasSelectedOption) return -1;
@@ -21497,16 +21540,30 @@ var Dropdown = function (_a) {
   // 드롭다운 열기/닫기 애니메이션 관리
   useEffect(function () {
     if (isOpen) {
-      // 드롭다운 위치 계산
+      // 먼저 위치와 좌표를 완전히 계산
+      if (!triggerRef.current) return;
+      var triggerRect = triggerRef.current.getBoundingClientRect();
       var position = calculateDropdownPosition();
+      var optimalWidth = calculateOptimalWidth();
+      // 좌표 미리 계산
+      var coordinates = __assign({
+        left: triggerRect.left,
+        width: optimalWidth
+      }, position === 'bottom' ? {
+        top: triggerRect.bottom + 8
+      } : {
+        bottom: window.innerHeight - triggerRect.top + 8
+      });
+      // 위치 상태 설정
       setDropdownPosition(position);
-      // 열기: 먼저 DOM에 마운트하고 애니메이션 시작
+      setDropdownCoordinates(coordinates);
+      // 이제 렌더링 시작 (위치가 이미 계산되어 있음)
       setShouldRender(true);
+      setPositionCalculated(true); // 위치 계산 완료로 즉시 설정
       // hover 상태 초기화
       setHoveredOptionIndex(null);
-      // 첫 번째 requestAnimationFrame으로 DOM 렌더링 대기
+      // requestAnimationFrame으로 애니메이션 시작
       requestAnimationFrame(function () {
-        // 두 번째 requestAnimationFrame으로 스크롤 설정 후 애니메이션 시작
         requestAnimationFrame(function () {
           // 스크롤 위치를 애니메이션 시작 직전에 설정
           scrollToSelectedOption();
@@ -21520,6 +21577,8 @@ var Dropdown = function (_a) {
     } else {
       // 닫기: 애니메이션 시작하고 완료 후 DOM에서 제거
       setIsAnimating(false);
+      setPositionCalculated(false);
+      setDropdownCoordinates(null);
       // hover 상태 초기화
       setHoveredOptionIndex(null);
       // 검색 텍스트 초기화 (검색이 활성화된 경우에만)
@@ -21533,7 +21592,7 @@ var Dropdown = function (_a) {
         return clearTimeout(timer_1);
       };
     }
-  }, [isOpen, enableSearch, scrollToSelectedOption, calculateDropdownPosition]);
+  }, [isOpen, enableSearch, scrollToSelectedOption, calculateDropdownPosition, calculateOptimalWidth]);
   // 외부 클릭 시 드롭다운 닫기
   useEffect(function () {
     var handleClickOutside = function (event) {
@@ -21621,7 +21680,11 @@ var Dropdown = function (_a) {
     return __assign(__assign({}, textStyle), {
       flex: 1,
       color: textColor,
-      userSelect: !enableSearch || hideOption ? 'none' : 'auto'
+      userSelect: !enableSearch || hideOption ? 'none' : 'auto',
+      // 말줄임 처리
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis'
     });
   }, [actuallyDisabled, isPopulatedDisabled, error, hasSelectedOption, enableSearch, hideOption, getTextStyle]);
   var getInputStyles = useCallback(function () {
@@ -21722,12 +21785,12 @@ var Dropdown = function (_a) {
   var dropdownOptionsStyle = useMemo(function () {
     return __assign(__assign({
       position: 'fixed',
-      left: triggerRef.current ? triggerRef.current.getBoundingClientRect().left : 0,
-      width: triggerRef.current ? triggerRef.current.getBoundingClientRect().width : finalWidth
+      left: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.left) || 0,
+      width: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.width) || 0
     }, dropdownPosition === 'bottom' ? {
-      top: triggerRef.current ? triggerRef.current.getBoundingClientRect().bottom + 8 : 0
+      top: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.top) || 0
     } : {
-      bottom: triggerRef.current ? window.innerHeight - triggerRef.current.getBoundingClientRect().top + 8 : 0
+      bottom: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.bottom) || 0
     }), {
       backgroundColor: colors.semantic.background.primary,
       border: "1px solid ".concat(colors.semantic.border.strong),
@@ -21736,15 +21799,17 @@ var Dropdown = function (_a) {
       zIndex: 1000,
       maxHeight: '200px',
       overflowY: 'auto',
+      // 위치 계산이 완료되기 전에는 보이지 않게 함
+      visibility: positionCalculated ? 'visible' : 'hidden',
       // 애니메이션 스타일
       opacity: isAnimating ? 1 : 0,
       transform: isAnimating ? 'translateY(0) scaleY(1)' : dropdownPosition === 'bottom' ? 'translateY(-8px) scaleY(0.95)' : 'translateY(8px) scaleY(0.95)',
       transformOrigin: dropdownPosition === 'bottom' ? 'top center' : 'bottom center',
-      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+      transition: positionCalculated ? 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
       userSelect: !enableSearch ? 'none' : 'auto',
       boxSizing: 'border-box'
     });
-  }, [isAnimating, enableSearch, dropdownPosition, finalWidth]);
+  }, [isAnimating, enableSearch, dropdownPosition, positionCalculated, dropdownCoordinates]);
   var getCheckIcon = function () {
     return jsx(Icon, {
       type: "check",
@@ -21830,7 +21895,7 @@ var Dropdown = function (_a) {
         onClick: isOpen && enableSearch ? handleClick : undefined,
         children: getChevronIcon()
       })]
-    }), shouldRender && !hideOption && jsx("div", {
+    }), shouldRender && !hideOption && dropdownCoordinates && jsx("div", {
       style: dropdownOptionsStyle,
       role: "listbox",
       ref: optionsContainerRef,
