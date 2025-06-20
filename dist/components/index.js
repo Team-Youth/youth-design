@@ -19471,25 +19471,54 @@ var Tab = function (_a) {
       }
       return fontWeight.semibold;
     };
+    var getTextStyle = function () {
+      if (type === 'toggle') {
+        if (size === 'l') {
+          return __assign(__assign({}, textStyles.body1), {
+            fontWeight: getFontWeight()
+          });
+        } else if (size === 's') {
+          return __assign(__assign({}, textStyles.body2), {
+            fontWeight: getFontWeight()
+          });
+        } else {
+          // size === 'm'
+          return __assign(__assign({}, textStyles.body3), {
+            fontWeight: getFontWeight()
+          });
+        }
+      }
+      // 기존 로직 유지
+      if (type === 'underline') {
+        return __assign(__assign({}, textStyles.heading4), {
+          fontWeight: getFontWeight()
+        });
+      } else if (type === 'capsule') {
+        return __assign(__assign({}, textStyles.heading4), {
+          fontWeight: getFontWeight()
+        });
+      } else {
+        return __assign(__assign({}, textStyles.body3), {
+          fontWeight: getFontWeight()
+        });
+      }
+    };
     var configs = {
-      l: __assign(__assign({}, type === 'underline' ? textStyles.heading4 : type === 'capsule' ? textStyles.heading4 : textStyles.body1), {
+      l: __assign(__assign({}, getTextStyle()), {
         height: type === 'underline' ? 64 : type === 'capsule' ? 42 : 40,
         padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '10px 16px' : '0 8px',
-        fontWeight: getFontWeight(),
         iconSize: 20,
         borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 8 : 0
       }),
-      m: __assign(__assign({}, type === 'underline' ? textStyles.heading4 : type === 'capsule' ? textStyles.heading4 : textStyles.body3), {
+      m: __assign(__assign({}, getTextStyle()), {
         height: type === 'underline' ? 48 : type === 'capsule' ? 36 : 32,
         padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '6px 12px' : '0 8px',
-        fontWeight: getFontWeight(),
         iconSize: 16,
         borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 6 : 0
       }),
-      s: __assign(__assign({}, type === 'underline' ? textStyles.heading5 : type === 'capsule' ? textStyles.body3 : textStyles.body2), {
-        height: type === 'underline' ? 40 : type === 'capsule' ? 30 : 28,
+      s: __assign(__assign({}, getTextStyle()), {
+        height: type === 'underline' ? 40 : type === 'capsule' ? 30 : 'auto',
         padding: type === 'underline' ? '0 8px' : type === 'capsule' ? '5px 12px' : '4px 8px',
-        fontWeight: getFontWeight(),
         iconSize: 16,
         borderRadius: type === 'capsule' ? 100 : type === 'toggle' ? 4 : 0
       })
@@ -19556,6 +19585,7 @@ var Tab = function (_a) {
         }
         return {
           text: colors.primary.coolGray[400],
+          // Figma에서 확인한 #AFB6C0
           background: 'transparent',
           border: 'transparent',
           number: colors.primary.coolGray[200]
@@ -19571,13 +19601,26 @@ var Tab = function (_a) {
   };
   var config = getSizeConfig();
   var colorScheme = getColors();
+  var getJustifyContent = function () {
+    if (type === 'toggle') {
+      return selected ? 'center' : 'stretch';
+    }
+    return 'center';
+  };
+  var getAlignItems = function () {
+    if (type === 'toggle') {
+      return selected ? 'center' : 'stretch';
+    }
+    return 'center';
+  };
   var getBaseStyles = function () {
     return __assign({
       display: width === 'fill' ? 'flex' : 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: getAlignItems(),
+      justifyContent: getJustifyContent(),
       gap: '4px',
-      height: config.height,
+      height: type === 'toggle' && size === 's' ? 'auto' : config.height,
+      minHeight: type === 'toggle' && size === 's' ? '30px' : undefined,
       padding: config.padding,
       fontSize: config.fontSize,
       fontWeight: config.fontWeight,
@@ -19586,7 +19629,7 @@ var Tab = function (_a) {
       background: colorScheme.background,
       color: colorScheme.text,
       cursor: disabled ? 'not-allowed' : 'pointer',
-      transition: 'all 0.2s ease',
+      transition: type === 'toggle' ? 'background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease' : 'all 0.2s ease',
       boxShadow: type === 'toggle' && selected ? '0px 1px 8px 0px rgba(21, 23, 25, 0.08)' : 'none',
       position: 'relative',
       minWidth: width === 'fill' ? '0' : 'fit-content',
@@ -19607,7 +19650,7 @@ var Tab = function (_a) {
         };
       case 'toggle':
         return {
-          backgroundColor: colors.primary.coolGray[100]
+          backgroundColor: 'rgba(175, 182, 192, 0.1)' // coolGray[400]의 10% 투명도
         };
       default:
         return {};
@@ -19648,23 +19691,69 @@ var Tab = function (_a) {
       children: number
     });
   };
-  // underline용 ::after 스타일을 위한 unique id 생성
-  var uniqueId = React.useId();
-  var buttonId = "tab-".concat(uniqueId);
-  return jsxRuntime.jsxs(jsxRuntime.Fragment, {
-    children: [type === 'underline' && jsxRuntime.jsx("style", {
-      children: "\n            #".concat(buttonId, "::after {\n              content: '';\n              position: absolute;\n              bottom: 0;\n              left: 0;\n              right: 0;\n              height: 2px;\n              background-color: ").concat(selected ? colorScheme.border : 'transparent', ";\n              transition: background-color 0.2s ease;\n            }\n            #").concat(buttonId, ":hover:not(:disabled)::after {\n              background-color: ").concat(!selected && !disabled ? colors.primary.coolGray[300] : selected ? colorScheme.border : 'transparent', ";\n            }\n          ")
-    }), jsxRuntime.jsxs("button", {
-      id: buttonId,
-      style: getBaseStyles(),
-      onClick: handleClick,
-      disabled: disabled,
-      className: className,
-      onMouseEnter: handleMouseEnter,
-      onMouseLeave: handleMouseLeave,
+  var renderContent = function () {
+    if (type === 'toggle' && !selected) {
+      // toggle 타입이고 선택되지 않은 경우, 스트레치 레이아웃
+      return jsxRuntime.jsxs("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: '100%',
+          gap: '4px'
+        },
+        children: [renderIcon(), jsxRuntime.jsx("span", {
+          children: children
+        }), renderNumber()]
+      });
+    }
+    // 기본 레이아웃
+    return jsxRuntime.jsxs(jsxRuntime.Fragment, {
       children: [renderIcon(), jsxRuntime.jsx("span", {
         children: children
       }), renderNumber()]
+    });
+  };
+  // underline용 ::after 스타일을 위한 unique id 생성
+  var uniqueId = React.useId();
+  var buttonId = "tab-".concat(uniqueId);
+  // toggle 타입의 CSS 클래스 생성
+  var getToggleClasses = function () {
+    if (type !== 'toggle') return '';
+    var sizeClass = size === 'l' ? 'toggle-large' : size === 's' ? 'toggle-small' : 'toggle-medium';
+    var stateClass = selected ? 'toggle-selected' : 'toggle-unselected';
+    return "".concat(sizeClass, " ").concat(stateClass);
+  };
+  var getToggleBaseStyles = function () {
+    return __assign({
+      display: width === 'fill' ? 'flex' : 'inline-flex',
+      alignItems: getAlignItems(),
+      justifyContent: getJustifyContent(),
+      gap: '4px',
+      height: type === 'toggle' && size === 's' ? 'auto' : config.height,
+      minHeight: type === 'toggle' && size === 's' ? '30px' : undefined,
+      padding: config.padding,
+      borderRadius: config.borderRadius,
+      border: type === 'capsule' ? "1px solid ".concat(colorScheme.border) : 'none',
+      cursor: disabled ? 'not-allowed' : 'pointer',
+      position: 'relative',
+      minWidth: width === 'fill' ? '0' : 'fit-content',
+      width: getTabWidth()
+    }, style);
+  };
+  return jsxRuntime.jsxs(jsxRuntime.Fragment, {
+    children: [jsxRuntime.jsxs("style", {
+      children: ["\n          /* Toggle \uD0C0\uC785 \uC2A4\uD0C0\uC77C */\n          .toggle-large.toggle-selected {\n            font-size: ".concat(textStyles.body1.fontSize, ";\n            font-weight: ").concat(fontWeight.semibold, ";\n            color: ").concat(colors.primary.coolGray[800], ";\n            background: ").concat(colors.primary.gray.white, ";\n            box-shadow: 0px 1px 8px 0px rgba(21, 23, 25, 0.08);\n            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;\n          }\n          \n          .toggle-large.toggle-unselected {\n            font-size: ").concat(textStyles.body1.fontSize, ";\n            font-weight: ").concat(fontWeight.medium, ";\n            color: ").concat(colors.primary.coolGray[400], ";\n            background: transparent;\n            box-shadow: none;\n            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;\n          }\n          \n          .toggle-small.toggle-selected {\n            font-size: ").concat(textStyles.body2.fontSize, ";\n            font-weight: ").concat(fontWeight.semibold, ";\n            color: ").concat(colors.primary.coolGray[800], ";\n            background: ").concat(colors.primary.gray.white, ";\n            box-shadow: 0px 1px 8px 0px rgba(21, 23, 25, 0.08);\n            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;\n          }\n          \n          .toggle-small.toggle-unselected {\n            font-size: ").concat(textStyles.body2.fontSize, ";\n            font-weight: ").concat(fontWeight.medium, ";\n            color: ").concat(colors.primary.coolGray[400], ";\n            background: transparent;\n            box-shadow: none;\n            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;\n          }\n          \n          .toggle-medium.toggle-selected {\n            font-size: ").concat(textStyles.body3.fontSize, ";\n            font-weight: ").concat(fontWeight.semibold, ";\n            color: ").concat(colors.primary.coolGray[800], ";\n            background: ").concat(colors.primary.gray.white, ";\n            box-shadow: 0px 1px 8px 0px rgba(21, 23, 25, 0.08);\n            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;\n          }\n          \n          .toggle-medium.toggle-unselected {\n            font-size: ").concat(textStyles.body3.fontSize, ";\n            font-weight: ").concat(fontWeight.medium, ";\n            color: ").concat(colors.primary.coolGray[400], ";\n            background: transparent;\n            box-shadow: none;\n            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;\n          }\n          \n          /* \uD638\uBC84 \uD6A8\uACFC */\n          .toggle-unselected:hover:not(:disabled) {\n            background-color: rgba(175, 182, 192, 0.1) !important;\n          }\n        "), type === 'underline' && "\n          #".concat(buttonId, "::after {\n            content: '';\n            position: absolute;\n            bottom: 0;\n            left: 0;\n            right: 0;\n            height: 2px;\n            background-color: ").concat(selected ? colorScheme.border : 'transparent', ";\n            transition: background-color 0.2s ease;\n          }\n          #").concat(buttonId, ":hover:not(:disabled)::after {\n            background-color: ").concat(!selected && !disabled ? colors.primary.coolGray[300] : selected ? colorScheme.border : 'transparent', ";\n          }\n        ")]
+    }), jsxRuntime.jsx("button", {
+      id: buttonId,
+      style: type === 'toggle' ? getToggleBaseStyles() : getBaseStyles(),
+      onClick: handleClick,
+      disabled: disabled,
+      className: "".concat(className, " ").concat(type === 'toggle' ? getToggleClasses() : ''),
+      onMouseEnter: type === 'toggle' ? undefined : handleMouseEnter,
+      onMouseLeave: type === 'toggle' ? undefined : handleMouseLeave,
+      children: renderContent()
     })]
   });
 };
@@ -19699,12 +19788,13 @@ var TabBar = function (_a) {
   var getContainerStyles = function () {
     var baseStyles = {
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'stretch',
       gap: type === 'toggle' ? '0px' : type === 'capsule' ? '12px' : '8px',
       flexDirection: 'row',
       flexWrap: wrap ? 'wrap' : 'nowrap',
       rowGap: wrap ? type === 'toggle' ? '4px' : type === 'capsule' ? '12px' : '8px' : undefined,
-      width: width === 'fill' ? '100%' : width || 'fit-content',
+      width: type === 'toggle' ? '335px' : width === 'fill' ? '100%' : width || 'fit-content',
+      height: type === 'toggle' ? size === 'l' ? '48px' : size === 's' ? '38px' : '48px' : 'auto',
       borderBottom: type === 'underline' ? "1px solid ".concat(colors.semantic.border.default) : 'none',
       background: type === 'toggle' ? colors.primary.coolGray[50] : 'transparent',
       borderRadius: type === 'toggle' ? size === 'l' ? '12px' : '8px' : '0px',
@@ -19715,9 +19805,9 @@ var TabBar = function (_a) {
   var getTabStyles = function (index) {
     if (type === 'toggle') {
       return {
-        width: width === 'fill' ? 'fill' : undefined,
+        width: 'fill',
         style: {
-          flex: width === 'fill' ? '1' : 'none',
+          flex: '1',
           minWidth: '0'
         }
       };
@@ -21865,7 +21955,7 @@ var TextArea = React.forwardRef(function (_a, ref) {
     }
     return {
       width: '100%',
-      minHeight: '160px',
+      minHeight: '120px',
       padding: "14px ".concat(spacing.m),
       // 14px 16px
       border: 'none',
