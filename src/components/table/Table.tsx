@@ -263,12 +263,12 @@ export const Table = <T,>({
                     ...(type === 'parent'
                       ? index === formattedColumns.length - 2 && {
                           flex: 1,
-                          minWidth: 0,
+                          minWidth: 80,
                           width: 'auto',
                         }
                       : index === formattedColumns.length - 1 && {
                           flex: 2,
-                          minWidth: 0,
+                          minWidth: 80,
                           width: 'auto',
                         }),
                     ...(type === 'child' &&
