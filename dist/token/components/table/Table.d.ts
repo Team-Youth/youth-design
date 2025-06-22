@@ -21,6 +21,10 @@ export interface TableProps<T> {
     maxVisiblePages?: number;
     paginationDisabled?: boolean;
     onPageChange?: (page: number, pageData: T[], totalPages: number) => void;
+    serverSide?: boolean;
+    totalCount?: number;
+    currentPage?: number;
+    totalPages?: number;
 }
-export declare const Table: <T>({ data, columns, rowAccordion, type, isLoading, emptyIcon, emptyIconSize, emptyIconColor, emptyText, pagination, pageSize, initialPage, maxVisiblePages, paginationDisabled, onPageChange, }: TableProps<T>) => import("react/jsx-runtime").JSX.Element;
+export declare const Table: <T>({ data, columns, rowAccordion, type, isLoading, emptyIcon, emptyIconSize, emptyIconColor, emptyText, pagination, pageSize, initialPage, maxVisiblePages, paginationDisabled, onPageChange, serverSide, totalCount, currentPage: serverCurrentPage, totalPages: serverTotalPages, }: TableProps<T>) => import("react/jsx-runtime").JSX.Element;
 export {};
