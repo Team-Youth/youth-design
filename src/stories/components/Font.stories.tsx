@@ -11,7 +11,7 @@ const meta: Meta<typeof Font> = {
     docs: {
       description: {
         component:
-          '디자인 시스템의 Typography 토큰을 기반으로 한 Font 컴포넌트입니다. 다양한 텍스트 스타일과 색상을 지원합니다.',
+          '디자인 시스템의 Typography 토큰을 기반으로 한 Font 컴포넌트입니다. 다양한 텍스트 스타일과 색상을 지원하며, 반응형 디자인을 위한 여러 옵션을 제공합니다.',
       },
     },
   },
@@ -51,6 +51,11 @@ const meta: Meta<typeof Font> = {
     underline: {
       control: 'boolean',
       description: 'Underline decoration',
+    },
+    responsive: {
+      control: 'select',
+      options: ['auto', 'tablet-optimized', 'mobile-first', 'none'],
+      description: 'Responsive behavior for different screen sizes',
     },
     children: {
       control: 'text',
@@ -242,11 +247,125 @@ export const TextOverflow: Story = {
   ),
 };
 
+export const ResponsiveComparison: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '800px' }}>
+      <div>
+        <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 'bold' }}>
+          반응형 비교 (브라우저 크기를 조정해보세요)
+        </h3>
+        <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#666' }}>
+          각 모드별로 화면 크기에 따른 폰트 크기 변화를 확인할 수 있습니다.
+        </p>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ padding: '16px', border: '1px solid #e0e0e0', borderRadius: '8px' }}>
+          <h4
+            style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'semibold', color: '#333' }}
+          >
+            Auto (기본 반응형)
+          </h4>
+          <Font type="heading1" responsive="auto">
+            화면 크기에 따라 자동으로 조정되는 제목
+          </Font>
+          <Font type="body1" responsive="auto" style={{ marginTop: '8px' }}>
+            본문 텍스트도 반응형으로 조정됩니다. 모바일부터 데스크톱까지 최적화된 크기로 표시됩니다.
+          </Font>
+        </div>
+
+        <div style={{ padding: '16px', border: '1px solid #e0e0e0', borderRadius: '8px' }}>
+          <h4
+            style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'semibold', color: '#333' }}
+          >
+            Tablet Optimized (태블릿 최적화)
+          </h4>
+          <Font type="heading1" responsive="tablet-optimized">
+            태블릿 환경에 최적화된 제목
+          </Font>
+          <Font type="body1" responsive="tablet-optimized" style={{ marginTop: '8px' }}>
+            태블릿에서 더 큰 폰트 크기로 표시되어 가독성을 높입니다.
+          </Font>
+        </div>
+
+        <div style={{ padding: '16px', border: '1px solid #e0e0e0', borderRadius: '8px' }}>
+          <h4
+            style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'semibold', color: '#333' }}
+          >
+            Mobile First (모바일 우선)
+          </h4>
+          <Font type="heading1" responsive="mobile-first">
+            모바일 우선으로 설계된 제목
+          </Font>
+          <Font type="body1" responsive="mobile-first" style={{ marginTop: '8px' }}>
+            작은 화면에서 시작해서 점진적으로 크기가 커지는 방식입니다.
+          </Font>
+        </div>
+
+        <div style={{ padding: '16px', border: '1px solid #e0e0e0', borderRadius: '8px' }}>
+          <h4
+            style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'semibold', color: '#333' }}
+          >
+            None (고정 크기)
+          </h4>
+          <Font type="heading1" responsive="none">
+            화면 크기와 관계없이 고정된 제목
+          </Font>
+          <Font type="body1" responsive="none" style={{ marginTop: '8px' }}>
+            반응형이 비활성화된 텍스트입니다. 모든 화면에서 동일한 크기로 표시됩니다.
+          </Font>
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+export const ResponsiveBreakpoints: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '800px' }}>
+      <div>
+        <h3 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 'bold' }}>
+          반응형 브레이크포인트별 비교
+        </h3>
+        <p style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#666' }}>
+          다양한 텍스트 스타일이 화면 크기에 따라 어떻게 변하는지 확인하세요.
+        </p>
+      </div>
+
+      <div style={{ display: 'grid', gap: '16px' }}>
+        <Font type="display1" responsive="auto">
+          Display 1 - 가장 큰 제목 (반응형)
+        </Font>
+        <Font type="display2" responsive="auto">
+          Display 2 - 두 번째 큰 제목 (반응형)
+        </Font>
+        <Font type="heading1" responsive="auto">
+          Heading 1 - 섹션 제목 (반응형)
+        </Font>
+        <Font type="heading2" responsive="auto">
+          Heading 2 - 서브섹션 제목 (반응형)
+        </Font>
+        <Font type="body1" responsive="auto">
+          Body 1 - 이것은 본문 텍스트입니다. 반응형으로 설정되어 화면 크기에 따라 최적의 가독성을
+          제공합니다.
+        </Font>
+        <Font type="body2" responsive="auto">
+          Body 2 - 보조 본문 텍스트도 반응형으로 조정되어 다양한 디바이스에서 읽기 편합니다.
+        </Font>
+        <Font type="caption" responsive="auto">
+          Caption - 작은 설명 텍스트도 반응형 지원으로 가독성을 유지합니다.
+        </Font>
+      </div>
+    </div>
+  ),
+};
+
 export const Playground: Story = {
   args: {
     type: 'heading2',
     fontWeight: 'semibold',
     color: colors.semantic.text.primary,
+    responsive: 'auto',
     children: '플레이그라운드에서 다양한 옵션을 테스트해보세요!',
   },
 };
