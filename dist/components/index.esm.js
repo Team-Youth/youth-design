@@ -24971,7 +24971,12 @@ var Table = function (_a) {
     maxVisiblePages = _h === void 0 ? 5 : _h,
     _j = _a.paginationDisabled,
     paginationDisabled = _j === void 0 ? false : _j,
-    onPageChange = _a.onPageChange;
+    onPageChange = _a.onPageChange,
+    // 서버사이드 페이지네이션 관련 props
+    serverSide = _a.serverSide,
+    totalCount = _a.totalCount,
+    serverCurrentPage = _a.currentPage,
+    serverTotalPages = _a.totalPages;
   // 각 열의 최대 너비를 저장하는 상태
   var _k = useState({}),
     columnLayouts = _k[0],
@@ -24982,38 +24987,54 @@ var Table = function (_a) {
     setIsWidthCalculationComplete = _l[1];
   // 헤더 셀의 참조를 저장할 배열
   var headerRefs = useRef([]);
-  // 페이지네이션 상태
+  // 페이지네이션 상태 (클라이언트 사이드용)
   var _m = useState(initialPage),
-    currentPage = _m[0],
-    setCurrentPage = _m[1];
+    clientCurrentPage = _m[0],
+    setClientCurrentPage = _m[1];
+  // 실제 사용할 현재 페이지 (서버사이드 모드면 외부에서 전달받은 값 사용)
+  var currentPage = serverSide ? serverCurrentPage !== null && serverCurrentPage !== void 0 ? serverCurrentPage : initialPage : clientCurrentPage;
   // 페이지네이션이 활성화된 경우 총 페이지 수 계산
   var totalPages = useMemo(function () {
     if (!pagination) return 1;
+    // 서버사이드 모드면 외부에서 전달받은 값 사용, 없으면 클라이언트 사이드 계산
+    if (serverSide) return serverTotalPages !== null && serverTotalPages !== void 0 ? serverTotalPages : 1;
     return Math.ceil(data.length / pageSize);
-  }, [pagination, data.length, pageSize]);
+  }, [pagination, serverSide, serverTotalPages, data.length, pageSize]);
   // 현재 페이지에 표시할 데이터 계산
   var currentPageData = useMemo(function () {
     if (!pagination) return data;
+    // 서버사이드 모드면 전달받은 data를 그대로 사용 (이미 서버에서 페이지네이션됨)
+    if (serverSide) return data;
+    // 클라이언트 사이드 모드면 data를 slice
     var startIndex = (currentPage - 1) * pageSize;
     var endIndex = startIndex + pageSize;
     return data.slice(startIndex, endIndex);
-  }, [data, pagination, currentPage, pageSize]);
+  }, [data, pagination, serverSide, currentPage, pageSize]);
   // 페이지 변경 핸들러
   var handlePageChange = useCallback(function (page) {
-    setCurrentPage(page);
+    // 클라이언트 사이드 모드에서만 내부 상태 업데이트
+    if (!serverSide) {
+      setClientCurrentPage(page);
+    }
     if (onPageChange) {
-      var startIndex = (page - 1) * pageSize;
-      var endIndex = startIndex + pageSize;
-      var pageData = data.slice(startIndex, endIndex);
-      onPageChange(page, pageData, totalPages);
+      if (serverSide) {
+        // 서버사이드 모드면 현재 data를 그대로 전달 (이미 서버에서 페이지네이션됨)
+        onPageChange(page, data, totalPages);
+      } else {
+        // 클라이언트 사이드 모드면 slice한 데이터 전달
+        var startIndex = (page - 1) * pageSize;
+        var endIndex = startIndex + pageSize;
+        var pageData = data.slice(startIndex, endIndex);
+        onPageChange(page, pageData, totalPages);
+      }
     }
-  }, [data, pageSize, totalPages, onPageChange]);
-  // 데이터가 변경되면 첫 페이지로 리셋
+  }, [serverSide, data, pageSize, totalPages, onPageChange]);
+  // 데이터가 변경되면 첫 페이지로 리셋 (클라이언트 사이드만)
   useEffect(function () {
-    if (pagination) {
-      setCurrentPage(1);
+    if (pagination && !serverSide) {
+      setClientCurrentPage(1);
     }
-  }, [data, pagination]);
+  }, [data, pagination, serverSide]);
   // 열 너비를 업데이트하는 함수
   var updateColumnWidth = function (index, width) {
     setColumnLayouts(function (prevLayouts) {
@@ -25233,11 +25254,15 @@ var Table = function (_a) {
         alignItems: 'center',
         padding: '8px 0'
       },
-      children: jsxs(Font, {
+      children: jsx(Font, {
         type: "caption",
         fontWeight: "medium",
         color: colors.primary.coolGray[400],
-        children: ["\uCD1D ", data.length, "\uAC1C \uD56D\uBAA9 \uC911 ", (currentPage - 1) * pageSize + 1, "-", Math.min(currentPage * pageSize, data.length), "\uBC88\uC9F8 \uD45C\uC2DC"]
+        children: serverSide && totalCount ? jsxs(Fragment, {
+          children: ["\uCD1D ", totalCount, "\uAC1C \uD56D\uBAA9 \uC911 ", (currentPage - 1) * pageSize + 1, "-", Math.min(currentPage * pageSize, totalCount), "\uBC88\uC9F8 \uD45C\uC2DC"]
+        }) : jsxs(Fragment, {
+          children: ["\uCD1D ", data.length, "\uAC1C \uD56D\uBAA9 \uC911 ", (currentPage - 1) * pageSize + 1, "-", Math.min(currentPage * pageSize, data.length), "\uBC88\uC9F8 \uD45C\uC2DC"]
+        })
       })
     })]
   });
