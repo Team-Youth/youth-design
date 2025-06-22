@@ -7,16 +7,16 @@ export declare const fontFamily: {
     readonly primary: "Pretendard";
 };
 export declare const fontSize: {
-    readonly xxxxl: "2rem";
-    readonly xxxl: "1.75rem";
-    readonly xxl: "1.5rem";
-    readonly xl: "1.25rem";
-    readonly l: "1.125rem";
-    readonly m: "1rem";
-    readonly s: "0.875rem";
-    readonly xs: "0.75rem";
-    readonly xxs: "0.625rem";
-    readonly xxxs: "0.688rem";
+    readonly xxxxl: "clamp(1.75rem, 4vw, 2rem)";
+    readonly xxxl: "clamp(1.5rem, 3.5vw, 1.75rem)";
+    readonly xxl: "clamp(1.25rem, 3vw, 1.5rem)";
+    readonly xl: "clamp(1.125rem, 2.5vw, 1.25rem)";
+    readonly l: "clamp(1rem, 2vw, 1.125rem)";
+    readonly m: "clamp(0.875rem, 1.5vw, 1rem)";
+    readonly s: "clamp(0.75rem, 1.25vw, 0.875rem)";
+    readonly xs: "clamp(0.625rem, 1vw, 0.75rem)";
+    readonly xxs: "clamp(0.5625rem, 0.875vw, 0.625rem)";
+    readonly xxxs: "clamp(0.625rem, 1vw, 0.688rem)";
 };
 export declare const fontWeight: {
     readonly bold: 700;
@@ -25,108 +25,113 @@ export declare const fontWeight: {
     readonly regular: 400;
 };
 export declare const lineHeight: {
-    readonly xxxxl: "42px";
-    readonly xxxl: "36px";
-    readonly xxl: "32px";
-    readonly xl: "28px";
-    readonly l: "24px";
-    readonly m: "24px";
-    readonly s: "22px";
-    readonly xs: "20px";
-    readonly xxs: "18px";
-    readonly xxxs: "17px";
+    readonly xxxxl: "1.3";
+    readonly xxxl: "1.3";
+    readonly xxl: "1.33";
+    readonly xl: "1.4";
+    readonly l: "1.33";
+    readonly m: "1.5";
+    readonly s: "1.57";
+    readonly xs: "1.67";
+    readonly xxs: "1.8";
+    readonly xxxs: "1.55";
 };
 export declare const letterSpacing: {
     readonly m: "0";
     readonly s: "-1%";
     readonly xs: "-2%";
 };
+export declare const breakpoints: {
+    readonly mobile: "320px";
+    readonly tablet: "768px";
+    readonly desktop: "1024px";
+};
 export declare const textStyles: {
     /** 주목도를 높이고 큰 타이틀 영역 강조에 사용 */
     readonly display1: {
-        readonly fontSize: "2rem";
+        readonly fontSize: "clamp(1.75rem, 4vw, 2rem)";
         readonly fontWeight: 700;
-        readonly lineHeight: "42px";
+        readonly lineHeight: "1.3";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 중간 크기 타이틀에 사용 */
     readonly display2: {
-        readonly fontSize: "1.75rem";
+        readonly fontSize: "clamp(1.5rem, 3.5vw, 1.75rem)";
         readonly fontWeight: 700;
-        readonly lineHeight: "36px";
+        readonly lineHeight: "1.3";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 정보성 카드 타이틀에 주로 사용 */
     readonly heading1: {
-        readonly fontSize: "1.5rem";
+        readonly fontSize: "clamp(1.25rem, 3vw, 1.5rem)";
         readonly fontWeight: 700;
-        readonly lineHeight: "32px";
+        readonly lineHeight: "1.33";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 섹션 구분 타이틀 등에 사용 */
     readonly heading2: {
-        readonly fontSize: "1.25rem";
+        readonly fontSize: "clamp(1.125rem, 2.5vw, 1.25rem)";
         readonly fontWeight: 600;
-        readonly lineHeight: "28px";
+        readonly lineHeight: "1.4";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 소제목 등에 사용 */
     readonly heading3: {
-        readonly fontSize: "1.125rem";
+        readonly fontSize: "clamp(1rem, 2vw, 1.125rem)";
         readonly fontWeight: 600;
-        readonly lineHeight: "24px";
+        readonly lineHeight: "1.33";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 리스트 아이템, 버튼 텍스트 등에 사용 */
     readonly heading4: {
-        readonly fontSize: "1rem";
+        readonly fontSize: "clamp(0.875rem, 1.5vw, 1rem)";
         readonly fontWeight: 600;
-        readonly lineHeight: "24px";
+        readonly lineHeight: "1.5";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 부가 정보, 캡션 등에 사용 */
     readonly heading5: {
-        readonly fontSize: "0.875rem";
+        readonly fontSize: "clamp(0.75rem, 1.25vw, 0.875rem)";
         readonly fontWeight: 600;
-        readonly lineHeight: "22px";
+        readonly lineHeight: "1.57";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 주요 본문 텍스트에 사용 */
     readonly body1: {
-        readonly fontSize: "1rem";
+        readonly fontSize: "clamp(0.875rem, 1.5vw, 1rem)";
         readonly fontWeight: 400;
-        readonly lineHeight: "24px";
+        readonly lineHeight: "1.33";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 보조 본문 텍스트에 사용 */
     readonly body2: {
-        readonly fontSize: "0.875rem";
+        readonly fontSize: "clamp(0.75rem, 1.25vw, 0.875rem)";
         readonly fontWeight: 400;
-        readonly lineHeight: "22px";
+        readonly lineHeight: "1.57";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장 */
     readonly body3: {
-        readonly fontSize: "0.75rem";
+        readonly fontSize: "clamp(0.625rem, 1vw, 0.75rem)";
         readonly fontWeight: 400;
-        readonly lineHeight: "18px";
+        readonly lineHeight: "1.8";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
     /** 보조 정보나 컴포넌트 레벨에서 사용 */
     readonly caption: {
-        readonly fontSize: "0.75rem";
+        readonly fontSize: "clamp(0.625rem, 1vw, 0.75rem)";
         readonly fontWeight: 400;
-        readonly lineHeight: "20px";
+        readonly lineHeight: "1.67";
         readonly letterSpacing: "0";
         readonly fontFamily: "Pretendard";
     };
@@ -137,16 +142,16 @@ export declare const typography: {
         readonly primary: "Pretendard";
     };
     readonly fontSize: {
-        readonly xxxxl: "2rem";
-        readonly xxxl: "1.75rem";
-        readonly xxl: "1.5rem";
-        readonly xl: "1.25rem";
-        readonly l: "1.125rem";
-        readonly m: "1rem";
-        readonly s: "0.875rem";
-        readonly xs: "0.75rem";
-        readonly xxs: "0.625rem";
-        readonly xxxs: "0.688rem";
+        readonly xxxxl: "clamp(1.75rem, 4vw, 2rem)";
+        readonly xxxl: "clamp(1.5rem, 3.5vw, 1.75rem)";
+        readonly xxl: "clamp(1.25rem, 3vw, 1.5rem)";
+        readonly xl: "clamp(1.125rem, 2.5vw, 1.25rem)";
+        readonly l: "clamp(1rem, 2vw, 1.125rem)";
+        readonly m: "clamp(0.875rem, 1.5vw, 1rem)";
+        readonly s: "clamp(0.75rem, 1.25vw, 0.875rem)";
+        readonly xs: "clamp(0.625rem, 1vw, 0.75rem)";
+        readonly xxs: "clamp(0.5625rem, 0.875vw, 0.625rem)";
+        readonly xxxs: "clamp(0.625rem, 1vw, 0.688rem)";
     };
     readonly fontWeight: {
         readonly bold: 700;
@@ -155,16 +160,16 @@ export declare const typography: {
         readonly regular: 400;
     };
     readonly lineHeight: {
-        readonly xxxxl: "42px";
-        readonly xxxl: "36px";
-        readonly xxl: "32px";
-        readonly xl: "28px";
-        readonly l: "24px";
-        readonly m: "24px";
-        readonly s: "22px";
-        readonly xs: "20px";
-        readonly xxs: "18px";
-        readonly xxxs: "17px";
+        readonly xxxxl: "1.3";
+        readonly xxxl: "1.3";
+        readonly xxl: "1.33";
+        readonly xl: "1.4";
+        readonly l: "1.33";
+        readonly m: "1.5";
+        readonly s: "1.57";
+        readonly xs: "1.67";
+        readonly xxs: "1.8";
+        readonly xxxs: "1.55";
     };
     readonly letterSpacing: {
         readonly m: "0";
@@ -174,92 +179,97 @@ export declare const typography: {
     readonly textStyles: {
         /** 주목도를 높이고 큰 타이틀 영역 강조에 사용 */
         readonly display1: {
-            readonly fontSize: "2rem";
+            readonly fontSize: "clamp(1.75rem, 4vw, 2rem)";
             readonly fontWeight: 700;
-            readonly lineHeight: "42px";
+            readonly lineHeight: "1.3";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 중간 크기 타이틀에 사용 */
         readonly display2: {
-            readonly fontSize: "1.75rem";
+            readonly fontSize: "clamp(1.5rem, 3.5vw, 1.75rem)";
             readonly fontWeight: 700;
-            readonly lineHeight: "36px";
+            readonly lineHeight: "1.3";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 정보성 카드 타이틀에 주로 사용 */
         readonly heading1: {
-            readonly fontSize: "1.5rem";
+            readonly fontSize: "clamp(1.25rem, 3vw, 1.5rem)";
             readonly fontWeight: 700;
-            readonly lineHeight: "32px";
+            readonly lineHeight: "1.33";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 섹션 구분 타이틀 등에 사용 */
         readonly heading2: {
-            readonly fontSize: "1.25rem";
+            readonly fontSize: "clamp(1.125rem, 2.5vw, 1.25rem)";
             readonly fontWeight: 600;
-            readonly lineHeight: "28px";
+            readonly lineHeight: "1.4";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 소제목 등에 사용 */
         readonly heading3: {
-            readonly fontSize: "1.125rem";
+            readonly fontSize: "clamp(1rem, 2vw, 1.125rem)";
             readonly fontWeight: 600;
-            readonly lineHeight: "24px";
+            readonly lineHeight: "1.33";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 리스트 아이템, 버튼 텍스트 등에 사용 */
         readonly heading4: {
-            readonly fontSize: "1rem";
+            readonly fontSize: "clamp(0.875rem, 1.5vw, 1rem)";
             readonly fontWeight: 600;
-            readonly lineHeight: "24px";
+            readonly lineHeight: "1.5";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 부가 정보, 캡션 등에 사용 */
         readonly heading5: {
-            readonly fontSize: "0.875rem";
+            readonly fontSize: "clamp(0.75rem, 1.25vw, 0.875rem)";
             readonly fontWeight: 600;
-            readonly lineHeight: "22px";
+            readonly lineHeight: "1.57";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 주요 본문 텍스트에 사용 */
         readonly body1: {
-            readonly fontSize: "1rem";
+            readonly fontSize: "clamp(0.875rem, 1.5vw, 1rem)";
             readonly fontWeight: 400;
-            readonly lineHeight: "24px";
+            readonly lineHeight: "1.33";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 보조 본문 텍스트에 사용 */
         readonly body2: {
-            readonly fontSize: "0.875rem";
+            readonly fontSize: "clamp(0.75rem, 1.25vw, 0.875rem)";
             readonly fontWeight: 400;
-            readonly lineHeight: "22px";
+            readonly lineHeight: "1.57";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 본문 보조, 하위 위계 텍스트 쓰임새로 사용 권장 */
         readonly body3: {
-            readonly fontSize: "0.75rem";
+            readonly fontSize: "clamp(0.625rem, 1vw, 0.75rem)";
             readonly fontWeight: 400;
-            readonly lineHeight: "18px";
+            readonly lineHeight: "1.8";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
         /** 보조 정보나 컴포넌트 레벨에서 사용 */
         readonly caption: {
-            readonly fontSize: "0.75rem";
+            readonly fontSize: "clamp(0.625rem, 1vw, 0.75rem)";
             readonly fontWeight: 400;
-            readonly lineHeight: "20px";
+            readonly lineHeight: "1.67";
             readonly letterSpacing: "0";
             readonly fontFamily: "Pretendard";
         };
+    };
+    readonly breakpoints: {
+        readonly mobile: "320px";
+        readonly tablet: "768px";
+        readonly desktop: "1024px";
     };
 };
 export default typography;
