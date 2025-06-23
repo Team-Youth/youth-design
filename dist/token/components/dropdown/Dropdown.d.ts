@@ -38,5 +38,9 @@ export interface DropdownProps {
     customContent?: React.ReactNode;
     /** 커스텀 컨텐츠 사용 시 최대 높이 (기본값: 200px) */
     customContentMaxHeight?: number;
+    /** 외부에서 드롭다운 열림 상태 제어 (선택사항) */
+    isOpen?: boolean;
+    /** 드롭다운 열림 상태 변경 콜백 (선택사항) */
+    onOpenChange?: (isOpen: boolean) => void;
 }
 export declare const Dropdown: React.FC<DropdownProps>;

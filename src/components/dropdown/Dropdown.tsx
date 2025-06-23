@@ -41,6 +41,10 @@ export interface DropdownProps {
   customContent?: React.ReactNode;
   /** 커스텀 컨텐츠 사용 시 최대 높이 (기본값: 200px) */
   customContentMaxHeight?: number;
+  /** 외부에서 드롭다운 열림 상태 제어 (선택사항) */
+  isOpen?: boolean;
+  /** 드롭다운 열림 상태 변경 콜백 (선택사항) */
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -60,8 +64,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
   disablePopulatedDisabled = false,
   customContent,
   customContentMaxHeight = 200,
+  isOpen,
+  onOpenChange,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenState, setIsOpenState] = useState(isOpen || false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [hoveredOptionIndex, setHoveredOptionIndex] = useState<number | null>(null);
@@ -74,6 +80,30 @@ export const Dropdown: React.FC<DropdownProps> = ({
     left: number;
     width: number;
   } | null>(null);
+
+  // 외부에서 isOpen prop으로 제어하거나 내부 상태 사용
+  const actualIsOpen = isOpen !== undefined ? isOpen : isOpenState;
+
+  // 드롭다운 열림/닫힘 상태 변경 함수
+  const setActualIsOpen = useCallback(
+    (newIsOpen: boolean) => {
+      if (isOpen !== undefined) {
+        // 외부 제어 모드
+        onOpenChange?.(newIsOpen);
+      } else {
+        // 내부 상태 모드
+        setIsOpenState(newIsOpen);
+      }
+    },
+    [isOpen, onOpenChange],
+  );
+
+  // 외부 isOpen prop 변경 시 내부 상태 동기화
+  useEffect(() => {
+    if (isOpen !== undefined) {
+      setIsOpenState(isOpen);
+    }
+  }, [isOpen]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
   const optionsContainerRef = useRef<HTMLDivElement>(null);
@@ -252,7 +282,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   // 드롭다운 열기/닫기 애니메이션 관리
   useEffect(() => {
-    if (isOpen) {
+    if (actualIsOpen) {
       // 먼저 위치와 좌표를 완전히 계산
       if (!triggerRef.current) return;
 
@@ -309,7 +339,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       return () => clearTimeout(timer);
     }
   }, [
-    isOpen,
+    actualIsOpen,
     enableSearch,
     scrollToSelectedOption,
     calculateDropdownPosition,
@@ -320,35 +350,35 @@ export const Dropdown: React.FC<DropdownProps> = ({
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        setActualIsOpen(false);
       }
     };
 
-    if (isOpen) {
+    if (actualIsOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [actualIsOpen, setActualIsOpen]);
 
   // ESC 키로 드롭다운 닫기
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+      if (event.key === 'Escape' && actualIsOpen) {
+        setActualIsOpen(false);
       }
     };
 
-    if (isOpen) {
+    if (actualIsOpen) {
       document.addEventListener('keydown', handleKeyDown);
     }
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [actualIsOpen, setActualIsOpen]);
 
   // 텍스트 스타일 계산 (size에 따라 body1/body2 + medium)
   const getTextStyle = useCallback(() => {
@@ -369,7 +399,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       backgroundColor = colors.semantic.disabled.background; // #F3F5F6
     } else if (error) {
       borderColor = colors.semantic.state.error; // #FF2E2E
-    } else if (isOpen) {
+    } else if (actualIsOpen) {
       borderColor = colors.semantic.text.primary; // #25282D
     }
 
@@ -391,7 +421,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       userSelect: !enableSearch ? 'none' : 'auto',
       ...(hideOption && { userSelect: 'none' }),
     };
-  }, [actuallyDisabled, error, isOpen, finalWidth, hideOption, enableSearch, size]);
+  }, [actuallyDisabled, error, actualIsOpen, finalWidth, hideOption, enableSearch, size]);
 
   const getTextStyles = useCallback((): React.CSSProperties => {
     let textColor: string;
@@ -459,24 +489,26 @@ export const Dropdown: React.FC<DropdownProps> = ({
   }, [actuallyDisabled, error]);
 
   const getChevronIcon = useCallback(
-    () => <Icon type={isOpen ? 'chevron-up' : 'chevron-down'} size={20} color="currentColor" />,
-    [isOpen],
+    () => (
+      <Icon type={actualIsOpen ? 'chevron-up' : 'chevron-down'} size={20} color="currentColor" />
+    ),
+    [actualIsOpen],
   );
 
   const handleClick = useCallback(() => {
     if (!actuallyDisabled && !hideOption) {
-      setIsOpen(!isOpen);
+      setActualIsOpen(!actualIsOpen);
     }
-  }, [actuallyDisabled, hideOption, isOpen]);
+  }, [actuallyDisabled, hideOption, actualIsOpen, setActualIsOpen]);
 
   const handleOptionClick = useCallback(
     (optionValue: string) => {
       if (!actuallyDisabled) {
         onChange?.(optionValue);
-        setIsOpen(false);
+        setActualIsOpen(false);
       }
     },
-    [actuallyDisabled, onChange],
+    [actuallyDisabled, onChange, setActualIsOpen],
   );
 
   const handleKeyDown = useCallback(
@@ -509,7 +541,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         }
       } else if (event.key === 'Escape') {
         event.preventDefault();
-        setIsOpen(false);
+        setActualIsOpen(false);
       }
     },
     [enableSearch, filteredOptions, handleOptionClick],
@@ -618,7 +650,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   // 표시할 텍스트 결정
   const getDisplayText = () => {
-    if (isOpen && enableSearch) {
+    if (actualIsOpen && enableSearch) {
       return searchText;
     }
     return hasSelectedOption ? selectedOption.label : placeholder;
@@ -626,7 +658,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   // 플레이스홀더 텍스트 결정
   const getPlaceholderText = () => {
-    if (isOpen && enableSearch) {
+    if (actualIsOpen && enableSearch) {
       return hasSelectedOption ? selectedOption.label : placeholder;
     }
     return '';
@@ -653,22 +685,22 @@ export const Dropdown: React.FC<DropdownProps> = ({
         position: 'relative',
         width: finalWidth === 'fill' ? '100%' : finalWidth,
         // 드롭다운이 열려도 높이에 영향을 주지 않도록 설정
-        zIndex: isOpen ? 1001 : 'auto',
+        zIndex: actualIsOpen ? 1001 : 'auto',
       }}
     >
       <div
         ref={triggerRef}
         style={getContainerStyles()}
-        onClick={!isOpen || !enableSearch ? handleClick : undefined}
-        onKeyDown={!isOpen || !enableSearch ? handleKeyDown : undefined}
-        tabIndex={actuallyDisabled || (isOpen && enableSearch) ? -1 : 0}
+        onClick={!actualIsOpen || !enableSearch ? handleClick : undefined}
+        onKeyDown={!actualIsOpen || !enableSearch ? handleKeyDown : undefined}
+        tabIndex={actuallyDisabled || (actualIsOpen && enableSearch) ? -1 : 0}
         role="combobox"
-        aria-expanded={isOpen}
+        aria-expanded={actualIsOpen}
         aria-haspopup="listbox"
         aria-disabled={actuallyDisabled}
       >
         {renderLeadingIcon()}
-        {isOpen && enableSearch ? (
+        {actualIsOpen && enableSearch ? (
           <input
             ref={inputRef}
             type="text"
@@ -691,10 +723,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
             alignItems: 'center',
             justifyContent: 'center',
             color: getIconColor(),
-            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transform: actualIsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease',
           }}
-          onClick={isOpen && enableSearch ? handleClick : undefined}
+          onClick={actualIsOpen && enableSearch ? handleClick : undefined}
         >
           {getChevronIcon()}
         </div>

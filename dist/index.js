@@ -21529,10 +21529,12 @@ var Dropdown = function (_a) {
     disablePopulatedDisabled = _k === void 0 ? false : _k,
     customContent = _a.customContent,
     _l = _a.customContentMaxHeight,
-    customContentMaxHeight = _l === void 0 ? 200 : _l;
-  var _m = React.useState(false),
-    isOpen = _m[0],
-    setIsOpen = _m[1];
+    customContentMaxHeight = _l === void 0 ? 200 : _l,
+    isOpen = _a.isOpen,
+    onOpenChange = _a.onOpenChange;
+  var _m = React.useState(isOpen || false),
+    isOpenState = _m[0],
+    setIsOpenState = _m[1];
   var _o = React.useState(false),
     isAnimating = _o[0],
     setIsAnimating = _o[1];
@@ -21554,6 +21556,24 @@ var Dropdown = function (_a) {
   var _u = React.useState(null),
     dropdownCoordinates = _u[0],
     setDropdownCoordinates = _u[1];
+  // 외부에서 isOpen prop으로 제어하거나 내부 상태 사용
+  var actualIsOpen = isOpen !== undefined ? isOpen : isOpenState;
+  // 드롭다운 열림/닫힘 상태 변경 함수
+  var setActualIsOpen = React.useCallback(function (newIsOpen) {
+    if (isOpen !== undefined) {
+      // 외부 제어 모드
+      onOpenChange === null || onOpenChange === void 0 ? void 0 : onOpenChange(newIsOpen);
+    } else {
+      // 내부 상태 모드
+      setIsOpenState(newIsOpen);
+    }
+  }, [isOpen, onOpenChange]);
+  // 외부 isOpen prop 변경 시 내부 상태 동기화
+  React.useEffect(function () {
+    if (isOpen !== undefined) {
+      setIsOpenState(isOpen);
+    }
+  }, [isOpen]);
   var dropdownRef = React.useRef(null);
   var triggerRef = React.useRef(null);
   var optionsContainerRef = React.useRef(null);
@@ -21705,7 +21725,7 @@ var Dropdown = function (_a) {
   }, [hasSelectedOption, getSelectedOptionIndex]);
   // 드롭다운 열기/닫기 애니메이션 관리
   React.useEffect(function () {
-    if (isOpen) {
+    if (actualIsOpen) {
       // 먼저 위치와 좌표를 완전히 계산
       if (!triggerRef.current) return;
       var triggerRect = triggerRef.current.getBoundingClientRect();
@@ -21758,35 +21778,35 @@ var Dropdown = function (_a) {
         return clearTimeout(timer_1);
       };
     }
-  }, [isOpen, enableSearch, scrollToSelectedOption, calculateDropdownPosition, calculateOptimalWidth]);
+  }, [actualIsOpen, enableSearch, scrollToSelectedOption, calculateDropdownPosition, calculateOptimalWidth]);
   // 외부 클릭 시 드롭다운 닫기
   React.useEffect(function () {
     var handleClickOutside = function (event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
+        setActualIsOpen(false);
       }
     };
-    if (isOpen) {
+    if (actualIsOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return function () {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
+  }, [actualIsOpen, setActualIsOpen]);
   // ESC 키로 드롭다운 닫기
   React.useEffect(function () {
     var handleKeyDown = function (event) {
-      if (event.key === 'Escape' && isOpen) {
-        setIsOpen(false);
+      if (event.key === 'Escape' && actualIsOpen) {
+        setActualIsOpen(false);
       }
     };
-    if (isOpen) {
+    if (actualIsOpen) {
       document.addEventListener('keydown', handleKeyDown);
     }
     return function () {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [actualIsOpen, setActualIsOpen]);
   // 텍스트 스타일 계산 (size에 따라 body1/body2 + medium)
   var getTextStyle = React.useCallback(function () {
     var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
@@ -21803,7 +21823,7 @@ var Dropdown = function (_a) {
       backgroundColor = colors.semantic.disabled.background; // #F3F5F6
     } else if (error) {
       borderColor = colors.semantic.state.error; // #FF2E2E
-    } else if (isOpen) {
+    } else if (actualIsOpen) {
       borderColor = colors.semantic.text.primary; // #25282D
     }
     // size에 따른 패딩 설정
@@ -21825,7 +21845,7 @@ var Dropdown = function (_a) {
     }, hideOption && {
       userSelect: 'none'
     });
-  }, [actuallyDisabled, error, isOpen, finalWidth, hideOption, enableSearch, size]);
+  }, [actuallyDisabled, error, actualIsOpen, finalWidth, hideOption, enableSearch, size]);
   var getTextStyles = React.useCallback(function () {
     var textColor;
     if (actuallyDisabled) {
@@ -21876,22 +21896,22 @@ var Dropdown = function (_a) {
   }, [actuallyDisabled, error]);
   var getChevronIcon = React.useCallback(function () {
     return jsxRuntime.jsx(Icon, {
-      type: isOpen ? 'chevron-up' : 'chevron-down',
+      type: actualIsOpen ? 'chevron-up' : 'chevron-down',
       size: 20,
       color: "currentColor"
     });
-  }, [isOpen]);
+  }, [actualIsOpen]);
   var handleClick = React.useCallback(function () {
     if (!actuallyDisabled && !hideOption) {
-      setIsOpen(!isOpen);
+      setActualIsOpen(!actualIsOpen);
     }
-  }, [actuallyDisabled, hideOption, isOpen]);
+  }, [actuallyDisabled, hideOption, actualIsOpen, setActualIsOpen]);
   var handleOptionClick = React.useCallback(function (optionValue) {
     if (!actuallyDisabled) {
       onChange === null || onChange === void 0 ? void 0 : onChange(optionValue);
-      setIsOpen(false);
+      setActualIsOpen(false);
     }
-  }, [actuallyDisabled, onChange]);
+  }, [actuallyDisabled, onChange, setActualIsOpen]);
   var handleKeyDown = React.useCallback(function (event) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -21916,7 +21936,7 @@ var Dropdown = function (_a) {
       }
     } else if (event.key === 'Escape') {
       event.preventDefault();
-      setIsOpen(false);
+      setActualIsOpen(false);
     }
   }, [enableSearch, filteredOptions, handleOptionClick]);
   var handleInputChange = React.useCallback(function (event) {
@@ -22003,14 +22023,14 @@ var Dropdown = function (_a) {
   };
   // 표시할 텍스트 결정
   var getDisplayText = function () {
-    if (isOpen && enableSearch) {
+    if (actualIsOpen && enableSearch) {
       return searchText;
     }
     return hasSelectedOption ? selectedOption.label : placeholder;
   };
   // 플레이스홀더 텍스트 결정
   var getPlaceholderText = function () {
-    if (isOpen && enableSearch) {
+    if (actualIsOpen && enableSearch) {
       return hasSelectedOption ? selectedOption.label : placeholder;
     }
     return '';
@@ -22034,19 +22054,19 @@ var Dropdown = function (_a) {
       position: 'relative',
       width: finalWidth === 'fill' ? '100%' : finalWidth,
       // 드롭다운이 열려도 높이에 영향을 주지 않도록 설정
-      zIndex: isOpen ? 1001 : 'auto'
+      zIndex: actualIsOpen ? 1001 : 'auto'
     },
     children: [jsxRuntime.jsxs("div", {
       ref: triggerRef,
       style: getContainerStyles(),
-      onClick: !isOpen || !enableSearch ? handleClick : undefined,
-      onKeyDown: !isOpen || !enableSearch ? handleKeyDown : undefined,
-      tabIndex: actuallyDisabled || isOpen && enableSearch ? -1 : 0,
+      onClick: !actualIsOpen || !enableSearch ? handleClick : undefined,
+      onKeyDown: !actualIsOpen || !enableSearch ? handleKeyDown : undefined,
+      tabIndex: actuallyDisabled || actualIsOpen && enableSearch ? -1 : 0,
       role: "combobox",
-      "aria-expanded": isOpen,
+      "aria-expanded": actualIsOpen,
       "aria-haspopup": "listbox",
       "aria-disabled": actuallyDisabled,
-      children: [renderLeadingIcon(), isOpen && enableSearch ? jsxRuntime.jsx("input", {
+      children: [renderLeadingIcon(), actualIsOpen && enableSearch ? jsxRuntime.jsx("input", {
         ref: inputRef,
         type: "text",
         value: searchText,
@@ -22066,10 +22086,10 @@ var Dropdown = function (_a) {
           alignItems: 'center',
           justifyContent: 'center',
           color: getIconColor(),
-          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+          transform: actualIsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
           transition: 'transform 0.2s ease'
         },
-        onClick: isOpen && enableSearch ? handleClick : undefined,
+        onClick: actualIsOpen && enableSearch ? handleClick : undefined,
         children: getChevronIcon()
       })]
     }), shouldRender && !hideOption && dropdownCoordinates && jsxRuntime.jsx("div", {
