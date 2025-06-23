@@ -21524,31 +21524,34 @@ var Dropdown = function (_a) {
     _j = _a.hideOption,
     hideOption = _j === void 0 ? false : _j,
     _k = _a.disablePopulatedDisabled,
-    disablePopulatedDisabled = _k === void 0 ? false : _k;
-  var _l = useState(false),
-    isOpen = _l[0],
-    setIsOpen = _l[1];
+    disablePopulatedDisabled = _k === void 0 ? false : _k,
+    customContent = _a.customContent,
+    _l = _a.customContentMaxHeight,
+    customContentMaxHeight = _l === void 0 ? 200 : _l;
   var _m = useState(false),
-    isAnimating = _m[0],
-    setIsAnimating = _m[1];
+    isOpen = _m[0],
+    setIsOpen = _m[1];
   var _o = useState(false),
-    shouldRender = _o[0],
-    setShouldRender = _o[1];
-  var _p = useState(null),
-    hoveredOptionIndex = _p[0],
-    setHoveredOptionIndex = _p[1];
-  var _q = useState(''),
-    searchText = _q[0],
-    setSearchText = _q[1];
-  var _r = useState('bottom'),
-    dropdownPosition = _r[0],
-    setDropdownPosition = _r[1];
-  var _s = useState(false),
-    positionCalculated = _s[0],
-    setPositionCalculated = _s[1];
-  var _t = useState(null),
-    dropdownCoordinates = _t[0],
-    setDropdownCoordinates = _t[1];
+    isAnimating = _o[0],
+    setIsAnimating = _o[1];
+  var _p = useState(false),
+    shouldRender = _p[0],
+    setShouldRender = _p[1];
+  var _q = useState(null),
+    hoveredOptionIndex = _q[0],
+    setHoveredOptionIndex = _q[1];
+  var _r = useState(''),
+    searchText = _r[0],
+    setSearchText = _r[1];
+  var _s = useState('bottom'),
+    dropdownPosition = _s[0],
+    setDropdownPosition = _s[1];
+  var _t = useState(false),
+    positionCalculated = _t[0],
+    setPositionCalculated = _t[1];
+  var _u = useState(null),
+    dropdownCoordinates = _u[0],
+    setDropdownCoordinates = _u[1];
   var dropdownRef = useRef(null);
   var triggerRef = useRef(null);
   var optionsContainerRef = useRef(null);
@@ -21559,6 +21562,7 @@ var Dropdown = function (_a) {
     });
   }, [options, value]);
   var hasSelectedOption = !!selectedOption;
+  var hasCustomContent = !!customContent;
   // populated disabled 상태 체크: 옵션이 하나뿐일 때
   var isPopulatedDisabled = useMemo(function () {
     if (disablePopulatedDisabled) return false;
@@ -21601,7 +21605,7 @@ var Dropdown = function (_a) {
     if (!triggerRef.current) return 'bottom';
     var triggerRect = triggerRef.current.getBoundingClientRect();
     var viewportHeight = window.innerHeight;
-    var dropdownMaxHeight = 200; // maxHeight와 동일
+    var dropdownMaxHeight = hasCustomContent ? customContentMaxHeight : 200; // customContent일 때는 customContentMaxHeight 사용
     var margin = 8; // marginTop과 동일
     var spaceBelow = viewportHeight - triggerRect.bottom - margin;
     var spaceAbove = triggerRect.top - margin;
@@ -21613,7 +21617,7 @@ var Dropdown = function (_a) {
     } else {
       return spaceBelow >= spaceAbove ? 'bottom' : 'top';
     }
-  }, []);
+  }, [hasCustomContent, customContentMaxHeight]);
   // 옵션 리스트의 최적 너비 계산 함수
   var calculateOptimalWidth = useCallback(function () {
     if (!triggerRef.current) {
@@ -21953,7 +21957,7 @@ var Dropdown = function (_a) {
       borderRadius: '8px',
       boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
       zIndex: 1000,
-      maxHeight: '200px',
+      maxHeight: hasCustomContent ? "".concat(customContentMaxHeight, "px") : '200px',
       overflowY: 'auto',
       // 위치 계산이 완료되기 전에는 보이지 않게 함
       visibility: positionCalculated ? 'visible' : 'hidden',
@@ -21965,7 +21969,7 @@ var Dropdown = function (_a) {
       userSelect: !enableSearch ? 'none' : 'auto',
       boxSizing: 'border-box'
     });
-  }, [isAnimating, enableSearch, dropdownPosition, positionCalculated, dropdownCoordinates]);
+  }, [isAnimating, enableSearch, dropdownPosition, positionCalculated, dropdownCoordinates, hasCustomContent, customContentMaxHeight]);
   var getCheckIcon = function () {
     return jsx(Icon, {
       type: "check",
@@ -22055,7 +22059,7 @@ var Dropdown = function (_a) {
       style: dropdownOptionsStyle,
       role: "listbox",
       ref: optionsContainerRef,
-      children: filteredOptions.length === 0 ? jsx("div", {
+      children: hasCustomContent ? customContent : filteredOptions.length === 0 ? jsx("div", {
         style: __assign(__assign({
           padding: '13px 16px'
         }, getTextStyle()), {

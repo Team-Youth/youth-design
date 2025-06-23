@@ -37,6 +37,10 @@ export interface DropdownProps {
   hideOption?: boolean;
   /** populated disabled 기능 비활성화 여부 (기본값: false) */
   disablePopulatedDisabled?: boolean;
+  /** 커스텀 컨텐츠 (기본 옵션 리스트 대신 렌더링) */
+  customContent?: React.ReactNode;
+  /** 커스텀 컨텐츠 사용 시 최대 높이 (기본값: 200px) */
+  customContentMaxHeight?: number;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -54,6 +58,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
   enableSearch = false,
   hideOption = false,
   disablePopulatedDisabled = false,
+  customContent,
+  customContentMaxHeight = 200,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -78,6 +84,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     [options, value],
   );
   const hasSelectedOption = !!selectedOption;
+  const hasCustomContent = !!customContent;
 
   // populated disabled 상태 체크: 옵션이 하나뿐일 때
   const isPopulatedDisabled = useMemo(() => {
@@ -123,7 +130,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
-    const dropdownMaxHeight = 200; // maxHeight와 동일
+    const dropdownMaxHeight = hasCustomContent ? customContentMaxHeight : 200; // customContent일 때는 customContentMaxHeight 사용
     const margin = 8; // marginTop과 동일
 
     const spaceBelow = viewportHeight - triggerRect.bottom - margin;
@@ -137,7 +144,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     } else {
       return spaceBelow >= spaceAbove ? 'bottom' : 'top';
     }
-  }, []);
+  }, [hasCustomContent, customContentMaxHeight]);
 
   // 옵션 리스트의 최적 너비 계산 함수
   const calculateOptimalWidth = useCallback((): number => {
@@ -559,7 +566,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       borderRadius: '8px',
       boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
       zIndex: 1000,
-      maxHeight: '200px',
+      maxHeight: hasCustomContent ? `${customContentMaxHeight}px` : '200px',
       overflowY: 'auto',
       // 위치 계산이 완료되기 전에는 보이지 않게 함
       visibility: positionCalculated ? 'visible' : 'hidden',
@@ -575,7 +582,15 @@ export const Dropdown: React.FC<DropdownProps> = ({
       userSelect: !enableSearch ? 'none' : 'auto',
       boxSizing: 'border-box',
     }),
-    [isAnimating, enableSearch, dropdownPosition, positionCalculated, dropdownCoordinates],
+    [
+      isAnimating,
+      enableSearch,
+      dropdownPosition,
+      positionCalculated,
+      dropdownCoordinates,
+      hasCustomContent,
+      customContentMaxHeight,
+    ],
   );
 
   const getCheckIcon = () => <Icon type="check" size={20} color="currentColor" />;
@@ -667,7 +682,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
       {shouldRender && !hideOption && dropdownCoordinates && (
         <div style={dropdownOptionsStyle} role="listbox" ref={optionsContainerRef}>
-          {filteredOptions.length === 0 ? (
+          {hasCustomContent ? (
+            customContent
+          ) : filteredOptions.length === 0 ? (
             <div
               style={{
                 padding: '13px 16px',

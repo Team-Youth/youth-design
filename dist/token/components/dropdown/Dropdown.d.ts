@@ -34,5 +34,9 @@ export interface DropdownProps {
     hideOption?: boolean;
     /** populated disabled 기능 비활성화 여부 (기본값: false) */
     disablePopulatedDisabled?: boolean;
+    /** 커스텀 컨텐츠 (기본 옵션 리스트 대신 렌더링) */
+    customContent?: React.ReactNode;
+    /** 커스텀 컨텐츠 사용 시 최대 높이 (기본값: 200px) */
+    customContentMaxHeight?: number;
 }
 export declare const Dropdown: React.FC<DropdownProps>;
