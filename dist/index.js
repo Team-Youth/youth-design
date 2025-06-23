@@ -25064,82 +25064,28 @@ var Table = function (_a) {
     _d = _a.emptyIconColor,
     emptyIconColor = _d === void 0 ? colors.primary.coolGray[300] : _d,
     emptyText = _a.emptyText,
-    // 페이지네이션 관련 props
-    _e = _a.pagination,
-    // 페이지네이션 관련 props
-    pagination = _e === void 0 ? false : _e,
-    _f = _a.pageSize,
-    pageSize = _f === void 0 ? 10 : _f,
-    _g = _a.initialPage,
-    initialPage = _g === void 0 ? 1 : _g,
-    _h = _a.maxVisiblePages,
-    maxVisiblePages = _h === void 0 ? 5 : _h,
-    _j = _a.paginationDisabled,
-    paginationDisabled = _j === void 0 ? false : _j,
-    onPageChange = _a.onPageChange,
-    // 서버사이드 페이지네이션 관련 props
-    serverSide = _a.serverSide,
-    totalCount = _a.totalCount,
-    serverCurrentPage = _a.currentPage,
-    serverTotalPages = _a.totalPages;
+    // Infinite Query 페이지네이션 관련 props
+    hasNextPage = _a.hasNextPage,
+    isFetchingNextPage = _a.isFetchingNextPage,
+    onLoadMore = _a.onLoadMore,
+    _e = _a.totalPages,
+    totalPages = _e === void 0 ? 1 : _e,
+    _f = _a.currentPage,
+    currentPage = _f === void 0 ? 1 : _f,
+    onPageJump = _a.onPageJump,
+    totalCount = _a.totalCount;
   // 각 열의 최대 너비를 저장하는 상태
-  var _k = React.useState({}),
-    columnLayouts = _k[0],
-    setColumnLayouts = _k[1];
+  var _g = React.useState({}),
+    columnLayouts = _g[0],
+    setColumnLayouts = _g[1];
   // 너비 계산이 완료되었는지 추적하는 상태
-  var _l = React.useState(false),
-    isWidthCalculationComplete = _l[0],
-    setIsWidthCalculationComplete = _l[1];
+  var _h = React.useState(false),
+    isWidthCalculationComplete = _h[0],
+    setIsWidthCalculationComplete = _h[1];
   // 헤더 셀의 참조를 저장할 배열
   var headerRefs = React.useRef([]);
-  // 페이지네이션 상태 (클라이언트 사이드용)
-  var _m = React.useState(initialPage),
-    clientCurrentPage = _m[0],
-    setClientCurrentPage = _m[1];
-  // 실제 사용할 현재 페이지 (서버사이드 모드면 외부에서 전달받은 값 사용)
-  var currentPage = serverSide ? serverCurrentPage !== null && serverCurrentPage !== void 0 ? serverCurrentPage : initialPage : clientCurrentPage;
-  // 페이지네이션이 활성화된 경우 총 페이지 수 계산
-  var totalPages = React.useMemo(function () {
-    if (!pagination) return 1;
-    // 서버사이드 모드면 외부에서 전달받은 값 사용, 없으면 클라이언트 사이드 계산
-    if (serverSide) return serverTotalPages !== null && serverTotalPages !== void 0 ? serverTotalPages : 1;
-    return Math.ceil(data.length / pageSize);
-  }, [pagination, serverSide, serverTotalPages, data.length, pageSize]);
-  // 현재 페이지에 표시할 데이터 계산
-  var currentPageData = React.useMemo(function () {
-    if (!pagination) return data;
-    // 서버사이드 모드면 전달받은 data를 그대로 사용 (이미 서버에서 페이지네이션됨)
-    if (serverSide) return data;
-    // 클라이언트 사이드 모드면 data를 slice
-    var startIndex = (currentPage - 1) * pageSize;
-    var endIndex = startIndex + pageSize;
-    return data.slice(startIndex, endIndex);
-  }, [data, pagination, serverSide, currentPage, pageSize]);
-  // 페이지 변경 핸들러
-  var handlePageChange = React.useCallback(function (page) {
-    // 클라이언트 사이드 모드에서만 내부 상태 업데이트
-    if (!serverSide) {
-      setClientCurrentPage(page);
-    }
-    if (onPageChange) {
-      if (serverSide) {
-        // 서버사이드 모드면 현재 data를 그대로 전달 (이미 서버에서 페이지네이션됨)
-        onPageChange(page, data, totalPages);
-      } else {
-        // 클라이언트 사이드 모드면 slice한 데이터 전달
-        var startIndex = (page - 1) * pageSize;
-        var endIndex = startIndex + pageSize;
-        var pageData = data.slice(startIndex, endIndex);
-        onPageChange(page, pageData, totalPages);
-      }
-    }
-  }, [serverSide, data, pageSize, totalPages, onPageChange]);
-  // 데이터가 변경되면 첫 페이지로 리셋 (클라이언트 사이드만)
-  React.useEffect(function () {
-    if (pagination && !serverSide) {
-      setClientCurrentPage(1);
-    }
-  }, [data, pagination, serverSide]);
+  // Infinite Query에서는 data가 이미 플랫한 배열로 전달됨
+  var currentPageData = data;
   // 열 너비를 업데이트하는 함수
   var updateColumnWidth = function (index, width) {
     setColumnLayouts(function (prevLayouts) {
@@ -25334,40 +25280,69 @@ var Table = function (_a) {
             isWidthCalculationComplete: isWidthCalculationComplete,
             rowAccordion: rowAccordion,
             tableType: type
-          }, "row-".concat((currentPage - 1) * pageSize + rowIndex));
+          }, "row-".concat(rowIndex));
         })
       })]
-    }), pagination && data.length > 0 && totalPages > 1 && jsxRuntime.jsx("div", {
+    }), totalPages > 1 && jsxRuntime.jsxs("div", {
       style: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        gap: '12px',
         padding: '16px 0',
         marginTop: '8px'
       },
-      children: jsxRuntime.jsx(Pagination, {
-        currentPage: currentPage,
-        totalPages: totalPages,
-        onPageChange: handlePageChange,
-        maxVisiblePages: maxVisiblePages,
-        disabled: paginationDisabled || isLoading
-      })
-    }), pagination && data.length > 0 && jsxRuntime.jsx("div", {
+      children: [onPageJump && jsxRuntime.jsxs("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        },
+        children: [jsxRuntime.jsx(Font, {
+          type: "caption",
+          color: colors.primary.coolGray[600],
+          children: "\uD398\uC774\uC9C0:"
+        }), jsxRuntime.jsx(Pagination, {
+          currentPage: currentPage,
+          totalPages: totalPages,
+          onPageChange: onPageJump,
+          maxVisiblePages: 5,
+          disabled: isLoading
+        })]
+      }), hasNextPage && onLoadMore && jsxRuntime.jsx("div", {
+        style: {
+          display: 'flex',
+          alignItems: 'center'
+        },
+        children: jsxRuntime.jsx("button", {
+          onClick: onLoadMore,
+          disabled: isFetchingNextPage || isLoading,
+          style: {
+            padding: '8px 16px',
+            border: "1px solid ".concat(colors.primary.coolGray[300]),
+            borderRadius: '6px',
+            backgroundColor: 'white',
+            color: colors.primary.coolGray[700],
+            cursor: isFetchingNextPage || isLoading ? 'not-allowed' : 'pointer',
+            fontSize: '14px',
+            fontWeight: '500',
+            transition: 'all 0.2s ease'
+          },
+          children: isFetchingNextPage ? '로딩 중...' : '더 보기'
+        })
+      })]
+    }), data.length > 0 && totalCount && jsxRuntime.jsx("div", {
       style: {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         padding: '8px 0'
       },
-      children: jsxRuntime.jsx(Font, {
+      children: jsxRuntime.jsxs(Font, {
         type: "caption",
         fontWeight: "medium",
         color: colors.primary.coolGray[400],
-        children: serverSide && totalCount ? jsxRuntime.jsxs(jsxRuntime.Fragment, {
-          children: ["\uCD1D ", totalCount, "\uAC1C \uD56D\uBAA9 \uC911 ", (currentPage - 1) * pageSize + 1, "-", Math.min(currentPage * pageSize, totalCount), "\uBC88\uC9F8 \uD45C\uC2DC"]
-        }) : jsxRuntime.jsxs(jsxRuntime.Fragment, {
-          children: ["\uCD1D ", data.length, "\uAC1C \uD56D\uBAA9 \uC911 ", (currentPage - 1) * pageSize + 1, "-", Math.min(currentPage * pageSize, data.length), "\uBC88\uC9F8 \uD45C\uC2DC"]
-        })
+        children: ["\uCD1D ", totalCount, "\uAC1C \uD56D\uBAA9 \uC911 ", currentPage, "\uD398\uC774\uC9C0 \uD45C\uC2DC"]
       })
     })]
   });

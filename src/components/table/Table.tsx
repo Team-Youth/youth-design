@@ -32,18 +32,14 @@ export interface TableProps<T> {
   emptyIconSize?: number;
   emptyIconColor?: string;
   emptyText?: string;
-  // 페이지네이션 관련 props
-  pagination?: boolean;
-  pageSize?: number;
-  initialPage?: number;
-  maxVisiblePages?: number;
-  paginationDisabled?: boolean;
-  onPageChange?: (page: number, pageData: T[], totalPages: number) => void;
-  // 서버사이드 페이지네이션 관련 props
-  serverSide?: boolean;
-  totalCount?: number;
-  currentPage?: number;
+  // Infinite Query 페이지네이션 관련 props
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  onLoadMore?: () => void;
   totalPages?: number;
+  currentPage?: number;
+  onPageJump?: (page: number) => void;
+  totalCount?: number;
 }
 
 export const Table = <T,>({
@@ -56,18 +52,14 @@ export const Table = <T,>({
   emptyIconSize = 32,
   emptyIconColor = colors.primary.coolGray[300],
   emptyText,
-  // 페이지네이션 관련 props
-  pagination = false,
-  pageSize = 10,
-  initialPage = 1,
-  maxVisiblePages = 5,
-  paginationDisabled = false,
-  onPageChange,
-  // 서버사이드 페이지네이션 관련 props
-  serverSide,
+  // Infinite Query 페이지네이션 관련 props
+  hasNextPage,
+  isFetchingNextPage,
+  onLoadMore,
+  totalPages = 1,
+  currentPage = 1,
+  onPageJump,
   totalCount,
-  currentPage: serverCurrentPage,
-  totalPages: serverTotalPages,
 }: TableProps<T>) => {
   // 각 열의 최대 너비를 저장하는 상태
   const [columnLayouts, setColumnLayouts] = useState<{ [key: number]: number }>({});
@@ -78,62 +70,8 @@ export const Table = <T,>({
   // 헤더 셀의 참조를 저장할 배열
   const headerRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // 페이지네이션 상태 (클라이언트 사이드용)
-  const [clientCurrentPage, setClientCurrentPage] = useState(initialPage);
-
-  // 실제 사용할 현재 페이지 (서버사이드 모드면 외부에서 전달받은 값 사용)
-  const currentPage = serverSide ? (serverCurrentPage ?? initialPage) : clientCurrentPage;
-
-  // 페이지네이션이 활성화된 경우 총 페이지 수 계산
-  const totalPages = useMemo(() => {
-    if (!pagination) return 1;
-    // 서버사이드 모드면 외부에서 전달받은 값 사용, 없으면 클라이언트 사이드 계산
-    if (serverSide) return serverTotalPages ?? 1;
-    return Math.ceil(data.length / pageSize);
-  }, [pagination, serverSide, serverTotalPages, data.length, pageSize]);
-
-  // 현재 페이지에 표시할 데이터 계산
-  const currentPageData = useMemo(() => {
-    if (!pagination) return data;
-    // 서버사이드 모드면 전달받은 data를 그대로 사용 (이미 서버에서 페이지네이션됨)
-    if (serverSide) return data;
-
-    // 클라이언트 사이드 모드면 data를 slice
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return data.slice(startIndex, endIndex);
-  }, [data, pagination, serverSide, currentPage, pageSize]);
-
-  // 페이지 변경 핸들러
-  const handlePageChange = useCallback(
-    (page: number) => {
-      // 클라이언트 사이드 모드에서만 내부 상태 업데이트
-      if (!serverSide) {
-        setClientCurrentPage(page);
-      }
-
-      if (onPageChange) {
-        if (serverSide) {
-          // 서버사이드 모드면 현재 data를 그대로 전달 (이미 서버에서 페이지네이션됨)
-          onPageChange(page, data, totalPages);
-        } else {
-          // 클라이언트 사이드 모드면 slice한 데이터 전달
-          const startIndex = (page - 1) * pageSize;
-          const endIndex = startIndex + pageSize;
-          const pageData = data.slice(startIndex, endIndex);
-          onPageChange(page, pageData, totalPages);
-        }
-      }
-    },
-    [serverSide, data, pageSize, totalPages, onPageChange],
-  );
-
-  // 데이터가 변경되면 첫 페이지로 리셋 (클라이언트 사이드만)
-  useEffect(() => {
-    if (pagination && !serverSide) {
-      setClientCurrentPage(1);
-    }
-  }, [data, pagination, serverSide]);
+  // Infinite Query에서는 data가 이미 플랫한 배열로 전달됨
+  const currentPageData = data;
 
   // 열 너비를 업데이트하는 함수
   const updateColumnWidth = (index: number, width: number) => {
@@ -352,7 +290,7 @@ export const Table = <T,>({
           ) : (
             currentPageData.map((rowData, rowIndex) => (
               <Row
-                key={`row-${(currentPage - 1) * pageSize + rowIndex}`}
+                key={`row-${rowIndex}`}
                 data={rowData}
                 columns={formattedColumns}
                 updateColumnWidth={updateColumnWidth}
@@ -366,29 +304,61 @@ export const Table = <T,>({
         </div>
       </div>
 
-      {/* 페이지네이션 */}
-      {pagination && data.length > 0 && totalPages > 1 && (
+      {/* Infinite Query 페이지네이션 */}
+      {totalPages > 1 && (
         <div
           style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            gap: '12px',
             padding: '16px 0',
             marginTop: '8px',
           }}
         >
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-            maxVisiblePages={maxVisiblePages}
-            disabled={paginationDisabled || isLoading}
-          />
+          {/* 페이지 점프 */}
+          {onPageJump && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Font type="caption" color={colors.primary.coolGray[600]}>
+                페이지:
+              </Font>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={onPageJump}
+                maxVisiblePages={5}
+                disabled={isLoading}
+              />
+            </div>
+          )}
+
+          {/* 더 보기 버튼 */}
+          {hasNextPage && onLoadMore && (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <button
+                onClick={onLoadMore}
+                disabled={isFetchingNextPage || isLoading}
+                style={{
+                  padding: '8px 16px',
+                  border: `1px solid ${colors.primary.coolGray[300]}`,
+                  borderRadius: '6px',
+                  backgroundColor: 'white',
+                  color: colors.primary.coolGray[700],
+                  cursor: isFetchingNextPage || isLoading ? 'not-allowed' : 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {isFetchingNextPage ? '로딩 중...' : '더 보기'}
+              </button>
+            </div>
+          )}
         </div>
       )}
 
-      {/* 페이지네이션 정보 (선택사항) */}
-      {pagination && data.length > 0 && (
+      {/* 페이지네이션 정보 */}
+      {data.length > 0 && totalCount && (
         <div
           style={{
             display: 'flex',
@@ -398,17 +368,7 @@ export const Table = <T,>({
           }}
         >
           <Font type="caption" fontWeight="medium" color={colors.primary.coolGray[400]}>
-            {serverSide && totalCount ? (
-              <>
-                총 {totalCount}개 항목 중 {(currentPage - 1) * pageSize + 1}-
-                {Math.min(currentPage * pageSize, totalCount)}번째 표시
-              </>
-            ) : (
-              <>
-                총 {data.length}개 항목 중 {(currentPage - 1) * pageSize + 1}-
-                {Math.min(currentPage * pageSize, data.length)}번째 표시
-              </>
-            )}
+            총 {totalCount}개 항목 중 {currentPage}페이지 표시
           </Font>
         </div>
       )}
