@@ -168,7 +168,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       const textStyle = size === 'm' ? textStyles.body2 : textStyles.body1;
 
       return {
-        flex: 1,
+        width: '100%',
         border: 'none',
         outline: 'none',
         backgroundColor: 'transparent',

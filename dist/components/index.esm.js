@@ -22354,7 +22354,7 @@ var TextField = forwardRef(function (_a, ref) {
     // size에 따른 폰트 스타일 설정
     var textStyle = size === 'm' ? textStyles.body2 : textStyles.body1;
     return __assign({
-      flex: 1,
+      width: '100%',
       border: 'none',
       outline: 'none',
       backgroundColor: 'transparent',
