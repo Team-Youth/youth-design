@@ -21843,7 +21843,7 @@ var Dropdown = function (_a) {
     });
   }, [hoveredOptionIndex, getTextStyle]);
   var dropdownOptionsStyle = useMemo(function () {
-    return __assign(__assign(__assign({
+    return __assign(__assign(__assign(__assign({
       position: 'fixed',
       left: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.left) || 0
     }, hasCustomContent ? {
@@ -21855,11 +21855,18 @@ var Dropdown = function (_a) {
       top: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.top) || 0
     } : {
       bottom: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.bottom) || 0
-    }), {
+    }), hasCustomContent ? {
+      // customContent는 자체 스타일링을 가지므로 기본 배경/보더 제거
+      backgroundColor: 'transparent',
+      border: 'none',
+      borderRadius: 0,
+      boxShadow: 'none'
+    } : {
       backgroundColor: colors.semantic.background.primary,
       border: "1px solid ".concat(colors.semantic.border.strong),
       borderRadius: '8px',
-      boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
+      boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)'
+    }), {
       zIndex: 1000,
       maxHeight: hasCustomContent ? "".concat(customContentMaxHeight, "px") : '200px',
       overflowY: hasCustomContent ? 'visible' : 'auto',

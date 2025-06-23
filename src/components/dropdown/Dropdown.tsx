@@ -570,10 +570,21 @@ export const Dropdown: React.FC<DropdownProps> = ({
         : {
             bottom: dropdownCoordinates?.bottom || 0,
           }),
-      backgroundColor: colors.semantic.background.primary,
-      border: `1px solid ${colors.semantic.border.strong}`,
-      borderRadius: '8px',
-      boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
+      // customContent가 있을 때는 기본 스타일을 제거
+      ...(hasCustomContent
+        ? {
+            // customContent는 자체 스타일링을 가지므로 기본 배경/보더 제거
+            backgroundColor: 'transparent',
+            border: 'none',
+            borderRadius: 0,
+            boxShadow: 'none',
+          }
+        : {
+            backgroundColor: colors.semantic.background.primary,
+            border: `1px solid ${colors.semantic.border.strong}`,
+            borderRadius: '8px',
+            boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
+          }),
       zIndex: 1000,
       maxHeight: hasCustomContent ? `${customContentMaxHeight}px` : '200px',
       overflowY: hasCustomContent ? 'visible' : 'auto', // customContent일 때는 overflow 처리를 컨텐츠에 맡김
