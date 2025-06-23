@@ -9,18 +9,18 @@ export const fontFamily = {
   primary: 'Pretendard',
 } as const;
 
-// Font Sizes (rem 단위로 반응형 지원)
+// Font Sizes (clamp를 사용한 반응형 폰트)
 export const fontSize = {
-  xxxxl: '2rem', // 32px
-  xxxl: '1.75rem', // 28px
-  xxl: '1.5rem', // 24px
-  xl: '1.25rem', // 20px
-  l: '1.125rem', // 18px
-  m: '1rem', // 16px
-  s: '0.875rem', // 14px
-  xs: '0.75rem', // 12px
-  xxs: '0.625rem', // 10px
-  xxxs: '0.688rem', // 11px
+  xxxxl: 'clamp(1.75rem, 4vw, 2rem)', // 28px ~ 32px
+  xxxl: 'clamp(1.5rem, 3.5vw, 1.75rem)', // 24px ~ 28px
+  xxl: 'clamp(1.25rem, 3vw, 1.5rem)', // 20px ~ 24px
+  xl: 'clamp(1.125rem, 2.5vw, 1.25rem)', // 18px ~ 20px
+  l: 'clamp(1rem, 2vw, 1.125rem)', // 16px ~ 18px
+  m: 'clamp(0.875rem, 1.5vw, 1rem)', // 14px ~ 16px
+  s: 'clamp(0.75rem, 1.25vw, 0.875rem)', // 12px ~ 14px
+  xs: 'clamp(0.625rem, 1vw, 0.75rem)', // 10px ~ 12px
+  xxs: 'clamp(0.5625rem, 0.875vw, 0.625rem)', // 9px ~ 10px
+  xxxs: 'clamp(0.625rem, 1vw, 0.688rem)', // 10px ~ 11px
 } as const;
 
 // Font Weights
@@ -31,18 +31,18 @@ export const fontWeight = {
   regular: 400,
 } as const;
 
-// Line Heights
+// Line Heights (상대 단위로 변경)
 export const lineHeight = {
-  xxxxl: '42px',
-  xxxl: '36px',
-  xxl: '32px',
-  xl: '28px',
-  l: '24px',
-  m: '24px',
-  s: '22px',
-  xs: '20px',
-  xxs: '18px',
-  xxxs: '17px',
+  xxxxl: '1.3', // 130%
+  xxxl: '1.3', // 130%
+  xxl: '1.33', // 133%
+  xl: '1.4', // 140%
+  l: '1.33', // 133%
+  m: '1.5', // 150%
+  s: '1.57', // 157%
+  xs: '1.67', // 167%
+  xxs: '1.8', // 180%
+  xxxs: '1.55', // 155%
 } as const;
 
 // Letter Spacings
@@ -50,6 +50,13 @@ export const letterSpacing = {
   m: '0',
   s: '-1%',
   xs: '-2%',
+} as const;
+
+// Responsive breakpoints for additional control
+export const breakpoints = {
+  mobile: '320px',
+  tablet: '768px',
+  desktop: '1024px',
 } as const;
 
 // Text Styles (React.CSSProperties 호환)
@@ -152,6 +159,7 @@ export const typography = {
   lineHeight,
   letterSpacing,
   textStyles,
+  breakpoints,
 } as const;
 
 export default typography;

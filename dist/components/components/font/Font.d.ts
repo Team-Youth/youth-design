@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { textStyles, fontWeight as fontWeightTokens } from '../../tokens/typography';
 export type FontType = keyof typeof textStyles;
 export type FontWeight = keyof typeof fontWeightTokens;
+export type ResponsiveScale = 'auto' | 'tablet-optimized' | 'mobile-first' | 'none';
 export interface FontProps {
     /** Typography variant (display1, display2, heading1, etc.) */
     type: FontType;
@@ -19,6 +20,8 @@ export interface FontProps {
     noWhiteSpace?: boolean;
     /** Underline decoration */
     underline?: boolean;
+    /** Responsive behavior for different screen sizes */
+    responsive?: ResponsiveScale;
     /** Custom className */
     className?: string;
     /** Custom styles */

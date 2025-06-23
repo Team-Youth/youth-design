@@ -885,27 +885,27 @@ var fontFamily = {
   /** 웹사이트에 사용되는 모든 폰트는 Pretendard를 기반으로 함 */
   primary: 'Pretendard'
 };
-// Font Sizes (rem 단위로 반응형 지원)
+// Font Sizes (clamp를 사용한 반응형 폰트)
 var fontSize = {
-  xxxxl: '2rem',
-  // 32px
-  xxxl: '1.75rem',
-  // 28px
-  xxl: '1.5rem',
-  // 24px
-  xl: '1.25rem',
-  // 20px
-  l: '1.125rem',
-  // 18px
-  m: '1rem',
-  // 16px
-  s: '0.875rem',
-  // 14px
-  xs: '0.75rem',
-  // 12px
-  xxs: '0.625rem',
-  // 10px
-  xxxs: '0.688rem' // 11px
+  xxxxl: 'clamp(1.75rem, 4vw, 2rem)',
+  // 28px ~ 32px
+  xxxl: 'clamp(1.5rem, 3.5vw, 1.75rem)',
+  // 24px ~ 28px
+  xxl: 'clamp(1.25rem, 3vw, 1.5rem)',
+  // 20px ~ 24px
+  xl: 'clamp(1.125rem, 2.5vw, 1.25rem)',
+  // 18px ~ 20px
+  l: 'clamp(1rem, 2vw, 1.125rem)',
+  // 16px ~ 18px
+  m: 'clamp(0.875rem, 1.5vw, 1rem)',
+  // 14px ~ 16px
+  s: 'clamp(0.75rem, 1.25vw, 0.875rem)',
+  // 12px ~ 14px
+  xs: 'clamp(0.625rem, 1vw, 0.75rem)',
+  // 10px ~ 12px
+  xxs: 'clamp(0.5625rem, 0.875vw, 0.625rem)',
+  // 9px ~ 10px
+  xxxs: 'clamp(0.625rem, 1vw, 0.688rem)' // 10px ~ 11px
 };
 // Font Weights
 var fontWeight = {
@@ -914,24 +914,39 @@ var fontWeight = {
   medium: 500,
   regular: 400
 };
-// Line Heights
+// Line Heights (상대 단위로 변경)
 var lineHeight = {
-  xxxxl: '42px',
-  xxxl: '36px',
-  xxl: '32px',
-  xl: '28px',
-  l: '24px',
-  m: '24px',
-  s: '22px',
-  xs: '20px',
-  xxs: '18px',
-  xxxs: '17px'
+  xxxxl: '1.3',
+  // 130%
+  xxxl: '1.3',
+  // 130%
+  xxl: '1.33',
+  // 133%
+  xl: '1.4',
+  // 140%
+  l: '1.33',
+  // 133%
+  m: '1.5',
+  // 150%
+  s: '1.57',
+  // 157%
+  xs: '1.67',
+  // 167%
+  xxs: '1.8',
+  // 180%
+  xxxs: '1.55' // 155%
 };
 // Letter Spacings
 var letterSpacing = {
   m: '0',
   s: '-1%',
   xs: '-2%'
+};
+// Responsive breakpoints for additional control
+var breakpoints = {
+  mobile: '320px',
+  tablet: '768px',
+  desktop: '1024px'
 };
 // Text Styles (React.CSSProperties 호환)
 var textStyles = {
@@ -1031,9 +1046,43 @@ var typography = {
   fontWeight: fontWeight,
   lineHeight: lineHeight,
   letterSpacing: letterSpacing,
-  textStyles: textStyles
+  textStyles: textStyles,
+  breakpoints: breakpoints
 };
 
+// Helper function to get responsive font scaling
+var getResponsiveStyles = function (responsive, baseStyle) {
+  var responsiveStyles = {};
+  switch (responsive) {
+    case 'tablet-optimized':
+      // 태블릿에서 폰트를 약간 크게
+      responsiveStyles.fontSize = "clamp(".concat(baseStyle.fontSize, ", calc(").concat(baseStyle.fontSize, " * 1.1), calc(").concat(baseStyle.fontSize, " * 1.2))");
+      break;
+    case 'mobile-first':
+      // 모바일 우선으로 더 작게 시작
+      responsiveStyles.fontSize = "clamp(calc(".concat(baseStyle.fontSize, " * 0.9), ").concat(baseStyle.fontSize, ", calc(").concat(baseStyle.fontSize, " * 1.1))");
+      break;
+    case 'none':
+      {
+        // 반응형 비활성화 (원래 rem 값 사용)
+        var sizeMap = {
+          'clamp(1.75rem, 4vw, 2rem)': '2rem',
+          'clamp(1.5rem, 3.5vw, 1.75rem)': '1.75rem',
+          'clamp(1.25rem, 3vw, 1.5rem)': '1.5rem',
+          'clamp(1.125rem, 2.5vw, 1.25rem)': '1.25rem',
+          'clamp(1rem, 2vw, 1.125rem)': '1.125rem',
+          'clamp(0.875rem, 1.5vw, 1rem)': '1rem',
+          'clamp(0.75rem, 1.25vw, 0.875rem)': '0.875rem',
+          'clamp(0.625rem, 1vw, 0.75rem)': '0.75rem',
+          'clamp(0.5625rem, 0.875vw, 0.625rem)': '0.625rem',
+          'clamp(0.625rem, 1vw, 0.688rem)': '0.688rem'
+        };
+        responsiveStyles.fontSize = sizeMap[baseStyle.fontSize] || baseStyle.fontSize;
+        break;
+      }
+  }
+  return responsiveStyles;
+};
 var Font = function (_a) {
   var type = _a.type,
     fontWeight$1 = _a.fontWeight,
@@ -1047,11 +1096,14 @@ var Font = function (_a) {
     noWhiteSpace = _d === void 0 ? false : _d,
     _e = _a.underline,
     underline = _e === void 0 ? false : _e,
+    _f = _a.responsive,
+    responsive = _f === void 0 ? 'auto' : _f,
     className = _a.className,
     style = _a.style,
     children = _a.children;
   var baseStyle = textStyles[type];
-  var fontStyles = __assign(__assign(__assign(__assign({}, baseStyle), fontWeight$1 && {
+  var responsiveStyles = getResponsiveStyles(responsive, baseStyle);
+  var fontStyles = __assign(__assign(__assign(__assign(__assign({}, baseStyle), responsiveStyles), fontWeight$1 && {
     fontWeight: fontWeight[fontWeight$1]
   }), {
     color: color,
