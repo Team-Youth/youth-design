@@ -159,6 +159,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
     }
 
     const triggerWidth = triggerRef.current.getBoundingClientRect().width;
+
+    // customContent가 있는 경우 triggerWidth를 기본값으로 사용 (컨텐츠가 더 넓어질 수 있음)
+    if (hasCustomContent) {
+      return triggerWidth; // 트리거 너비를 기본값으로 사용
+    }
+
     const minWidth = triggerWidth;
 
     // 뷰포트 너비의 80% 또는 600px 중 작은 값을 최대 너비로 설정
@@ -189,7 +195,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     const optimalWidth = Math.min(Math.max(minWidth, maxTextWidth + 68), maxWidth);
 
     return optimalWidth;
-  }, [triggerRef, finalWidth, filteredOptions, size]);
+  }, [triggerRef, finalWidth, filteredOptions, size, hasCustomContent]);
 
   // 선택된 옵션의 인덱스를 찾기 위한 함수
   const getSelectedOptionIndex = useCallback(() => {
@@ -553,7 +559,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
     () => ({
       position: 'fixed',
       left: dropdownCoordinates?.left || 0,
-      width: dropdownCoordinates?.width || 0,
+      // customContent가 있을 때는 minWidth로 처리하여 컨텐츠가 더 넓어질 수 있도록 함
+      ...(hasCustomContent
+        ? { minWidth: dropdownCoordinates?.width || 0, width: 'auto' }
+        : { width: dropdownCoordinates?.width || 0 }),
       ...(dropdownPosition === 'bottom'
         ? {
             top: dropdownCoordinates?.top || 0,
@@ -567,7 +576,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
       zIndex: 1000,
       maxHeight: hasCustomContent ? `${customContentMaxHeight}px` : '200px',
-      overflowY: 'auto',
+      overflowY: hasCustomContent ? 'visible' : 'auto', // customContent일 때는 overflow 처리를 컨텐츠에 맡김
       // 위치 계산이 완료되기 전에는 보이지 않게 함
       visibility: positionCalculated ? 'visible' : 'hidden',
       // 애니메이션 스타일

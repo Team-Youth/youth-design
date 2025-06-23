@@ -21526,6 +21526,10 @@ var Dropdown = function (_a) {
       return 335; // 기본값
     }
     var triggerWidth = triggerRef.current.getBoundingClientRect().width;
+    // customContent가 있는 경우 triggerWidth를 기본값으로 사용 (컨텐츠가 더 넓어질 수 있음)
+    if (hasCustomContent) {
+      return triggerWidth; // 트리거 너비를 기본값으로 사용
+    }
     var minWidth = triggerWidth;
     // 뷰포트 너비의 80% 또는 600px 중 작은 값을 최대 너비로 설정
     var maxWidth = Math.min(window.innerWidth * 0.8, 600);
@@ -21550,7 +21554,7 @@ var Dropdown = function (_a) {
     // 패딩(32px) + 아이콘 공간(20px) + 여유 공간(16px) = 68px
     var optimalWidth = Math.min(Math.max(minWidth, maxTextWidth + 68), maxWidth);
     return optimalWidth;
-  }, [triggerRef, finalWidth, filteredOptions, size]);
+  }, [triggerRef, finalWidth, filteredOptions, size, hasCustomContent]);
   // 선택된 옵션의 인덱스를 찾기 위한 함수
   var getSelectedOptionIndex = useCallback(function () {
     if (!hasSelectedOption) return -1;
@@ -21839,11 +21843,15 @@ var Dropdown = function (_a) {
     });
   }, [hoveredOptionIndex, getTextStyle]);
   var dropdownOptionsStyle = useMemo(function () {
-    return __assign(__assign({
+    return __assign(__assign(__assign({
       position: 'fixed',
-      left: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.left) || 0,
+      left: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.left) || 0
+    }, hasCustomContent ? {
+      minWidth: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.width) || 0,
+      width: 'auto'
+    } : {
       width: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.width) || 0
-    }, dropdownPosition === 'bottom' ? {
+    }), dropdownPosition === 'bottom' ? {
       top: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.top) || 0
     } : {
       bottom: (dropdownCoordinates === null || dropdownCoordinates === void 0 ? void 0 : dropdownCoordinates.bottom) || 0
@@ -21854,7 +21862,7 @@ var Dropdown = function (_a) {
       boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
       zIndex: 1000,
       maxHeight: hasCustomContent ? "".concat(customContentMaxHeight, "px") : '200px',
-      overflowY: 'auto',
+      overflowY: hasCustomContent ? 'visible' : 'auto',
       // 위치 계산이 완료되기 전에는 보이지 않게 함
       visibility: positionCalculated ? 'visible' : 'hidden',
       // 애니메이션 스타일
