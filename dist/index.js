@@ -19919,20 +19919,41 @@ var TabBar = function (_a) {
     defaultSelectedIndex = _e === void 0 ? 0 : _e,
     selectedIndex = _a.selectedIndex,
     onTabChange = _a.onTabChange,
+    _f = _a.multiSelect,
+    multiSelect = _f === void 0 ? false : _f,
+    _g = _a.defaultSelectedIndices,
+    defaultSelectedIndices = _g === void 0 ? [] : _g,
+    selectedIndices = _a.selectedIndices,
+    onTabsChange = _a.onTabsChange,
     tabs = _a.tabs,
-    _f = _a.className,
-    className = _f === void 0 ? '' : _f;
-  var _g = React.useState(defaultSelectedIndex),
-    internalSelectedIndex = _g[0],
-    setInternalSelectedIndex = _g[1];
-  var currentSelectedIndex = selectedIndex !== undefined ? selectedIndex : internalSelectedIndex;
+    _h = _a.className,
+    className = _h === void 0 ? '' : _h;
+  var _j = React.useState(defaultSelectedIndex),
+    internalSelectedIndex = _j[0],
+    setInternalSelectedIndex = _j[1];
+  var _k = React.useState(defaultSelectedIndices),
+    internalSelectedIndices = _k[0],
+    setInternalSelectedIndices = _k[1];
+  var isMultiSelect = multiSelect || selectedIndices !== undefined || onTabsChange !== undefined;
+  var currentSelectedIndices = isMultiSelect ? selectedIndices !== undefined ? selectedIndices : internalSelectedIndices : [];
+  var currentSelectedIndex = isMultiSelect ? -1 : selectedIndex !== undefined ? selectedIndex : internalSelectedIndex;
   var handleTabClick = function (index) {
     var _a;
     if ((_a = tabs[index]) === null || _a === void 0 ? void 0 : _a.disabled) return;
-    if (selectedIndex === undefined) {
-      setInternalSelectedIndex(index);
+    if (isMultiSelect) {
+      var newSelectedIndices = currentSelectedIndices.includes(index) ? currentSelectedIndices.filter(function (i) {
+        return i !== index;
+      }) : __spreadArray(__spreadArray([], currentSelectedIndices, true), [index], false);
+      if (selectedIndices === undefined) {
+        setInternalSelectedIndices(newSelectedIndices);
+      }
+      onTabsChange === null || onTabsChange === void 0 ? void 0 : onTabsChange(newSelectedIndices);
+    } else {
+      if (selectedIndex === undefined) {
+        setInternalSelectedIndex(index);
+      }
+      onTabChange === null || onTabChange === void 0 ? void 0 : onTabChange(index);
     }
-    onTabChange === null || onTabChange === void 0 ? void 0 : onTabChange(index);
   };
   var getContainerStyles = function () {
     var baseStyles = {
@@ -19972,6 +19993,9 @@ var TabBar = function (_a) {
     }
     return {};
   };
+  var isTabSelected = function (index) {
+    return isMultiSelect ? currentSelectedIndices.includes(index) : index === currentSelectedIndex;
+  };
   return jsxRuntime.jsx("div", {
     style: getContainerStyles(),
     className: className,
@@ -19979,7 +20003,7 @@ var TabBar = function (_a) {
       return jsxRuntime.jsx(Tab, __assign({
         type: type,
         size: size,
-        selected: index === currentSelectedIndex,
+        selected: isTabSelected(index),
         disabled: tab.disabled,
         icon: tab.icon,
         number: tab.number,

@@ -10,6 +10,10 @@ export interface TabBarProps {
     defaultSelectedIndex?: number;
     selectedIndex?: number;
     onTabChange?: (index: number) => void;
+    multiSelect?: boolean;
+    defaultSelectedIndices?: number[];
+    selectedIndices?: number[];
+    onTabsChange?: (indices: number[]) => void;
     tabs: Array<{
         label: string;
         icon?: IconType;

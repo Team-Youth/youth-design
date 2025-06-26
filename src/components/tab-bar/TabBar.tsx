@@ -13,6 +13,10 @@ export interface TabBarProps {
   defaultSelectedIndex?: number;
   selectedIndex?: number;
   onTabChange?: (index: number) => void;
+  multiSelect?: boolean;
+  defaultSelectedIndices?: number[];
+  selectedIndices?: number[];
+  onTabsChange?: (indices: number[]) => void;
   tabs: Array<{
     label: string;
     icon?: IconType;
@@ -30,20 +34,48 @@ export const TabBar: React.FC<TabBarProps> = ({
   defaultSelectedIndex = 0,
   selectedIndex,
   onTabChange,
+  multiSelect = false,
+  defaultSelectedIndices = [],
+  selectedIndices,
+  onTabsChange,
   tabs,
   className = '',
 }) => {
   const [internalSelectedIndex, setInternalSelectedIndex] = useState(defaultSelectedIndex);
+  const [internalSelectedIndices, setInternalSelectedIndices] =
+    useState<number[]>(defaultSelectedIndices);
 
-  const currentSelectedIndex = selectedIndex !== undefined ? selectedIndex : internalSelectedIndex;
+  const isMultiSelect = multiSelect || selectedIndices !== undefined || onTabsChange !== undefined;
+
+  const currentSelectedIndices = isMultiSelect
+    ? selectedIndices !== undefined
+      ? selectedIndices
+      : internalSelectedIndices
+    : [];
+  const currentSelectedIndex = isMultiSelect
+    ? -1
+    : selectedIndex !== undefined
+      ? selectedIndex
+      : internalSelectedIndex;
 
   const handleTabClick = (index: number) => {
     if (tabs[index]?.disabled) return;
 
-    if (selectedIndex === undefined) {
-      setInternalSelectedIndex(index);
+    if (isMultiSelect) {
+      const newSelectedIndices = currentSelectedIndices.includes(index)
+        ? currentSelectedIndices.filter((i) => i !== index)
+        : [...currentSelectedIndices, index];
+
+      if (selectedIndices === undefined) {
+        setInternalSelectedIndices(newSelectedIndices);
+      }
+      onTabsChange?.(newSelectedIndices);
+    } else {
+      if (selectedIndex === undefined) {
+        setInternalSelectedIndex(index);
+      }
+      onTabChange?.(index);
     }
-    onTabChange?.(index);
   };
 
   const getContainerStyles = (): React.CSSProperties => {
@@ -89,6 +121,10 @@ export const TabBar: React.FC<TabBarProps> = ({
     return {};
   };
 
+  const isTabSelected = (index: number): boolean => {
+    return isMultiSelect ? currentSelectedIndices.includes(index) : index === currentSelectedIndex;
+  };
+
   return (
     <div style={getContainerStyles()} className={className}>
       {tabs.map((tab, index) => (
@@ -96,7 +132,7 @@ export const TabBar: React.FC<TabBarProps> = ({
           key={index}
           type={type}
           size={size}
-          selected={index === currentSelectedIndex}
+          selected={isTabSelected(index)}
           disabled={tab.disabled}
           icon={tab.icon}
           number={tab.number}
