@@ -536,7 +536,7 @@ const Cell = memo(
             {cell}
           </div>
         ) : (
-          <div style={{ display: 'flex' }}>{cell}</div>
+          <>{cell}</>
         )}
       </div>
     );

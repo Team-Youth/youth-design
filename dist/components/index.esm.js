@@ -25455,10 +25455,7 @@ var Cell = memo(function (_a) {
         transform: isRowAccordionOpen && tableType === 'parent' ? 'rotate(180deg)' : 'rotate(0deg)'
       }),
       children: cell
-    }) : jsx("div", {
-      style: {
-        display: 'flex'
-      },
+    }) : jsx(Fragment, {
       children: cell
     })
   });

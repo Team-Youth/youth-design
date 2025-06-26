@@ -25457,10 +25457,7 @@ var Cell = React.memo(function (_a) {
         transform: isRowAccordionOpen && tableType === 'parent' ? 'rotate(180deg)' : 'rotate(0deg)'
       }),
       children: cell
-    }) : jsxRuntime.jsx("div", {
-      style: {
-        display: 'flex'
-      },
+    }) : jsxRuntime.jsx(jsxRuntime.Fragment, {
       children: cell
     })
   });
