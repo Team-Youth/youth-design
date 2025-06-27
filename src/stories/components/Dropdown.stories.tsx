@@ -75,9 +75,9 @@ const meta: Meta<typeof Dropdown> = {
       control: 'boolean',
       description: '모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음)',
     },
-    disablePopulatedDisabled: {
+    populatedDisabled: {
       control: 'boolean',
-      description: 'populated disabled 기능 비활성화 여부',
+      description: 'populated disabled 기능 활성화 여부 (옵션이 1개일 때 자동 선택 및 비활성화)',
     },
     customContentMaxHeight: {
       control: 'number',
@@ -336,14 +336,15 @@ export const PopulatedDisabled: Story = {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div>
-          <h3>Populated Disabled 활성화 (기본)</h3>
+          <h3>Populated Disabled 활성화</h3>
           <p style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
-            옵션이 1개만 있으면 자동으로 선택되고 비활성화됩니다
+            populatedDisabled=true일 때, 옵션이 1개만 있으면 자동으로 선택되고 비활성화됩니다
           </p>
           <Dropdown
             placeholder="자동 선택됨"
             value={value1}
             options={singleOption}
+            populatedDisabled={true}
             onChange={(newValue) => {
               setValue1(newValue);
               action('onChange-populated')(newValue);
@@ -351,15 +352,15 @@ export const PopulatedDisabled: Story = {
           />
         </div>
         <div>
-          <h3>Populated Disabled 비활성화</h3>
+          <h3>Populated Disabled 비활성화 (기본)</h3>
           <p style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
-            옵션이 1개만 있어도 사용자가 직접 선택해야 합니다
+            populatedDisabled=false일 때, 옵션이 1개만 있어도 사용자가 직접 선택해야 합니다
           </p>
           <Dropdown
             placeholder="직접 선택 필요"
             value={value2}
             options={singleOption}
-            disablePopulatedDisabled
+            populatedDisabled={false}
             onChange={(newValue) => {
               setValue2(newValue);
               action('onChange-no-populated')(newValue);

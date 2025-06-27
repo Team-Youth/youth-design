@@ -34,8 +34,8 @@ export interface DropdownProps {
     onSearchChange?: (searchValue: string) => void;
     /** 모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음) */
     hideOption?: boolean;
-    /** populated disabled 기능 비활성화 여부 (기본값: false) */
-    disablePopulatedDisabled?: boolean;
+    /** populated disabled 기능 활성화 여부 (기본값: false) */
+    populatedDisabled?: boolean;
     /** 커스텀 컨텐츠 (기본 옵션 리스트 대신 렌더링) */
     customContent?: React.ReactNode;
     /** 커스텀 컨텐츠 사용 시 최대 높이 (기본값: 200px) */

@@ -52,8 +52,8 @@ export interface DropdownProps {
   onSearchChange?: (searchValue: string) => void;
   /** 모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음) */
   hideOption?: boolean;
-  /** populated disabled 기능 비활성화 여부 (기본값: false) */
-  disablePopulatedDisabled?: boolean;
+  /** populated disabled 기능 활성화 여부 (기본값: false) */
+  populatedDisabled?: boolean;
   /** 커스텀 컨텐츠 (기본 옵션 리스트 대신 렌더링) */
   customContent?: React.ReactNode;
   /** 커스텀 컨텐츠 사용 시 최대 높이 (기본값: 200px) */
@@ -85,7 +85,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   enableSearch = false,
   onSearchChange,
   hideOption = false,
-  disablePopulatedDisabled = false,
+  populatedDisabled = false,
   customContent,
   customContentMaxHeight = 200,
   isOpen,
@@ -143,28 +143,32 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const hasSelectedOption = !!selectedOption;
   const hasCustomContent = !!customContent;
 
-  // populated disabled 상태 체크: 옵션이 하나뿐일 때 (검색 중이 아닐 때만)
+  // populated disabled 상태 체크: populatedDisabled가 true이고, 검색기능이 없고, 옵션이 하나뿐일 때만
   const isPopulatedDisabled = useMemo(() => {
-    if (disablePopulatedDisabled) return false;
-    // 검색 중이거나 검색 텍스트가 있을 때는 populated disabled 비활성화
-    if (enableSearch && (actualIsOpen || searchText.trim())) return false;
+    // populatedDisabled prop이 false면 populated disabled 기능 비활성화
+    if (!populatedDisabled) return false;
 
+    // 검색 기능이 활성화된 경우는 populated disabled 비활성화
+    if (enableSearch) return false;
+
+    // 활성화된 옵션이 정확히 1개일 때만 populated disabled 활성화
     const enabledOptions = options.filter((option) => !option.disabled);
     return enabledOptions.length === 1;
-  }, [options, disablePopulatedDisabled, enableSearch, actualIsOpen, searchText]);
+  }, [options, populatedDisabled, enableSearch]);
 
-  // 옵션이 하나뿐일 때 자동으로 선택 (검색 중이 아닐 때만)
+  // populated disabled 상태일 때 값이 없으면 자동으로 선택
   useEffect(() => {
-    // 검색 중이거나 검색 텍스트가 있을 때는 자동 선택 비활성화
-    if (enableSearch && (actualIsOpen || searchText.trim())) return;
+    // 검색 기능이 있으면 자동 선택 비활성화
+    if (enableSearch) return;
 
+    // populated disabled 상태이고 현재 값이 없으면 유일한 옵션을 자동 선택
     if (isPopulatedDisabled && !value && onChange) {
       const enabledOptions = options.filter((option) => !option.disabled);
       if (enabledOptions.length === 1) {
         onChange(enabledOptions[0].value);
       }
     }
-  }, [isPopulatedDisabled, value, onChange, options, enableSearch, actualIsOpen, searchText]);
+  }, [isPopulatedDisabled, value, onChange, options, enableSearch]);
 
   // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
   const actuallyDisabled = disabled || isPopulatedDisabled;
@@ -376,7 +380,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       setDropdownCoordinates(null);
       // hover 상태 초기화
       setHoveredOptionIndex(null);
-      // 검색 텍스트 초기화 (검색이 활성화된 경우에만)
+      // 검색 텍스트 초기화 (검색이 활성화된 경우에만, 하지만 선택된 값이 있으면 유지)
       if (enableSearch) {
         setSearchText('');
       }

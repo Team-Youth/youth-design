@@ -21558,8 +21558,8 @@ var Dropdown = function (_a) {
     onSearchChange = _a.onSearchChange,
     _j = _a.hideOption,
     hideOption = _j === void 0 ? false : _j,
-    _k = _a.disablePopulatedDisabled,
-    disablePopulatedDisabled = _k === void 0 ? false : _k,
+    _k = _a.populatedDisabled,
+    populatedDisabled = _k === void 0 ? false : _k,
     customContent = _a.customContent,
     _l = _a.customContentMaxHeight,
     customContentMaxHeight = _l === void 0 ? 200 : _l,
@@ -21621,20 +21621,23 @@ var Dropdown = function (_a) {
   }, [options, value]);
   var hasSelectedOption = !!selectedOption;
   var hasCustomContent = !!customContent;
-  // populated disabled 상태 체크: 옵션이 하나뿐일 때 (검색 중이 아닐 때만)
+  // populated disabled 상태 체크: populatedDisabled가 true이고, 검색기능이 없고, 옵션이 하나뿐일 때만
   var isPopulatedDisabled = React.useMemo(function () {
-    if (disablePopulatedDisabled) return false;
-    // 검색 중이거나 검색 텍스트가 있을 때는 populated disabled 비활성화
-    if (enableSearch && (actualIsOpen || searchText.trim())) return false;
+    // populatedDisabled prop이 false면 populated disabled 기능 비활성화
+    if (!populatedDisabled) return false;
+    // 검색 기능이 활성화된 경우는 populated disabled 비활성화
+    if (enableSearch) return false;
+    // 활성화된 옵션이 정확히 1개일 때만 populated disabled 활성화
     var enabledOptions = options.filter(function (option) {
       return !option.disabled;
     });
     return enabledOptions.length === 1;
-  }, [options, disablePopulatedDisabled, enableSearch, actualIsOpen, searchText]);
-  // 옵션이 하나뿐일 때 자동으로 선택 (검색 중이 아닐 때만)
+  }, [options, populatedDisabled, enableSearch]);
+  // populated disabled 상태일 때 값이 없으면 자동으로 선택
   React.useEffect(function () {
-    // 검색 중이거나 검색 텍스트가 있을 때는 자동 선택 비활성화
-    if (enableSearch && (actualIsOpen || searchText.trim())) return;
+    // 검색 기능이 있으면 자동 선택 비활성화
+    if (enableSearch) return;
+    // populated disabled 상태이고 현재 값이 없으면 유일한 옵션을 자동 선택
     if (isPopulatedDisabled && !value && onChange) {
       var enabledOptions = options.filter(function (option) {
         return !option.disabled;
@@ -21643,7 +21646,7 @@ var Dropdown = function (_a) {
         onChange(enabledOptions[0].value);
       }
     }
-  }, [isPopulatedDisabled, value, onChange, options, enableSearch, actualIsOpen, searchText]);
+  }, [isPopulatedDisabled, value, onChange, options, enableSearch]);
   // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
   var actuallyDisabled = disabled || isPopulatedDisabled;
   // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
@@ -21819,7 +21822,7 @@ var Dropdown = function (_a) {
       setDropdownCoordinates(null);
       // hover 상태 초기화
       setHoveredOptionIndex(null);
-      // 검색 텍스트 초기화 (검색이 활성화된 경우에만)
+      // 검색 텍스트 초기화 (검색이 활성화된 경우에만, 하지만 선택된 값이 있으면 유지)
       if (enableSearch) {
         setSearchText('');
       }
