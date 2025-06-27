@@ -6,7 +6,7 @@ import json from '@rollup/plugin-json';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import postcss from 'rollup-plugin-postcss';
 
-const createConfig = (input, outputDir) => ({
+const createConfig = (input, outputDir, includeCSS = true) => ({
   input,
   output: [
     {
@@ -25,14 +25,18 @@ const createConfig = (input, outputDir) => ({
   plugins: [
     peerDepsExternal(),
     resolve({
-      browser: true,
+      browser: !outputDir.includes('native'),
     }),
     commonjs(),
     json(),
-    postcss({
-      extract: true,
-      minimize: true,
-    }),
+    ...(includeCSS
+      ? [
+          postcss({
+            extract: true,
+            minimize: true,
+          }),
+        ]
+      : []),
     typescript({
       tsconfig: './tsconfig.json',
       declaration: true,
@@ -48,10 +52,12 @@ const createConfig = (input, outputDir) => ({
 });
 
 export default [
-  // Main entry point
+  // Main entry point (Web)
   createConfig('src/index.ts', '.'),
   // Token entry point
   createConfig('src/tokens/index.ts', 'token'),
-  // Components entry point
+  // Components entry point (Web)
   createConfig('src/components/index.ts', 'components'),
+  // React Native entry point
+  createConfig('src/native/index.ts', 'native', false),
 ];
