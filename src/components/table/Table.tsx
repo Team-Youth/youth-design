@@ -194,8 +194,8 @@ export const Table = <T,>({
       {/* 테이블 컨테이너 */}
       <div
         style={{
-          opacity: isWidthCalculationComplete || currentPageData.length === 0 ? 1 : 0.7,
-          transition: 'opacity 0.3s ease-in-out',
+          visibility:
+            isWidthCalculationComplete || currentPageData.length === 0 ? 'visible' : 'hidden',
         }}
       >
         {/* 헤더 */}
@@ -217,7 +217,9 @@ export const Table = <T,>({
                   boxSizing: 'border-box',
                   overflow: 'visible',
                   height: 48,
-                  transition: 'width 0.2s ease-out, flex 0.2s ease-out',
+                  ...(isWidthCalculationComplete && {
+                    transition: 'width 0.2s ease-out, flex 0.2s ease-out',
+                  }),
                   // 데이터가 없을 때 컬럼에 적절한 최소 너비 설정
                   ...(currentPageData.length === 0 && {
                     flex: 1,
@@ -509,7 +511,9 @@ const Cell = memo(
           minWidth: columnIndex === 1 ? 84 : columnWidth ? `${columnWidth}px` : '0',
           width: columnWidth ? `${columnWidth}px` : 'auto',
           overflow: 'visible',
-          transition: 'width 0.2s ease-out, flex 0.2s ease-out',
+          ...(isWidthCalculationComplete && {
+            transition: 'width 0.2s ease-out, flex 0.2s ease-out',
+          }),
 
           ...(tableType === 'parent'
             ? columnIndex === columnLength - 2 && { flex: 1, minWidth: 0 }

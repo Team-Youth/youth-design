@@ -27761,8 +27761,7 @@ var Table = function (_a) {
     },
     children: [jsxs("div", {
       style: {
-        opacity: isWidthCalculationComplete || currentPageData.length === 0 ? 1 : 0.7,
-        transition: 'opacity 0.3s ease-in-out'
+        visibility: isWidthCalculationComplete || currentPageData.length === 0 ? 'visible' : 'hidden'
       },
       children: [jsx("div", {
         style: {
@@ -27773,7 +27772,7 @@ var Table = function (_a) {
             ref: function (el) {
               headerRefs.current[index] = el;
             },
-            style: __assign(__assign(__assign({
+            style: __assign(__assign(__assign(__assign({
               display: 'flex',
               alignItems: 'center',
               backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
@@ -27782,9 +27781,10 @@ var Table = function (_a) {
               width: columnLayouts[index] ? "".concat(columnLayouts[index], "px") : 'auto',
               boxSizing: 'border-box',
               overflow: 'visible',
-              height: 48,
+              height: 48
+            }, isWidthCalculationComplete && {
               transition: 'width 0.2s ease-out, flex 0.2s ease-out'
-            }, currentPageData.length === 0 && {
+            }), currentPageData.length === 0 && {
               flex: 1,
               minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
               width: 'auto'
@@ -27988,9 +27988,9 @@ var Cell = memo(function (_a) {
     columnLength = _a.columnLength,
     isRowAccordionOpen = _a.isRowAccordionOpen,
     tableType = _a.tableType,
-    style = _a.style;
-    _a.isWidthCalculationComplete;
-    var hasRowAccordion = _a.hasRowAccordion;
+    style = _a.style,
+    isWidthCalculationComplete = _a.isWidthCalculationComplete,
+    hasRowAccordion = _a.hasRowAccordion;
   var cellRef = useRef(null);
   useLayoutEffect(function () {
     if (cellRef.current) {
@@ -28009,7 +28009,7 @@ var Cell = memo(function (_a) {
   return jsx("div", {
     ref: cellRef,
     onClick: handleClick,
-    style: __assign(__assign(__assign({
+    style: __assign(__assign(__assign(__assign({
       display: 'flex',
       borderBottom: tableType === 'parent' ? '1px solid #eee' : 'none',
       padding: tableType === 'parent' && columnIndex === columnLength - 1 ? '16px 12px' : '8px 12px',
@@ -28017,9 +28017,10 @@ var Cell = memo(function (_a) {
       boxSizing: 'border-box',
       minWidth: columnIndex === 1 ? 84 : columnWidth ? "".concat(columnWidth, "px") : '0',
       width: columnWidth ? "".concat(columnWidth, "px") : 'auto',
-      overflow: 'visible',
+      overflow: 'visible'
+    }, isWidthCalculationComplete && {
       transition: 'width 0.2s ease-out, flex 0.2s ease-out'
-    }, tableType === 'parent' ? columnIndex === columnLength - 2 && {
+    }), tableType === 'parent' ? columnIndex === columnLength - 2 && {
       flex: 1,
       minWidth: 0
     } : columnIndex === columnLength - 1 && {
