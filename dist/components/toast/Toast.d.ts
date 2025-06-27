@@ -1,4 +1,5 @@
 import React from 'react';
+import './Toast.css';
 export type ToastStatus = 'success' | 'error' | 'warning' | 'info';
 export interface ToastProps {
     /** 토스트 상태 */
@@ -11,16 +12,13 @@ export interface ToastProps {
     showLeadingIcon?: boolean;
     /** 닫기 버튼 표시 여부 */
     showCloseButton?: boolean;
-    /** 닫기 버튼 클릭 핸들러 */
-    onClose?: () => void;
-    /** 커스텀 클래스명 */
-    className?: string;
+    /** base-ui toast 객체 */
+    toast: any;
+    /** 토스트 위치 (애니메이션을 위해) */
+    position?: string;
 }
 /**
- * 토스트 오버레이 컴포넌트
- *
- * 사용자가 어떤 작업을 완료했을 때, 시스템이 잘 처리됐다는 걸 알려주는 알림입니다.
- * 현재 하고 있는 일을 방해하지 않고, 잠깐 나타났다 사라지는 방식으로 보여집니다.
+ * Base UI Toast를 youth-design 스타일로 래핑한 컴포넌트
  */
 export declare const Toast: React.FC<ToastProps>;
 export default Toast;

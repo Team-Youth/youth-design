@@ -132,6 +132,7 @@
   },
   "homepage": "https://github.com/Team-Youth/youth-design#readme",
   "dependencies": {
+    "@base-ui-components/react": "^1.0.0-beta.0",
     "lottie-react": "^2.4.1",
     "react-hot-toast": "^2.5.2",
     "rooks": "^8.0.1"
