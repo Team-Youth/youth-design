@@ -21515,16 +21515,20 @@ var Dropdown = function (_a) {
   }, [options, value]);
   var hasSelectedOption = !!selectedOption;
   var hasCustomContent = !!customContent;
-  // populated disabled 상태 체크: 옵션이 하나뿐일 때
+  // populated disabled 상태 체크: 옵션이 하나뿐일 때 (검색 중이 아닐 때만)
   var isPopulatedDisabled = useMemo(function () {
     if (disablePopulatedDisabled) return false;
+    // 검색 중이거나 검색 텍스트가 있을 때는 populated disabled 비활성화
+    if (enableSearch && (actualIsOpen || searchText.trim())) return false;
     var enabledOptions = options.filter(function (option) {
       return !option.disabled;
     });
     return enabledOptions.length === 1;
-  }, [options, disablePopulatedDisabled]);
-  // 옵션이 하나뿐일 때 자동으로 선택
+  }, [options, disablePopulatedDisabled, enableSearch, actualIsOpen, searchText]);
+  // 옵션이 하나뿐일 때 자동으로 선택 (검색 중이 아닐 때만)
   useEffect(function () {
+    // 검색 중이거나 검색 텍스트가 있을 때는 자동 선택 비활성화
+    if (enableSearch && (actualIsOpen || searchText.trim())) return;
     if (isPopulatedDisabled && !value && onChange) {
       var enabledOptions = options.filter(function (option) {
         return !option.disabled;
@@ -21533,7 +21537,7 @@ var Dropdown = function (_a) {
         onChange(enabledOptions[0].value);
       }
     }
-  }, [isPopulatedDisabled, value, onChange, options]);
+  }, [isPopulatedDisabled, value, onChange, options, enableSearch, actualIsOpen, searchText]);
   // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
   var actuallyDisabled = disabled || isPopulatedDisabled;
   // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
@@ -22094,7 +22098,7 @@ var Dropdown = function (_a) {
               children: getLockIcon()
             }) : null]
           }, option.value);
-        }), isLoadingMore && jsxs("div", {
+        }), isLoadingMore && jsx("div", {
           style: __assign(__assign({
             padding: '13px 16px'
           }, getTextStyle()), {
@@ -22103,10 +22107,9 @@ var Dropdown = function (_a) {
             userSelect: 'none',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            gap: '8px'
+            justifyContent: 'center'
           }),
-          children: [jsx("div", {
+          children: jsx("div", {
             style: {
               width: '16px',
               height: '16px',
@@ -22115,9 +22118,7 @@ var Dropdown = function (_a) {
               borderRadius: '50%',
               animation: 'spin 1s linear infinite'
             }
-          }), jsx("span", {
-            children: "\uB85C\uB529 \uC911..."
-          })]
+          })
         })]
       })
     }), error && errorMessage && jsx("div", {

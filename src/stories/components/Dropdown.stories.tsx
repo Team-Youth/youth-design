@@ -1,1405 +1,648 @@
+import React, { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
-import { Dropdown } from '../../components';
-import type { DropdownOption } from '../../components/dropdown/Dropdown';
-import React from 'react';
-
-// Sample options
-const cityOptions: DropdownOption[] = [
-  { value: 'seoul', label: '서울' },
-  { value: 'busan', label: '부산' },
-  { value: 'daegu', label: '대구' },
-  { value: 'incheon', label: '인천' },
-  { value: 'gwangju', label: '광주' },
-  { value: 'daejeon', label: '대전' },
-  { value: 'ulsan', label: '울산' },
-  { value: 'sejong', label: '세종' },
-];
-
-const categoryOptions: DropdownOption[] = [
-  { value: 'tech', label: '기술' },
-  { value: 'design', label: '디자인' },
-  { value: 'business', label: '비즈니스' },
-  { value: 'marketing', label: '마케팅' },
-  { value: 'sales', label: '영업' },
-  { value: 'hr', label: '인사' },
-  { value: 'finance', label: '재무' },
-  { value: 'legal', label: '법무' },
-];
-
-const roleOptions: DropdownOption[] = [
-  { value: 'admin', label: '관리자' },
-  { value: 'manager', label: '매니저' },
-  { value: 'developer', label: '개발자' },
-  { value: 'designer', label: '디자이너' },
-  { value: 'user', label: '일반 사용자', disabled: true },
-  { value: 'guest', label: '게스트' },
-  { value: 'viewer', label: '뷰어', disabled: true },
-  { value: 'restricted', label: '제한된 사용자', disabled: true },
-];
-
-// Controlled Dropdown component for interactive stories
-const ControlledDropdown = (props: any) => {
-  const [value, setValue] = useState(props.value || '');
-  return <Dropdown {...props} value={value} onChange={setValue} />;
-};
+import { action } from '@storybook/addon-actions';
+import { Dropdown, DropdownOption } from '../../components/dropdown/Dropdown';
+import { Icon } from '../../components/icon';
 
 const meta: Meta<typeof Dropdown> = {
   title: 'Components/Dropdown',
   component: Dropdown,
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
     docs: {
       description: {
-        component: `
-드롭다운(Dropdown)은 사용자가 여러 옵션 중 하나를 선택할 수 있는 선택형 입력 컴포넌트입니다.
-
-## ✨ 최신 업데이트 (Figma 디자인 스펙 반영)
-- **Size 옵션 추가**: 'l' (기본, 48px height), 'm' (40px height) 지원
-- **디자인 토큰 활용**: typography.textStyles.body1/body2 + fontWeight.medium 사용
-- **비활성화 옵션 Lock 아이콘**: disabled 옵션에 자동으로 lock 아이콘 표시
-- **정확한 색상 스펙**: 최신 color 토큰 사용으로 피그마 디자인과 완벽 일치
-
-## 주요 기능
-- **Figma 디자인 스펙 완벽 구현**: 정확한 크기, 패딩, 색상, 그림자 적용
-- **선택된 옵션 표시**: 체크 아이콘과 보라색 하이라이트로 현재 선택 상태 표시
-- **호버 상태**: 마우스 오버 시 부드러운 배경색 변화
-- **키보드 접근성**: Enter, Space, ESC 키 지원
-- **외부 클릭 감지**: 드롭다운 외부 클릭 시 자동 닫기
-- **Leading Icon 지원**: 아이콘과 함께 사용 가능
-- **에러 상태**: 빨간색 테두리와 에러 메시지 표시
-- **비활성화 상태**: disabled 옵션 및 전체 컴포넌트 비활성화
-- **검색 기능**: enableSearch=true로 옵션 검색 가능
-- **옵션 숨김 기능**: hideOption=true로 드롭다운 옵션 표시 없이 디스플레이만 사용
-        `,
+        component:
+          '드롭다운 컴포넌트입니다. 다양한 옵션을 선택할 수 있으며, 검색, 무한스크롤, 커스텀 컨텐츠 등의 기능을 지원합니다.',
       },
     },
   },
   argTypes: {
     placeholder: {
-      control: { type: 'text' },
-      description: '드롭다운 플레이스홀더 텍스트입니다.',
-      defaultValue: 'Placeholder',
+      control: 'text',
+      description: '드롭다운 플레이스홀더 텍스트',
     },
     value: {
-      control: { type: 'text' },
-      description: '선택된 값입니다.',
+      control: 'text',
+      description: '선택된 값',
     },
     options: {
-      control: { type: 'object' },
-      description:
-        '드롭다운 옵션 리스트입니다. disabled: true인 옵션은 자동으로 lock 아이콘이 표시됩니다.',
+      control: 'object',
+      description: '옵션 리스트',
     },
-    size: {
-      control: { type: 'select' },
-      options: ['l', 'm'],
-      description:
-        '드롭다운 크기를 설정합니다. l: 48px height (body1 + medium), m: 40px height (body2 + medium)',
-      defaultValue: 'l',
+    onChange: {
+      action: 'changed',
+      description: '값 변경 시 호출되는 콜백',
     },
     disabled: {
-      control: { type: 'boolean' },
-      description: '비활성화 상태를 설정합니다.',
-      defaultValue: false,
+      control: 'boolean',
+      description: '비활성화 상태',
     },
     error: {
-      control: { type: 'boolean' },
-      description: '에러 상태를 설정합니다.',
-      defaultValue: false,
+      control: 'boolean',
+      description: '에러 상태',
     },
     errorMessage: {
-      control: { type: 'text' },
-      description: '에러 메시지를 설정합니다.',
-    },
-    width: {
-      control: { type: 'select' },
-      options: ['320px', 'fill', '400px', '50%'],
-      description: '드롭다운의 너비를 설정합니다. "fill"을 사용하면 부모 요소의 100%가 됩니다.',
-      defaultValue: '320px',
-    },
-    leadingIconType: {
-      control: { type: 'select' },
-      options: [
-        'none',
-        'search',
-        'location-stroke',
-        'location-filled',
-        'person-stroke',
-        'person-filled',
-        'home',
-        'home-filled',
-        'calendar',
-        'calendar-filled',
-        'mail-stroke',
-        'mail-filled',
-        'settings-stroke',
-        'settings-filled',
-        'heart',
-        'heart-filled',
-        'chevron-up',
-        'chevron-down',
-        'check',
-        'lock',
-      ],
-      description: 'Leading 아이콘 타입을 설정합니다. Icon 컴포넌트를 사용합니다.',
-      mapping: {
-        none: undefined,
-        search: 'search',
-        'location-stroke': 'location-stroke',
-        'location-filled': 'location-filled',
-        'person-stroke': 'person-stroke',
-        'person-filled': 'person-filled',
-        home: 'home',
-        'home-filled': 'home-filled',
-        calendar: 'calendar',
-        'calendar-filled': 'calendar-filled',
-        'mail-stroke': 'mail-stroke',
-        'mail-filled': 'mail-filled',
-        'settings-stroke': 'settings-stroke',
-        'settings-filled': 'settings-filled',
-        heart: 'heart',
-        'heart-filled': 'heart-filled',
-        'chevron-up': 'chevron-up',
-        'chevron-down': 'chevron-down',
-        check: 'check',
-        lock: 'lock',
-      },
-    },
-    enableSearch: {
-      control: { type: 'boolean' },
-      description: '검색 기능을 활성화합니다. true일 때 드롭다운 내에서 옵션을 검색할 수 있습니다.',
-      defaultValue: false,
-    },
-    hideOption: {
-      control: { type: 'boolean' },
-      description:
-        '모든 옵션을 숨깁니다. true일 때 드롭다운이 열리지 않고 디스플레이만 사용할 수 있습니다.',
-      defaultValue: false,
+      control: 'text',
+      description: '에러 메시지',
     },
     className: {
-      control: { type: 'text' },
-      description: '커스텀 클래스명을 설정합니다.',
+      control: 'text',
+      description: '커스텀 클래스명',
+    },
+    leadingIconType: {
+      control: 'select',
+      options: ['home', 'search', 'check', 'close', 'arrow-right', 'arrow-left'],
+      description: 'Leading 아이콘 타입',
+    },
+    size: {
+      control: 'select',
+      options: ['l', 'm'],
+      description: '크기 설정',
+    },
+    width: {
+      control: 'text',
+      description: '너비 설정 (fill 또는 px 값)',
+    },
+    enableSearch: {
+      control: 'boolean',
+      description: '검색 기능 활성화 여부',
+    },
+    onSearchChange: {
+      action: 'search-changed',
+      description: '검색 텍스트 변경 콜백',
+    },
+    hideOption: {
+      control: 'boolean',
+      description: '모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음)',
+    },
+    disablePopulatedDisabled: {
+      control: 'boolean',
+      description: 'populated disabled 기능 비활성화 여부',
+    },
+    customContentMaxHeight: {
+      control: 'number',
+      description: '커스텀 컨텐츠 사용 시 최대 높이',
+    },
+    isOpen: {
+      control: 'boolean',
+      description: '외부에서 드롭다운 열림 상태 제어',
+    },
+    onOpenChange: {
+      action: 'open-changed',
+      description: '드롭다운 열림 상태 변경 콜백',
+    },
+    hasNextPage: {
+      control: 'boolean',
+      description: '무한스크롤: 다음 페이지가 있는지 여부',
+    },
+    isLoadingMore: {
+      control: 'boolean',
+      description: '무한스크롤: 로딩 중인지 여부',
     },
   },
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Dropdown>;
 
+// 기본 옵션 데이터
+const basicOptions: DropdownOption[] = [
+  { value: 'option1', label: '옵션 1' },
+  { value: 'option2', label: '옵션 2' },
+  { value: 'option3', label: '옵션 3' },
+  { value: 'option4', label: '옵션 4' },
+  { value: 'option5', label: '옵션 5' },
+];
+
+const fruitOptions: DropdownOption[] = [
+  { value: 'apple', label: '사과' },
+  { value: 'banana', label: '바나나' },
+  { value: 'orange', label: '오렌지' },
+  { value: 'grape', label: '포도' },
+  { value: 'strawberry', label: '딸기' },
+  { value: 'kiwi', label: '키위' },
+  { value: 'mango', label: '망고' },
+  { value: 'pineapple', label: '파인애플' },
+];
+
+const memberOptions: DropdownOption[] = [
+  { value: 'member1', label: '기회원' },
+  { value: 'member2', label: '김회원' },
+  { value: 'member3', label: '박회원' },
+  { value: 'member4', label: '이회원' },
+  { value: 'member5', label: '최회원' },
+];
+
+const mixedOptions: DropdownOption[] = [
+  { value: 'enabled1', label: '활성화된 옵션 1' },
+  { value: 'disabled1', label: '비활성화된 옵션 1', disabled: true },
+  { value: 'enabled2', label: '활성화된 옵션 2' },
+  { value: 'disabled2', label: '비활성화된 옵션 2', disabled: true },
+  { value: 'enabled3', label: '활성화된 옵션 3' },
+];
+
+// 기본 스토리
 export const Default: Story = {
   args: {
-    placeholder: 'Placeholder',
-    options: [
-      { value: 'option1', label: 'Option1' },
-      { value: 'option2', label: 'Option2' },
-      { value: 'option3', label: 'Option3' },
-      { value: 'option4', label: 'Option4' },
-    ],
+    placeholder: '옵션을 선택해주세요',
+    options: basicOptions,
+    onChange: action('onChange'),
   },
-  render: (args) => <ControlledDropdown {...args} />,
 };
 
-export const Selected: Story = {
+// 선택된 값이 있는 상태
+export const WithSelectedValue: Story = {
   args: {
-    placeholder: 'Placeholder',
-    value: 'option1',
-    options: [
-      { value: 'option1', label: 'Option1' },
-      { value: 'option2', label: 'Option2' },
-      { value: 'option3', label: 'Option3' },
-      { value: 'option4', label: 'Option4' },
-    ],
+    placeholder: '옵션을 선택해주세요',
+    value: 'option2',
+    options: basicOptions,
+    onChange: action('onChange'),
   },
-  render: (args) => <ControlledDropdown {...args} />,
 };
 
-// 새로운 Size 옵션 시연
-export const SizeComparison: Story = {
+// 크기 변형
+export const Sizes: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '32px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          📏 Size 옵션 비교 (최신 Figma 스펙)
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          size 옵션으로 드롭다운의 크기를 조정할 수 있습니다. 각 크기별로 적절한 텍스트 스타일이
-          자동 적용됩니다.
-        </p>
+        <h3>Large (기본)</h3>
+        <Dropdown
+          placeholder="Large 사이즈"
+          size="l"
+          options={basicOptions}
+          onChange={action('onChange-large')}
+        />
       </div>
-
-      <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start' }}>
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            Size Large (기본값)
-          </h3>
-          <p style={{ marginBottom: '12px', color: '#8D97A5', fontSize: '12px' }}>
-            Height: 48px | Text: body1 + medium | Padding: 12px 16px
-          </p>
-          <ControlledDropdown
-            size="l"
-            placeholder="Size Large"
-            options={cityOptions}
-            leadingIconType="location-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            Size Medium (새로 추가)
-          </h3>
-          <p style={{ marginBottom: '12px', color: '#8D97A5', fontSize: '12px' }}>
-            Height: 40px | Text: body2 + medium | Padding: 9px 16px
-          </p>
-          <ControlledDropdown
-            size="m"
-            placeholder="Size Medium"
-            options={cityOptions}
-            leadingIconType="location-stroke"
-          />
-        </div>
-      </div>
-
-      <div style={{ padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '8px' }}>
-        <h4 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}>
-          🎨 디자인 토큰 활용
-        </h4>
-        <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
-          <li>Size L: typography.textStyles.body1 + typography.fontWeight.medium</li>
-          <li>Size M: typography.textStyles.body2 + typography.fontWeight.medium</li>
-          <li>기존 인라인 폰트 스타일 제거, 일관된 디자인 토큰 사용</li>
-        </ul>
+      <div>
+        <h3>Medium</h3>
+        <Dropdown
+          placeholder="Medium 사이즈"
+          size="m"
+          options={basicOptions}
+          onChange={action('onChange-medium')}
+        />
       </div>
     </div>
   ),
 };
 
-// Lock 아이콘이 있는 비활성화 옵션 시연
-export const DisabledOptionsWithLockIcon: Story = {
+// 너비 변형
+export const Widths: Story = {
   render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '32px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          🔒 비활성화 옵션 & Lock 아이콘 (Figma 스펙)
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          disabled: true인 옵션들은 자동으로 lock 아이콘이 표시되고 선택할 수 없습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', gap: '24px' }}>
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            역할 선택 (비활성화 옵션 포함)
-          </h3>
-          <ControlledDropdown
-            placeholder="역할을 선택해주세요..."
-            options={roleOptions}
-            leadingIconType="person-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            Size Medium으로도 확인
-          </h3>
-          <ControlledDropdown
-            size="m"
-            placeholder="역할을 선택해주세요..."
-            options={roleOptions}
-            leadingIconType="person-stroke"
+        <h3>Fill (부모 너비에 맞춤)</h3>
+        <div style={{ width: '500px', border: '1px dashed #ccc', padding: '8px' }}>
+          <Dropdown
+            placeholder="Fill 너비"
+            width="fill"
+            options={basicOptions}
+            onChange={action('onChange-fill')}
           />
         </div>
       </div>
-
-      <div style={{ padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '8px' }}>
-        <h4 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}>
-          🎯 구현 세부사항
-        </h4>
-        <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
-          <li>disabled: true 옵션은 자동으로 우측에 lock 아이콘 표시</li>
-          <li>비활성화 옵션 색상: colors.semantic.disabled.foreground (#D1D5DB)</li>
-          <li>클릭해도 선택되지 않음 (cursor: not-allowed)</li>
-          <li>선택된 옵션이 있으면 체크 아이콘, 비활성화면 lock 아이콘 우선 표시</li>
-        </ul>
+      <div>
+        <h3>고정 너비 (200px)</h3>
+        <Dropdown
+          placeholder="200px 너비"
+          width="200px"
+          options={basicOptions}
+          onChange={action('onChange-200px')}
+        />
+      </div>
+      <div>
+        <h3>기본 너비 (335px)</h3>
+        <Dropdown
+          placeholder="기본 너비"
+          options={basicOptions}
+          onChange={action('onChange-default')}
+        />
       </div>
     </div>
   ),
 };
 
+// Leading 아이콘
 export const WithLeadingIcon: Story = {
-  args: {
-    placeholder: '위치를 선택해주세요...',
-    options: cityOptions,
-    leadingIconType: 'location-stroke',
-  },
-  render: (args) => <ControlledDropdown {...args} />,
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <Dropdown
+        placeholder="사용자 선택"
+        leadingIconType="home"
+        options={memberOptions}
+        onChange={action('onChange-user')}
+      />
+      <Dropdown
+        placeholder="검색 옵션"
+        leadingIconType="search"
+        options={fruitOptions}
+        onChange={action('onChange-search')}
+      />
+      <Dropdown
+        placeholder="설정 메뉴"
+        leadingIconType="check"
+        options={basicOptions}
+        onChange={action('onChange-setting')}
+      />
+    </div>
+  ),
 };
 
-export const WithDisabledOptions: Story = {
-  args: {
-    placeholder: '역할을 선택해주세요...',
-    options: roleOptions,
-    leadingIconType: 'person-stroke',
-  },
-  render: (args) => <ControlledDropdown {...args} />,
-  parameters: {
-    docs: {
-      description: {
-        story: 'disabled: true인 옵션들은 자동으로 lock 아이콘이 표시되고 선택할 수 없습니다.',
-      },
-    },
-  },
+// 상태 변형
+export const States: Story = {
+  render: () => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div>
+        <h3>일반 상태</h3>
+        <Dropdown
+          placeholder="일반 상태"
+          options={basicOptions}
+          onChange={action('onChange-normal')}
+        />
+      </div>
+      <div>
+        <h3>비활성화 상태</h3>
+        <Dropdown
+          placeholder="비활성화 상태"
+          disabled
+          options={basicOptions}
+          onChange={action('onChange-disabled')}
+        />
+      </div>
+      <div>
+        <h3>에러 상태</h3>
+        <Dropdown
+          placeholder="에러 상태"
+          error
+          errorMessage="필수 항목입니다"
+          options={basicOptions}
+          onChange={action('onChange-error')}
+        />
+      </div>
+    </div>
+  ),
 };
 
-export const ErrorState: Story = {
-  args: {
-    placeholder: '카테고리를 선택해주세요...',
-    options: categoryOptions,
-    error: true,
-    errorMessage: '카테고리를 선택해야 합니다.',
-    leadingIconType: 'settings-stroke',
-  },
-  render: (args) => <ControlledDropdown {...args} />,
-};
-
-export const Disabled: Story = {
-  args: {
-    placeholder: '비활성화된 드롭다운',
-    options: cityOptions,
-    disabled: true,
-    value: 'seoul',
-  },
-  render: (args) => <ControlledDropdown {...args} />,
-};
-
-// 새로운 hideOption 기능 시연
-export const HideOption: Story = {
-  args: {
-    placeholder: '옵션이 숨겨진 드롭다운',
-    value: 'seoul',
-    options: cityOptions,
-    hideOption: true,
-    leadingIconType: 'location-stroke',
-  },
-  render: (args) => <ControlledDropdown {...args} />,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'hideOption=true로 설정하면 드롭다운이 열리지 않고 디스플레이 목적으로만 사용할 수 있습니다.',
-      },
-    },
-  },
-};
-
-// 검색 기능 시연
+// 검색 기능
 export const WithSearch: Story = {
-  args: {
-    placeholder: '검색하여 선택해주세요...',
-    options: cityOptions,
-    enableSearch: true,
-    leadingIconType: 'search',
-  },
-  render: (args) => <ControlledDropdown {...args} />,
-  parameters: {
-    docs: {
-      description: {
-        story: 'enableSearch=true로 설정하면 드롭다운 내에서 옵션을 검색할 수 있습니다.',
-      },
-    },
-  },
-};
-
-// Interactive controlled examples
-export const Interactive: Story = {
-  args: {
-    placeholder: '도시를 선택해주세요...',
-    options: cityOptions,
-  },
-  render: (args) => <ControlledDropdown {...args} />,
-};
-
-export const InteractiveWithIcon: Story = {
-  args: {
-    placeholder: '위치를 선택해주세요...',
-    options: cityOptions,
-    leadingIconType: 'location-stroke',
-  },
-  render: (args) => <ControlledDropdown {...args} />,
-};
-
-// 모든 기능을 포함한 종합 시연
-export const AllFeatures: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '32px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          🚀 모든 기능 시연 (업데이트됨)
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          Dropdown 컴포넌트의 모든 기능과 상태를 확인할 수 있습니다. Size 옵션과 Lock 아이콘 기능이
-          추가되었습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            Size L (기본)
-          </h3>
-          <ControlledDropdown size="l" placeholder="기본 사이즈" options={cityOptions} />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            Size M (새로운)
-          </h3>
-          <ControlledDropdown size="m" placeholder="작은 사이즈" options={cityOptions} />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>선택된 상태</h3>
-          <ControlledDropdown placeholder="선택된 드롭다운" value="seoul" options={cityOptions} />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            Leading Icon 포함
-          </h3>
-          <ControlledDropdown
-            placeholder="아이콘 포함"
-            options={cityOptions}
-            leadingIconType="location-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            검색 기능 활성화
-          </h3>
-          <ControlledDropdown
-            placeholder="검색하여 선택..."
-            options={cityOptions}
-            enableSearch={true}
-            leadingIconType="search"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            🔒 Lock 아이콘
-          </h3>
-          <ControlledDropdown
-            placeholder="역할 선택..."
-            options={roleOptions}
-            leadingIconType="person-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            옵션 숨김 (hideOption)
-          </h3>
-          <ControlledDropdown
-            placeholder="표시만 가능"
-            value="seoul"
-            options={cityOptions}
-            hideOption={true}
-            leadingIconType="location-filled"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>에러 상태</h3>
-          <ControlledDropdown
-            placeholder="에러 상태 드롭다운"
-            options={categoryOptions}
-            error={true}
-            errorMessage="필수 항목입니다."
-            leadingIconType="settings-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            비활성화 상태
-          </h3>
-          <ControlledDropdown
-            placeholder="비활성화됨"
-            value="seoul"
-            options={cityOptions}
-            disabled={true}
-            leadingIconType="location-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            Size M + Lock 아이콘
-          </h3>
-          <ControlledDropdown
-            size="m"
-            placeholder="작은 사이즈 + Lock"
-            options={roleOptions}
-            leadingIconType="person-stroke"
-          />
-        </div>
-      </div>
-
-      <div
-        style={{
-          padding: '16px',
-          backgroundColor: '#F8F9FA',
-          borderRadius: '8px',
-          marginTop: '16px',
-        }}
-      >
-        <h4 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}>
-          ✨ 최신 업데이트 사항
-        </h4>
-        <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
-          <li>
-            <strong>Size 옵션:</strong> 'l' (48px) / 'm' (40px) 지원
-          </li>
-          <li>
-            <strong>텍스트 스타일:</strong> 디자인 토큰 (body1/body2 + medium) 사용
-          </li>
-          <li>
-            <strong>Lock 아이콘:</strong> disabled 옵션에 자동 표시
-          </li>
-          <li>
-            <strong>색상 업데이트:</strong> 최신 semantic color 토큰 적용
-          </li>
-        </ul>
-      </div>
-    </div>
-  ),
-};
-
-// Figma 디자인 스펙 시연을 위한 새로운 스토리
-export const FigmaDesignShowcase: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '32px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          🎨 Figma 디자인 스펙 구현 (업데이트됨)
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          실제 Figma 디자인과 동일한 스펙으로 구현된 드롭다운 컴포넌트입니다. 새로운 size 옵션과
-          lock 아이콘이 포함되어 있습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            Size L (기본값) - 48px Height
-          </h3>
-          <div style={{ display: 'flex', gap: '24px' }}>
-            <ControlledDropdown
-              size="l"
-              placeholder="Placeholder"
-              options={[
-                { value: 'option1', label: 'Option1' },
-                { value: 'option2', label: 'Option2' },
-                { value: 'option3', label: 'Option3' },
-                { value: 'option4', label: 'Option4' },
-              ]}
-            />
-            <ControlledDropdown
-              size="l"
-              placeholder="OptionName"
-              value="option1"
-              options={[
-                { value: 'option1', label: 'Option1' },
-                { value: 'option2', label: 'Option2' },
-                { value: 'option3', label: 'Option3' },
-                { value: 'option4', label: 'Option4' },
-              ]}
-            />
-          </div>
-        </div>
-
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            Size M (새로 추가) - 40px Height
-          </h3>
-          <div style={{ display: 'flex', gap: '24px' }}>
-            <ControlledDropdown
-              size="m"
-              placeholder="Placeholder"
-              options={[
-                { value: 'option1', label: 'Option1' },
-                { value: 'option2', label: 'Option2' },
-                { value: 'option3', label: 'Option3' },
-                { value: 'option4', label: 'Option4' },
-              ]}
-            />
-            <ControlledDropdown
-              size="m"
-              placeholder="OptionName"
-              value="option1"
-              options={[
-                { value: 'option1', label: 'Option1' },
-                { value: 'option2', label: 'Option2' },
-                { value: 'option3', label: 'Option3' },
-                { value: 'option4', label: 'Option4' },
-              ]}
-            />
-          </div>
-        </div>
-
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            비활성화 옵션 with Lock 아이콘
-          </h3>
-          <ControlledDropdown
-            placeholder="역할을 선택해주세요..."
-            options={roleOptions}
-            leadingIconType="person-stroke"
-          />
-        </div>
-      </div>
-    </div>
-  ),
-};
-
-// All states showcase
-export const AllStates: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px' }}>
-      <div>
-        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Empty (Rest)</h3>
-        <ControlledDropdown placeholder="선택해주세요..." options={cityOptions} />
-      </div>
-
-      <div>
-        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Selected</h3>
-        <ControlledDropdown placeholder="선택해주세요..." options={cityOptions} value="seoul" />
-      </div>
-
-      <div>
-        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-          With Leading Icon
-        </h3>
-        <ControlledDropdown
-          placeholder="위치를 선택해주세요..."
-          options={cityOptions}
-          leadingIconType="location-stroke"
-        />
-      </div>
-
-      <div>
-        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-          With Search Enabled
-        </h3>
-        <ControlledDropdown
-          placeholder="검색해서 선택해주세요..."
-          options={cityOptions}
-          enableSearch={true}
-          leadingIconType="search"
-        />
-      </div>
-
-      <div>
-        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-          With Disabled Options
-        </h3>
-        <ControlledDropdown
-          placeholder="역할을 선택해주세요..."
-          options={roleOptions}
-          leadingIconType="person-stroke"
-        />
-      </div>
-
-      <div>
-        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-          Hidden Options (Display Only)
-        </h3>
-        <ControlledDropdown
-          placeholder="표시만 가능한 드롭다운"
-          value="seoul"
-          options={cityOptions}
-          hideOption={true}
-          leadingIconType="location-filled"
-        />
-      </div>
-
-      <div>
-        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Error State</h3>
-        <ControlledDropdown
-          placeholder="카테고리를 선택해주세요..."
-          options={categoryOptions}
-          error={true}
-          errorMessage="카테고리를 선택해야 합니다."
-          leadingIconType="settings-stroke"
-        />
-      </div>
-
-      <div>
-        <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>Disabled</h3>
-        <ControlledDropdown
-          placeholder="비활성화된 드롭다운"
-          options={cityOptions}
-          disabled={true}
-          value="seoul"
-        />
-      </div>
-    </div>
-  ),
-};
-
-// Long option list example
-export const LongOptionList: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="국가를 선택해주세요..."
-      options={[
-        { value: 'kr', label: '대한민국' },
-        { value: 'us', label: '미국' },
-        { value: 'jp', label: '일본' },
-        { value: 'cn', label: '중국' },
-        { value: 'uk', label: '영국' },
-        { value: 'fr', label: '프랑스' },
-        { value: 'de', label: '독일' },
-        { value: 'it', label: '이탈리아' },
-        { value: 'es', label: '스페인' },
-        { value: 'ca', label: '캐나다' },
-        { value: 'au', label: '호주' },
-        { value: 'br', label: '브라질' },
-        { value: 'in', label: '인도' },
-        { value: 'ru', label: '러시아' },
-        { value: 'mx', label: '멕시코' },
-      ]}
-      leadingIconType="location-stroke"
-    />
-  ),
-};
-
-// Width examples
-export const WidthDefault: Story = {
-  render: () => (
-    <div style={{ padding: '20px' }}>
-      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
-        기본 너비 (320px)
-      </h3>
-      <ControlledDropdown placeholder="기본 너비" options={cityOptions} />
-    </div>
-  ),
-};
-
-export const WidthFill: Story = {
-  render: () => (
-    <div style={{ padding: '20px', width: '500px', border: '1px dashed #ccc' }}>
-      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
-        부모 컨테이너 100% (width="fill")
-      </h3>
-      <ControlledDropdown width="fill" placeholder="부모의 100% 너비" options={cityOptions} />
-    </div>
-  ),
-};
-
-export const WidthCustom: Story = {
-  render: () => (
-    <div style={{ padding: '20px' }}>
-      <h3 style={{ marginBottom: '12px', fontSize: '14px', fontWeight: '600' }}>
-        커스텀 너비 (400px)
-      </h3>
-      <ControlledDropdown width="400px" placeholder="커스텀 너비" options={cityOptions} />
-    </div>
-  ),
-};
-
-export const WidthShowcase: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          💎 Width 옵션 비교
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          다양한 너비 설정으로 레이아웃에 맞게 조정할 수 있습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            기본값 (320px)
-          </h3>
-          <ControlledDropdown placeholder="기본 너비" options={cityOptions} />
-        </div>
-
-        <div style={{ width: '600px', border: '1px dashed #ddd', padding: '16px' }}>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            부모 컨테이너 100% (width="fill")
-          </h3>
-          <ControlledDropdown width="fill" placeholder="부모의 100% 너비" options={cityOptions} />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            커스텀 너비 (500px)
-          </h3>
-          <ControlledDropdown width="500px" placeholder="커스텀 너비" options={cityOptions} />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            상대적 너비 (50%)
-          </h3>
-          <ControlledDropdown width="50%" placeholder="상대적 너비" options={cityOptions} />
-        </div>
-      </div>
-    </div>
-  ),
-};
-
-// Search functionality examples
-export const WithoutSearch: Story = {
-  args: {
-    placeholder: '일반 드롭다운',
-    options: cityOptions,
-    enableSearch: false,
-    leadingIconType: 'location-stroke',
-  },
-  render: (args) => <ControlledDropdown {...args} />,
-};
-
-export const SearchLongList: Story = {
-  render: () => (
-    <ControlledDropdown
-      placeholder="국가를 검색해주세요..."
-      enableSearch={true}
-      options={[
-        { value: 'kr', label: '대한민국' },
-        { value: 'us', label: '미국' },
-        { value: 'jp', label: '일본' },
-        { value: 'cn', label: '중국' },
-        { value: 'uk', label: '영국' },
-        { value: 'fr', label: '프랑스' },
-        { value: 'de', label: '독일' },
-        { value: 'it', label: '이탈리아' },
-        { value: 'es', label: '스페인' },
-        { value: 'ca', label: '캐나다' },
-        { value: 'au', label: '호주' },
-        { value: 'br', label: '브라질' },
-        { value: 'in', label: '인도' },
-        { value: 'ru', label: '러시아' },
-        { value: 'mx', label: '멕시코' },
-        { value: 'sg', label: '싱가포르' },
-        { value: 'th', label: '태국' },
-        { value: 'vn', label: '베트남' },
-        { value: 'ph', label: '필리핀' },
-        { value: 'my', label: '말레이시아' },
-      ]}
-      leadingIconType="search"
-    />
-  ),
-  parameters: {
-    docs: {
-      description: {
-        story:
-          '많은 옵션이 있을 때 검색 기능을 사용하면 사용자가 원하는 옵션을 쉽게 찾을 수 있습니다.',
-      },
-    },
-  },
-};
-
-export const SearchComparison: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          🔍 검색 기능 비교
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          enableSearch props로 검색 기능을 활성화/비활성화할 수 있습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', gap: '24px' }}>
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            검색 활성화 (enableSearch=true)
-          </h3>
-          <ControlledDropdown
-            placeholder="검색하여 선택해주세요..."
-            options={cityOptions}
-            enableSearch={true}
-            leadingIconType="search"
-          />
-        </div>
-
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            일반 드롭다운 (enableSearch=false)
-          </h3>
-          <ControlledDropdown
-            placeholder="선택해주세요..."
-            options={cityOptions}
-            enableSearch={false}
-            leadingIconType="location-stroke"
-          />
-        </div>
-      </div>
-    </div>
-  ),
-};
-
-// hideOption 기능 상세 시연
-export const HideOptionShowcase: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          👁️ hideOption 기능 시연
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          hideOption=true로 설정하면 드롭다운이 열리지 않고 디스플레이 목적으로만 사용할 수
-          있습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', gap: '24px' }}>
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            일반 드롭다운 (클릭 가능)
-          </h3>
-          <ControlledDropdown
-            placeholder="클릭해서 열기"
-            value="seoul"
-            options={cityOptions}
-            hideOption={false}
-            leadingIconType="location-stroke"
-          />
-        </div>
-
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            옵션 숨김 (hideOption=true)
-          </h3>
-          <ControlledDropdown
-            placeholder="클릭해도 열리지 않음"
-            value="seoul"
-            options={cityOptions}
-            hideOption={true}
-            leadingIconType="location-filled"
-          />
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: '16px',
-          padding: '16px',
-          backgroundColor: '#F8F9FA',
-          borderRadius: '8px',
-        }}
-      >
-        <h4 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}>
-          💡 사용 사례
-        </h4>
-        <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
-          <li>선택된 값을 표시만 하고 변경하지 않을 때</li>
-          <li>읽기 전용 상태로 정보를 보여줄 때</li>
-          <li>폼 검토 단계에서 선택한 값을 확인할 때</li>
-        </ul>
-      </div>
-    </div>
-  ),
-};
-
-// Leading Icon comparison
-export const LeadingIconComparison: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          🎨 다양한 Leading Icon 타입
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          leadingIconType을 사용해서 다양한 아이콘을 적용할 수 있습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', gap: '24px' }}>
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            Stroke 타입 (location-stroke)
-          </h3>
-          <ControlledDropdown
-            placeholder="위치를 선택해주세요..."
-            options={cityOptions}
-            leadingIconType="location-stroke"
-          />
-        </div>
-
-        <div>
-          <h3
-            style={{ marginBottom: '12px', fontSize: '16px', fontWeight: '600', color: '#25282D' }}
-          >
-            Filled 타입 (location-filled)
-          </h3>
-          <ControlledDropdown
-            placeholder="위치를 선택해주세요..."
-            options={cityOptions}
-            leadingIconType="location-filled"
-          />
-        </div>
-      </div>
-    </div>
-  ),
-};
-
-export const IconTypeShowcase: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', padding: '24px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          🎯 다양한 leadingIconType 예시
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          다양한 상황에 맞는 아이콘 타입들을 활용할 수 있습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '24px' }}>
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            검색 (search)
-          </h3>
-          <ControlledDropdown
-            placeholder="검색어를 입력해주세요..."
-            options={categoryOptions}
-            leadingIconType="search"
-            enableSearch={true}
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            사용자 (person-stroke)
-          </h3>
-          <ControlledDropdown
-            placeholder="사용자를 선택해주세요..."
-            options={roleOptions}
-            leadingIconType="person-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>홈 (home)</h3>
-          <ControlledDropdown
-            placeholder="홈 옵션을 선택해주세요..."
-            options={cityOptions}
-            leadingIconType="home"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            캘린더 (calendar)
-          </h3>
-          <ControlledDropdown
-            placeholder="날짜를 선택해주세요..."
-            options={[
-              { value: 'today', label: '오늘' },
-              { value: 'tomorrow', label: '내일' },
-              { value: 'week', label: '이번 주' },
-              { value: 'month', label: '이번 달' },
-            ]}
-            leadingIconType="calendar"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            메일 (mail-stroke)
-          </h3>
-          <ControlledDropdown
-            placeholder="메일 유형을 선택해주세요..."
-            options={[
-              { value: 'inbox', label: '받은편지함' },
-              { value: 'sent', label: '보낸편지함' },
-              { value: 'draft', label: '임시보관함' },
-              { value: 'spam', label: '스팸' },
-            ]}
-            leadingIconType="mail-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            설정 (settings-stroke)
-          </h3>
-          <ControlledDropdown
-            placeholder="설정을 선택해주세요..."
-            options={[
-              { value: 'general', label: '일반 설정' },
-              { value: 'privacy', label: '개인정보 설정' },
-              { value: 'notification', label: '알림 설정' },
-              { value: 'account', label: '계정 설정' },
-            ]}
-            leadingIconType="settings-stroke"
-          />
-        </div>
-      </div>
-    </div>
-  ),
-};
-
-// 키보드 접근성 테스트
-export const KeyboardAccessibility: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          ⌨️ 키보드 접근성 테스트
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          키보드만으로도 모든 기능을 사용할 수 있습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '8px' }}>
-          <h4
-            style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}
-          >
-            🔑 키보드 단축키
-          </h4>
-          <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
-            <li>
-              <code>Tab</code>: 드롭다운에 포커스
-            </li>
-            <li>
-              <code>Enter</code> 또는 <code>Space</code>: 드롭다운 열기/닫기
-            </li>
-            <li>
-              <code>Escape</code>: 드롭다운 닫기
-            </li>
-            <li>
-              <code>Arrow Down</code>: (검색 모드에서) 첫 번째 옵션에 호버
-            </li>
-            <li>
-              <code>Enter</code>: (검색 모드에서) 첫 번째 필터된 옵션 선택
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            일반 드롭다운 - Tab으로 포커스하고 Enter로 열어보세요
-          </h3>
-          <ControlledDropdown
-            placeholder="키보드로 조작해보세요..."
-            options={cityOptions}
-            leadingIconType="location-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            검색 드롭다운 - 열린 후 타이핑하고 Enter로 선택하세요
-          </h3>
-          <ControlledDropdown
-            placeholder="검색해서 선택해보세요..."
-            options={cityOptions}
-            enableSearch={true}
-            leadingIconType="search"
-          />
-        </div>
-      </div>
-    </div>
-  ),
-};
-
-// 에러 상태 상세 시연
-export const ErrorStatesShowcase: Story = {
-  render: () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
-      <div>
-        <h2 style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}>
-          ⚠️ 에러 상태 시연
-        </h2>
-        <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-          다양한 에러 상황에서의 드롭다운 표시를 확인할 수 있습니다.
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            필수 선택 에러
-          </h3>
-          <ControlledDropdown
-            placeholder="카테고리를 선택해주세요..."
-            options={categoryOptions}
-            error={true}
-            errorMessage="카테고리 선택은 필수입니다."
-            leadingIconType="settings-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            유효하지 않은 선택 에러
-          </h3>
-          <ControlledDropdown
-            placeholder="유효한 옵션을 선택해주세요..."
-            options={roleOptions}
-            error={true}
-            errorMessage="선택한 옵션이 유효하지 않습니다."
-            leadingIconType="person-stroke"
-          />
-        </div>
-
-        <div>
-          <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-            권한 없음 에러
-          </h3>
-          <ControlledDropdown
-            placeholder="접근 권한이 필요합니다..."
-            options={[]}
-            error={true}
-            errorMessage="이 옵션에 접근할 권한이 없습니다."
-            leadingIconType="settings-filled"
-          />
-        </div>
-      </div>
-    </div>
-  ),
-};
-
-// 자동 스크롤 및 텍스트 선택 방지 기능 시연
-export const AutoScrollAndUserSelect: Story = {
   render: () => {
-    const longOptions: DropdownOption[] = [
-      { value: 'option1', label: '첫 번째 옵션' },
-      { value: 'option2', label: '두 번째 옵션' },
-      { value: 'option3', label: '세 번째 옵션' },
-      { value: 'option4', label: '네 번째 옵션' },
-      { value: 'option5', label: '다섯 번째 옵션' },
-      { value: 'option6', label: '여섯 번째 옵션' },
-      { value: 'option7', label: '일곱 번째 옵션' },
-      { value: 'option8', label: '여덟 번째 옵션' },
-      { value: 'option9', label: '아홉 번째 옵션' },
-      { value: 'option10', label: '열 번째 옵션' },
-      { value: 'option11', label: '열한 번째 옵션' },
-      { value: 'option12', label: '열두 번째 옵션' },
-      { value: 'option13', label: '열세 번째 옵션' },
-      { value: 'option14', label: '열네 번째 옵션' },
-      { value: 'option15', label: '열다섯 번째 옵션' },
-    ];
+    const [value, setValue] = useState<string>('');
+    const [searchValue, setSearchValue] = useState<string>('');
 
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', padding: '24px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div>
-          <h2
-            style={{ marginBottom: '16px', fontSize: '20px', fontWeight: '600', color: '#25282D' }}
-          >
-            📍 자동 스크롤 및 텍스트 선택 방지 기능
-          </h2>
-          <p style={{ marginBottom: '24px', color: '#8D97A5', fontSize: '14px' }}>
-            선택된 값이 있을 때 드롭다운을 다시 열면 해당 위치로 자동 스크롤됩니다. 또한 검색 기능이
-            비활성화된 경우 텍스트를 선택할 수 없습니다.
+          <h3>검색 기능 활성화</h3>
+          <Dropdown
+            placeholder="회원을 검색해보세요"
+            value={value}
+            options={memberOptions}
+            enableSearch
+            onChange={(newValue) => {
+              setValue(newValue);
+              action('onChange-search')(newValue);
+            }}
+            onSearchChange={(searchText) => {
+              setSearchValue(searchText);
+              action('onSearchChange')(searchText);
+            }}
+          />
+          <p style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
+            선택된 값: {value || '없음'} | 검색어: {searchValue || '없음'}
           </p>
         </div>
+      </div>
+    );
+  },
+};
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <div>
-            <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-              🎯 자동 스크롤 기능 - 중간 옵션이 미리 선택됨
-            </h3>
-            <p style={{ marginBottom: '12px', color: '#8D97A5', fontSize: '12px' }}>
-              "여덟 번째 옵션"이 선택되어 있습니다. 드롭다운을 열어보면 해당 위치로 자동
-              스크롤됩니다.
-            </p>
-            <ControlledDropdown
-              placeholder="옵션을 선택해주세요..."
-              options={longOptions}
-              value="option8"
-              enableSearch={false}
-            />
-          </div>
+// 혼합 옵션 (활성화/비활성화)
+export const MixedOptions: Story = {
+  args: {
+    placeholder: '혼합 옵션 선택',
+    options: mixedOptions,
+    onChange: action('onChange'),
+  },
+};
 
-          <div>
-            <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-              🔍 검색 기능 활성화 시 - 텍스트 선택 가능
-            </h3>
-            <p style={{ marginBottom: '12px', color: '#8D97A5', fontSize: '12px' }}>
-              검색 기능이 활성화되어 있어 텍스트를 드래그해서 선택할 수 있습니다.
-            </p>
-            <ControlledDropdown
-              placeholder="검색 가능 - 텍스트 선택도 가능"
-              options={longOptions}
-              value="option12"
-              enableSearch={true}
-              leadingIconType="search"
-            />
-          </div>
+// Populated Disabled
+export const PopulatedDisabled: Story = {
+  render: () => {
+    const [value1, setValue1] = useState<string>('');
+    const [value2, setValue2] = useState<string>('');
 
-          <div>
-            <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-              🚫 검색 기능 비활성화 시 - 텍스트 선택 불가 (user-select: none)
-            </h3>
-            <p style={{ marginBottom: '12px', color: '#8D97A5', fontSize: '12px' }}>
-              검색 기능이 비활성화되어 있어 텍스트를 드래그해도 선택되지 않습니다.
-            </p>
-            <ControlledDropdown
-              placeholder="텍스트 선택 불가 - 드래그해보세요"
-              options={longOptions}
-              value="option5"
-              enableSearch={false}
-            />
-          </div>
+    const singleOption = [{ value: 'only', label: '유일한 옵션' }];
 
-          <div>
-            <h3 style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600' }}>
-              📋 옵션 숨김 모드 - 완전히 텍스트 선택 불가
-            </h3>
-            <p style={{ marginBottom: '12px', color: '#8D97A5', fontSize: '12px' }}>
-              hideOption이 true여서 드롭다운도 열리지 않고 텍스트도 선택되지 않습니다.
-            </p>
-            <ControlledDropdown
-              placeholder="디스플레이 전용 - 클릭해도 열리지 않음"
-              options={longOptions}
-              value="option10"
-              hideOption={true}
-            />
-          </div>
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div>
+          <h3>Populated Disabled 활성화 (기본)</h3>
+          <p style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
+            옵션이 1개만 있으면 자동으로 선택되고 비활성화됩니다
+          </p>
+          <Dropdown
+            placeholder="자동 선택됨"
+            value={value1}
+            options={singleOption}
+            onChange={(newValue) => {
+              setValue1(newValue);
+              action('onChange-populated')(newValue);
+            }}
+          />
         </div>
+        <div>
+          <h3>Populated Disabled 비활성화</h3>
+          <p style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
+            옵션이 1개만 있어도 사용자가 직접 선택해야 합니다
+          </p>
+          <Dropdown
+            placeholder="직접 선택 필요"
+            value={value2}
+            options={singleOption}
+            disablePopulatedDisabled
+            onChange={(newValue) => {
+              setValue2(newValue);
+              action('onChange-no-populated')(newValue);
+            }}
+          />
+        </div>
+      </div>
+    );
+  },
+};
 
-        <div style={{ padding: '16px', backgroundColor: '#F8F9FA', borderRadius: '8px' }}>
-          <h4
-            style={{ marginBottom: '8px', fontSize: '14px', fontWeight: '600', color: '#25282D' }}
+// 외부 제어
+export const ExternalControl: Story = {
+  render: () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [value, setValue] = useState<string>('');
+
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            style={{
+              padding: '8px 16px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              background: 'white',
+              cursor: 'pointer',
+            }}
           >
-            🔧 기술적 구현 내용
-          </h4>
-          <ul style={{ margin: 0, paddingLeft: '20px', color: '#8D97A5', fontSize: '14px' }}>
-            <li>선택된 옵션이 있을 때 드롭다운이 열리면 해당 옵션이 중앙에 오도록 자동 스크롤</li>
-            <li>enableSearch가 false일 때 모든 텍스트에 user-select: none 적용</li>
-            <li>hideOption이 true일 때도 user-select: none 적용</li>
-            <li>검색 기능이 활성화된 경우에만 텍스트 선택 허용</li>
-          </ul>
+            {isOpen ? '드롭다운 닫기' : '드롭다운 열기'}
+          </button>
+          <button
+            onClick={() => setValue('')}
+            style={{
+              padding: '8px 16px',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              background: 'white',
+              cursor: 'pointer',
+            }}
+          >
+            선택 초기화
+          </button>
         </div>
+        <Dropdown
+          placeholder="외부에서 제어되는 드롭다운"
+          value={value}
+          options={fruitOptions}
+          isOpen={isOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open);
+            action('onOpenChange')(open);
+          }}
+          onChange={(newValue) => {
+            setValue(newValue);
+            action('onChange-external')(newValue);
+          }}
+        />
+        <p style={{ fontSize: '14px', color: '#666' }}>
+          열림 상태: {isOpen ? '열림' : '닫힘'} | 선택된 값: {value || '없음'}
+        </p>
+      </div>
+    );
+  },
+};
+
+// 커스텀 컨텐츠
+export const CustomContent: Story = {
+  render: () => {
+    const [value, setValue] = useState<string>('');
+
+    const customContent = (
+      <div
+        style={{
+          background: 'white',
+          border: '1px solid #D6D6D6',
+          borderRadius: '8px',
+          boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
+          padding: '16px',
+          minWidth: '300px',
+        }}
+      >
+        <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: 600 }}>
+          커스텀 선택 메뉴
+        </h4>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {fruitOptions.map((option) => (
+            <div
+              key={option.value}
+              onClick={() => setValue(option.value)}
+              style={{
+                padding: '12px',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: value === option.value ? '#F8F4FE' : 'transparent',
+                color: value === option.value ? '#7248D9' : '#25282D',
+                border: '1px solid transparent',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                if (value !== option.value) {
+                  e.currentTarget.style.background = '#F3F5F6';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (value !== option.value) {
+                  e.currentTarget.style.background = 'transparent';
+                }
+              }}
+            >
+              <Icon
+                type="check"
+                size={16}
+                color={value === option.value ? '#7248D9' : 'transparent'}
+              />
+              <span>{option.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    return (
+      <div>
+        <h3>커스텀 컨텐츠가 있는 드롭다운</h3>
+        <p style={{ fontSize: '14px', color: '#666', marginBottom: '16px' }}>
+          기본 옵션 리스트 대신 커스텀 컨텐츠를 렌더링할 수 있습니다
+        </p>
+        <Dropdown
+          placeholder="커스텀 컨텐츠 선택"
+          value={value}
+          customContent={customContent}
+          onChange={(newValue) => {
+            setValue(newValue);
+            action('onChange-custom')(newValue);
+          }}
+        />
+        <p style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
+          선택된 값: {value ? fruitOptions.find((opt) => opt.value === value)?.label : '없음'}
+        </p>
+      </div>
+    );
+  },
+};
+
+// 무한스크롤
+export const InfiniteScroll: Story = {
+  render: () => {
+    const [value, setValue] = useState<string>('');
+    const [options, setOptions] = useState<DropdownOption[]>(
+      Array.from({ length: 20 }, (_, i) => ({
+        value: `item-${i + 1}`,
+        label: `아이템 ${i + 1}`,
+      })),
+    );
+    const [hasNextPage, setHasNextPage] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleLoadMore = () => {
+      if (isLoading) return;
+
+      setIsLoading(true);
+
+      // 실제로는 API 호출
+      setTimeout(() => {
+        const newItems = Array.from({ length: 10 }, (_, i) => ({
+          value: `item-${options.length + i + 1}`,
+          label: `아이템 ${options.length + i + 1}`,
+        }));
+
+        setOptions((prev) => [...prev, ...newItems]);
+        setIsLoading(false);
+
+        // 50개 이상이면 더 이상 로드하지 않음
+        if (options.length + newItems.length >= 50) {
+          setHasNextPage(false);
+        }
+      }, 1000);
+    };
+
+    return (
+      <div>
+        <h3>무한스크롤 기능</h3>
+        <p style={{ fontSize: '14px', color: '#666', marginBottom: '16px' }}>
+          스크롤을 아래로 내리면 더 많은 옵션이 로드됩니다 (총 {options.length}개 로드됨)
+        </p>
+        <Dropdown
+          placeholder="무한스크롤 옵션"
+          value={value}
+          options={options}
+          onLoadMore={handleLoadMore}
+          hasNextPage={hasNextPage}
+          isLoadingMore={isLoading}
+          onChange={(newValue) => {
+            setValue(newValue);
+            action('onChange-infinite')(newValue);
+          }}
+        />
+        <p style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
+          선택된 값: {value || '없음'}
+        </p>
+      </div>
+    );
+  },
+};
+
+// Hide Option
+export const HideOption: Story = {
+  args: {
+    placeholder: '클릭해도 드롭다운이 열리지 않습니다',
+    hideOption: true,
+    options: basicOptions,
+    onChange: action('onChange'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'hideOption이 true일 때는 드롭다운이 열리지 않습니다. 입력 필드처럼 사용할 수 있습니다.',
+      },
+    },
+  },
+};
+
+// 검색 결과 없음
+export const NoSearchResults: Story = {
+  render: () => {
+    const [value, setValue] = useState<string>('');
+
+    return (
+      <div>
+        <h3>검색 결과 없음 상태</h3>
+        <p style={{ fontSize: '14px', color: '#666', marginBottom: '16px' }}>
+          "xyz"와 같은 존재하지 않는 키워드로 검색해보세요
+        </p>
+        <Dropdown
+          placeholder="검색해보세요"
+          value={value}
+          options={fruitOptions}
+          enableSearch
+          onChange={(newValue) => {
+            setValue(newValue);
+            action('onChange-no-results')(newValue);
+          }}
+          onSearchChange={action('onSearchChange-no-results')}
+        />
+      </div>
+    );
+  },
+};
+
+// 다양한 시나리오 통합
+export const AllFeatures: Story = {
+  render: () => {
+    const [value, setValue] = useState<string>('apple');
+
+    return (
+      <div>
+        <h3>모든 기능이 포함된 드롭다운</h3>
+        <p style={{ fontSize: '14px', color: '#666', marginBottom: '16px' }}>
+          검색, Leading 아이콘, 에러 상태, 선택된 값 등이 모두 포함된 예시입니다
+        </p>
+        <Dropdown
+          placeholder="과일을 선택하거나 검색하세요"
+          value={value}
+          options={fruitOptions}
+          leadingIconType="search"
+          enableSearch
+          size="l"
+          width="400px"
+          onChange={(newValue) => {
+            setValue(newValue);
+            action('onChange-all-features')(newValue);
+          }}
+          onSearchChange={action('onSearchChange-all-features')}
+        />
+        <p style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
+          선택된 값: {value ? fruitOptions.find((opt) => opt.value === value)?.label : '없음'}
+        </p>
       </div>
     );
   },

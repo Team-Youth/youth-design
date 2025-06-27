@@ -143,22 +143,28 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const hasSelectedOption = !!selectedOption;
   const hasCustomContent = !!customContent;
 
-  // populated disabled 상태 체크: 옵션이 하나뿐일 때
+  // populated disabled 상태 체크: 옵션이 하나뿐일 때 (검색 중이 아닐 때만)
   const isPopulatedDisabled = useMemo(() => {
     if (disablePopulatedDisabled) return false;
+    // 검색 중이거나 검색 텍스트가 있을 때는 populated disabled 비활성화
+    if (enableSearch && (actualIsOpen || searchText.trim())) return false;
+
     const enabledOptions = options.filter((option) => !option.disabled);
     return enabledOptions.length === 1;
-  }, [options, disablePopulatedDisabled]);
+  }, [options, disablePopulatedDisabled, enableSearch, actualIsOpen, searchText]);
 
-  // 옵션이 하나뿐일 때 자동으로 선택
+  // 옵션이 하나뿐일 때 자동으로 선택 (검색 중이 아닐 때만)
   useEffect(() => {
+    // 검색 중이거나 검색 텍스트가 있을 때는 자동 선택 비활성화
+    if (enableSearch && (actualIsOpen || searchText.trim())) return;
+
     if (isPopulatedDisabled && !value && onChange) {
       const enabledOptions = options.filter((option) => !option.disabled);
       if (enabledOptions.length === 1) {
         onChange(enabledOptions[0].value);
       }
     }
-  }, [isPopulatedDisabled, value, onChange, options]);
+  }, [isPopulatedDisabled, value, onChange, options, enableSearch, actualIsOpen, searchText]);
 
   // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
   const actuallyDisabled = disabled || isPopulatedDisabled;
