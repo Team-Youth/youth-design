@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { JSX } from 'react';
 import { TouchableOpacity, ViewStyle } from 'react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { colors } from '../../tokens/colors';
