@@ -332,6 +332,28 @@ export const Dropdown: React.FC<DropdownProps> = ({
     setTimeout(retryScroll, 0);
   }, [hasSelectedOption, getSelectedOptionIndex]);
 
+  // 드롭다운 위치 재계산 함수
+  const recalculatePosition = useCallback(() => {
+    if (!triggerRef.current || !actualIsOpen) return;
+
+    const triggerRect = triggerRef.current.getBoundingClientRect();
+    const position = calculateDropdownPosition();
+    const optimalWidth = calculateOptimalWidth();
+
+    // 좌표 재계산
+    const coordinates = {
+      left: triggerRect.left,
+      width: optimalWidth,
+      ...(position === 'bottom'
+        ? { top: triggerRect.bottom + 8 }
+        : { bottom: window.innerHeight - triggerRect.top + 8 }),
+    };
+
+    // 위치 상태 업데이트
+    setDropdownPosition(position);
+    setDropdownCoordinates(coordinates);
+  }, [actualIsOpen, calculateDropdownPosition, calculateOptimalWidth]);
+
   // 드롭다운 열기/닫기 애니메이션 관리
   useEffect(() => {
     if (actualIsOpen) {
@@ -397,6 +419,27 @@ export const Dropdown: React.FC<DropdownProps> = ({
     calculateDropdownPosition,
     calculateOptimalWidth,
   ]);
+
+  // 창 크기 변경 시 드롭다운 위치 재계산
+  useEffect(() => {
+    if (!actualIsOpen) return;
+
+    const handleResize = () => {
+      // 디바운스를 위해 requestAnimationFrame 사용
+      requestAnimationFrame(() => {
+        recalculatePosition();
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    // 스크롤 이벤트도 감지 (부모 요소가 스크롤될 때도 위치 재계산)
+    window.addEventListener('scroll', handleResize, true);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize, true);
+    };
+  }, [actualIsOpen, recalculatePosition]);
 
   // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
@@ -876,7 +919,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                       width: '16px',
                       height: '16px',
                       border: '2px solid #f3f3f3',
-                      borderTop: '2px solid #7248D9',
+                      borderTop: '2px solid #cccccc',
                       borderRadius: '50%',
                       animation: 'spin 1s linear infinite',
                     }}

@@ -616,6 +616,186 @@ export const NoSearchResults: Story = {
   },
 };
 
+// 창 크기 변경 테스트
+export const ResizeTest: Story = {
+  render: () => {
+    const [values, setValues] = useState<Record<string, string>>({
+      topLeft: '',
+      topRight: '',
+      bottomLeft: '',
+      bottomRight: '',
+      center: '',
+    });
+
+    const handleChange = (key: string) => (newValue: string) => {
+      setValues((prev) => ({ ...prev, [key]: newValue }));
+      action(`onChange-${key}`)(newValue);
+    };
+
+    return (
+      <div style={{ position: 'relative', minHeight: '100vh', padding: '20px' }}>
+        <div
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            background: '#f0f0f0',
+            padding: '16px',
+            borderRadius: '8px',
+            border: '1px solid #ccc',
+            fontSize: '14px',
+            zIndex: 10000,
+          }}
+        >
+          <h4 style={{ margin: '0 0 8px 0' }}>📏 창 크기 변경 테스트</h4>
+          <p style={{ margin: '0 0 8px 0' }}>
+            현재 창 크기: {window.innerWidth} × {window.innerHeight}
+          </p>
+          <p style={{ margin: '0', color: '#666' }}>
+            브라우저 창 크기를 변경하면서
+            <br />
+            드롭다운 위치가 자동으로
+            <br />
+            재계산되는지 확인해보세요!
+          </p>
+        </div>
+
+        {/* 상단 좌측 */}
+        <div style={{ position: 'absolute', top: '20px', left: '20px' }}>
+          <h4>상단 좌측</h4>
+          <Dropdown
+            placeholder="상단 좌측 드롭다운"
+            value={values.topLeft}
+            options={fruitOptions}
+            width="250px"
+            onChange={handleChange('topLeft')}
+          />
+        </div>
+
+        {/* 상단 우측 */}
+        <div style={{ position: 'absolute', top: '20px', right: '300px' }}>
+          <h4>상단 우측</h4>
+          <Dropdown
+            placeholder="상단 우측 드롭다운"
+            value={values.topRight}
+            options={memberOptions}
+            width="250px"
+            leadingIconType="home"
+            onChange={handleChange('topRight')}
+          />
+        </div>
+
+        {/* 중앙 */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <h4 style={{ textAlign: 'center' }}>중앙</h4>
+          <Dropdown
+            placeholder="중앙 드롭다운 (검색 기능)"
+            value={values.center}
+            options={fruitOptions}
+            width="300px"
+            enableSearch
+            leadingIconType="search"
+            onChange={handleChange('center')}
+            onSearchChange={action('onSearchChange-center')}
+          />
+        </div>
+
+        {/* 하단 좌측 */}
+        <div style={{ position: 'absolute', bottom: '20px', left: '20px' }}>
+          <h4>하단 좌측</h4>
+          <Dropdown
+            placeholder="하단 좌측 드롭다운"
+            value={values.bottomLeft}
+            options={basicOptions}
+            width="250px"
+            onChange={handleChange('bottomLeft')}
+          />
+        </div>
+
+        {/* 하단 우측 */}
+        <div style={{ position: 'absolute', bottom: '20px', right: '300px' }}>
+          <h4>하단 우측</h4>
+          <Dropdown
+            placeholder="하단 우측 드롭다운"
+            value={values.bottomRight}
+            options={mixedOptions}
+            width="250px"
+            onChange={handleChange('bottomRight')}
+          />
+        </div>
+
+        {/* 상태 표시 */}
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '20px',
+            background: 'white',
+            padding: '16px',
+            borderRadius: '8px',
+            border: '1px solid #ddd',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            fontSize: '12px',
+            maxWidth: '250px',
+          }}
+        >
+          <h4 style={{ margin: '0 0 8px 0', fontSize: '14px' }}>선택된 값들</h4>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div>상단좌측: {values.topLeft || '없음'}</div>
+            <div>상단우측: {values.topRight || '없음'}</div>
+            <div>중앙: {values.center || '없음'}</div>
+            <div>하단좌측: {values.bottomLeft || '없음'}</div>
+            <div>하단우측: {values.bottomRight || '없음'}</div>
+          </div>
+        </div>
+
+        {/* 테스트 안내 */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '120px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#FFF9E6',
+            border: '1px solid #FFD700',
+            borderRadius: '8px',
+            padding: '16px',
+            maxWidth: '600px',
+            textAlign: 'center',
+          }}
+        >
+          <h3 style={{ margin: '0 0 12px 0', color: '#B8860B' }}>
+            🧪 창 크기 변경 테스트 시나리오
+          </h3>
+          <ol style={{ textAlign: 'left', paddingLeft: '20px', margin: '0' }}>
+            <li>각 위치의 드롭다운을 클릭해서 옵션 목록을 엽니다</li>
+            <li>드롭다운이 열린 상태에서 브라우저 창 크기를 변경합니다</li>
+            <li>옵션 목록이 새로운 창 크기에 맞게 위치가 자동 조정되는지 확인합니다</li>
+            <li>페이지를 스크롤해도 드롭다운 위치가 올바르게 유지되는지 확인합니다</li>
+            <li>특히 화면 가장자리 근처의 드롭다운이 화면 밖으로 나가지 않는지 확인합니다</li>
+          </ol>
+        </div>
+      </div>
+    );
+  },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        story:
+          '창 크기 변경 시 드롭다운 위치 재계산 기능을 테스트할 수 있습니다. 화면의 다양한 위치에 드롭다운을 배치하고, 브라우저 창 크기를 조절하면서 위치가 올바르게 재계산되는지 확인할 수 있습니다.',
+      },
+    },
+  },
+};
+
 // 다양한 시나리오 통합
 export const AllFeatures: Story = {
   render: () => {
