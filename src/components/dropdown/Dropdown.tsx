@@ -859,7 +859,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '8px',
                   }}
                 >
                   <div
@@ -872,7 +871,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
                       animation: 'spin 1s linear infinite',
                     }}
                   />
-                  <span>로딩 중...</span>
                 </div>
               )}
             </>
