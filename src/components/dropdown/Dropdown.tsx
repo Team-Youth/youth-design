@@ -2,6 +2,21 @@ import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import { colors, spacing, typography } from '../../tokens';
 import { IconType, Icon } from '../icon';
 
+// 스피너 애니메이션을 위한 CSS keyframes 추가
+const spinKeyframes = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+// 스타일 시트에 keyframes 추가
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = spinKeyframes;
+  document.head.appendChild(style);
+}
+
 export interface DropdownOption {
   value: string;
   label: string;
@@ -33,6 +48,8 @@ export interface DropdownProps {
   width?: 'fill' | (string & {});
   /** 검색 기능 활성화 여부 */
   enableSearch?: boolean;
+  /** 검색 텍스트 변경 콜백 */
+  onSearchChange?: (searchValue: string) => void;
   /** 모든 옵션 숨김 여부 (드롭다운 자체를 열지 않음) */
   hideOption?: boolean;
   /** populated disabled 기능 비활성화 여부 (기본값: false) */
@@ -45,6 +62,12 @@ export interface DropdownProps {
   isOpen?: boolean;
   /** 드롭다운 열림 상태 변경 콜백 (선택사항) */
   onOpenChange?: (isOpen: boolean) => void;
+  /** 무한스크롤: 다음 페이지 로드 콜백 */
+  onLoadMore?: () => void;
+  /** 무한스크롤: 다음 페이지가 있는지 여부 */
+  hasNextPage?: boolean;
+  /** 무한스크롤: 로딩 중인지 여부 */
+  isLoadingMore?: boolean;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -60,12 +83,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
   size = 'l',
   width,
   enableSearch = false,
+  onSearchChange,
   hideOption = false,
   disablePopulatedDisabled = false,
   customContent,
   customContentMaxHeight = 200,
   isOpen,
   onOpenChange,
+  onLoadMore,
+  hasNextPage,
+  isLoadingMore,
 }) => {
   const [isOpenState, setIsOpenState] = useState(isOpen || false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -143,6 +170,21 @@ export const Dropdown: React.FC<DropdownProps> = ({
     }
     return '335px';
   }, [width, size]);
+
+  // 무한스크롤 스크롤 이벤트 처리
+  const handleScroll = useCallback(
+    (event: React.UIEvent<HTMLDivElement>) => {
+      if (!onLoadMore || !hasNextPage || isLoadingMore) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+      const scrollThreshold = 10; // 스크롤 임계값 (px)
+
+      if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
+        onLoadMore();
+      }
+    },
+    [onLoadMore, hasNextPage, isLoadingMore],
+  );
 
   // 검색 텍스트에 따른 옵션 필터링
   const filteredOptions = useMemo(() => {
@@ -550,10 +592,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
   const handleInputChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       if (!enableSearch) return;
-      setSearchText(event.target.value);
+      const newSearchValue = event.target.value;
+      setSearchText(newSearchValue);
       setHoveredOptionIndex(null);
+      // 외부 검색 핸들러 호출
+      onSearchChange?.(newSearchValue);
     },
-    [enableSearch],
+    [enableSearch, onSearchChange],
   );
 
   const getOptionStyles = useCallback(
@@ -733,7 +778,12 @@ export const Dropdown: React.FC<DropdownProps> = ({
       </div>
 
       {shouldRender && !hideOption && dropdownCoordinates && (
-        <div style={dropdownOptionsStyle} role="listbox" ref={optionsContainerRef}>
+        <div
+          style={dropdownOptionsStyle}
+          role="listbox"
+          ref={optionsContainerRef}
+          onScroll={handleScroll}
+        >
           {hasCustomContent ? (
             customContent
           ) : filteredOptions.length === 0 ? (
@@ -749,53 +799,83 @@ export const Dropdown: React.FC<DropdownProps> = ({
               {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
             </div>
           ) : (
-            filteredOptions.map((option, index) => {
-              const isSelected = value === option.value;
-              return (
+            <>
+              {filteredOptions.map((option, index) => {
+                const isSelected = value === option.value;
+                return (
+                  <div
+                    key={option.value}
+                    style={{
+                      ...getOptionStyles(option, index, isSelected),
+                      userSelect: !enableSearch ? 'none' : 'auto',
+                    }}
+                    onClick={() => !option.disabled && handleOptionClick(option.value)}
+                    onMouseEnter={() => setHoveredOptionIndex(index)}
+                    onMouseLeave={() => setHoveredOptionIndex(null)}
+                    role="option"
+                    aria-selected={isSelected}
+                    aria-disabled={option.disabled}
+                  >
+                    <span>{option.label}</span>
+                    {isSelected ? (
+                      <div
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#7248D9',
+                        }}
+                      >
+                        {getCheckIcon()}
+                      </div>
+                    ) : option.disabled ? (
+                      <div
+                        style={{
+                          width: '20px',
+                          height: '20px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: colors.semantic.disabled.foreground,
+                        }}
+                      >
+                        {getLockIcon()}
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+              {/* 무한스크롤 로딩 인디케이터 */}
+              {isLoadingMore && (
                 <div
-                  key={option.value}
                   style={{
-                    ...getOptionStyles(option, index, isSelected),
-                    userSelect: !enableSearch ? 'none' : 'auto',
+                    padding: '13px 16px',
+                    ...getTextStyle(),
+                    color: colors.semantic.disabled.foreground,
+                    textAlign: 'center',
+                    userSelect: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
                   }}
-                  onClick={() => !option.disabled && handleOptionClick(option.value)}
-                  onMouseEnter={() => setHoveredOptionIndex(index)}
-                  onMouseLeave={() => setHoveredOptionIndex(null)}
-                  role="option"
-                  aria-selected={isSelected}
-                  aria-disabled={option.disabled}
                 >
-                  <span>{option.label}</span>
-                  {isSelected ? (
-                    <div
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#7248D9',
-                      }}
-                    >
-                      {getCheckIcon()}
-                    </div>
-                  ) : option.disabled ? (
-                    <div
-                      style={{
-                        width: '20px',
-                        height: '20px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: colors.semantic.disabled.foreground,
-                      }}
-                    >
-                      {getLockIcon()}
-                    </div>
-                  ) : null}
+                  <div
+                    style={{
+                      width: '16px',
+                      height: '16px',
+                      border: '2px solid #f3f3f3',
+                      borderTop: '2px solid #7248D9',
+                      borderRadius: '50%',
+                      animation: 'spin 1s linear infinite',
+                    }}
+                  />
+                  <span>로딩 중...</span>
                 </div>
-              );
-            })
+              )}
+            </>
           )}
         </div>
       )}

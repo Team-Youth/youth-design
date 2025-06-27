@@ -21527,6 +21527,14 @@ var Modal = function (_a) {
   });
 };
 
+// 스피너 애니메이션을 위한 CSS keyframes 추가
+var spinKeyframes = "\n  @keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n  }\n";
+// 스타일 시트에 keyframes 추가
+if (typeof document !== 'undefined') {
+  var style = document.createElement('style');
+  style.textContent = spinKeyframes;
+  document.head.appendChild(style);
+}
 var Dropdown = function (_a) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? '' : _b,
@@ -21547,6 +21555,7 @@ var Dropdown = function (_a) {
     width = _a.width,
     _h = _a.enableSearch,
     enableSearch = _h === void 0 ? false : _h,
+    onSearchChange = _a.onSearchChange,
     _j = _a.hideOption,
     hideOption = _j === void 0 ? false : _j,
     _k = _a.disablePopulatedDisabled,
@@ -21555,7 +21564,10 @@ var Dropdown = function (_a) {
     _l = _a.customContentMaxHeight,
     customContentMaxHeight = _l === void 0 ? 200 : _l,
     isOpen = _a.isOpen,
-    onOpenChange = _a.onOpenChange;
+    onOpenChange = _a.onOpenChange,
+    onLoadMore = _a.onLoadMore,
+    hasNextPage = _a.hasNextPage,
+    isLoadingMore = _a.isLoadingMore;
   var _m = React.useState(isOpen || false),
     isOpenState = _m[0],
     setIsOpenState = _m[1];
@@ -21637,6 +21649,18 @@ var Dropdown = function (_a) {
     }
     return '335px';
   }, [width, size]);
+  // 무한스크롤 스크롤 이벤트 처리
+  var handleScroll = React.useCallback(function (event) {
+    if (!onLoadMore || !hasNextPage || isLoadingMore) return;
+    var _a = event.currentTarget,
+      scrollTop = _a.scrollTop,
+      scrollHeight = _a.scrollHeight,
+      clientHeight = _a.clientHeight;
+    var scrollThreshold = 10; // 스크롤 임계값 (px)
+    if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
+      onLoadMore();
+    }
+  }, [onLoadMore, hasNextPage, isLoadingMore]);
   // 검색 텍스트에 따른 옵션 필터링
   var filteredOptions = React.useMemo(function () {
     if (!enableSearch || !searchText.trim()) {
@@ -21965,9 +21989,12 @@ var Dropdown = function (_a) {
   }, [enableSearch, filteredOptions, handleOptionClick]);
   var handleInputChange = React.useCallback(function (event) {
     if (!enableSearch) return;
-    setSearchText(event.target.value);
+    var newSearchValue = event.target.value;
+    setSearchText(newSearchValue);
     setHoveredOptionIndex(null);
-  }, [enableSearch]);
+    // 외부 검색 핸들러 호출
+    onSearchChange === null || onSearchChange === void 0 ? void 0 : onSearchChange(newSearchValue);
+  }, [enableSearch, onSearchChange]);
   var getOptionStyles = React.useCallback(function (option, index, isSelected) {
     var backgroundColor = colors.semantic.background.primary; // #FFFFFF
     var textColor = colors.semantic.text.primary; // #25282D
@@ -22120,6 +22147,7 @@ var Dropdown = function (_a) {
       style: dropdownOptionsStyle,
       role: "listbox",
       ref: optionsContainerRef,
+      onScroll: handleScroll,
       children: hasCustomContent ? customContent : filteredOptions.length === 0 ? jsxRuntime.jsx("div", {
         style: __assign(__assign({
           padding: '13px 16px'
@@ -22129,48 +22157,74 @@ var Dropdown = function (_a) {
           userSelect: !enableSearch ? 'none' : 'auto'
         }),
         children: enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'
-      }) : filteredOptions.map(function (option, index) {
-        var isSelected = value === option.value;
-        return jsxRuntime.jsxs("div", {
-          style: __assign(__assign({}, getOptionStyles(option, index, isSelected)), {
-            userSelect: !enableSearch ? 'none' : 'auto'
+      }) : jsxRuntime.jsxs(jsxRuntime.Fragment, {
+        children: [filteredOptions.map(function (option, index) {
+          var isSelected = value === option.value;
+          return jsxRuntime.jsxs("div", {
+            style: __assign(__assign({}, getOptionStyles(option, index, isSelected)), {
+              userSelect: !enableSearch ? 'none' : 'auto'
+            }),
+            onClick: function () {
+              return !option.disabled && handleOptionClick(option.value);
+            },
+            onMouseEnter: function () {
+              return setHoveredOptionIndex(index);
+            },
+            onMouseLeave: function () {
+              return setHoveredOptionIndex(null);
+            },
+            role: "option",
+            "aria-selected": isSelected,
+            "aria-disabled": option.disabled,
+            children: [jsxRuntime.jsx("span", {
+              children: option.label
+            }), isSelected ? jsxRuntime.jsx("div", {
+              style: {
+                width: '20px',
+                height: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#7248D9'
+              },
+              children: getCheckIcon()
+            }) : option.disabled ? jsxRuntime.jsx("div", {
+              style: {
+                width: '20px',
+                height: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: colors.semantic.disabled.foreground
+              },
+              children: getLockIcon()
+            }) : null]
+          }, option.value);
+        }), isLoadingMore && jsxRuntime.jsxs("div", {
+          style: __assign(__assign({
+            padding: '13px 16px'
+          }, getTextStyle()), {
+            color: colors.semantic.disabled.foreground,
+            textAlign: 'center',
+            userSelect: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
           }),
-          onClick: function () {
-            return !option.disabled && handleOptionClick(option.value);
-          },
-          onMouseEnter: function () {
-            return setHoveredOptionIndex(index);
-          },
-          onMouseLeave: function () {
-            return setHoveredOptionIndex(null);
-          },
-          role: "option",
-          "aria-selected": isSelected,
-          "aria-disabled": option.disabled,
-          children: [jsxRuntime.jsx("span", {
-            children: option.label
-          }), isSelected ? jsxRuntime.jsx("div", {
+          children: [jsxRuntime.jsx("div", {
             style: {
-              width: '20px',
-              height: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#7248D9'
-            },
-            children: getCheckIcon()
-          }) : option.disabled ? jsxRuntime.jsx("div", {
-            style: {
-              width: '20px',
-              height: '20px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: colors.semantic.disabled.foreground
-            },
-            children: getLockIcon()
-          }) : null]
-        }, option.value);
+              width: '16px',
+              height: '16px',
+              border: '2px solid #f3f3f3',
+              borderTop: '2px solid #7248D9',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite'
+            }
+          }), jsxRuntime.jsx("span", {
+            children: "\uB85C\uB529 \uC911..."
+          })]
+        })]
       })
     }), error && errorMessage && jsxRuntime.jsx("div", {
       style: {
