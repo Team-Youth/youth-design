@@ -1,6 +1,7 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import React, { useState, forwardRef, useRef, useImperativeHandle, useCallback, useEffect, useMemo, memo, useLayoutEffect } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import * as React from 'react';
+import React__default, { useState, forwardRef, useRef, useImperativeHandle, useCallback, useLayoutEffect, createContext, useContext, useEffect, useMemo, memo } from 'react';
+import * as ReactDOM from 'react-dom';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -18374,7 +18375,7 @@ function requireLottie () {
 
 (function (module, exports) {
 	(function (global, factory) {
-	  factory(exports, requireLottie(), React) ;
+	  factory(exports, requireLottie(), React__default) ;
 	})(commonjsGlobal, (function (exports, lottie, React) {
 	  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -19138,7 +19139,7 @@ var YouthLottie = forwardRef(function (_a, ref) {
     segments: segments
   });
   // 애니메이션 설정 적용
-  React.useEffect(function () {
+  React__default.useEffect(function () {
     if (lottieRef.current) {
       lottieRef.current.setSpeed(speed);
       lottieRef.current.setDirection(direction);
@@ -19766,7 +19767,7 @@ var Tab = function (_a) {
     });
   };
   // underline용 ::after 스타일을 위한 unique id 생성
-  var uniqueId = React.useId();
+  var uniqueId = React__default.useId();
   var buttonId = "tab-".concat(uniqueId);
   // toggle 타입의 CSS 클래스 생성
   var getToggleClasses = function () {
@@ -20731,6 +20732,2351 @@ var Toggle = function (_a) {
   });
 };
 
+function hasWindow() {
+  return typeof window !== 'undefined';
+}
+function getWindow(node) {
+  var _node$ownerDocument;
+  return (node == null || (_node$ownerDocument = node.ownerDocument) == null ? void 0 : _node$ownerDocument.defaultView) || window;
+}
+function isShadowRoot(value) {
+  if (!hasWindow() || typeof ShadowRoot === 'undefined') {
+    return false;
+  }
+  return value instanceof ShadowRoot || value instanceof getWindow(value).ShadowRoot;
+}
+
+function getUserAgent() {
+  const uaData = navigator.userAgentData;
+  if (uaData && Array.isArray(uaData.brands)) {
+    return uaData.brands.map(_ref => {
+      let {
+        brand,
+        version
+      } = _ref;
+      return brand + "/" + version;
+    }).join(' ');
+  }
+  return navigator.userAgent;
+}
+function isSafari() {
+  // Chrome DevTools does not complain about navigator.vendor
+  return /apple/i.test(navigator.vendor);
+}
+function isJSDOM() {
+  return getUserAgent().includes('jsdom/');
+}
+
+function activeElement(doc) {
+  let activeElement = doc.activeElement;
+  while (((_activeElement = activeElement) == null || (_activeElement = _activeElement.shadowRoot) == null ? void 0 : _activeElement.activeElement) != null) {
+    var _activeElement;
+    activeElement = activeElement.shadowRoot.activeElement;
+  }
+  return activeElement;
+}
+function contains(parent, child) {
+  if (!parent || !child) {
+    return false;
+  }
+  const rootNode = child.getRootNode == null ? void 0 : child.getRootNode();
+
+  // First, attempt with faster native method
+  if (parent.contains(child)) {
+    return true;
+  }
+
+  // then fallback to custom implementation with Shadow DOM support
+  if (rootNode && isShadowRoot(rootNode)) {
+    let next = child;
+    while (next) {
+      if (parent === next) {
+        return true;
+      }
+      // @ts-ignore
+      next = next.parentNode || next.host;
+    }
+  }
+
+  // Give up, the result is false
+  return false;
+}
+function getTarget(event) {
+  if ('composedPath' in event) {
+    return event.composedPath()[0];
+  }
+
+  // TS thinks `event` is of type never as it assumes all browsers support
+  // `composedPath()`, but browsers without shadow DOM don't.
+  return event.target;
+}
+function getDocument(node) {
+  return (node == null ? void 0 : node.ownerDocument) || document;
+}
+function matchesFocusVisible(element) {
+  // We don't want to block focus from working with `visibleOnly`
+  // (JSDOM doesn't match `:focus-visible` when the element has `:focus`)
+  if (!element || isJSDOM()) return true;
+  try {
+    return element.matches(':focus-visible');
+  } catch (_e) {
+    return true;
+  }
+}
+
+var isClient = typeof document !== 'undefined';
+
+var noop = function noop() {};
+var index = isClient ? useLayoutEffect : noop;
+
+function useLatestRef$1(value) {
+  const ref = React.useRef(value);
+  index(() => {
+    ref.current = value;
+  });
+  return ref;
+}
+
+const ToastContext = /*#__PURE__*/React.createContext(undefined);
+if (process.env.NODE_ENV !== "production") ToastContext.displayName = "ToastContext";
+function useToastContext() {
+  const context = React.useContext(ToastContext);
+  if (!context) {
+    throw new Error('Base UI: useToast must be used within <Toast.Provider>.');
+  }
+  return context;
+}
+
+const UNINITIALIZED = {};
+
+/**
+ * A React.useRef() that is initialized lazily with a function. Note that it accepts an optional
+ * initialization argument, so the initialization function doesn't need to be an inline closure.
+ *
+ * @usage
+ *   const ref = useLazyRef(sortColumns, columns)
+ */
+
+function useLazyRef(init, initArg) {
+  const ref = React.useRef(UNINITIALIZED);
+  if (ref.current === UNINITIALIZED) {
+    ref.current = init(initArg);
+  }
+  return ref;
+}
+
+// https://github.com/mui/material-ui/issues/41190#issuecomment-2040873379
+const useInsertionEffect = React[`useInsertionEffect${Math.random().toFixed(1)}`.slice(0, -3)] || (fn => fn());
+function useEventCallback(callback) {
+  const stable = useLazyRef(createStableCallback).current;
+  stable.next = callback;
+  useInsertionEffect(stable.effect);
+  return stable.trampoline;
+}
+function createStableCallback() {
+  const stable = {
+    next: undefined,
+    callback: assertNotCalled,
+    trampoline: (...args) => stable.callback?.(...args),
+    effect: () => {
+      stable.callback = stable.next;
+    }
+  };
+  return stable;
+}
+function assertNotCalled() {
+  throw new Error('Cannot call an event handler while rendering.');
+}
+
+let counter = 0;
+function generateId(prefix) {
+  counter += 1;
+  return `${prefix}-${Math.random().toString(36).slice(2, 6)}-${counter}`;
+}
+
+function resolvePromiseOptions(options, result) {
+  if (typeof options === 'string') {
+    return {
+      description: options
+    };
+  }
+  if (typeof options === 'function') {
+    const resolvedOptions = options(result);
+    return typeof resolvedOptions === 'string' ? {
+      description: resolvedOptions
+    } : resolvedOptions;
+  }
+  return options;
+}
+
+const EMPTY$2 = [];
+
+/**
+ * A React.useEffect equivalent that runs once, when the component is mounted.
+ */
+function useOnMount(fn) {
+  // TODO: uncomment once we enable eslint-plugin-react-compiler // eslint-disable-next-line react-compiler/react-compiler -- no need to put `fn` in the dependency array
+  /* eslint-disable react-hooks/exhaustive-deps */
+  React.useEffect(fn, EMPTY$2);
+  /* eslint-enable react-hooks/exhaustive-deps */
+}
+
+const EMPTY$1 = 0;
+class Timeout {
+  static create() {
+    return new Timeout();
+  }
+  currentId = (() => EMPTY$1)();
+
+  /**
+   * Executes `fn` after `delay`, clearing any previously scheduled call.
+   */
+  start(delay, fn) {
+    this.clear();
+    this.currentId = setTimeout(() => {
+      this.currentId = EMPTY$1;
+      fn();
+    }, delay); /* Node.js types are enabled in development */
+  }
+  isStarted() {
+    return this.currentId !== EMPTY$1;
+  }
+  clear = () => {
+    if (this.currentId !== EMPTY$1) {
+      clearTimeout(this.currentId);
+      this.currentId = EMPTY$1;
+    }
+  };
+  disposeEffect = () => {
+    return this.clear;
+  };
+}
+
+/**
+ * A `setTimeout` with automatic cleanup and guard.
+ */
+function useTimeout() {
+  const timeout = useLazyRef(Timeout.create).current;
+  useOnMount(timeout.disposeEffect);
+  return timeout;
+}
+
+/**
+ * Provides a context for creating and managing toasts.
+ *
+ * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
+ */
+const ToastProvider$1 = function ToastProvider(props) {
+  const {
+    children,
+    timeout = 5000,
+    limit = 3,
+    toastManager
+  } = props;
+  const [toasts, setToasts] = React.useState([]);
+  const [hovering, setHovering] = React.useState(false);
+  const [focused, setFocused] = React.useState(false);
+  const [prevFocusElement, setPrevFocusElement] = React.useState(null);
+  if (toasts.length === 0) {
+    if (hovering) {
+      setHovering(false);
+    }
+    if (focused) {
+      setFocused(false);
+    }
+  }
+
+  // It's not possible to stack a smaller height toast onto a larger height toast, but
+  // the reverse is possible. For simplicity, we'll enforce the expanded state if the
+  // toasts aren't all the same height.
+  const hasDifferingHeights = React.useMemo(() => {
+    const heights = toasts.map(t => t.height).filter(h => h !== 0);
+    return heights.length > 0 && new Set(heights).size > 1;
+  }, [toasts]);
+  const timersRef = React.useRef(new Map());
+  const viewportRef = React.useRef(null);
+  const windowFocusedRef = React.useRef(true);
+  const isPausedRef = React.useRef(false);
+  const hoveringRef = useLatestRef$1(hovering);
+  const focusedRef = useLatestRef$1(focused);
+  const handleFocusManagement = useEventCallback(toastId => {
+    const activeEl = activeElement(getDocument(viewportRef.current));
+    if (!viewportRef.current || !contains(viewportRef.current, activeEl) || !matchesFocusVisible(activeEl)) {
+      return;
+    }
+    const currentIndex = toasts.findIndex(toast => toast.id === toastId);
+    let nextToast = null;
+
+    // Try to find the next toast that isn't animating out
+    let index = currentIndex + 1;
+    while (index < toasts.length) {
+      if (toasts[index].transitionStatus !== 'ending') {
+        nextToast = toasts[index];
+        break;
+      }
+      index += 1;
+    }
+
+    // Go backwards if no next toast is found
+    if (!nextToast) {
+      index = currentIndex - 1;
+      while (index >= 0) {
+        if (toasts[index].transitionStatus !== 'ending') {
+          nextToast = toasts[index];
+          break;
+        }
+        index -= 1;
+      }
+    }
+    if (nextToast) {
+      nextToast.ref?.current?.focus();
+    } else {
+      prevFocusElement?.focus({
+        preventScroll: true
+      });
+    }
+  });
+  const pauseTimers = useEventCallback(() => {
+    if (isPausedRef.current) {
+      return;
+    }
+    isPausedRef.current = true;
+    timersRef.current.forEach(timer => {
+      if (timer.timeout) {
+        timer.timeout.clear();
+        const elapsed = Date.now() - timer.start;
+        const remaining = timer.delay - elapsed;
+        timer.remaining = remaining > 0 ? remaining : 0;
+      }
+    });
+  });
+  const resumeTimers = useEventCallback(() => {
+    if (!isPausedRef.current) {
+      return;
+    }
+    isPausedRef.current = false;
+    timersRef.current.forEach((timer, id) => {
+      timer.remaining = timer.remaining > 0 ? timer.remaining : timer.delay;
+      timer.timeout ??= Timeout.create();
+      timer.timeout.start(timer.remaining, () => {
+        timersRef.current.delete(id);
+        timer.callback();
+      });
+      timer.start = Date.now();
+    });
+  });
+  const close = useEventCallback(toastId => {
+    setToasts(prevToasts => {
+      const toastsWithEnding = prevToasts.map(toast => toast.id === toastId ? {
+        ...toast,
+        transitionStatus: 'ending',
+        height: 0
+      } : toast);
+      const activeToasts = toastsWithEnding.filter(t => t.transitionStatus !== 'ending');
+      return toastsWithEnding.map(toast => {
+        if (toast.transitionStatus === 'ending') {
+          return toast;
+        }
+        const isActiveToastLimited = activeToasts.indexOf(toast) >= limit;
+        return {
+          ...toast,
+          limited: isActiveToastLimited
+        };
+      });
+    });
+    const timer = timersRef.current.get(toastId);
+    if (timer && timer.timeout) {
+      timer.timeout.clear();
+      timersRef.current.delete(toastId);
+    }
+    const toast = toasts.find(t => t.id === toastId);
+    toast?.onClose?.();
+    handleFocusManagement(toastId);
+    if (toasts.length === 1) {
+      hoveringRef.current = false;
+      focusedRef.current = false;
+    }
+  });
+  const remove = useEventCallback(toastId => {
+    setToasts(prev => prev.filter(toast => toast.id !== toastId));
+    const toast = toasts.find(t => t.id === toastId);
+    toast?.onRemove?.();
+  });
+  const scheduleTimer = useEventCallback((id, delay, callback) => {
+    const start = Date.now();
+    const shouldStartActive = windowFocusedRef.current && !hoveringRef.current && !focusedRef.current;
+    const currentTimeout = shouldStartActive ? Timeout.create() : undefined;
+    currentTimeout?.start(delay, () => {
+      timersRef.current.delete(id);
+      callback();
+    });
+    timersRef.current.set(id, {
+      timeout: currentTimeout,
+      start: shouldStartActive ? start : 0,
+      delay,
+      remaining: delay,
+      callback
+    });
+  });
+  const add = useEventCallback(toast => {
+    const id = toast.id || generateId('toast');
+    const toastToAdd = {
+      ...toast,
+      id,
+      transitionStatus: 'starting'
+    };
+    setToasts(prev => {
+      const updatedToasts = [toastToAdd, ...prev];
+      const activeToasts = updatedToasts.filter(t => t.transitionStatus !== 'ending');
+
+      // Mark oldest toasts for removal when over limit
+      if (activeToasts.length > limit) {
+        const excessCount = activeToasts.length - limit;
+        const oldestActiveToasts = activeToasts.slice(-excessCount);
+        return updatedToasts.map(t => oldestActiveToasts.some(old => old.id === t.id) ? {
+          ...t,
+          limited: true
+        } : {
+          ...t,
+          limited: false
+        });
+      }
+      return updatedToasts.map(t => ({
+        ...t,
+        limited: false
+      }));
+    });
+    const duration = toastToAdd.timeout ?? timeout;
+    if (toastToAdd.type !== 'loading' && duration > 0) {
+      scheduleTimer(id, duration, () => close(id));
+    }
+    if (hoveringRef.current || focusedRef.current || !windowFocusedRef.current) {
+      pauseTimers();
+    }
+    return id;
+  });
+  const update = useEventCallback((id, updates) => {
+    setToasts(prev => prev.map(toast => toast.id === id ? {
+      ...toast,
+      ...updates
+    } : toast));
+  });
+  const promise = useEventCallback((promiseValue, options) => {
+    // Create a loading toast (which does not auto-dismiss).
+    const loadingOptions = resolvePromiseOptions(options.loading);
+    const id = add({
+      ...loadingOptions,
+      type: 'loading'
+    });
+    const handledPromise = promiseValue.then(result => {
+      update(id, {
+        ...resolvePromiseOptions(options.success, result),
+        type: 'success'
+      });
+      scheduleTimer(id, timeout, () => close(id));
+      if (hoveringRef.current || focusedRef.current || !windowFocusedRef.current) {
+        pauseTimers();
+      }
+      return result;
+    }).catch(error => {
+      update(id, {
+        ...resolvePromiseOptions(options.error, error),
+        type: 'error'
+      });
+      scheduleTimer(id, timeout, () => close(id));
+      if (hoveringRef.current || focusedRef.current || !windowFocusedRef.current) {
+        pauseTimers();
+      }
+      return Promise.reject(error);
+    });
+
+    // Private API used exclusively by `Manager` to handoff the promise
+    // back to the manager after it's handled here.
+    if ({}.hasOwnProperty.call(options, 'setPromise')) {
+      options.setPromise(handledPromise);
+    }
+    return handledPromise;
+  });
+  React.useEffect(function subscribeToToastManager() {
+    if (!toastManager) {
+      return undefined;
+    }
+    const unsubscribe = toastManager[' subscribe'](({
+      action,
+      options
+    }) => {
+      const id = options.id;
+      if (action === 'promise' && options.promise) {
+        promise(options.promise, options);
+      } else if (action === 'update' && id) {
+        update(id, options);
+      } else if (action === 'close' && id) {
+        close(id);
+      } else {
+        add(options);
+      }
+    });
+    return unsubscribe;
+  }, [add, update, scheduleTimer, timeout, toastManager, promise, close]);
+  const contextValue = React.useMemo(() => ({
+    toasts,
+    setToasts,
+    hovering,
+    setHovering,
+    focused,
+    setFocused,
+    add,
+    close,
+    remove,
+    update,
+    promise,
+    pauseTimers,
+    resumeTimers,
+    prevFocusElement,
+    setPrevFocusElement,
+    viewportRef,
+    scheduleTimer,
+    windowFocusedRef,
+    hasDifferingHeights
+  }), [add, close, focused, hovering, pauseTimers, prevFocusElement, promise, remove, resumeTimers, scheduleTimer, toasts, update, hasDifferingHeights]);
+  return /*#__PURE__*/jsx(ToastContext.Provider, {
+    value: contextValue,
+    children: children
+  });
+};
+if (process.env.NODE_ENV !== "production") ToastProvider$1.displayName = "ToastProvider";
+
+const ToastViewportContext = /*#__PURE__*/React.createContext(undefined);
+if (process.env.NODE_ENV !== "production") ToastViewportContext.displayName = "ToastViewportContext";
+
+const visuallyHidden = {
+  clip: 'rect(0 0 0 0)',
+  overflow: 'hidden',
+  whiteSpace: 'nowrap',
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  border: 0,
+  padding: 0,
+  width: 1,
+  height: 1,
+  margin: -1
+};
+
+const FocusGuard = /*#__PURE__*/React.forwardRef(function FocusGuard(props, ref) {
+  const [role, setRole] = React.useState();
+  index(() => {
+    if (isSafari()) {
+      // Unlike other screen readers such as NVDA and JAWS, the virtual cursor
+      // on VoiceOver does trigger the onFocus event, so we can use the focus
+      // trap element. On Safari, only buttons trigger the onFocus event.
+      setRole('button');
+    }
+  }, []);
+  const restProps = {
+    ref,
+    tabIndex: 0,
+    // Role is only for VoiceOver
+    role,
+    'aria-hidden': role ? undefined : true,
+    style: visuallyHidden
+  };
+  return /*#__PURE__*/jsx("span", {
+    ...props,
+    ...restProps,
+    "data-base-ui-focus-guard": ""
+  });
+});
+if (process.env.NODE_ENV !== "production") FocusGuard.displayName = "FocusGuard";
+
+function getStyleHookProps(state, customMapping) {
+  const props = {};
+
+  /* eslint-disable-next-line guard-for-in */
+  for (const key in state) {
+    const value = state[key];
+    if (customMapping?.hasOwnProperty(key)) {
+      const customProps = customMapping[key](value);
+      if (customProps != null) {
+        Object.assign(props, customProps);
+      }
+      continue;
+    }
+    if (value === true) {
+      props[`data-${key.toLowerCase()}`] = '';
+    } else if (value) {
+      props[`data-${key.toLowerCase()}`] = value.toString();
+    }
+  }
+  return props;
+}
+
+/**
+ * Merges refs into a single memoized callback ref or `null`.
+ */
+
+function useForkRef(a, b, c, d) {
+  const forkRef = useLazyRef(createForkRef).current;
+  if (didChange(forkRef, a, b, c, d)) {
+    update(forkRef, [a, b, c, d]);
+  }
+  return forkRef.callback;
+}
+
+/**
+ * Merges variadic amount of refs into a single memoized callback ref or `null`.
+ */
+function useForkRefN(...refs) {
+  const forkRef = useLazyRef(createForkRef).current;
+  if (didChangeN(forkRef, refs)) {
+    update(forkRef, refs);
+  }
+  return forkRef.callback;
+}
+function createForkRef() {
+  return {
+    callback: null,
+    cleanup: null,
+    refs: []
+  };
+}
+function didChange(forkRef, a, b, c, d) {
+  // prettier-ignore
+  return forkRef.refs[0] !== a || forkRef.refs[1] !== b || forkRef.refs[2] !== c || forkRef.refs[3] !== d;
+}
+function didChangeN(forkRef, newRefs) {
+  return forkRef.refs.length !== newRefs.length || forkRef.refs.some((ref, index) => ref !== newRefs[index]);
+}
+function update(forkRef, refs) {
+  forkRef.refs = refs;
+  if (refs.every(ref => ref == null)) {
+    forkRef.callback = null;
+    return;
+  }
+  forkRef.callback = instance => {
+    if (forkRef.cleanup) {
+      forkRef.cleanup();
+      forkRef.cleanup = null;
+    }
+    if (instance != null) {
+      const cleanupCallbacks = Array(refs.length).fill(null);
+      for (let i = 0; i < refs.length; i += 1) {
+        const ref = refs[i];
+        if (ref == null) {
+          continue;
+        }
+        switch (typeof ref) {
+          case 'function':
+            {
+              const refCleanup = ref(instance);
+              if (typeof refCleanup === 'function') {
+                cleanupCallbacks[i] = refCleanup;
+              }
+              break;
+            }
+          case 'object':
+            {
+              ref.current = instance;
+              break;
+            }
+        }
+      }
+      forkRef.cleanup = () => {
+        for (let i = 0; i < refs.length; i += 1) {
+          const ref = refs[i];
+          if (ref == null) {
+            continue;
+          }
+          switch (typeof ref) {
+            case 'function':
+              {
+                const cleanupCallback = cleanupCallbacks[i];
+                if (typeof cleanupCallback === 'function') {
+                  cleanupCallback();
+                } else {
+                  ref(null);
+                }
+                break;
+              }
+            case 'object':
+              {
+                ref.current = null;
+                break;
+              }
+          }
+        }
+      };
+    }
+  };
+}
+
+/**
+ * If the provided className is a string, it will be returned as is.
+ * Otherwise, the function will call the className function with the state as the first argument.
+ *
+ * @param className
+ * @param state
+ */
+function resolveClassName(className, state) {
+  return typeof className === 'function' ? className(state) : className;
+}
+
+const majorVersion = parseInt(React.version, 10);
+function isReactVersionAtLeast(reactVersionToCheck) {
+  return majorVersion >= reactVersionToCheck;
+}
+
+function mergeObjects(a, b) {
+  if (a && !b) {
+    return a;
+  }
+  if (!a && b) {
+    return b;
+  }
+  if (a || b) {
+    return {
+      ...a,
+      ...b
+    };
+  }
+  return undefined;
+}
+
+const EMPTY_PROPS = {};
+
+/**
+ * Merges multiple sets of React props. It follows the Object.assign pattern where the rightmost object's fields overwrite
+ * the conflicting ones from others. This doesn't apply to event handlers, `className` and `style` props.
+ * Event handlers are merged such that they are called in sequence (the rightmost one being called first),
+ * and allows the user to prevent the subsequent event handlers from being
+ * executed by attaching a `preventBaseUIHandler` method.
+ * It also merges the `className` and `style` props, whereby the classes are concatenated
+ * and the rightmost styles overwrite the subsequent ones.
+ *
+ * Props can either be provided as objects or as functions that take the previous props as an argument.
+ * The function will receive the merged props up to that point (going from left to right):
+ * so in the case of `(obj1, obj2, fn, obj3)`, `fn` will receive the merged props of `obj1` and `obj2`.
+ * The function is responsible for chaining event handlers if needed (i.e. we don't run the merge logic).
+ *
+ * Event handlers returned by the functions are not automatically prevented when `preventBaseUIHandler` is called.
+ * They must check `event.baseUIHandlerPrevented` themselves and bail out if it's true.
+ *
+ * @important **`ref` is not merged.**
+ * @param props props to merge.
+ * @returns the merged props.
+ */
+/* eslint-disable id-denylist */
+
+function mergeProps(a, b, c, d, e) {
+  // We need to mutably own `merged`
+  let merged = {
+    ...resolvePropsGetter(a, EMPTY_PROPS)
+  };
+  if (b) {
+    merged = mergeOne(merged, b);
+  }
+  if (c) {
+    merged = mergeOne(merged, c);
+  }
+  if (d) {
+    merged = mergeOne(merged, d);
+  }
+  if (e) {
+    merged = mergeOne(merged, e);
+  }
+  return merged;
+}
+/* eslint-enable id-denylist */
+
+function mergePropsN(props) {
+  if (props.length === 0) {
+    return EMPTY_PROPS;
+  }
+  if (props.length === 1) {
+    return resolvePropsGetter(props[0], EMPTY_PROPS);
+  }
+
+  // We need to mutably own `merged`
+  let merged = {
+    ...resolvePropsGetter(props[0], EMPTY_PROPS)
+  };
+  for (let i = 1; i < props.length; i += 1) {
+    merged = mergeOne(merged, props[i]);
+  }
+  return merged;
+}
+function mergeOne(merged, inputProps) {
+  if (isPropsGetter(inputProps)) {
+    return inputProps(merged);
+  }
+  return mutablyMergeInto(merged, inputProps);
+}
+
+/**
+ * Merges two sets of props. In case of conflicts, the external props take precedence.
+ */
+function mutablyMergeInto(mergedProps, externalProps) {
+  if (!externalProps) {
+    return mergedProps;
+  }
+
+  // eslint-disable-next-line guard-for-in
+  for (const propName in externalProps) {
+    const externalPropValue = externalProps[propName];
+    switch (propName) {
+      case 'style':
+        {
+          mergedProps[propName] = mergeObjects(mergedProps.style, externalPropValue);
+          break;
+        }
+      case 'className':
+        {
+          mergedProps[propName] = mergeClassNames(mergedProps.className, externalPropValue);
+          break;
+        }
+      default:
+        {
+          if (isEventHandler(propName, externalPropValue)) {
+            mergedProps[propName] = mergeEventHandlers(mergedProps[propName], externalPropValue);
+          } else {
+            mergedProps[propName] = externalPropValue;
+          }
+        }
+    }
+  }
+  return mergedProps;
+}
+function isEventHandler(key, value) {
+  // This approach is more efficient than using a regex.
+  const code0 = key.charCodeAt(0);
+  const code1 = key.charCodeAt(1);
+  const code2 = key.charCodeAt(2);
+  return code0 === 111 /* o */ && code1 === 110 /* n */ && code2 >= 65 /* A */ && code2 <= 90 /* Z */ && typeof value === 'function';
+}
+function isPropsGetter(inputProps) {
+  return typeof inputProps === 'function';
+}
+function resolvePropsGetter(inputProps, previousProps) {
+  if (isPropsGetter(inputProps)) {
+    return inputProps(previousProps);
+  }
+  return inputProps ?? EMPTY_PROPS;
+}
+function mergeEventHandlers(ourHandler, theirHandler) {
+  return event => {
+    if (isSyntheticEvent(event)) {
+      const baseUIEvent = event;
+      makeEventPreventable(baseUIEvent);
+      const result = theirHandler(baseUIEvent);
+      if (!baseUIEvent.baseUIHandlerPrevented) {
+        ourHandler?.(baseUIEvent);
+      }
+      return result;
+    }
+    const result = theirHandler(event);
+    ourHandler?.(event);
+    return result;
+  };
+}
+function makeEventPreventable(event) {
+  event.preventBaseUIHandler = () => {
+    event.baseUIHandlerPrevented = true;
+  };
+  return event;
+}
+function mergeClassNames(ourClassName, theirClassName) {
+  if (theirClassName) {
+    if (ourClassName) {
+      // eslint-disable-next-line prefer-template
+      return theirClassName + ' ' + ourClassName;
+    }
+    return theirClassName;
+  }
+  return ourClassName;
+}
+function isSyntheticEvent(event) {
+  return event != null && typeof event === 'object' && 'nativeEvent' in event;
+}
+
+const EMPTY_OBJECT = {};
+const IDENTITY = x => x;
+
+/**
+ * Render a Base UI element.
+ */
+function useRenderElement(element, componentProps, params = {}) {
+  const renderProp = componentProps.render;
+  const outProps = useRenderElementProps(componentProps, params);
+  if (params.enabled === false) {
+    return null;
+  }
+  const state = params.state ?? EMPTY_OBJECT;
+  return evaluateRenderProp(element, renderProp, outProps, state);
+}
+
+/**
+ * Computes render element final props.
+ */
+function useRenderElementProps(componentProps, params = {}) {
+  const {
+    className: classNameProp,
+    render: renderProp
+  } = componentProps;
+  const {
+    propGetter = IDENTITY,
+    state = EMPTY_OBJECT,
+    ref,
+    props,
+    disableStyleHooks,
+    customStyleHookMapping,
+    enabled = true
+  } = params;
+  const className = enabled ? resolveClassName(classNameProp, state) : undefined;
+  let styleHooks;
+  if (disableStyleHooks !== true) {
+    // SAFETY: We use typings to ensure `disableStyleHooks` is either always set or
+    // always unset, so this `if` block is stable across renders.
+    /* eslint-disable-next-line react-hooks/rules-of-hooks */
+    styleHooks = React.useMemo(() => enabled ? getStyleHookProps(state, customStyleHookMapping) : EMPTY_OBJECT, [state, customStyleHookMapping, enabled]);
+  }
+  const outProps = enabled ? propGetter(mergeObjects(styleHooks, Array.isArray(props) ? mergePropsN(props) : props) ?? EMPTY_OBJECT) : EMPTY_OBJECT;
+
+  // SAFETY: The `useForkRef` functions use a single hook to store the same value,
+  // switching between them at runtime is safe. If this assertion fails, React will
+  // throw at runtime anyway.
+  /* eslint-disable react-hooks/rules-of-hooks */
+  if (!enabled) {
+    useForkRef(null, null);
+  } else if (Array.isArray(ref)) {
+    outProps.ref = useForkRefN(outProps.ref, getChildRef(renderProp), ...ref);
+  } else {
+    outProps.ref = useForkRef(outProps.ref, getChildRef(renderProp), ref);
+  }
+  /* eslint-enable react-hooks/rules-of-hooks */
+
+  if (!enabled) {
+    return EMPTY_OBJECT;
+  }
+  if (className !== undefined) {
+    outProps.className = className;
+  }
+  return outProps;
+}
+function evaluateRenderProp(element, render, props, state) {
+  if (render) {
+    if (typeof render === 'function') {
+      return render(props, state);
+    }
+    const mergedProps = mergeProps(props, render.props);
+    mergedProps.ref = props.ref;
+    return /*#__PURE__*/React.cloneElement(render, mergedProps);
+  }
+  if (element) {
+    if (typeof element === 'string') {
+      return renderTag(element, props);
+    }
+  }
+  // Unreachable, but the typings on `useRenderElement` need to be reworked
+  // to annotate it correctly.
+  throw new Error('Need either element or render to be defined');
+}
+function renderTag(Tag, props) {
+  if (Tag === 'button') {
+    return /*#__PURE__*/jsx("button", {
+      type: "button",
+      ...props
+    });
+  }
+  if (Tag === 'img') {
+    return /*#__PURE__*/jsx("img", {
+      alt: "",
+      ...props
+    });
+  }
+  return /*#__PURE__*/React.createElement(Tag, props);
+}
+function getChildRef(render) {
+  if (render && typeof render !== 'function') {
+    return isReactVersionAtLeast(19) ? render.props.ref : render.ref;
+  }
+  return null;
+}
+
+const ToastViewport = /*#__PURE__*/React.forwardRef(function ToastViewport(componentProps, forwardedRef) {
+  const {
+    render,
+    className,
+    children,
+    ...elementProps
+  } = componentProps;
+  const {
+    toasts,
+    pauseTimers,
+    resumeTimers,
+    setHovering,
+    setFocused,
+    viewportRef,
+    windowFocusedRef,
+    prevFocusElement,
+    setPrevFocusElement,
+    hovering,
+    focused,
+    hasDifferingHeights
+  } = useToastContext();
+  const handlingFocusGuardRef = React.useRef(false);
+  const focusedRef = useLatestRef$1(focused);
+  const numToasts = toasts.length;
+
+  // Listen globally for F6 so we can force-focus the viewport.
+  React.useEffect(() => {
+    if (!viewportRef.current) {
+      return undefined;
+    }
+    function handleGlobalKeyDown(event) {
+      if (numToasts === 0) {
+        return;
+      }
+      if (event.key === 'F6' && event.target !== viewportRef.current) {
+        event.preventDefault();
+        setPrevFocusElement(activeElement(getDocument(viewportRef.current)));
+        viewportRef.current?.focus();
+        pauseTimers();
+        setFocused(true);
+      }
+    }
+    const win = getWindow(viewportRef.current);
+    win.addEventListener('keydown', handleGlobalKeyDown);
+    return () => {
+      win.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, [pauseTimers, setFocused, setPrevFocusElement, numToasts, viewportRef]);
+  React.useEffect(() => {
+    if (!viewportRef.current || !numToasts) {
+      return undefined;
+    }
+    const win = getWindow(viewportRef.current);
+    function handleWindowBlur(event) {
+      if (event.target !== win) {
+        return;
+      }
+      windowFocusedRef.current = false;
+      pauseTimers();
+    }
+    function handleWindowFocus(event) {
+      if (event.relatedTarget || event.target === win) {
+        return;
+      }
+      const target = getTarget(event);
+      const activeEl = activeElement(getDocument(viewportRef.current));
+      if (!contains(viewportRef.current, target) || !matchesFocusVisible(activeEl)) {
+        resumeTimers();
+      }
+
+      // Wait for the `handleFocus` event to fire.
+      setTimeout(() => {
+        windowFocusedRef.current = true;
+      });
+    }
+    win.addEventListener('blur', handleWindowBlur, true);
+    win.addEventListener('focus', handleWindowFocus, true);
+    return () => {
+      win.removeEventListener('blur', handleWindowBlur, true);
+      win.removeEventListener('focus', handleWindowFocus, true);
+    };
+  }, [pauseTimers, resumeTimers, viewportRef, windowFocusedRef, setFocused, focusedRef,
+  // `viewportRef.current` isn't available on the first render,
+  // since the portal node hasn't yet been created.
+  // By adding this dependency, we ensure the window listeners
+  // are added when toasts have been created, once the ref is available.
+  numToasts]);
+  function handleFocusGuard(event) {
+    if (!viewportRef.current) {
+      return;
+    }
+    handlingFocusGuardRef.current = true;
+
+    // If we're coming off the container, move to the first toast
+    if (event.relatedTarget === viewportRef.current) {
+      toasts[0]?.ref?.current?.focus();
+    } else {
+      prevFocusElement?.focus({
+        preventScroll: true
+      });
+    }
+  }
+  function handleKeyDown(event) {
+    if (event.key === 'Tab' && event.shiftKey && event.target === viewportRef.current) {
+      event.preventDefault();
+      prevFocusElement?.focus({
+        preventScroll: true
+      });
+      resumeTimers();
+    }
+  }
+  function handleMouseEnter() {
+    pauseTimers();
+    setHovering(true);
+  }
+  function handleMouseLeave() {
+    const activeEl = activeElement(getDocument(viewportRef.current));
+    if (contains(viewportRef.current, activeEl) && matchesFocusVisible(activeEl)) {
+      return;
+    }
+    resumeTimers();
+    setHovering(false);
+  }
+  function handleFocus() {
+    if (handlingFocusGuardRef.current) {
+      handlingFocusGuardRef.current = false;
+      return;
+    }
+    if (focused) {
+      return;
+    }
+
+    // If the window was previously blurred, the focus must be visible to
+    // pause the timers, since for pointers it's unexpected that focus is
+    // considered inside the viewport at this point.
+    const activeEl = activeElement(getDocument(viewportRef.current));
+    if (!windowFocusedRef.current && !matchesFocusVisible(activeEl)) {
+      return;
+    }
+    setFocused(true);
+    pauseTimers();
+  }
+  function handleBlur(event) {
+    if (!focused || contains(viewportRef.current, event.relatedTarget)) {
+      return;
+    }
+    setFocused(false);
+    resumeTimers();
+  }
+  const props = {
+    role: 'region',
+    tabIndex: -1,
+    'aria-label': `${numToasts} notification${numToasts !== 1 ? 's' : ''} (F6)`,
+    onMouseEnter: handleMouseEnter,
+    onMouseMove: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+    onFocus: handleFocus,
+    onBlur: handleBlur,
+    onKeyDown: handleKeyDown,
+    onClick: handleFocus
+  };
+  const state = React.useMemo(() => ({
+    expanded: hovering || focused || hasDifferingHeights
+  }), [hovering, focused, hasDifferingHeights]);
+  const element = useRenderElement('div', componentProps, {
+    ref: [forwardedRef, viewportRef],
+    state,
+    props: [props, {
+      ...elementProps,
+      children: /*#__PURE__*/jsxs(React.Fragment, {
+        children: [numToasts > 0 && prevFocusElement && /*#__PURE__*/jsx(FocusGuard, {
+          onFocus: handleFocusGuard
+        }), children, numToasts > 0 && prevFocusElement && /*#__PURE__*/jsx(FocusGuard, {
+          onFocus: handleFocusGuard
+        })]
+      })
+    }]
+  });
+  const contextValue = React.useMemo(() => ({
+    viewportRef
+  }), [viewportRef]);
+  return /*#__PURE__*/jsxs(ToastViewportContext.Provider, {
+    value: contextValue,
+    children: [numToasts > 0 && prevFocusElement && /*#__PURE__*/jsx(FocusGuard, {
+      onFocus: handleFocusGuard
+    }), element]
+  });
+});
+if (process.env.NODE_ENV !== "production") ToastViewport.displayName = "ToastViewport";
+
+const ToastRootContext = /*#__PURE__*/React.createContext(undefined);
+if (process.env.NODE_ENV !== "production") ToastRootContext.displayName = "ToastRootContext";
+function useToastRootContext() {
+  const context = React.useContext(ToastRootContext);
+  if (!context) {
+    throw new Error('useToastRoot must be used within a ToastRoot');
+  }
+  return context;
+}
+
+let TransitionStatusDataAttributes = /*#__PURE__*/function (TransitionStatusDataAttributes) {
+  /**
+   * Present when the component is animating in.
+   */
+  TransitionStatusDataAttributes["startingStyle"] = "data-starting-style";
+  /**
+   * Present when the component is animating out.
+   */
+  TransitionStatusDataAttributes["endingStyle"] = "data-ending-style";
+  return TransitionStatusDataAttributes;
+}({});
+const STARTING_HOOK = {
+  [TransitionStatusDataAttributes.startingStyle]: ''
+};
+const ENDING_HOOK = {
+  [TransitionStatusDataAttributes.endingStyle]: ''
+};
+const transitionStatusMapping = {
+  transitionStatus(value) {
+    if (value === 'starting') {
+      return STARTING_HOOK;
+    }
+    if (value === 'ending') {
+      return ENDING_HOOK;
+    }
+    return null;
+  }
+};
+
+/** Unlike `setTimeout`, rAF doesn't guarantee a positive integer return value, so we can't have
+ * a monomorphic `uint` type with `0` meaning empty.
+ * See warning note at:
+ * https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame#return_value */
+const EMPTY = null;
+let LAST_RAF = globalThis.requestAnimationFrame;
+class Scheduler {
+  /* This implementation uses an array as a backing data-structure for frame callbacks.
+   * It allows `O(1)` callback cancelling by inserting a `null` in the array, though it
+   * never calls the native `cancelAnimationFrame` if there are no frames left. This can
+   * be much more efficient if there is a call pattern that alterns as
+   * "request-cancel-request-cancel-…".
+   * But in the case of "request-request-…-cancel-cancel-…", it leaves the final animation
+   * frame to run anyway. We turn that frame into a `O(1)` no-op via `callbacksCount`. */
+
+  callbacks = (() => [])();
+  callbacksCount = 0;
+  nextId = 1;
+  startId = 1;
+  isScheduled = false;
+  tick = timestamp => {
+    this.isScheduled = false;
+    const currentCallbacks = this.callbacks;
+    const currentCallbacksCount = this.callbacksCount;
+
+    // Update these before iterating, callbacks could call `requestAnimationFrame` again.
+    this.callbacks = [];
+    this.callbacksCount = 0;
+    this.startId = this.nextId;
+    if (currentCallbacksCount > 0) {
+      for (let i = 0; i < currentCallbacks.length; i += 1) {
+        currentCallbacks[i]?.(timestamp);
+      }
+    }
+  };
+  request(fn) {
+    const id = this.nextId;
+    this.nextId += 1;
+    this.callbacks.push(fn);
+    this.callbacksCount += 1;
+
+    /* In a test environment with fake timers, a fake `requestAnimationFrame` can be called
+     * but there's no guarantee that the animation frame will actually run before the fake
+     * timers are teared, which leaves `isScheduled` set, but won't run our `tick()`. */
+    const didRAFChange = process.env.NODE_ENV === 'test' && LAST_RAF !== requestAnimationFrame && (LAST_RAF = requestAnimationFrame, true);
+    if (!this.isScheduled || didRAFChange) {
+      requestAnimationFrame(this.tick);
+      this.isScheduled = true;
+    }
+    return id;
+  }
+  cancel(id) {
+    const index = id - this.startId;
+    if (index < 0 || index >= this.callbacks.length) {
+      return;
+    }
+    this.callbacks[index] = null;
+    this.callbacksCount -= 1;
+  }
+}
+const scheduler = new Scheduler();
+class AnimationFrame {
+  static create() {
+    return new AnimationFrame();
+  }
+  static request(fn) {
+    return scheduler.request(fn);
+  }
+  static cancel(id) {
+    return scheduler.cancel(id);
+  }
+  currentId = (() => EMPTY)();
+
+  /**
+   * Executes `fn` after `delay`, clearing any previously scheduled call.
+   */
+  request(fn) {
+    this.cancel();
+    this.currentId = scheduler.request(() => {
+      this.currentId = EMPTY;
+      fn();
+    });
+  }
+  cancel = () => {
+    if (this.currentId !== EMPTY) {
+      scheduler.cancel(this.currentId);
+      this.currentId = EMPTY;
+    }
+  };
+  disposeEffect = () => {
+    return this.cancel;
+  };
+}
+
+/**
+ * A `requestAnimationFrame` with automatic cleanup and guard.
+ */
+function useAnimationFrame() {
+  const timeout = useLazyRef(AnimationFrame.create).current;
+  useOnMount(timeout.disposeEffect);
+  return timeout;
+}
+
+/**
+ * Executes a function once all animations have finished on the provided element.
+ * @param ref - The element to watch for animations.
+ * @param waitForNextTick - Whether to wait for the next tick before checking for animations.
+ */
+function useAnimationsFinished(ref, waitForNextTick = false) {
+  const frame = useAnimationFrame();
+  const timeout = useTimeout();
+  return useEventCallback((fnToExecute,
+  /**
+   * An optional [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) that
+   * can be used to abort `fnToExecute` before all the animations have finished.
+   * @default null
+   */
+  signal = null) => {
+    frame.cancel();
+    timeout.clear();
+    const element = ref.current;
+    if (!element) {
+      return;
+    }
+    if (typeof element.getAnimations !== 'function' || globalThis.BASE_UI_ANIMATIONS_DISABLED) {
+      fnToExecute();
+    } else {
+      frame.request(() => {
+        function exec() {
+          if (!element) {
+            return;
+          }
+          Promise.allSettled(element.getAnimations().map(anim => anim.finished)).then(() => {
+            if (signal != null && signal.aborted) {
+              return;
+            }
+            // Synchronously flush the unmounting of the component so that the browser doesn't
+            // paint: https://github.com/mui/base-ui/issues/979
+            ReactDOM.flushSync(fnToExecute);
+          });
+        }
+
+        // `open: true` animations need to wait for the next tick to be detected
+        if (waitForNextTick) {
+          timeout.start(0, exec);
+        } else {
+          exec();
+        }
+      });
+    }
+  });
+}
+
+function useLatestRef(value) {
+  const latest = useLazyRef(createLatestRef, value).current;
+  latest.next = value;
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  index(latest.effect);
+  return latest;
+}
+function createLatestRef(value) {
+  const latest = {
+    current: value,
+    next: value,
+    effect: () => {
+      latest.current = latest.next;
+    }
+  };
+  return latest;
+}
+
+/**
+ * Calls the provided function when the CSS open/close animation or transition completes.
+ */
+function useOpenChangeComplete(parameters) {
+  const {
+    enabled = true,
+    open,
+    ref,
+    onComplete: onCompleteParam
+  } = parameters;
+  const openRef = useLatestRef(open);
+  const onComplete = useEventCallback(onCompleteParam);
+  const runOnceAnimationsFinish = useAnimationsFinished(ref, open);
+  React.useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+    runOnceAnimationsFinish(() => {
+      if (open === openRef.current) {
+        onComplete();
+      }
+    });
+  }, [enabled, open, onComplete, runOnceAnimationsFinish, openRef]);
+}
+
+let ToastRootCssVars = /*#__PURE__*/function (ToastRootCssVars) {
+  /**
+   * Indicates the index of the toast in the list.
+   * @type {number}
+   */
+  ToastRootCssVars["index"] = "--toast-index";
+  /**
+   * Indicates the vertical pixels offset of the toast in the list when expanded.
+   * @type {number}
+   */
+  ToastRootCssVars["offsetY"] = "--toast-offset-y";
+  /**
+   * Indicates the horizontal swipe movement of the toast.
+   * @type {number}
+   */
+  ToastRootCssVars["swipeMovementX"] = "--toast-swipe-movement-x";
+  /**
+   * Indicates the vertical swipe movement of the toast.
+   * @type {number}
+   */
+  ToastRootCssVars["swipeMovementY"] = "--toast-swipe-movement-y";
+  return ToastRootCssVars;
+}({});
+
+function inertValue(value) {
+  if (isReactVersionAtLeast(19)) {
+    return value;
+  }
+  // compatibility with React < 19
+  return value ? 'true' : undefined;
+}
+
+const customStyleHookMapping = {
+  ...transitionStatusMapping,
+  swipeDirection(value) {
+    return value ? {
+      'data-swipe-direction': value
+    } : null;
+  }
+};
+const SWIPE_THRESHOLD = 40;
+const REVERSE_CANCEL_THRESHOLD = 10;
+const OPPOSITE_DIRECTION_DAMPING_FACTOR = 0.5;
+const MIN_DRAG_THRESHOLD = 1;
+function getDisplacement(direction, deltaX, deltaY) {
+  switch (direction) {
+    case 'up':
+      return -deltaY;
+    case 'down':
+      return deltaY;
+    case 'left':
+      return -deltaX;
+    case 'right':
+      return deltaX;
+    default:
+      return 0;
+  }
+}
+function getElementTransform(element) {
+  const computedStyle = window.getComputedStyle(element);
+  const transform = computedStyle.transform;
+  let translateX = 0;
+  let translateY = 0;
+  let scale = 1;
+  if (transform && transform !== 'none') {
+    const matrix = transform.match(/matrix(?:3d)?\(([^)]+)\)/);
+    if (matrix) {
+      const values = matrix[1].split(', ').map(parseFloat);
+      if (values.length === 6) {
+        translateX = values[4];
+        translateY = values[5];
+        scale = Math.sqrt(values[0] * values[0] + values[1] * values[1]);
+      } else if (values.length === 16) {
+        translateX = values[12];
+        translateY = values[13];
+        scale = values[0];
+      }
+    }
+  }
+  return {
+    x: translateX,
+    y: translateY,
+    scale
+  };
+}
+
+/**
+ * Groups all parts of an individual toast.
+ * Renders a `<div>` element.
+ *
+ * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
+ */
+const ToastRoot = /*#__PURE__*/React.forwardRef(function ToastRoot(componentProps, forwardedRef) {
+  const {
+    toast,
+    render,
+    className,
+    children,
+    swipeDirection = ['down', 'right'],
+    ...elementProps
+  } = componentProps;
+  const swipeDirections = Array.isArray(swipeDirection) ? swipeDirection : [swipeDirection];
+  const {
+    toasts,
+    hovering,
+    focused,
+    close,
+    remove,
+    setToasts,
+    pauseTimers,
+    resumeTimers,
+    hasDifferingHeights
+  } = useToastContext();
+  const [renderScreenReaderContent, setRenderScreenReaderContent] = React.useState(false);
+  const [currentSwipeDirection, setCurrentSwipeDirection] = React.useState(undefined);
+  const [isSwiping, setIsSwiping] = React.useState(false);
+  const [isRealSwipe, setIsRealSwipe] = React.useState(false);
+  const [dragDismissed, setDragDismissed] = React.useState(false);
+  const [dragOffset, setDragOffset] = React.useState({
+    x: 0,
+    y: 0
+  });
+  const [initialTransform, setInitialTransform] = React.useState({
+    x: 0,
+    y: 0,
+    scale: 1
+  });
+  const [titleId, setTitleId] = React.useState();
+  const [descriptionId, setDescriptionId] = React.useState();
+  const [lockedDirection, setLockedDirection] = React.useState(null);
+  const rootRef = React.useRef(null);
+  const dragStartPosRef = React.useRef({
+    x: 0,
+    y: 0
+  });
+  const initialTransformRef = React.useRef({
+    x: 0,
+    y: 0,
+    scale: 1
+  });
+  const intendedSwipeDirectionRef = React.useRef(undefined);
+  const maxSwipeDisplacementRef = React.useRef(0);
+  const cancelledSwipeRef = React.useRef(false);
+  const swipeCancelBaselineRef = React.useRef({
+    x: 0,
+    y: 0
+  });
+  const isFirstPointerMoveRef = React.useRef(false);
+  const domIndex = React.useMemo(() => toasts.indexOf(toast), [toast, toasts]);
+  const visibleIndex = React.useMemo(() => toasts.filter(t => t.transitionStatus !== 'ending').indexOf(toast), [toast, toasts]);
+  const offsetY = React.useMemo(() => {
+    return toasts.slice(0, toasts.indexOf(toast)).reduce((acc, t) => acc + (t.height || 0), 0);
+  }, [toasts, toast]);
+  useOpenChangeComplete({
+    open: toast.transitionStatus !== 'ending',
+    ref: rootRef,
+    onComplete() {
+      if (toast.transitionStatus === 'ending') {
+        remove(toast.id);
+      }
+    }
+  });
+  React.useEffect(() => {
+    if (!rootRef.current) {
+      return undefined;
+    }
+    function setHeights() {
+      const height = rootRef.current?.offsetHeight;
+      setToasts(prev => prev.map(t => t.id === toast.id ? {
+        ...t,
+        ref: rootRef,
+        height,
+        transitionStatus: undefined
+      } : t));
+    }
+    setHeights();
+    if (typeof ResizeObserver === 'function') {
+      const resizeObserver = new ResizeObserver(setHeights);
+      resizeObserver.observe(rootRef.current);
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+    return undefined;
+  }, [toast.id, setToasts]);
+  function applyDirectionalDamping(deltaX, deltaY) {
+    let newDeltaX = deltaX;
+    let newDeltaY = deltaY;
+    if (!swipeDirections.includes('left') && !swipeDirections.includes('right')) {
+      newDeltaX = deltaX > 0 ? deltaX ** OPPOSITE_DIRECTION_DAMPING_FACTOR : -(Math.abs(deltaX) ** OPPOSITE_DIRECTION_DAMPING_FACTOR);
+    } else {
+      if (!swipeDirections.includes('right') && deltaX > 0) {
+        newDeltaX = deltaX ** OPPOSITE_DIRECTION_DAMPING_FACTOR;
+      }
+      if (!swipeDirections.includes('left') && deltaX < 0) {
+        newDeltaX = -(Math.abs(deltaX) ** OPPOSITE_DIRECTION_DAMPING_FACTOR);
+      }
+    }
+    if (!swipeDirections.includes('up') && !swipeDirections.includes('down')) {
+      newDeltaY = deltaY > 0 ? deltaY ** OPPOSITE_DIRECTION_DAMPING_FACTOR : -(Math.abs(deltaY) ** OPPOSITE_DIRECTION_DAMPING_FACTOR);
+    } else {
+      if (!swipeDirections.includes('down') && deltaY > 0) {
+        newDeltaY = deltaY ** OPPOSITE_DIRECTION_DAMPING_FACTOR;
+      }
+      if (!swipeDirections.includes('up') && deltaY < 0) {
+        newDeltaY = -(Math.abs(deltaY) ** OPPOSITE_DIRECTION_DAMPING_FACTOR);
+      }
+    }
+    return {
+      x: newDeltaX,
+      y: newDeltaY
+    };
+  }
+  function handlePointerDown(event) {
+    if (event.button !== 0) {
+      return;
+    }
+    if (event.pointerType === 'touch') {
+      pauseTimers();
+    }
+    const target = getTarget(event.nativeEvent);
+    const isInteractiveElement = target ? target.closest('button,a,input,textarea,[role="button"],[data-swipe-ignore]') : false;
+    if (isInteractiveElement) {
+      return;
+    }
+    cancelledSwipeRef.current = false;
+    intendedSwipeDirectionRef.current = undefined;
+    maxSwipeDisplacementRef.current = 0;
+    dragStartPosRef.current = {
+      x: event.clientX,
+      y: event.clientY
+    };
+    swipeCancelBaselineRef.current = dragStartPosRef.current;
+    if (rootRef.current) {
+      const transform = getElementTransform(rootRef.current);
+      initialTransformRef.current = transform;
+      setInitialTransform(transform);
+      setDragOffset({
+        x: transform.x,
+        y: transform.y
+      });
+    }
+    setIsSwiping(true);
+    setIsRealSwipe(false);
+    setLockedDirection(null);
+    isFirstPointerMoveRef.current = true;
+    rootRef.current?.setPointerCapture(event.pointerId);
+  }
+  function handlePointerMove(event) {
+    if (!isSwiping) {
+      return;
+    }
+
+    // Prevent text selection on Safari
+    event.preventDefault();
+    if (isFirstPointerMoveRef.current) {
+      // Adjust the starting position to the current position on the first move
+      // to account for the delay between pointerdown and the first pointermove on iOS.
+      dragStartPosRef.current = {
+        x: event.clientX,
+        y: event.clientY
+      };
+      isFirstPointerMoveRef.current = false;
+    }
+    const {
+      clientY,
+      clientX,
+      movementX,
+      movementY
+    } = event;
+    if (movementY < 0 && clientY > swipeCancelBaselineRef.current.y || movementY > 0 && clientY < swipeCancelBaselineRef.current.y) {
+      swipeCancelBaselineRef.current = {
+        x: swipeCancelBaselineRef.current.x,
+        y: clientY
+      };
+    }
+    if (movementX < 0 && clientX > swipeCancelBaselineRef.current.x || movementX > 0 && clientX < swipeCancelBaselineRef.current.x) {
+      swipeCancelBaselineRef.current = {
+        x: clientX,
+        y: swipeCancelBaselineRef.current.y
+      };
+    }
+    const deltaX = clientX - dragStartPosRef.current.x;
+    const deltaY = clientY - dragStartPosRef.current.y;
+    const cancelDeltaY = clientY - swipeCancelBaselineRef.current.y;
+    const cancelDeltaX = clientX - swipeCancelBaselineRef.current.x;
+    if (!isRealSwipe) {
+      const movementDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      if (movementDistance >= MIN_DRAG_THRESHOLD) {
+        setIsRealSwipe(true);
+        if (lockedDirection === null) {
+          const hasHorizontal = swipeDirections.includes('left') || swipeDirections.includes('right');
+          const hasVertical = swipeDirections.includes('up') || swipeDirections.includes('down');
+          if (hasHorizontal && hasVertical) {
+            const absX = Math.abs(deltaX);
+            const absY = Math.abs(deltaY);
+            setLockedDirection(absX > absY ? 'horizontal' : 'vertical');
+          }
+        }
+      }
+    }
+    let candidate;
+    if (!intendedSwipeDirectionRef.current) {
+      if (lockedDirection === 'vertical') {
+        if (deltaY > 0) {
+          candidate = 'down';
+        } else if (deltaY < 0) {
+          candidate = 'up';
+        }
+      } else if (lockedDirection === 'horizontal') {
+        if (deltaX > 0) {
+          candidate = 'right';
+        } else if (deltaX < 0) {
+          candidate = 'left';
+        }
+      } else if (Math.abs(deltaX) >= Math.abs(deltaY)) {
+        candidate = deltaX > 0 ? 'right' : 'left';
+      } else {
+        candidate = deltaY > 0 ? 'down' : 'up';
+      }
+      if (candidate && swipeDirections.includes(candidate)) {
+        intendedSwipeDirectionRef.current = candidate;
+        maxSwipeDisplacementRef.current = getDisplacement(candidate, deltaX, deltaY);
+        setCurrentSwipeDirection(candidate);
+      }
+    } else {
+      const direction = intendedSwipeDirectionRef.current;
+      const currentDisplacement = getDisplacement(direction, cancelDeltaX, cancelDeltaY);
+      if (currentDisplacement > SWIPE_THRESHOLD) {
+        cancelledSwipeRef.current = false;
+        setCurrentSwipeDirection(direction);
+      } else if (maxSwipeDisplacementRef.current - currentDisplacement >= REVERSE_CANCEL_THRESHOLD) {
+        // Mark that a change-of-mind has occurred
+        cancelledSwipeRef.current = true;
+      }
+    }
+    const dampedDelta = applyDirectionalDamping(deltaX, deltaY);
+    let newOffsetX = initialTransformRef.current.x;
+    let newOffsetY = initialTransformRef.current.y;
+    if (lockedDirection === 'horizontal') {
+      if (swipeDirections.includes('left') || swipeDirections.includes('right')) {
+        newOffsetX += dampedDelta.x;
+      }
+    } else if (lockedDirection === 'vertical') {
+      if (swipeDirections.includes('up') || swipeDirections.includes('down')) {
+        newOffsetY += dampedDelta.y;
+      }
+    } else {
+      if (swipeDirections.includes('left') || swipeDirections.includes('right')) {
+        newOffsetX += dampedDelta.x;
+      }
+      if (swipeDirections.includes('up') || swipeDirections.includes('down')) {
+        newOffsetY += dampedDelta.y;
+      }
+    }
+    setDragOffset({
+      x: newOffsetX,
+      y: newOffsetY
+    });
+  }
+  function handlePointerUp(event) {
+    if (!isSwiping) {
+      return;
+    }
+    if (event.pointerType === 'touch' && !focused) {
+      resumeTimers();
+    }
+    setIsSwiping(false);
+    setIsRealSwipe(false);
+    setLockedDirection(null);
+    rootRef.current?.releasePointerCapture(event.pointerId);
+    if (cancelledSwipeRef.current) {
+      setDragOffset({
+        x: initialTransform.x,
+        y: initialTransform.y
+      });
+      setCurrentSwipeDirection(undefined);
+      return;
+    }
+    let shouldClose = false;
+    const deltaX = dragOffset.x - initialTransform.x;
+    const deltaY = dragOffset.y - initialTransform.y;
+    let dismissDirection;
+    for (const direction of swipeDirections) {
+      switch (direction) {
+        case 'right':
+          if (deltaX > SWIPE_THRESHOLD) {
+            shouldClose = true;
+            dismissDirection = 'right';
+          }
+          break;
+        case 'left':
+          if (deltaX < -SWIPE_THRESHOLD) {
+            shouldClose = true;
+            dismissDirection = 'left';
+          }
+          break;
+        case 'down':
+          if (deltaY > SWIPE_THRESHOLD) {
+            shouldClose = true;
+            dismissDirection = 'down';
+          }
+          break;
+        case 'up':
+          if (deltaY < -SWIPE_THRESHOLD) {
+            shouldClose = true;
+            dismissDirection = 'up';
+          }
+          break;
+      }
+      if (shouldClose) {
+        break;
+      }
+    }
+    if (shouldClose) {
+      setCurrentSwipeDirection(dismissDirection);
+      setDragDismissed(true);
+      close(toast.id);
+    } else {
+      setDragOffset({
+        x: initialTransform.x,
+        y: initialTransform.y
+      });
+      setCurrentSwipeDirection(undefined);
+    }
+  }
+  function handleKeyDown(event) {
+    if (event.key === 'Escape') {
+      if (!rootRef.current || !contains(rootRef.current, activeElement(getDocument(rootRef.current)))) {
+        return;
+      }
+      close(toast.id);
+    }
+  }
+  React.useEffect(() => {
+    const element = rootRef.current;
+    if (!element) {
+      return undefined;
+    }
+    function preventDefaultTouchStart(event) {
+      if (contains(element, event.target)) {
+        event.preventDefault();
+      }
+    }
+    element.addEventListener('touchmove', preventDefaultTouchStart, {
+      passive: false
+    });
+    return () => {
+      element.removeEventListener('touchmove', preventDefaultTouchStart);
+    };
+  }, []);
+
+  // macOS Safari needs some time to pass after the status node has been
+  // created before changing its text content to reliably announce its content.
+  const screenReaderTimeout = useTimeout();
+  useOnMount(() => {
+    screenReaderTimeout.start(50, () => setRenderScreenReaderContent(true));
+  });
+  function getDragStyles() {
+    if (!isSwiping && dragOffset.x === initialTransform.x && dragOffset.y === initialTransform.y && !dragDismissed) {
+      return {
+        [ToastRootCssVars.swipeMovementX]: '0px',
+        [ToastRootCssVars.swipeMovementY]: '0px'
+      };
+    }
+    const deltaX = dragOffset.x - initialTransform.x;
+    const deltaY = dragOffset.y - initialTransform.y;
+    return {
+      transition: isSwiping ? 'none' : undefined,
+      [ToastRootCssVars.swipeMovementX]: `${deltaX}px`,
+      [ToastRootCssVars.swipeMovementY]: `${deltaY}px`
+    };
+  }
+  const props = {
+    role: toast.priority === 'high' ? 'alertdialog' : 'dialog',
+    tabIndex: 0,
+    'aria-modal': false,
+    'aria-labelledby': titleId,
+    'aria-describedby': descriptionId,
+    onPointerDown: handlePointerDown,
+    onPointerMove: handlePointerMove,
+    onPointerUp: handlePointerUp,
+    onKeyDown: handleKeyDown,
+    inert: inertValue(toast.limited),
+    style: {
+      ...getDragStyles(),
+      [ToastRootCssVars.index]: toast.transitionStatus === 'ending' ? domIndex : visibleIndex,
+      [ToastRootCssVars.offsetY]: `${offsetY}px`
+    }
+  };
+  const toastRoot = React.useMemo(() => ({
+    rootRef,
+    renderScreenReaderContent,
+    toast,
+    titleId,
+    setTitleId,
+    descriptionId,
+    setDescriptionId,
+    swiping: isSwiping,
+    swipeDirection: currentSwipeDirection
+  }), [renderScreenReaderContent, toast, titleId, descriptionId, isSwiping, currentSwipeDirection]);
+  const state = React.useMemo(() => ({
+    transitionStatus: toast.transitionStatus,
+    expanded: hovering || focused || hasDifferingHeights,
+    limited: toast.limited || false,
+    type: toast.type,
+    swiping: toastRoot.swiping,
+    swipeDirection: toastRoot.swipeDirection
+  }), [hovering, focused, hasDifferingHeights, toast.transitionStatus, toast.limited, toast.type, toastRoot.swiping, toastRoot.swipeDirection]);
+  const element = useRenderElement('div', componentProps, {
+    ref: [forwardedRef, toastRoot.rootRef],
+    state,
+    customStyleHookMapping,
+    props: [props, elementProps, {
+      // Screen readers won't announce the text upon DOM insertion of the component.
+      // We need to wait until the next tick to render the children so that screen
+      // readers can announce the contents.
+      children: /*#__PURE__*/jsxs(React.Fragment, {
+        children: [children, !focused && /*#__PURE__*/jsx("div", {
+          style: visuallyHidden,
+          ...(toast.priority === 'high' ? {
+            role: 'alert',
+            'aria-atomic': true
+          } : {
+            role: 'status',
+            'aria-live': 'polite'
+          }),
+          children: toastRoot.renderScreenReaderContent && /*#__PURE__*/jsxs(React.Fragment, {
+            children: [toast.title && /*#__PURE__*/jsx("div", {
+              children: toast.title
+            }), toast.description && /*#__PURE__*/jsx("div", {
+              children: toast.description
+            })]
+          })
+        })]
+      })
+    }]
+  });
+  return /*#__PURE__*/jsx(ToastRootContext.Provider, {
+    value: toastRoot,
+    children: element
+  });
+});
+if (process.env.NODE_ENV !== "production") ToastRoot.displayName = "ToastRoot";
+
+let globalId = 0;
+
+// TODO React 17: Remove `useGlobalId` once React 17 support is removed
+function useGlobalId(idOverride, prefix = 'mui') {
+  const [defaultId, setDefaultId] = React.useState(idOverride);
+  const id = idOverride || defaultId;
+  React.useEffect(() => {
+    if (defaultId == null) {
+      // Fallback to this default id when possible.
+      // Use the incrementing value for client-side rendering only.
+      // We can't use it server-side.
+      // If you want to use random values please consider the Birthday Problem: https://en.wikipedia.org/wiki/Birthday_problem
+      globalId += 1;
+      setDefaultId(`${prefix}-${globalId}`);
+    }
+  }, [defaultId, prefix]);
+  return id;
+}
+
+// See https://github.com/mui/material-ui/issues/41190#issuecomment-2040873379 for why
+const safeReact = {
+  ...React
+};
+const maybeReactUseId = safeReact.useId;
+
+/**
+ *
+ * @example <div id={useId()} />
+ * @param idOverride
+ * @returns {string}
+ */
+function useId(idOverride, prefix) {
+  // React.useId() is only available from React 17.0.0.
+  if (maybeReactUseId !== undefined) {
+    const reactId = maybeReactUseId();
+    return idOverride ?? (prefix ? `${prefix}-${reactId}` : reactId);
+  }
+
+  // TODO: uncomment once we enable eslint-plugin-react-compiler // eslint-disable-next-line react-compiler/react-compiler
+  // eslint-disable-next-line react-hooks/rules-of-hooks -- `React.useId` is invariant at runtime.
+  return useGlobalId(idOverride, prefix);
+}
+
+/**
+ * A description that describes the toast.
+ * Can be used as the default message for the toast when no title is provided.
+ * Renders a `<p>` element.
+ *
+ * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
+ */
+const ToastDescription = /*#__PURE__*/React.forwardRef(function ToastDescription(componentProps, forwardedRef) {
+  const {
+    render,
+    className,
+    id: idProp,
+    children: childrenProp,
+    ...elementProps
+  } = componentProps;
+  const {
+    toast
+  } = useToastRootContext();
+  const children = childrenProp ?? toast.description;
+  const shouldRender = Boolean(children);
+  const id = useId(idProp);
+  const {
+    setDescriptionId
+  } = useToastRootContext();
+  index(() => {
+    if (!shouldRender) {
+      return undefined;
+    }
+    setDescriptionId(id);
+    return () => {
+      setDescriptionId(undefined);
+    };
+  }, [shouldRender, id, setDescriptionId]);
+  const state = React.useMemo(() => ({
+    type: toast.type
+  }), [toast.type]);
+  const element = useRenderElement('p', componentProps, {
+    ref: forwardedRef,
+    state,
+    props: {
+      ...elementProps,
+      id,
+      children
+    }
+  });
+  if (!shouldRender) {
+    return null;
+  }
+  return element;
+});
+if (process.env.NODE_ENV !== "production") ToastDescription.displayName = "ToastDescription";
+
+/**
+ * A title that labels the toast.
+ * Renders an `<h2>` element.
+ *
+ * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
+ */
+const ToastTitle = /*#__PURE__*/React.forwardRef(function ToastTitle(componentProps, forwardedRef) {
+  const {
+    render,
+    className,
+    id: idProp,
+    children: childrenProp,
+    ...elementProps
+  } = componentProps;
+  const {
+    toast
+  } = useToastRootContext();
+  const children = childrenProp ?? toast.title;
+  const shouldRender = Boolean(children);
+  const id = useId(idProp);
+  const {
+    setTitleId
+  } = useToastRootContext();
+  index(() => {
+    if (!shouldRender) {
+      return undefined;
+    }
+    setTitleId(id);
+    return () => {
+      setTitleId(undefined);
+    };
+  }, [shouldRender, id, setTitleId]);
+  const state = React.useMemo(() => ({
+    type: toast.type
+  }), [toast.type]);
+  const element = useRenderElement('h2', componentProps, {
+    ref: forwardedRef,
+    state,
+    props: {
+      ...elementProps,
+      id,
+      children
+    }
+  });
+  if (!shouldRender) {
+    return null;
+  }
+  return element;
+});
+if (process.env.NODE_ENV !== "production") ToastTitle.displayName = "ToastTitle";
+
+let set;
+if (process.env.NODE_ENV !== 'production') {
+  set = new Set();
+}
+function warn(...messages) {
+  if (process.env.NODE_ENV !== 'production') {
+    const messageKey = messages.join(' ');
+    if (!set.has(messageKey)) {
+      set.add(messageKey);
+      console.warn(`Base UI: ${messageKey}`);
+    }
+  }
+}
+
+/**
+ * Use this function determine the host element correctly on the server (in a SSR context, for example Next.js)
+ */
+function useRootElementName(parameters) {
+  const {
+    rootElementName: rootElementNameProp = ''
+  } = parameters;
+  const [rootElementName, setRootElementName] = React.useState(rootElementNameProp.toUpperCase());
+  if (process.env.NODE_ENV !== 'production') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    index(() => {
+      if (rootElementNameProp && rootElementName !== rootElementNameProp.toUpperCase()) {
+        warn(`useRootElementName expected the '${rootElementNameProp}' element, but a '${rootElementName.toLowerCase()}' was rendered instead`, 'This may cause hydration issues in an SSR context, for example in a Next.js app');
+      }
+    }, [rootElementNameProp, rootElementName]);
+  }
+  const updateRootElementName = React.useCallback(element => {
+    setRootElementName(element?.tagName ?? '');
+  }, []);
+  return {
+    rootElementName,
+    updateRootElementName
+  };
+}
+
+const CompositeRootContext = /*#__PURE__*/React.createContext(undefined);
+if (process.env.NODE_ENV !== "production") CompositeRootContext.displayName = "CompositeRootContext";
+function useCompositeRootContext(optional = false) {
+  const context = React.useContext(CompositeRootContext);
+  if (context === undefined && !optional) {
+    throw new Error('Base UI: CompositeRootContext is missing. Composite parts must be placed within <Composite.Root>.');
+  }
+  return context;
+}
+
+const BUTTON_TYPES = new Set(['button', 'submit', 'reset']);
+function useButton(parameters = {}) {
+  const {
+    buttonRef: externalRef,
+    disabled = false,
+    focusableWhenDisabled,
+    tabIndex = 0,
+    type = 'button',
+    elementName: elementNameProp
+  } = parameters;
+  const buttonRef = React.useRef(null);
+  const {
+    rootElementName: elementName,
+    updateRootElementName
+  } = useRootElementName({
+    rootElementName: elementNameProp
+  });
+  const isCompositeItem = useCompositeRootContext(true) !== undefined;
+  const isNativeButton = useEventCallback(() => {
+    const element = buttonRef.current;
+    return elementName === 'BUTTON' || elementName === 'INPUT' && BUTTON_TYPES.has(element?.type);
+  });
+  const isValidLink = useEventCallback(() => {
+    const element = buttonRef.current;
+    return Boolean(elementName === 'A' && element?.href);
+  });
+  const mergedRef = useForkRef(updateRootElementName, externalRef, buttonRef);
+  const buttonProps = React.useMemo(() => {
+    const additionalProps = {};
+    if (tabIndex !== undefined && !isCompositeItem) {
+      additionalProps.tabIndex = tabIndex;
+    }
+    if (elementName === 'BUTTON' || elementName === 'INPUT') {
+      if (focusableWhenDisabled || isCompositeItem) {
+        additionalProps['aria-disabled'] = disabled;
+      } else if (!isCompositeItem) {
+        additionalProps.disabled = disabled;
+      }
+    } else if (elementName !== '') {
+      if (elementName !== 'A') {
+        additionalProps.role = 'button';
+        if (!isCompositeItem) {
+          additionalProps.tabIndex = tabIndex ?? 0;
+        }
+      } else if (tabIndex && !isCompositeItem) {
+        additionalProps.tabIndex = tabIndex;
+      }
+      if (disabled) {
+        additionalProps['aria-disabled'] = disabled;
+        if (!isCompositeItem) {
+          additionalProps.tabIndex = focusableWhenDisabled ? tabIndex ?? 0 : -1;
+        }
+      }
+    }
+    return additionalProps;
+  }, [disabled, elementName, focusableWhenDisabled, isCompositeItem, tabIndex]);
+
+  // handles a disabled composite button rendering another button, e.g.
+  // <Toolbar.Button disabled render={<Menu.Trigger />} />
+  // the `disabled` prop needs to pass through 2 `useButton`s then finally
+  // delete the `disabled` attribute from DOM
+  index(() => {
+    const element = buttonRef.current;
+    if (!(element instanceof HTMLButtonElement)) {
+      return;
+    }
+    if (isCompositeItem && disabled && buttonProps.disabled === undefined && element.disabled) {
+      element.disabled = false;
+    }
+  }, [disabled, buttonProps.disabled, isCompositeItem]);
+  const getButtonProps = React.useCallback((externalProps = {}) => {
+    const {
+      onClick: externalOnClick,
+      onMouseDown: externalOnMouseDown,
+      onKeyUp: externalOnKeyUp,
+      onKeyDown: externalOnKeyDown,
+      onPointerDown: externalOnPointerDown,
+      ...otherExternalProps
+    } = externalProps;
+    return mergeProps({
+      type: elementName === 'BUTTON' || elementName === 'INPUT' ? type : undefined,
+      onClick(event) {
+        if (disabled) {
+          event.preventDefault();
+          return;
+        }
+        externalOnClick?.(event);
+      },
+      onMouseDown(event) {
+        if (!disabled) {
+          externalOnMouseDown?.(event);
+        }
+      },
+      onKeyDown(event) {
+        if (
+        // allow Tabbing away from focusableWhenDisabled buttons
+        disabled && focusableWhenDisabled && event.key !== 'Tab' || event.target === event.currentTarget && !isNativeButton() && event.key === ' ') {
+          event.preventDefault();
+        }
+        if (!disabled) {
+          makeEventPreventable(event);
+          externalOnKeyDown?.(event);
+        }
+        if (event.baseUIHandlerPrevented) {
+          return;
+        }
+
+        // Keyboard accessibility for non interactive elements
+        if (event.target === event.currentTarget && !isNativeButton() && !isValidLink() && event.key === 'Enter' && !disabled) {
+          externalOnClick?.(event);
+          event.preventDefault();
+        }
+      },
+      onKeyUp(event) {
+        // calling preventDefault in keyUp on a <button> will not dispatch a click event if Space is pressed
+        // https://codesandbox.io/p/sandbox/button-keyup-preventdefault-dn7f0
+        // Keyboard accessibility for non interactive elements
+        if (!disabled) {
+          makeEventPreventable(event);
+          externalOnKeyUp?.(event);
+        }
+        if (event.baseUIHandlerPrevented) {
+          return;
+        }
+        if (event.target === event.currentTarget && !isNativeButton() && !disabled && event.key === ' ') {
+          externalOnClick?.(event);
+        }
+      },
+      onPointerDown(event) {
+        if (disabled) {
+          event.preventDefault();
+          return;
+        }
+        externalOnPointerDown?.(event);
+      },
+      ref: mergedRef
+    }, buttonProps, otherExternalProps);
+  }, [buttonProps, disabled, elementName, focusableWhenDisabled, isNativeButton, isValidLink, mergedRef, type]);
+  return {
+    getButtonProps,
+    buttonRef: mergedRef
+  };
+}
+
+/**
+ * Closes the toast when clicked.
+ * Renders a `<button>` element.
+ *
+ * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
+ */
+const ToastClose = /*#__PURE__*/React.forwardRef(function ToastClose(componentProps, forwardedRef) {
+  const {
+    render,
+    className,
+    disabled,
+    ...elementProps
+  } = componentProps;
+  const {
+    close
+  } = useToastContext();
+  const {
+    toast
+  } = useToastRootContext();
+  const {
+    getButtonProps
+  } = useButton({
+    disabled,
+    buttonRef: forwardedRef
+  });
+  const state = React.useMemo(() => ({
+    type: toast.type
+  }), [toast.type]);
+  const element = useRenderElement('button', componentProps, {
+    ref: forwardedRef,
+    state,
+    props: [{
+      onClick() {
+        close(toast.id);
+      }
+    }, elementProps, getButtonProps]
+  });
+  return element;
+});
+if (process.env.NODE_ENV !== "production") ToastClose.displayName = "ToastClose";
+
+/**
+ * Returns the array of toasts and methods to manage them.
+ */
+function useToastManager() {
+  const context = React.useContext(ToastContext);
+  if (!context) {
+    throw new Error('Base UI: useToast must be used within <Toast.Provider>.');
+  }
+  const {
+    toasts,
+    add,
+    close,
+    update,
+    promise
+  } = context;
+  return React.useMemo(() => ({
+    toasts,
+    add,
+    close,
+    update,
+    promise
+  }), [toasts, add, close, update, promise]);
+}
+
 // 아이콘 컴포넌트들
 var CheckCircleIcon = function (_a) {
   var color = _a.color;
@@ -20848,12 +23194,9 @@ var statusConfig = {
   }
 };
 /**
- * 토스트 오버레이 컴포넌트
- *
- * 사용자가 어떤 작업을 완료했을 때, 시스템이 잘 처리됐다는 걸 알려주는 알림입니다.
- * 현재 하고 있는 일을 방해하지 않고, 잠깐 나타났다 사라지는 방식으로 보여집니다.
+ * Base UI Toast를 youth-design 스타일로 래핑한 컴포넌트
  */
-var Toast = React.memo(function (_a) {
+var Toast = React__default.memo(function (_a) {
   var status = _a.status,
     title = _a.title,
     description = _a.description,
@@ -20861,14 +23204,10 @@ var Toast = React.memo(function (_a) {
     showLeadingIcon = _b === void 0 ? true : _b,
     _c = _a.showCloseButton,
     showCloseButton = _c === void 0 ? false : _c,
-    onClose = _a.onClose,
-    _d = _a.className,
-    className = _d === void 0 ? '' : _d;
+    toast = _a.toast,
+    position = _a.position;
   var config = statusConfig[status];
   var IconComponent = config.icon;
-  var handleCloseClick = useCallback(function () {
-    onClose === null || onClose === void 0 ? void 0 : onClose();
-  }, [onClose]);
   var toastStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -20878,7 +23217,9 @@ var Toast = React.memo(function (_a) {
     borderRadius: radius.l,
     boxShadow: shadows.s,
     width: '360px',
-    minHeight: 'fit-content'
+    minHeight: 'fit-content',
+    position: 'relative',
+    pointerEvents: 'auto'
   };
   var contentStyle = {
     display: 'flex',
@@ -20903,19 +23244,18 @@ var Toast = React.memo(function (_a) {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radius.xs,
-    transition: 'background-color 0.2s ease'
+    transition: 'background-color 0.2s ease',
+    position: 'absolute',
+    top: spacing.m,
+    right: spacing.m
   };
-  var handleMouseEnter = useCallback(function (e) {
-    e.target.style.backgroundColor = colors.primary.coolGray[100];
-  }, []);
-  var handleMouseLeave = useCallback(function (e) {
-    e.target.style.backgroundColor = 'transparent';
-  }, []);
-  return jsxs("div", {
-    className: "toast toast--".concat(status, " ").concat(className),
+  return jsxs(ToastRoot, {
+    toast: toast,
     style: toastStyle,
-    role: "alert",
-    "aria-live": "polite",
+    className: "toast-root toast toast--".concat(status),
+    "data-transition-status": toast === null || toast === void 0 ? void 0 : toast.transitionStatus,
+    "data-position": position,
+    "data-swiping": (toast === null || toast === void 0 ? void 0 : toast.swiping) ? 'true' : 'false',
     children: [showLeadingIcon && jsx("div", {
       className: "toast__icon",
       children: jsx(IconComponent, {
@@ -20924,22 +23264,25 @@ var Toast = React.memo(function (_a) {
     }), jsxs("div", {
       className: "toast__content",
       style: contentStyle,
-      children: [jsx("h3", {
-        className: "toast__title",
+      children: [jsx(ToastTitle, {
         style: titleStyle,
+        className: "toast__title",
         children: title
-      }), description && jsx("p", {
-        className: "toast__description",
+      }), description && jsx(ToastDescription, {
         style: descriptionStyle,
+        className: "toast__description",
         children: description
       })]
-    }), showCloseButton && onClose && jsx("button", {
-      className: "toast__close",
+    }), showCloseButton && jsx(ToastClose, {
       style: closeButtonStyle,
-      onClick: handleCloseClick,
+      className: "toast__close",
       "aria-label": "\uC54C\uB9BC \uB2EB\uAE30",
-      onMouseEnter: handleMouseEnter,
-      onMouseLeave: handleMouseLeave,
+      onMouseEnter: function (e) {
+        e.target.style.backgroundColor = colors.primary.coolGray[100];
+      },
+      onMouseLeave: function (e) {
+        e.target.style.backgroundColor = 'transparent';
+      },
       children: jsx(Icon, {
         type: "close",
         size: 16,
@@ -20947,140 +23290,156 @@ var Toast = React.memo(function (_a) {
       })
     })]
   });
-}, function (prevProps, nextProps) {
-  // 커스텀 비교 함수: onClose를 제외한 나머지 props만 비교
-  return prevProps.status === nextProps.status && prevProps.title === nextProps.title && prevProps.description === nextProps.description && prevProps.showLeadingIcon === nextProps.showLeadingIcon && prevProps.showCloseButton === nextProps.showCloseButton && prevProps.className === nextProps.className;
 });
 // displayName 추가 (React Dev Tools에서 식별하기 쉽게)
 Toast.displayName = 'Toast';
 
+// Position Context for sharing position info
+var ToastPositionContext = createContext('top-right');
+// Position 스타일 맵핑
+var positionStyles = {
+  'top-right': {
+    top: '16px',
+    right: '16px'
+  },
+  'top-left': {
+    top: '16px',
+    left: '16px'
+  },
+  'bottom-right': {
+    bottom: '16px',
+    right: '16px'
+  },
+  'bottom-left': {
+    bottom: '16px',
+    left: '16px'
+  },
+  'top-center': {
+    top: '16px',
+    left: '50%',
+    transform: 'translateX(-50%)'
+  },
+  'bottom-center': {
+    bottom: '16px',
+    left: '50%',
+    transform: 'translateX(-50%)'
+  }
+};
+/**
+ * 토스트 렌더러 컴포넌트
+ *
+ * base-ui의 toast manager에서 관리되는 토스트들을 실제 UI로 렌더링합니다.
+ */
+var ToastRenderer = function () {
+  var toasts = useToastManager().toasts;
+  var position = useContext(ToastPositionContext);
+  return jsx(Fragment, {
+    children: toasts.map(function (toast) {
+      return jsx(Toast, {
+        toast: toast,
+        status: toast.type || 'info',
+        title: toast.title || '',
+        description: toast.description,
+        showLeadingIcon: true,
+        showCloseButton: true,
+        position: position
+      }, toast.id);
+    })
+  });
+};
 /**
  * Toast Provider 컴포넌트
  *
- * react-hot-toast를 래핑하여 기존 Toast 컴포넌트와 함께 사용할 수 있는 Provider입니다.
+ * base-ui의 toast 시스템을 래핑하여 기존 Toast 컴포넌트와 함께 사용할 수 있는 Provider입니다.
  */
 var ToastProvider = function (_a) {
   var children = _a.children,
     _b = _a.position,
     position = _b === void 0 ? 'top-right' : _b,
     _c = _a.defaultDuration,
-    defaultDuration = _c === void 0 ? 4000 : _c;
-  return jsxs(Fragment, {
-    children: [children, jsx(Toaster, {
-      position: position,
-      toastOptions: {
-        duration: defaultDuration,
-        style: {
-          background: 'transparent',
-          boxShadow: 'none',
-          padding: 0,
-          margin: 0
-        }
-      }
-    })]
+    defaultDuration = _c === void 0 ? 4000 : _c,
+    _d = _a.limit,
+    limit = _d === void 0 ? 3 : _d;
+  return jsx(ToastProvider$1, {
+    timeout: defaultDuration,
+    limit: limit,
+    children: jsxs(ToastPositionContext.Provider, {
+      value: position,
+      children: [children, jsx(ToastViewport, {
+        style: __assign({
+          position: 'fixed',
+          zIndex: 9999,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px',
+          maxWidth: '380px',
+          outline: 'none',
+          pointerEvents: 'none'
+        }, positionStyles[position]),
+        children: jsx(ToastRenderer, {})
+      })]
+    })
   });
 };
 /**
  * useToast 훅
  *
- * react-hot-toast를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
+ * base-ui의 toast 시스템을 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 var useToast = function () {
-  // dismiss 함수를 미리 참조로 저장하여 재생성 방지
-  var dismissToast = useCallback(function (id) {
-    return toast.dismiss(id);
-  }, []);
+  var toastManager = useToastManager();
   var success = useCallback(function (title, description, options) {
-    return toast.custom(function (t) {
-      var _a;
-      return jsx(Toast, __assign({
-        status: "success",
-        title: title,
-        description: description,
-        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
-        showCloseButton: true,
-        onClose: function () {
-          return dismissToast(t.id);
-        }
-      }, options), t.id);
-    }, {
-      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-      id: options === null || options === void 0 ? void 0 : options.id
+    return toastManager.add({
+      id: options === null || options === void 0 ? void 0 : options.id,
+      type: 'success',
+      title: title,
+      description: description,
+      timeout: options === null || options === void 0 ? void 0 : options.duration
     });
-  }, [dismissToast]);
+  }, [toastManager]);
   var error = useCallback(function (title, description, options) {
-    return toast.custom(function (t) {
-      var _a;
-      return jsx(Toast, __assign({
-        status: "error",
-        title: title,
-        description: description,
-        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
-        showCloseButton: true,
-        onClose: function () {
-          return dismissToast(t.id);
-        }
-      }, options), t.id);
-    }, {
-      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-      id: options === null || options === void 0 ? void 0 : options.id
+    return toastManager.add({
+      id: options === null || options === void 0 ? void 0 : options.id,
+      type: 'error',
+      title: title,
+      description: description,
+      timeout: options === null || options === void 0 ? void 0 : options.duration
     });
-  }, [dismissToast]);
+  }, [toastManager]);
   var warning = useCallback(function (title, description, options) {
-    return toast.custom(function (t) {
-      var _a;
-      return jsx(Toast, __assign({
-        status: "warning",
-        title: title,
-        description: description,
-        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
-        showCloseButton: true,
-        onClose: function () {
-          return dismissToast(t.id);
-        }
-      }, options), t.id);
-    }, {
-      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-      id: options === null || options === void 0 ? void 0 : options.id
+    return toastManager.add({
+      id: options === null || options === void 0 ? void 0 : options.id,
+      type: 'warning',
+      title: title,
+      description: description,
+      timeout: options === null || options === void 0 ? void 0 : options.duration
     });
-  }, [dismissToast]);
+  }, [toastManager]);
   var info = useCallback(function (title, description, options) {
-    return toast.custom(function (t) {
-      var _a;
-      return jsx(Toast, __assign({
-        status: "info",
-        title: title,
-        description: description,
-        showLeadingIcon: (_a = options === null || options === void 0 ? void 0 : options.showLeadingIcon) !== null && _a !== void 0 ? _a : true,
-        showCloseButton: true,
-        onClose: function () {
-          return dismissToast(t.id);
-        }
-      }, options), t.id);
-    }, {
-      duration: (options === null || options === void 0 ? void 0 : options.duration) || 4000,
-      id: options === null || options === void 0 ? void 0 : options.id
+    return toastManager.add({
+      id: options === null || options === void 0 ? void 0 : options.id,
+      type: 'info',
+      title: title,
+      description: description,
+      timeout: options === null || options === void 0 ? void 0 : options.duration
     });
-  }, [dismissToast]);
+  }, [toastManager]);
   var custom = useCallback(function (options) {
-    return toast.custom(function (t) {
-      return jsx(Toast, __assign({
-        showLeadingIcon: true,
-        showCloseButton: true,
-        onClose: function () {
-          return dismissToast(t.id);
-        }
-      }, options), t.id);
-    }, {
-      duration: options.duration || 4000
+    return toastManager.add({
+      type: options.status,
+      title: options.title,
+      description: options.description,
+      timeout: options.duration
     });
-  }, [dismissToast]);
+  }, [toastManager]);
   var remove = useCallback(function (id) {
-    return dismissToast(id);
-  }, [dismissToast]);
+    return toastManager.close(id);
+  }, [toastManager]);
   var removeAll = useCallback(function () {
-    return toast.dismiss();
-  }, []);
+    toastManager.toasts.forEach(function (toast) {
+      return toastManager.close(toast.id);
+    });
+  }, [toastManager]);
   return {
     success: success,
     error: error,
@@ -21226,13 +23585,13 @@ var Modal = function (_a) {
     style = _f === void 0 ? {} : _f,
     _g = _a.overlayStyle,
     overlayStyle = _g === void 0 ? {} : _g;
-  var _h = React.useState(false),
+  var _h = React__default.useState(false),
     isContentOverflowing = _h[0],
     setIsContentOverflowing = _h[1];
-  var _j = React.useState(true),
+  var _j = React__default.useState(true),
     isPrimaryDefaultDisabled = _j[0],
     setIsPrimaryDefaultDisabled = _j[1];
-  var contentRef = React.useRef(null);
+  var contentRef = React__default.useRef(null);
   useEffect(function () {
     if (children && contentRef.current) {
       var _a = contentRef.current,
@@ -24355,15 +26714,15 @@ var hasRequiredUseSyncExternalStoreShim_production;
 function requireUseSyncExternalStoreShim_production () {
 	if (hasRequiredUseSyncExternalStoreShim_production) return useSyncExternalStoreShim_production;
 	hasRequiredUseSyncExternalStoreShim_production = 1;
-	var React$1 = React;
+	var React = React__default;
 	function is(x, y) {
 	  return (x === y && (0 !== x || 1 / x === 1 / y)) || (x !== x && y !== y);
 	}
 	var objectIs = "function" === typeof Object.is ? Object.is : is,
-	  useState = React$1.useState,
-	  useEffect = React$1.useEffect,
-	  useLayoutEffect = React$1.useLayoutEffect,
-	  useDebugValue = React$1.useDebugValue;
+	  useState = React.useState,
+	  useEffect = React.useEffect,
+	  useLayoutEffect = React.useLayoutEffect,
+	  useDebugValue = React.useDebugValue;
 	function useSyncExternalStore$2(subscribe, getSnapshot) {
 	  var value = getSnapshot(),
 	    _useState = useState({ inst: { value: value, getSnapshot: getSnapshot } }),
@@ -24409,7 +26768,7 @@ function requireUseSyncExternalStoreShim_production () {
 	    ? useSyncExternalStore$1
 	    : useSyncExternalStore$2;
 	useSyncExternalStoreShim_production.useSyncExternalStore =
-	  void 0 !== React$1.useSyncExternalStore ? React$1.useSyncExternalStore : shim;
+	  void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
 	return useSyncExternalStoreShim_production;
 }
 
@@ -24437,7 +26796,7 @@ function requireUseSyncExternalStoreShim_development () {
 	    }
 	    function useSyncExternalStore$2(subscribe, getSnapshot) {
 	      didWarnOld18Alpha ||
-	        void 0 === React$1.startTransition ||
+	        void 0 === React.startTransition ||
 	        ((didWarnOld18Alpha = !0),
 	        console.error(
 	          "You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."
@@ -24493,12 +26852,12 @@ function requireUseSyncExternalStoreShim_development () {
 	      "function" ===
 	        typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart &&
 	      __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-	    var React$1 = React,
+	    var React = React__default,
 	      objectIs = "function" === typeof Object.is ? Object.is : is,
-	      useState = React$1.useState,
-	      useEffect = React$1.useEffect,
-	      useLayoutEffect = React$1.useLayoutEffect,
-	      useDebugValue = React$1.useDebugValue,
+	      useState = React.useState,
+	      useEffect = React.useEffect,
+	      useLayoutEffect = React.useLayoutEffect,
+	      useDebugValue = React.useDebugValue,
 	      didWarnOld18Alpha = !1,
 	      didWarnUncachedGetSnapshot = !1,
 	      shim =
@@ -24508,7 +26867,7 @@ function requireUseSyncExternalStoreShim_development () {
 	          ? useSyncExternalStore$1
 	          : useSyncExternalStore$2;
 	    useSyncExternalStoreShim_development.useSyncExternalStore =
-	      void 0 !== React$1.useSyncExternalStore ? React$1.useSyncExternalStore : shim;
+	      void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
 	    "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ &&
 	      "function" ===
 	        typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop &&
@@ -25439,8 +27798,7 @@ var Table = function (_a) {
     },
     children: [jsxs("div", {
       style: {
-        opacity: isWidthCalculationComplete || currentPageData.length === 0 ? 1 : 0.7,
-        transition: 'opacity 0.3s ease-in-out'
+        visibility: isWidthCalculationComplete || currentPageData.length === 0 ? 'visible' : 'hidden'
       },
       children: [jsx("div", {
         style: {
@@ -25451,7 +27809,7 @@ var Table = function (_a) {
             ref: function (el) {
               headerRefs.current[index] = el;
             },
-            style: __assign(__assign(__assign({
+            style: __assign(__assign(__assign(__assign({
               display: 'flex',
               alignItems: 'center',
               backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
@@ -25460,9 +27818,10 @@ var Table = function (_a) {
               width: columnLayouts[index] ? "".concat(columnLayouts[index], "px") : 'auto',
               boxSizing: 'border-box',
               overflow: 'visible',
-              height: 48,
+              height: 48
+            }, isWidthCalculationComplete && {
               transition: 'width 0.2s ease-out, flex 0.2s ease-out'
-            }, currentPageData.length === 0 && {
+            }), currentPageData.length === 0 && {
               flex: 1,
               minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
               width: 'auto'
@@ -25666,9 +28025,9 @@ var Cell = memo(function (_a) {
     columnLength = _a.columnLength,
     isRowAccordionOpen = _a.isRowAccordionOpen,
     tableType = _a.tableType,
-    style = _a.style;
-    _a.isWidthCalculationComplete;
-    var hasRowAccordion = _a.hasRowAccordion;
+    style = _a.style,
+    isWidthCalculationComplete = _a.isWidthCalculationComplete,
+    hasRowAccordion = _a.hasRowAccordion;
   var cellRef = useRef(null);
   useLayoutEffect(function () {
     if (cellRef.current) {
@@ -25687,7 +28046,7 @@ var Cell = memo(function (_a) {
   return jsx("div", {
     ref: cellRef,
     onClick: handleClick,
-    style: __assign(__assign(__assign({
+    style: __assign(__assign(__assign(__assign({
       display: 'flex',
       borderBottom: tableType === 'parent' ? '1px solid #eee' : 'none',
       padding: tableType === 'parent' && columnIndex === columnLength - 1 ? '16px 12px' : '8px 12px',
@@ -25695,9 +28054,10 @@ var Cell = memo(function (_a) {
       boxSizing: 'border-box',
       minWidth: columnIndex === 1 ? 84 : columnWidth ? "".concat(columnWidth, "px") : '0',
       width: columnWidth ? "".concat(columnWidth, "px") : 'auto',
-      overflow: 'visible',
+      overflow: 'visible'
+    }, isWidthCalculationComplete && {
       transition: 'width 0.2s ease-out, flex 0.2s ease-out'
-    }, tableType === 'parent' ? columnIndex === columnLength - 2 && {
+    }), tableType === 'parent' ? columnIndex === columnLength - 2 && {
       flex: 1,
       minWidth: 0
     } : columnIndex === columnLength - 1 && {
@@ -25764,7 +28124,7 @@ var sizeConfig = {
  * 페이지 내에서 사용자에게 중요한 정보나 상태를 알려주는 컴포넌트입니다.
  * 피그마 디자인에 따라 크기(s, m)와 타입(normal, success, warning)을 지원합니다.
  */
-var InlineNotification = React.memo(function (_a) {
+var InlineNotification = React__default.memo(function (_a) {
   var type = _a.type,
     message = _a.message,
     _b = _a.size,

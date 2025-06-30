@@ -1,0 +1,209 @@
+/* Toast Animation Styles */
+@keyframes toast-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes toast-slide-out {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+}
+
+@keyframes toast-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toast-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Toast Root Animation - 기본적으로 모든 토스트에 적용 */
+.toast-root {
+  /* 기본 상태 */
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* 등장 애니메이션 */
+  animation: toast-slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Transition 상태별 애니메이션 */
+.toast-root[data-transition-status="ending"] {
+  animation: toast-slide-out 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.toast-root[data-transition-status="starting"] {
+  opacity: 0;
+  transform: translateX(100%) scale(0.95);
+}
+
+/* Icon Animation */
+.toast__icon {
+  opacity: 0;
+  transform: scale(0.8);
+  animation: toast-scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+}
+
+/* Content Animation */
+.toast__content {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: toast-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.15s both;
+}
+
+/* Close Button Animation */
+.toast__close {
+  opacity: 0;
+  animation: toast-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+  transition: all 0.15s ease;
+}
+
+/* Hover Animations */
+.toast__close:hover {
+  transform: scale(1.1);
+}
+
+/* Position-specific animations - 위치별 다른 입장 방향 */
+.toast-root[data-position="top-left"],
+.toast-root[data-position="bottom-left"] {
+  animation: toast-slide-in-from-left 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.toast-root[data-position="top-center"],
+.toast-root[data-position="top-left"],
+.toast-root[data-position="top-right"] {
+  animation: toast-slide-in-from-top 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.toast-root[data-position="bottom-center"],
+.toast-root[data-position="bottom-left"],
+.toast-root[data-position="bottom-right"] {
+  animation: toast-slide-in-from-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes toast-slide-in-from-top {
+  from {
+    opacity: 0;
+    transform: translateY(-100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-slide-in-from-bottom {
+  from {
+    opacity: 0;
+    transform: translateY(100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-slide-in-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-100%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Swipe Animation for gesture dismissal */
+.toast-root[data-swiping="true"] {
+  transition: transform 0.1s ease-out;
+}
+
+/* Status-specific subtle animations */
+.toast--success .toast__icon {
+  animation: toast-scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both,
+             success-pulse 0.6s ease-in-out 0.5s;
+}
+
+.toast--error .toast__icon {
+  animation: toast-scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both,
+             error-shake 0.5s ease-in-out 0.5s;
+}
+
+@keyframes success-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+@keyframes error-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* Stack Animation - 여러 토스트가 쌓일 때 */
+.toast-root:not(:first-child) {
+  animation-delay: 0.1s;
+}
+
+.toast-root:not(:first-child) .toast__icon {
+  animation-delay: 0.2s;
+}
+
+.toast-root:not(:first-child) .toast__content {
+  animation-delay: 0.25s;
+}
+
+.toast-root:not(:first-child) .toast__close {
+  animation-delay: 0.3s;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .toast-root,
+  .toast__icon,
+  .toast__content,
+  .toast__close {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+  
+  .toast-root {
+    opacity: 1;
+    transform: none;
+  }
+  
+  .toast__icon,
+  .toast__content,
+  .toast__close {
+    opacity: 1;
+    transform: none;
+  }
+} 

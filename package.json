@@ -15,6 +15,11 @@
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
+    "./native": {
+      "import": "./dist/native/index.esm.js",
+      "require": "./dist/native/index.js",
+      "types": "./dist/native/index.d.ts"
+    },
     "./token": {
       "import": "./dist/token/index.esm.js",
       "require": "./dist/token/index.js",
@@ -50,7 +55,23 @@
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
-    "react-hot-toast": ">=2.0.0"
+    "react-hot-toast": ">=2.0.0",
+    "react-native": ">=0.60.0",
+    "react-native-svg": ">=12.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react-dom": {
+      "optional": true
+    },
+    "react-hot-toast": {
+      "optional": true
+    },
+    "react-native": {
+      "optional": true
+    },
+    "react-native-svg": {
+      "optional": true
+    }
   },
   "devDependencies": {
     "@babel/core": "^7.23.0",
@@ -89,6 +110,8 @@
     "prettier": "^3.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-native": "^0.80.0",
+    "react-native-svg": "^15.12.0",
     "rollup": "^3.29.4",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
@@ -109,6 +132,7 @@
   },
   "homepage": "https://github.com/Team-Youth/youth-design#readme",
   "dependencies": {
+    "@base-ui-components/react": "^1.0.0-beta.0",
     "lottie-react": "^2.4.1",
     "react-hot-toast": "^2.5.2",
     "rooks": "^8.0.1"

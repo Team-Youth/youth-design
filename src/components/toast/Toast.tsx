@@ -1,10 +1,12 @@
-import React, { useCallback } from 'react';
+import React from 'react';
+import { Toast as BaseToast } from '@base-ui-components/react/toast';
 import { colors } from '../../tokens/colors';
 import { radius } from '../../tokens/radius';
 import { shadows } from '../../tokens/shadows';
 import { spacing } from '../../tokens/spacing';
 import { textStyles } from '../../tokens/typography';
 import { Icon } from '../icon';
+import './Toast.css';
 
 // 토스트 상태 타입 정의
 export type ToastStatus = 'success' | 'error' | 'warning' | 'info';
@@ -83,17 +85,14 @@ export interface ToastProps {
   showLeadingIcon?: boolean;
   /** 닫기 버튼 표시 여부 */
   showCloseButton?: boolean;
-  /** 닫기 버튼 클릭 핸들러 */
-  onClose?: () => void;
-  /** 커스텀 클래스명 */
-  className?: string;
+  /** base-ui toast 객체 */
+  toast: any;
+  /** 토스트 위치 (애니메이션을 위해) */
+  position?: string;
 }
 
 /**
- * 토스트 오버레이 컴포넌트
- *
- * 사용자가 어떤 작업을 완료했을 때, 시스템이 잘 처리됐다는 걸 알려주는 알림입니다.
- * 현재 하고 있는 일을 방해하지 않고, 잠깐 나타났다 사라지는 방식으로 보여집니다.
+ * Base UI Toast를 youth-design 스타일로 래핑한 컴포넌트
  */
 export const Toast: React.FC<ToastProps> = React.memo(
   ({
@@ -102,15 +101,11 @@ export const Toast: React.FC<ToastProps> = React.memo(
     description,
     showLeadingIcon = true,
     showCloseButton = false,
-    onClose,
-    className = '',
+    toast,
+    position,
   }) => {
     const config = statusConfig[status];
     const IconComponent = config.icon;
-
-    const handleCloseClick = useCallback(() => {
-      onClose?.();
-    }, [onClose]);
 
     const toastStyle: React.CSSProperties = {
       display: 'flex',
@@ -122,6 +117,8 @@ export const Toast: React.FC<ToastProps> = React.memo(
       boxShadow: shadows.s,
       width: '360px',
       minHeight: 'fit-content',
+      position: 'relative',
+      pointerEvents: 'auto',
     };
 
     const contentStyle: React.CSSProperties = {
@@ -153,22 +150,19 @@ export const Toast: React.FC<ToastProps> = React.memo(
       justifyContent: 'center',
       borderRadius: radius.xs,
       transition: 'background-color 0.2s ease',
+      position: 'absolute',
+      top: spacing.m,
+      right: spacing.m,
     };
 
-    const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-      (e.target as HTMLElement).style.backgroundColor = colors.primary.coolGray[100];
-    }, []);
-
-    const handleMouseLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-      (e.target as HTMLElement).style.backgroundColor = 'transparent';
-    }, []);
-
     return (
-      <div
-        className={`toast toast--${status} ${className}`}
+      <BaseToast.Root
+        toast={toast}
         style={toastStyle}
-        role="alert"
-        aria-live="polite"
+        className={`toast-root toast toast--${status}`}
+        data-transition-status={toast?.transitionStatus}
+        data-position={position}
+        data-swiping={toast?.swiping ? 'true' : 'false'}
       >
         {showLeadingIcon && (
           <div className="toast__icon">
@@ -177,40 +171,32 @@ export const Toast: React.FC<ToastProps> = React.memo(
         )}
 
         <div className="toast__content" style={contentStyle}>
-          <h3 className="toast__title" style={titleStyle}>
+          <BaseToast.Title style={titleStyle} className="toast__title">
             {title}
-          </h3>
+          </BaseToast.Title>
           {description && (
-            <p className="toast__description" style={descriptionStyle}>
+            <BaseToast.Description style={descriptionStyle} className="toast__description">
               {description}
-            </p>
+            </BaseToast.Description>
           )}
         </div>
 
-        {showCloseButton && onClose && (
-          <button
-            className="toast__close"
+        {showCloseButton && (
+          <BaseToast.Close
             style={closeButtonStyle}
-            onClick={handleCloseClick}
+            className="toast__close"
             aria-label="알림 닫기"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
+              (e.target as HTMLElement).style.backgroundColor = colors.primary.coolGray[100];
+            }}
+            onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
+              (e.target as HTMLElement).style.backgroundColor = 'transparent';
+            }}
           >
             <Icon type="close" size={16} color={colors.semantic.text.tertiary} />
-          </button>
+          </BaseToast.Close>
         )}
-      </div>
-    );
-  },
-  (prevProps, nextProps) => {
-    // 커스텀 비교 함수: onClose를 제외한 나머지 props만 비교
-    return (
-      prevProps.status === nextProps.status &&
-      prevProps.title === nextProps.title &&
-      prevProps.description === nextProps.description &&
-      prevProps.showLeadingIcon === nextProps.showLeadingIcon &&
-      prevProps.showCloseButton === nextProps.showCloseButton &&
-      prevProps.className === nextProps.className
+      </BaseToast.Root>
     );
   },
 );
