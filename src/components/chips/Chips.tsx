@@ -21,6 +21,8 @@ export interface ChipsProps {
   text?: string;
   /** 클릭 이벤트 핸들러 */
   onClick?: () => void;
+  /** 뒤쪽 아이콘 클릭 이벤트 핸들러 */
+  onClickTrailingIcon?: () => void;
   /** 추가 CSS 클래스 */
   className?: string;
   /** 수평 패딩 (기본값을 덮어쓸 때 사용) */
@@ -38,6 +40,7 @@ export const Chips: React.FC<ChipsProps> = ({
   trailingIcon,
   text,
   onClick,
+  onClickTrailingIcon,
   className = '',
   paddingX,
   paddingY,
@@ -208,6 +211,13 @@ export const Chips: React.FC<ChipsProps> = ({
     }
   };
 
+  const handleTrailingIconClick = (event: React.MouseEvent) => {
+    if (!disabled && onClickTrailingIcon) {
+      event.stopPropagation(); // 이벤트 전파 방지
+      onClickTrailingIcon();
+    }
+  };
+
   const handleMouseEnter = () => {
     if (!disabled && !selected) {
       setIsHovered(true);
@@ -234,7 +244,19 @@ export const Chips: React.FC<ChipsProps> = ({
           </Font>
         )}
         {trailingIcon && (
-          <Icon type={trailingIcon} size={sizeConfig[size].iconSize} color={iconColor} />
+          <span
+            onClick={onClickTrailingIcon ? handleTrailingIconClick : undefined}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: !disabled && onClickTrailingIcon ? 'pointer' : 'inherit',
+              borderRadius: '4px',
+              padding: '2px',
+              margin: '-2px',
+            }}
+          >
+            <Icon type={trailingIcon} size={sizeConfig[size].iconSize} color={iconColor} />
+          </span>
         )}
       </>
     );

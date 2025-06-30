@@ -19932,6 +19932,7 @@ var Chips = function (_a) {
     trailingIcon = _a.trailingIcon,
     text = _a.text,
     onClick = _a.onClick,
+    onClickTrailingIcon = _a.onClickTrailingIcon,
     _f = _a.className,
     className = _f === void 0 ? '' : _f,
     paddingX = _a.paddingX,
@@ -20080,6 +20081,12 @@ var Chips = function (_a) {
       onClick();
     }
   };
+  var handleTrailingIconClick = function (event) {
+    if (!disabled && onClickTrailingIcon) {
+      event.stopPropagation(); // 이벤트 전파 방지
+      onClickTrailingIcon();
+    }
+  };
   var handleMouseEnter = function () {
     if (!disabled && !selected) {
       setIsHovered(true);
@@ -20102,10 +20109,21 @@ var Chips = function (_a) {
         fontWeight: fontWeight,
         color: textColor,
         children: text
-      }), trailingIcon && jsx(Icon, {
-        type: trailingIcon,
-        size: sizeConfig[size].iconSize,
-        color: iconColor
+      }), trailingIcon && jsx("span", {
+        onClick: onClickTrailingIcon ? handleTrailingIconClick : undefined,
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          cursor: !disabled && onClickTrailingIcon ? 'pointer' : 'inherit',
+          borderRadius: '4px',
+          padding: '2px',
+          margin: '-2px'
+        },
+        children: jsx(Icon, {
+          type: trailingIcon,
+          size: sizeConfig[size].iconSize,
+          color: iconColor
+        })
       })]
     });
   };
