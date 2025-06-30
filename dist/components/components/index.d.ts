@@ -38,6 +38,8 @@ export { TextArea } from './text-area';
 export type { TextAreaProps } from './text-area';
 export { TextField } from './text-field';
 export type { TextFieldProps } from './text-field';
+export { SearchField } from './search-field';
+export type { SearchFieldProps, SearchSuggestionItem } from './search-field';
 export { ExerciseCard } from './exercise-card';
 export type { ExerciseCardProps } from './exercise-card';
 export { ActivityGoalCard } from './activity-goal-card';

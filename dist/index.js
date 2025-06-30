@@ -22813,6 +22813,147 @@ var TextField = React.forwardRef(function (_a, ref) {
 });
 TextField.displayName = 'TextField';
 
+var SearchField = React.memo(React.forwardRef(function (_a, ref) {
+  var _b = _a.suggestions,
+    suggestions = _b === void 0 ? [] : _b,
+    _c = _a.showSuggestions,
+    showSuggestions = _c === void 0 ? false : _c,
+    onSuggestionClick = _a.onSuggestionClick,
+    _d = _a.noResultsText,
+    noResultsText = _d === void 0 ? '검색 결과가 없습니다' : _d,
+    textFieldProps = __rest(_a, ["suggestions", "showSuggestions", "onSuggestionClick", "noResultsText"]);
+  var _e = React.useState(null),
+    hoveredIndex = _e[0],
+    setHoveredIndex = _e[1];
+  var handleSuggestionClick = React.useCallback(function (suggestion, index) {
+    var _a;
+    if (suggestion.disabled) return;
+    (_a = suggestion.onClick) === null || _a === void 0 ? void 0 : _a.call(suggestion);
+    onSuggestionClick === null || onSuggestionClick === void 0 ? void 0 : onSuggestionClick(suggestion, index);
+  }, [onSuggestionClick]);
+  var getSuggestionStyles = React.useCallback(function (suggestion, index) {
+    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
+    if (suggestion.disabled) {
+      backgroundColor = colors.semantic.background.primary;
+    } else if (hoveredIndex === index) {
+      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+    }
+    return {
+      display: 'flex',
+      gap: spacing.xs,
+      // 8px
+      padding: "12px ".concat(spacing.m),
+      // 12px 16px
+      backgroundColor: backgroundColor,
+      cursor: suggestion.disabled ? 'not-allowed' : 'pointer',
+      transition: 'background-color 0.2s ease'
+    };
+  }, [hoveredIndex]);
+  var getTextColor = React.useCallback(function (suggestion) {
+    return suggestion.disabled ? colors.semantic.disabled.foreground // #D1D5DB
+    : colors.semantic.text.primary; // #25282D
+  }, []);
+  var getDescriptionColor = React.useCallback(function (suggestion) {
+    return suggestion.disabled ? colors.semantic.disabled.foreground // #D1D5DB
+    : colors.semantic.text.tertiary; // #AFB6C0
+  }, []);
+  var getIconColor = React.useCallback(function (suggestion) {
+    return suggestion.disabled ? colors.semantic.disabled.foreground // #D1D5DB
+    : colors.semantic.text.tertiary; // #AFB6C0
+  }, []);
+  var renderSuggestionItem = React.useCallback(function (suggestion, index) {
+    var textColor = getTextColor(suggestion);
+    var descriptionColor = getDescriptionColor(suggestion);
+    var iconColor = getIconColor(suggestion);
+    return jsxRuntime.jsxs("div", {
+      style: getSuggestionStyles(suggestion, index),
+      onMouseEnter: function () {
+        return !suggestion.disabled && setHoveredIndex(index);
+      },
+      onMouseLeave: function () {
+        return setHoveredIndex(null);
+      },
+      onClick: function () {
+        return handleSuggestionClick(suggestion, index);
+      },
+      children: [suggestion.leadingIconType && jsxRuntime.jsx(Icon, {
+        type: suggestion.leadingIconType,
+        size: 20,
+        color: iconColor
+      }), jsxRuntime.jsxs("div", {
+        style: {
+          flex: 1,
+          display: 'flex',
+          gap: '8px',
+          alignSelf: 'center'
+        },
+        children: [jsxRuntime.jsx("span", {
+          style: __assign(__assign({}, textStyles.body1), {
+            fontWeight: fontWeight.medium,
+            color: textColor,
+            whiteSpace: 'nowrap'
+          }),
+          children: suggestion.text
+        }), suggestion.description && jsxRuntime.jsx("span", {
+          style: __assign(__assign({}, textStyles.body1), {
+            fontWeight: fontWeight.regular,
+            color: descriptionColor
+          }),
+          children: suggestion.description
+        })]
+      }), suggestion.disabled ? jsxRuntime.jsx(Icon, {
+        type: "lock",
+        size: 20,
+        color: iconColor
+      }) : suggestion.trailingIconType && jsxRuntime.jsx(Icon, {
+        type: suggestion.trailingIconType,
+        size: 20,
+        color: iconColor
+      })]
+    }, index);
+  }, [getSuggestionStyles, getTextColor, getDescriptionColor, getIconColor, handleSuggestionClick]);
+  return jsxRuntime.jsxs("div", {
+    style: {
+      position: 'relative',
+      width: textFieldProps.width || '320px'
+    },
+    children: [jsxRuntime.jsx(TextField, __assign({
+      ref: ref,
+      leadingIconType: "search"
+    }, textFieldProps)), showSuggestions && jsxRuntime.jsx("div", {
+      style: {
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        right: 0,
+        marginTop: spacing.xs,
+        // 8px
+        backgroundColor: colors.semantic.background.primary,
+        // #FFFFFF
+        border: "1px solid ".concat(colors.semantic.border.strong),
+        // #D6D6D6
+        borderRadius: radius.s,
+        // 8px
+        boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
+        zIndex: 1000,
+        overflow: 'hidden'
+      },
+      children: suggestions.length > 0 ? suggestions.map(function (suggestion, index) {
+        return renderSuggestionItem(suggestion, index);
+      }) : jsxRuntime.jsx("div", {
+        style: __assign(__assign({
+          padding: "12px ".concat(spacing.m),
+          color: colors.semantic.text.tertiary
+        }, textStyles.body1), {
+          textAlign: 'center'
+        }),
+        children: noResultsText
+      })
+    })]
+  });
+}));
+SearchField.displayName = 'SearchField';
+
 var ExerciseCard = function (_a) {
   var title = _a.title,
     description = _a.description,
@@ -25828,6 +25969,7 @@ exports.Modal = Modal;
 exports.Pagination = Pagination;
 exports.Popup = Popup;
 exports.Radio = Radio;
+exports.SearchField = SearchField;
 exports.Stepper = Stepper;
 exports.Tab = Tab;
 exports.TabBar = TabBar;
