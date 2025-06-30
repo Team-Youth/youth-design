@@ -23914,12 +23914,12 @@ var Modal = function (_a) {
 };
 
 // 스피너 애니메이션을 위한 CSS keyframes 추가
-var spinKeyframes = "\n  @keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n  }\n";
+var spinKeyframes$1 = "\n  @keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n  }\n";
 // 스타일 시트에 keyframes 추가
 if (typeof document !== 'undefined') {
-  var style = document.createElement('style');
-  style.textContent = spinKeyframes;
-  document.head.appendChild(style);
+  var style$1 = document.createElement('style');
+  style$1.textContent = spinKeyframes$1;
+  document.head.appendChild(style$1);
 }
 var Dropdown = function (_a) {
   var _b = _a.placeholder,
@@ -25199,6 +25199,14 @@ var TextField = React.forwardRef(function (_a, ref) {
 });
 TextField.displayName = 'TextField';
 
+// 스피너 애니메이션을 위한 CSS keyframes 추가
+var spinKeyframes = "\n  @keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n  }\n";
+// 스타일 시트에 keyframes 추가
+if (typeof document !== 'undefined') {
+  var style = document.createElement('style');
+  style.textContent = spinKeyframes;
+  document.head.appendChild(style);
+}
 var SearchField = React.memo(React.forwardRef(function (_a, ref) {
   var _b = _a.suggestions,
     suggestions = _b === void 0 ? [] : _b,
@@ -25207,10 +25215,26 @@ var SearchField = React.memo(React.forwardRef(function (_a, ref) {
     onSuggestionClick = _a.onSuggestionClick,
     _d = _a.noResultsText,
     noResultsText = _d === void 0 ? '검색 결과가 없습니다' : _d,
-    textFieldProps = __rest(_a, ["suggestions", "showSuggestions", "onSuggestionClick", "noResultsText"]);
+    onLoadMore = _a.onLoadMore,
+    hasNextPage = _a.hasNextPage,
+    isLoadingMore = _a.isLoadingMore,
+    textFieldProps = __rest(_a, ["suggestions", "showSuggestions", "onSuggestionClick", "noResultsText", "onLoadMore", "hasNextPage", "isLoadingMore"]);
   var _e = React.useState(null),
     hoveredIndex = _e[0],
     setHoveredIndex = _e[1];
+  var suggestionsContainerRef = React.useRef(null);
+  // 무한스크롤 스크롤 이벤트 처리
+  var handleScroll = React.useCallback(function (event) {
+    if (!onLoadMore || !hasNextPage || isLoadingMore) return;
+    var _a = event.currentTarget,
+      scrollTop = _a.scrollTop,
+      scrollHeight = _a.scrollHeight,
+      clientHeight = _a.clientHeight;
+    var scrollThreshold = 10; // 스크롤 임계값 (px)
+    if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
+      onLoadMore();
+    }
+  }, [onLoadMore, hasNextPage, isLoadingMore]);
   var handleSuggestionClick = React.useCallback(function (suggestion, index) {
     var _a;
     if (suggestion.disabled) return;
@@ -25307,6 +25331,7 @@ var SearchField = React.memo(React.forwardRef(function (_a, ref) {
       ref: ref,
       leadingIconType: "search"
     }, textFieldProps)), showSuggestions && jsxRuntime.jsx("div", {
+      ref: suggestionsContainerRef,
       style: {
         position: 'absolute',
         top: '100%',
@@ -25322,18 +25347,49 @@ var SearchField = React.memo(React.forwardRef(function (_a, ref) {
         // 8px
         boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
         zIndex: 1000,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        maxHeight: '200px' // 최대 높이 설정
       },
-      children: suggestions.length > 0 ? suggestions.map(function (suggestion, index) {
-        return renderSuggestionItem(suggestion, index);
-      }) : jsxRuntime.jsx("div", {
-        style: __assign(__assign({
-          padding: "12px ".concat(spacing.m),
-          color: colors.semantic.text.tertiary
-        }, textStyles.body1), {
-          textAlign: 'center'
-        }),
-        children: noResultsText
+      children: jsxRuntime.jsx("div", {
+        style: {
+          maxHeight: '200px',
+          overflowY: 'auto'
+        },
+        onScroll: handleScroll,
+        children: suggestions.length > 0 ? jsxRuntime.jsxs(jsxRuntime.Fragment, {
+          children: [suggestions.map(function (suggestion, index) {
+            return renderSuggestionItem(suggestion, index);
+          }), isLoadingMore && jsxRuntime.jsx("div", {
+            style: __assign(__assign({
+              padding: "12px ".concat(spacing.m)
+            }, textStyles.body1), {
+              color: colors.semantic.disabled.foreground,
+              textAlign: 'center',
+              userSelect: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }),
+            children: jsxRuntime.jsx("div", {
+              style: {
+                width: '16px',
+                height: '16px',
+                border: '2px solid #f3f3f3',
+                borderTop: '2px solid #cccccc',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }
+            })
+          })]
+        }) : jsxRuntime.jsx("div", {
+          style: __assign(__assign({
+            padding: "12px ".concat(spacing.m),
+            color: colors.semantic.text.tertiary
+          }, textStyles.body1), {
+            textAlign: 'center'
+          }),
+          children: noResultsText
+        })
       })
     })]
   });

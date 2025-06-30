@@ -23,5 +23,11 @@ export interface SearchFieldProps extends Omit<TextFieldProps, 'leadingIconType'
     onSuggestionClick?: (suggestion: SearchSuggestionItem, index: number) => void;
     /** 제안 목록이 비어있을 때 표시할 메시지 */
     noResultsText?: string;
+    /** 무한스크롤: 다음 페이지 로드 콜백 */
+    onLoadMore?: () => void;
+    /** 무한스크롤: 다음 페이지가 있는지 여부 */
+    hasNextPage?: boolean;
+    /** 무한스크롤: 로딩 중인지 여부 */
+    isLoadingMore?: boolean;
 }
 export declare const SearchField: import("react").NamedExoticComponent<SearchFieldProps & import("react").RefAttributes<HTMLInputElement>>;

@@ -1,9 +1,24 @@
-import { useState, forwardRef, useCallback } from 'react';
+import { useState, forwardRef, useCallback, useRef } from 'react';
 import { memo } from 'react';
 
 import { TextField, TextFieldProps } from '../text-field/TextField';
 import { Icon, IconType } from '../icon/Icon';
 import { colors, spacing, radius, textStyles, fontWeight } from '../../tokens';
+
+// 스피너 애니메이션을 위한 CSS keyframes 추가
+const spinKeyframes = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+// 스타일 시트에 keyframes 추가
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = spinKeyframes;
+  document.head.appendChild(style);
+}
 
 export interface SearchSuggestionItem {
   /** 제안 텍스트 */
@@ -30,6 +45,12 @@ export interface SearchFieldProps
   onSuggestionClick?: (suggestion: SearchSuggestionItem, index: number) => void;
   /** 제안 목록이 비어있을 때 표시할 메시지 */
   noResultsText?: string;
+  /** 무한스크롤: 다음 페이지 로드 콜백 */
+  onLoadMore?: () => void;
+  /** 무한스크롤: 다음 페이지가 있는지 여부 */
+  hasNextPage?: boolean;
+  /** 무한스크롤: 로딩 중인지 여부 */
+  isLoadingMore?: boolean;
 }
 
 export const SearchField = memo(
@@ -40,11 +61,30 @@ export const SearchField = memo(
         showSuggestions = false,
         onSuggestionClick,
         noResultsText = '검색 결과가 없습니다',
+        onLoadMore,
+        hasNextPage,
+        isLoadingMore,
         ...textFieldProps
       },
       ref,
     ) => {
       const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+      const suggestionsContainerRef = useRef<HTMLDivElement>(null);
+
+      // 무한스크롤 스크롤 이벤트 처리
+      const handleScroll = useCallback(
+        (event: React.UIEvent<HTMLDivElement>) => {
+          if (!onLoadMore || !hasNextPage || isLoadingMore) return;
+
+          const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
+          const scrollThreshold = 10; // 스크롤 임계값 (px)
+
+          if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
+            onLoadMore();
+          }
+        },
+        [onLoadMore, hasNextPage, isLoadingMore],
+      );
 
       const handleSuggestionClick = useCallback(
         (suggestion: SearchSuggestionItem, index: number) => {
@@ -167,6 +207,7 @@ export const SearchField = memo(
           {/* Search Suggestions */}
           {showSuggestions && (
             <div
+              ref={suggestionsContainerRef}
               style={{
                 position: 'absolute',
                 top: '100%',
@@ -179,22 +220,61 @@ export const SearchField = memo(
                 boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
                 zIndex: 1000,
                 overflow: 'hidden',
+                maxHeight: '200px', // 최대 높이 설정
               }}
             >
-              {suggestions.length > 0 ? (
-                suggestions.map((suggestion, index) => renderSuggestionItem(suggestion, index))
-              ) : (
-                <div
-                  style={{
-                    padding: `12px ${spacing.m}`,
-                    color: colors.semantic.text.tertiary,
-                    ...textStyles.body1,
-                    textAlign: 'center',
-                  }}
-                >
-                  {noResultsText}
-                </div>
-              )}
+              <div
+                style={{
+                  maxHeight: '200px',
+                  overflowY: 'auto',
+                }}
+                onScroll={handleScroll}
+              >
+                {suggestions.length > 0 ? (
+                  <>
+                    {suggestions.map((suggestion, index) =>
+                      renderSuggestionItem(suggestion, index),
+                    )}
+                    {/* 무한스크롤 로딩 인디케이터 */}
+                    {isLoadingMore && (
+                      <div
+                        style={{
+                          padding: `12px ${spacing.m}`,
+                          ...textStyles.body1,
+                          color: colors.semantic.disabled.foreground,
+                          textAlign: 'center',
+                          userSelect: 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            border: '2px solid #f3f3f3',
+                            borderTop: '2px solid #cccccc',
+                            borderRadius: '50%',
+                            animation: 'spin 1s linear infinite',
+                          }}
+                        />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div
+                    style={{
+                      padding: `12px ${spacing.m}`,
+                      color: colors.semantic.text.tertiary,
+                      ...textStyles.body1,
+                      textAlign: 'center',
+                    }}
+                  >
+                    {noResultsText}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
