@@ -20016,7 +20016,7 @@ var TabBar = function (_a) {
   });
 };
 
-var Chips = function (_a) {
+var Chip = function (_a) {
   var _b = _a.size,
     size = _b === void 0 ? 'l' : _b,
     _c = _a.type,
@@ -20031,9 +20031,7 @@ var Chips = function (_a) {
     onClick = _a.onClick,
     onClickTrailingIcon = _a.onClickTrailingIcon,
     _f = _a.className,
-    className = _f === void 0 ? '' : _f,
-    paddingX = _a.paddingX,
-    paddingY = _a.paddingY;
+    className = _f === void 0 ? '' : _f;
   var _g = useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
@@ -20064,16 +20062,8 @@ var Chips = function (_a) {
     var config = sizeConfig[size];
     var hasLeadingIcon = leadingIcon !== undefined;
     var hasTrailingIcon = trailingIcon !== undefined;
-    // padding 값을 CSS 값으로 변환하는 헬퍼 함수
-    var toCssValue = function (value, defaultValue) {
-      if (value === undefined) return defaultValue;
-      return typeof value === 'number' ? "".concat(value, "px") : value;
-    };
-    // props로 전달받은 padding이 있으면 그것을 사용, 없으면 기본값 사용
-    var finalPaddingX = toCssValue(paddingX, config.paddingX);
-    var finalPaddingY = toCssValue(paddingY, config.paddingY);
-    var paddingLeft = finalPaddingX;
-    var paddingRight = finalPaddingX;
+    var paddingLeft = config.paddingX;
+    var paddingRight = config.paddingX;
     if (hasLeadingIcon) {
       paddingLeft = config.paddingWithLeadingIcon;
     }
@@ -20084,7 +20074,7 @@ var Chips = function (_a) {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: "".concat(finalPaddingY, " ").concat(paddingRight, " ").concat(finalPaddingY, " ").concat(paddingLeft),
+      padding: "".concat(config.paddingY, " ").concat(paddingRight, " ").concat(config.paddingY, " ").concat(paddingLeft),
       borderRadius: config.borderRadius,
       height: config.height,
       border: '1px solid transparent',
@@ -28328,5 +28318,5 @@ var InlineNotification = React__default.memo(function (_a) {
 });
 InlineNotification.displayName = 'InlineNotification';
 
-export { ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Pagination, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
+export { ActivityGoalCard, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Pagination, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
 //# sourceMappingURL=index.esm.js.map

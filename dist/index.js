@@ -20037,7 +20037,7 @@ var TabBar = function (_a) {
   });
 };
 
-var Chips = function (_a) {
+var Chip = function (_a) {
   var _b = _a.size,
     size = _b === void 0 ? 'l' : _b,
     _c = _a.type,
@@ -20052,9 +20052,7 @@ var Chips = function (_a) {
     onClick = _a.onClick,
     onClickTrailingIcon = _a.onClickTrailingIcon,
     _f = _a.className,
-    className = _f === void 0 ? '' : _f,
-    paddingX = _a.paddingX,
-    paddingY = _a.paddingY;
+    className = _f === void 0 ? '' : _f;
   var _g = React.useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
@@ -20085,16 +20083,8 @@ var Chips = function (_a) {
     var config = sizeConfig[size];
     var hasLeadingIcon = leadingIcon !== undefined;
     var hasTrailingIcon = trailingIcon !== undefined;
-    // padding 값을 CSS 값으로 변환하는 헬퍼 함수
-    var toCssValue = function (value, defaultValue) {
-      if (value === undefined) return defaultValue;
-      return typeof value === 'number' ? "".concat(value, "px") : value;
-    };
-    // props로 전달받은 padding이 있으면 그것을 사용, 없으면 기본값 사용
-    var finalPaddingX = toCssValue(paddingX, config.paddingX);
-    var finalPaddingY = toCssValue(paddingY, config.paddingY);
-    var paddingLeft = finalPaddingX;
-    var paddingRight = finalPaddingX;
+    var paddingLeft = config.paddingX;
+    var paddingRight = config.paddingX;
     if (hasLeadingIcon) {
       paddingLeft = config.paddingWithLeadingIcon;
     }
@@ -20105,7 +20095,7 @@ var Chips = function (_a) {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: "".concat(finalPaddingY, " ").concat(paddingRight, " ").concat(finalPaddingY, " ").concat(paddingLeft),
+      padding: "".concat(config.paddingY, " ").concat(paddingRight, " ").concat(config.paddingY, " ").concat(paddingLeft),
       borderRadius: config.borderRadius,
       height: config.height,
       border: '1px solid transparent',
@@ -28352,7 +28342,7 @@ InlineNotification.displayName = 'InlineNotification';
 exports.ActivityGoalCard = ActivityGoalCard;
 exports.Button = Button;
 exports.Checkbox = Checkbox;
-exports.Chips = Chips;
+exports.Chip = Chip;
 exports.Dropdown = Dropdown;
 exports.ExerciseCard = ExerciseCard;
 exports.ExerciseList = ExerciseList;

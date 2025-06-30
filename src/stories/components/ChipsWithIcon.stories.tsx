@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Chips } from '../../components/chips/Chips';
+import { Chip } from '../../components/chip/Chip';
 import React from 'react';
 
-const meta: Meta<typeof Chips> = {
-  title: 'Components/Chips/With Icons',
-  component: Chips,
+const meta: Meta<typeof Chip> = {
+  title: 'Components/Chip/With Icons',
+  component: Chip,
   parameters: {
     layout: 'centered',
     docs: {
       description: {
-        component: '아이콘이 포함된 Chips 컴포넌트의 다양한 사용 예시입니다.',
+        component: '아이콘이 포함된 Chip 컴포넌트의 다양한 사용 예시입니다.',
       },
     },
   },
@@ -130,30 +130,30 @@ export const IconCombinations: Story = {
       <div>
         <h3>Leading Icons</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips text="Location" leadingIcon="location-filled" />
-          <Chips text="Check" leadingIcon="check-circle-filled" selected={true} />
-          <Chips text="Add" leadingIcon="add-circle-filled" />
-          <Chips text="Heart" leadingIcon="heart-filled" />
-          <Chips text="Search" leadingIcon="search" />
+          <Chip text="Location" leadingIcon="location-filled" />
+          <Chip text="Check" leadingIcon="check-circle-filled" selected={true} />
+          <Chip text="Add" leadingIcon="add-circle-filled" />
+          <Chip text="Heart" leadingIcon="heart-filled" />
+          <Chip text="Search" leadingIcon="search" />
         </div>
       </div>
 
       <div>
         <h3>Trailing Icons</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips text="Navigate" trailingIcon="chevron-right" />
-          <Chips text="Remove" trailingIcon="close" />
-          <Chips text="Arrow" trailingIcon="arrow-right" />
-          <Chips text="More" trailingIcon="more" />
+          <Chip text="Navigate" trailingIcon="chevron-right" />
+          <Chip text="Remove" trailingIcon="close" />
+          <Chip text="Arrow" trailingIcon="arrow-right" />
+          <Chip text="More" trailingIcon="more" />
         </div>
       </div>
 
       <div>
         <h3>Both Icons</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips text="Location Guide" leadingIcon="location-filled" trailingIcon="chevron-right" />
-          <Chips text="Add New Item" leadingIcon="add-circle-filled" trailingIcon="arrow-right" />
-          <Chips text="Search More" leadingIcon="search" trailingIcon="more" selected={true} />
+          <Chip text="Location Guide" leadingIcon="location-filled" trailingIcon="chevron-right" />
+          <Chip text="Add New Item" leadingIcon="add-circle-filled" trailingIcon="arrow-right" />
+          <Chip text="Search More" leadingIcon="search" trailingIcon="more" selected={true} />
         </div>
       </div>
     </div>
@@ -167,9 +167,9 @@ export const IconSizeComparison: Story = {
       <div>
         <h3 style={{ margin: '0 0 12px 0', textAlign: 'center' }}>l Size with Icons</h3>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <Chips size="l" text="Location" leadingIcon="location-filled" />
-          <Chips size="l" text="Navigate" trailingIcon="chevron-right" />
-          <Chips
+          <Chip size="l" text="Location" leadingIcon="location-filled" />
+          <Chip size="l" text="Navigate" trailingIcon="chevron-right" />
+          <Chip
             size="l"
             text="Both"
             leadingIcon="check-circle-filled"
@@ -182,9 +182,9 @@ export const IconSizeComparison: Story = {
       <div>
         <h3 style={{ margin: '0 0 12px 0', textAlign: 'center' }}>m Size with Icons</h3>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <Chips size="m" text="Location" leadingIcon="location-filled" />
-          <Chips size="m" text="Navigate" trailingIcon="chevron-right" />
-          <Chips
+          <Chip size="m" text="Location" leadingIcon="location-filled" />
+          <Chip size="m" text="Navigate" trailingIcon="chevron-right" />
+          <Chip
             size="m"
             text="Both"
             leadingIcon="check-circle-filled"
@@ -204,18 +204,18 @@ export const IconStates: Story = {
       <div>
         <h3>Resting State</h3>
         <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-          <Chips text="Location" leadingIcon="location-filled" />
-          <Chips text="Navigate" trailingIcon="chevron-right" />
-          <Chips text="Both Icons" leadingIcon="add-circle-filled" trailingIcon="arrow-right" />
+          <Chip text="Location" leadingIcon="location-filled" />
+          <Chip text="Navigate" trailingIcon="chevron-right" />
+          <Chip text="Both Icons" leadingIcon="add-circle-filled" trailingIcon="arrow-right" />
         </div>
       </div>
 
       <div>
         <h3>Selected State</h3>
         <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-          <Chips text="Location" leadingIcon="location-filled" selected={true} />
-          <Chips text="Navigate" trailingIcon="chevron-right" selected={true} />
-          <Chips
+          <Chip text="Location" leadingIcon="location-filled" selected={true} />
+          <Chip text="Navigate" trailingIcon="chevron-right" selected={true} />
+          <Chip
             text="Both Icons"
             leadingIcon="add-circle-filled"
             trailingIcon="arrow-right"
@@ -227,9 +227,9 @@ export const IconStates: Story = {
       <div>
         <h3>Disabled State</h3>
         <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
-          <Chips text="Location" leadingIcon="location-filled" disabled={true} />
-          <Chips text="Navigate" trailingIcon="chevron-right" disabled={true} />
-          <Chips
+          <Chip text="Location" leadingIcon="location-filled" disabled={true} />
+          <Chip text="Navigate" trailingIcon="chevron-right" disabled={true} />
+          <Chip
             text="Both Icons"
             leadingIcon="add-circle-filled"
             trailingIcon="arrow-right"
@@ -248,28 +248,28 @@ export const RealWorldExamples: Story = {
       <div>
         <h3>Filter Tags</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips text="Location" leadingIcon="location-filled" />
-          <Chips text="Favorites" leadingIcon="heart-filled" selected={true} />
-          <Chips text="Recent" leadingIcon="time-filled" />
-          <Chips text="Clear All" trailingIcon="close" type="square" />
+          <Chip text="Location" leadingIcon="location-filled" />
+          <Chip text="Favorites" leadingIcon="heart-filled" selected={true} />
+          <Chip text="Recent" leadingIcon="time-filled" />
+          <Chip text="Clear All" trailingIcon="close" type="square" />
         </div>
       </div>
 
       <div>
         <h3>Navigation Menu</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips text="Home" leadingIcon="home-filled" trailingIcon="chevron-right" />
-          <Chips text="Profile" leadingIcon="person-filled" trailingIcon="chevron-right" />
-          <Chips text="Settings" leadingIcon="settings-filled" trailingIcon="chevron-right" />
+          <Chip text="Home" leadingIcon="home-filled" trailingIcon="chevron-right" />
+          <Chip text="Profile" leadingIcon="person-filled" trailingIcon="chevron-right" />
+          <Chip text="Settings" leadingIcon="settings-filled" trailingIcon="chevron-right" />
         </div>
       </div>
 
       <div>
         <h3>Action Buttons</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips text="Add Item" leadingIcon="add-circle-filled" size="l" />
-          <Chips text="Search" leadingIcon="search" trailingIcon="arrow-right" size="l" />
-          <Chips text="Download" leadingIcon="download" type="square" size="l" />
+          <Chip text="Add Item" leadingIcon="add-circle-filled" size="l" />
+          <Chip text="Search" leadingIcon="search" trailingIcon="arrow-right" size="l" />
+          <Chip text="Download" leadingIcon="download" type="square" size="l" />
         </div>
       </div>
     </div>

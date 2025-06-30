@@ -28,8 +28,8 @@ export type { TabProps } from './tab';
 export { TabBar } from './tab-bar';
 export type { TabBarProps } from './tab-bar';
 
-export { Chips } from './chips';
-export type { ChipsProps } from './chips';
+export { Chip } from './chip';
+export type { ChipProps } from './chip';
 
 export { Radio } from './radio';
 export type { RadioProps } from './radio';

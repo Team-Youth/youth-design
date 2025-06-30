@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Chips } from '../../components/chips/Chips';
+import { Chip } from '../../components/chip/Chip';
 import React from 'react';
 
 // 아이콘 예시들
@@ -27,15 +27,15 @@ const TagIcon = () => (
   </svg>
 );
 
-const meta: Meta<typeof Chips> = {
-  title: 'Components/Chips',
-  component: Chips,
+const meta: Meta<typeof Chip> = {
+  title: 'Components/Chip',
+  component: Chip,
   parameters: {
     layout: 'centered',
     docs: {
       description: {
         component:
-          'Chips는 선택 가능한 컴팩트한 요소로, 사용자가 정보를 입력하거나 선택, 필터링, 그리고 특정 액션을 유도할 때 사용됩니다. 칩은 상품 리스트를 필터링하는 기능으로 활용됩니다.',
+          'Chip는 선택 가능한 컴팩트한 요소로, 사용자가 정보를 입력하거나 선택, 필터링, 그리고 특정 액션을 유도할 때 사용됩니다. 칩은 상품 리스트를 필터링하는 기능으로 활용됩니다.',
       },
     },
   },
@@ -210,24 +210,19 @@ export const AllStates: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
       <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-        <Chips text="Resting" selected={false} disabled={false} />
-        <Chips text="Selected" selected={true} disabled={false} />
-        <Chips text="Disabled" selected={false} disabled={true} />
+        <Chip text="Resting" selected={false} disabled={false} />
+        <Chip text="Selected" selected={true} disabled={false} />
+        <Chip text="Disabled" selected={false} disabled={true} />
       </div>
       <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-        <Chips text="With Icon" leadingIcon="location-filled" selected={false} disabled={false} />
-        <Chips
+        <Chip text="With Icon" leadingIcon="location-filled" selected={false} disabled={false} />
+        <Chip
           text="Selected + Icon"
           leadingIcon="check-circle-filled"
           selected={true}
           disabled={false}
         />
-        <Chips
-          text="Trailing Icon"
-          trailingIcon="chevron-right"
-          selected={false}
-          disabled={false}
-        />
+        <Chip text="Trailing Icon" trailingIcon="chevron-right" selected={false} disabled={false} />
       </div>
     </div>
   ),
@@ -240,19 +235,19 @@ export const SizeAndTypeVariations: Story = {
       <div>
         <h3 style={{ margin: '0 0 12px 0', textAlign: 'center' }}>Large Size</h3>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <Chips text="Capsule" size="l" type="capsule" />
-          <Chips text="Square" size="l" type="square" />
-          <Chips text="With Icon" size="l" type="capsule" leadingIcon="location-filled" />
-          <Chips text="Selected" size="l" type="capsule" selected={true} />
+          <Chip text="Capsule" size="l" type="capsule" />
+          <Chip text="Square" size="l" type="square" />
+          <Chip text="With Icon" size="l" type="capsule" leadingIcon="location-filled" />
+          <Chip text="Selected" size="l" type="capsule" selected={true} />
         </div>
       </div>
       <div>
         <h3 style={{ margin: '0 0 12px 0', textAlign: 'center' }}>Medium Size</h3>
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <Chips text="Capsule" size="m" type="capsule" />
-          <Chips text="Square" size="m" type="square" />
-          <Chips text="With Icon" size="m" type="capsule" leadingIcon="location-filled" />
-          <Chips text="Selected" size="m" type="capsule" selected={true} />
+          <Chip text="Capsule" size="m" type="capsule" />
+          <Chip text="Square" size="m" type="square" />
+          <Chip text="With Icon" size="m" type="capsule" leadingIcon="location-filled" />
+          <Chip text="Selected" size="m" type="capsule" selected={true} />
         </div>
       </div>
     </div>
@@ -266,11 +261,11 @@ export const FigmaDesignShowcase: Story = {
       <div>
         <h3>Large Capsule</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips size="l" type="capsule" text="Resting" />
-          <Chips size="l" type="capsule" text="Selected" selected={true} />
-          <Chips size="l" type="capsule" text="Disabled" disabled={true} />
-          <Chips size="l" type="capsule" text="With Icon" leadingIcon="add-circle-filled" />
-          <Chips
+          <Chip size="l" type="capsule" text="Resting" />
+          <Chip size="l" type="capsule" text="Selected" selected={true} />
+          <Chip size="l" type="capsule" text="Disabled" disabled={true} />
+          <Chip size="l" type="capsule" text="With Icon" leadingIcon="add-circle-filled" />
+          <Chip
             size="l"
             type="capsule"
             text="Both Icons"
@@ -283,11 +278,11 @@ export const FigmaDesignShowcase: Story = {
       <div>
         <h3>Large Square</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips size="l" type="square" text="Resting" />
-          <Chips size="l" type="square" text="Selected" selected={true} />
-          <Chips size="l" type="square" text="Disabled" disabled={true} />
-          <Chips size="l" type="square" text="With Icon" leadingIcon="location-filled" />
-          <Chips
+          <Chip size="l" type="square" text="Resting" />
+          <Chip size="l" type="square" text="Selected" selected={true} />
+          <Chip size="l" type="square" text="Disabled" disabled={true} />
+          <Chip size="l" type="square" text="With Icon" leadingIcon="location-filled" />
+          <Chip
             size="l"
             type="square"
             text="Both Icons"
@@ -300,11 +295,11 @@ export const FigmaDesignShowcase: Story = {
       <div>
         <h3>Medium Capsule</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips size="m" type="capsule" text="Resting" />
-          <Chips size="m" type="capsule" text="Selected" selected={true} />
-          <Chips size="m" type="capsule" text="Disabled" disabled={true} />
-          <Chips size="m" type="capsule" text="With Icon" leadingIcon="check-circle-filled" />
-          <Chips
+          <Chip size="m" type="capsule" text="Resting" />
+          <Chip size="m" type="capsule" text="Selected" selected={true} />
+          <Chip size="m" type="capsule" text="Disabled" disabled={true} />
+          <Chip size="m" type="capsule" text="With Icon" leadingIcon="check-circle-filled" />
+          <Chip
             size="m"
             type="capsule"
             text="Both Icons"
@@ -317,11 +312,11 @@ export const FigmaDesignShowcase: Story = {
       <div>
         <h3>Medium Square</h3>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '8px' }}>
-          <Chips size="m" type="square" text="Resting" />
-          <Chips size="m" type="square" text="Selected" selected={true} />
-          <Chips size="m" type="square" text="Disabled" disabled={true} />
-          <Chips size="m" type="square" text="With Icon" leadingIcon="location-filled" />
-          <Chips
+          <Chip size="m" type="square" text="Resting" />
+          <Chip size="m" type="square" text="Selected" selected={true} />
+          <Chip size="m" type="square" text="Disabled" disabled={true} />
+          <Chip size="m" type="square" text="With Icon" leadingIcon="location-filled" />
+          <Chip
             size="m"
             type="square"
             text="Both Icons"
