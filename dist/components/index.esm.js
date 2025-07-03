@@ -28299,7 +28299,7 @@ var BreadcrumbItem = function (_a) {
   var getBackgroundColor = function () {
     if (isCurrent) return 'transparent';
     if (isPressed) return colors.primary.coolGray[100];
-    if (isHovered) return colors.primary.coolGray[50];
+    if (isHovered) return colors.primary.coolGray[100];
     return 'transparent';
   };
   var getTextColor = function () {
