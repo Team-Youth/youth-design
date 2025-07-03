@@ -89,5 +89,8 @@ export type {
 export { Pagination } from './pagination';
 export type { PaginationProps } from './pagination';
 
+export { Popover } from './popover';
+export type { PopoverProps, PopoverItem } from './popover';
+
 export { Breadcrumb } from './breadcrumb';
 export type { BreadcrumbProps, BreadcrumbItem } from './breadcrumb';

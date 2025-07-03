@@ -2,6 +2,7 @@ import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { useState, forwardRef, useRef, useImperativeHandle, useCallback, useLayoutEffect, createContext, useContext, useEffect, useMemo, memo } from 'react';
 import * as ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -28270,6 +28271,178 @@ var InlineNotification = React__default.memo(function (_a) {
 });
 InlineNotification.displayName = 'InlineNotification';
 
+var Popover = function (_a) {
+  var items = _a.items,
+    isOpen = _a.isOpen,
+    onOpenChange = _a.onOpenChange,
+    anchorRef = _a.anchorRef,
+    width = _a.width,
+    _b = _a.position,
+    position = _b === void 0 ? 'bottom' : _b,
+    _c = _a.className,
+    className = _c === void 0 ? '' : _c,
+    _d = _a.style,
+    style = _d === void 0 ? {} : _d,
+    maxHeight = _a.maxHeight;
+  var popoverRef = useRef(null);
+  var _e = useState(null),
+    popoverPosition = _e[0],
+    setPopoverPosition = _e[1];
+  var _f = useState('exited'),
+    animationState = _f[0],
+    setAnimationState = _f[1];
+  // Popover 위치 계산
+  var calculatePosition = useCallback(function () {
+    if (!(anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current)) return null;
+    var anchorRect = anchorRef.current.getBoundingClientRect();
+    var popoverWidth = width || anchorRect.width;
+    var coords = {
+      left: anchorRect.left,
+      width: typeof popoverWidth === 'number' ? popoverWidth : parseFloat(popoverWidth) || anchorRect.width
+    };
+    if (position === 'bottom') {
+      return __assign(__assign({}, coords), {
+        top: anchorRect.bottom + 8
+      });
+    } else {
+      return __assign(__assign({}, coords), {
+        bottom: window.innerHeight - anchorRect.top + 8
+      });
+    }
+  }, [anchorRef, width, position]);
+  // 외부 클릭 감지
+  useEffect(function () {
+    var handleClickOutside = function (event) {
+      if (popoverRef.current && !popoverRef.current.contains(event.target) && (anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current) && !anchorRef.current.contains(event.target)) {
+        onOpenChange(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return function () {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onOpenChange, anchorRef]);
+  // ESC 키 감지
+  useEffect(function () {
+    var handleKeyDown = function (event) {
+      if (event.key === 'Escape' && isOpen) {
+        onOpenChange(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return function () {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onOpenChange]);
+  // 창 크기 변경 시 위치 재계산
+  useEffect(function () {
+    if (!isOpen) return;
+    var handleResize = function () {
+      var newPosition = calculatePosition();
+      setPopoverPosition(newPosition);
+    };
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize, true);
+    return function () {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize, true);
+    };
+  }, [isOpen, calculatePosition]);
+  // 열림/닫힘 애니메이션 관리
+  useEffect(function () {
+    if (isOpen) {
+      var newPosition = calculatePosition();
+      setPopoverPosition(newPosition);
+      setAnimationState('entering');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          setAnimationState('entered');
+        });
+      });
+    } else {
+      setAnimationState('exiting');
+      var timer_1 = setTimeout(function () {
+        setAnimationState('exited');
+        setPopoverPosition(null);
+      }, 200);
+      return function () {
+        return clearTimeout(timer_1);
+      };
+    }
+  }, [isOpen, calculatePosition]);
+  // 아이템 클릭 핸들러
+  var handleItemClick = function (item) {
+    var _a;
+    if (item.disabled) return;
+    (_a = item.onClick) === null || _a === void 0 ? void 0 : _a.call(item, item.id);
+    onOpenChange(false);
+  };
+  // 아이템 키보드 이벤트 핸들러
+  var handleItemKeyDown = function (event, item) {
+    if (item.disabled) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleItemClick(item);
+    }
+  };
+  // 렌더링하지 않을 조건
+  if (animationState === 'exited' || !popoverPosition) {
+    return null;
+  }
+  var popoverStyle = __assign(__assign(__assign({}, popoverPosition), {
+    maxHeight: maxHeight
+  }), style);
+  var popoverClassName = ['popover', "popover--position-".concat(position), "popover--".concat(animationState), className].filter(Boolean).join(' ');
+  var popoverContent = jsx("div", {
+    ref: popoverRef,
+    className: popoverClassName,
+    style: popoverStyle,
+    role: "menu",
+    "aria-orientation": "vertical",
+    children: jsx("div", {
+      className: "popover__content",
+      style: {
+        maxHeight: maxHeight
+      },
+      children: items.map(function (item) {
+        return jsx("button", {
+          className: "popover__item",
+          onClick: function () {
+            return handleItemClick(item);
+          },
+          onKeyDown: function (e) {
+            return handleItemKeyDown(e, item);
+          },
+          disabled: item.disabled,
+          role: "menuitem",
+          tabIndex: item.disabled ? -1 : 0,
+          style: __assign(__assign({}, textStyles.body1), {
+            fontWeight: fontWeight.medium,
+            color: item.disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800]
+          }),
+          children: jsxs("div", {
+            className: "popover__item-content",
+            children: [jsx("span", {
+              className: "popover__item-label",
+              children: item.label
+            }), item.disabled && jsx(Icon, {
+              type: "lock",
+              size: 20,
+              color: colors.semantic.text.disabled
+            })]
+          })
+        }, item.id);
+      })
+    })
+  });
+  // Portal로 body에 렌더링
+  return createPortal(popoverContent, document.body);
+};
+
 var BreadcrumbItem = function (_a) {
   var item = _a.item,
     isCurrent = _a.isCurrent;
@@ -28407,5 +28580,5 @@ var Breadcrumb = function (_a) {
   });
 };
 
-export { ActivityGoalCard, Breadcrumb, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Pagination, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
+export { ActivityGoalCard, Breadcrumb, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Pagination, Popover, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
 //# sourceMappingURL=index.esm.js.map
