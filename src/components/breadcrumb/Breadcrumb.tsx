@@ -52,8 +52,8 @@ const BreadcrumbItem: React.FC<{
 
   const getBackgroundColor = () => {
     if (isCurrent) return 'transparent';
-    if (isPressed) return colors.primary.coolGray[100];
     if (isHovered) return colors.primary.coolGray[100];
+    if (isPressed) return colors.primary.coolGray[200];
     return 'transparent';
   };
 
