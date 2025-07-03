@@ -88,3 +88,6 @@ export type {
 
 export { Pagination } from './pagination';
 export type { PaginationProps } from './pagination';
+
+export { Breadcrumb } from './breadcrumb';
+export type { BreadcrumbProps, BreadcrumbItem } from './breadcrumb';

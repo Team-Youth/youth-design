@@ -56,3 +56,5 @@ export { InlineNotification } from './inline-notification';
 export type { InlineNotificationProps, InlineNotificationType, InlineNotificationSize, } from './inline-notification';
 export { Pagination } from './pagination';
 export type { PaginationProps } from './pagination';
+export { Breadcrumb } from './breadcrumb';
+export type { BreadcrumbProps, BreadcrumbItem } from './breadcrumb';

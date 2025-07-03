@@ -28270,5 +28270,142 @@ var InlineNotification = React__default.memo(function (_a) {
 });
 InlineNotification.displayName = 'InlineNotification';
 
-export { ActivityGoalCard, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Pagination, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
+var BreadcrumbItem = function (_a) {
+  var item = _a.item,
+    isCurrent = _a.isCurrent;
+  var _b = React__default.useState(false),
+    isHovered = _b[0],
+    setIsHovered = _b[1];
+  var _c = React__default.useState(false),
+    isPressed = _c[0],
+    setIsPressed = _c[1];
+  var handleClick = function () {
+    if (!isCurrent && item.onClick) {
+      item.onClick();
+    }
+  };
+  var handleMouseDown = function () {
+    if (!isCurrent) {
+      setIsPressed(true);
+    }
+  };
+  var handleMouseUp = function () {
+    setIsPressed(false);
+  };
+  var handleMouseLeave = function () {
+    setIsHovered(false);
+    setIsPressed(false);
+  };
+  var getBackgroundColor = function () {
+    if (isCurrent) return 'transparent';
+    if (isPressed) return colors.primary.coolGray[100];
+    if (isHovered) return colors.primary.coolGray[50];
+    return 'transparent';
+  };
+  var getTextColor = function () {
+    if (isCurrent || isPressed) return colors.semantic.text.primary;
+    return colors.semantic.text.secondary;
+  };
+  var itemStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '4px 8px',
+    borderRadius: '8px',
+    backgroundColor: getBackgroundColor(),
+    cursor: isCurrent ? 'default' : 'pointer',
+    transition: 'background-color 0.2s ease',
+    userSelect: 'none',
+    // a 태그 기본 스타일 제거
+    textDecoration: 'none',
+    color: 'inherit'
+  };
+  var ItemComponent = item.href && !isCurrent ? 'a' : 'div';
+  return jsx(ItemComponent, {
+    style: itemStyle,
+    onClick: handleClick,
+    onMouseEnter: function () {
+      return !isCurrent && setIsHovered(true);
+    },
+    onMouseLeave: handleMouseLeave,
+    onMouseDown: handleMouseDown,
+    onMouseUp: handleMouseUp,
+    href: item.href,
+    "aria-current": isCurrent ? 'page' : undefined,
+    role: isCurrent ? undefined : 'button',
+    tabIndex: isCurrent ? -1 : 0,
+    onKeyDown: function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && !isCurrent) {
+        e.preventDefault();
+        handleClick();
+      }
+    },
+    children: jsx(Font, {
+      type: "heading3",
+      fontWeight: "semibold",
+      color: getTextColor(),
+      children: item.label
+    })
+  });
+};
+var Separator = function (_a) {
+  _a.separator;
+  return jsx("div", {
+    style: {
+      width: '20px',
+      height: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative'
+    },
+    children: jsx("svg", {
+      width: "8",
+      height: "16",
+      viewBox: "0 0 8 16",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      children: jsx("rect", {
+        x: "5.78198",
+        y: "0.667301",
+        width: "1.66667",
+        height: "15",
+        rx: "0.833334",
+        transform: "rotate(20 5.78198 0.667301)",
+        fill: "#D1D5DB"
+      })
+    })
+  });
+};
+var Breadcrumb = function (_a) {
+  var items = _a.items,
+    _b = _a.separator,
+    separator = _b === void 0 ? '/' : _b,
+    className = _a.className,
+    style = _a.style;
+  var containerStyle = __assign({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px'
+  }, style);
+  return jsx("nav", {
+    style: containerStyle,
+    className: className,
+    "aria-label": "breadcrumb",
+    children: items.map(function (item, index) {
+      var isCurrent = index === items.length - 1;
+      var isLast = index === items.length - 1;
+      return jsxs(React__default.Fragment, {
+        children: [jsx(BreadcrumbItem, {
+          item: item,
+          isCurrent: isCurrent
+        }), !isLast && jsx(Separator, {
+          separator: separator
+        })]
+      }, index);
+    })
+  });
+};
+
+export { ActivityGoalCard, Breadcrumb, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Pagination, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, useToast };
 //# sourceMappingURL=index.esm.js.map
