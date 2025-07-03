@@ -2,7 +2,87 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '../icon';
 import { colors, textStyles, fontWeight } from '../../tokens';
-import './Popover.css';
+
+// 인라인 스타일 정의
+const styles = {
+  popover: {
+    position: 'fixed' as const,
+    zIndex: 1000,
+    background: '#ffffff',
+    borderRadius: '8px',
+    boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
+    overflow: 'hidden' as const,
+    transformOrigin: 'top center',
+    transition: 'all 0.2s ease',
+  },
+  popoverPositionTop: {
+    transformOrigin: 'bottom center',
+  },
+  popoverPositionBottom: {
+    transformOrigin: 'top center',
+  },
+  popoverEntering: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(-4px)',
+  },
+  popoverPositionTopEntering: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(4px)',
+  },
+  popoverEntered: {
+    opacity: 1,
+    transform: 'scale(1) translateY(0)',
+  },
+  popoverExiting: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(-4px)',
+  },
+  popoverPositionTopExiting: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(4px)',
+  },
+  popoverContent: {
+    maxHeight: '200px',
+    overflowY: 'auto' as const,
+    // 웹킷 스크롤바 스타일은 CSS-in-JS로 직접 적용할 수 없으므로 별도 처리 필요
+  },
+  popoverItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '12px 16px',
+    minHeight: '48px',
+    background: 'transparent',
+    border: 'none',
+    width: '100%',
+    textAlign: 'left' as const,
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease',
+    outline: 'none',
+    position: 'relative' as const,
+  },
+  popoverItemHover: {
+    backgroundColor: '#f3f5f6',
+  },
+  popoverItemActive: {
+    backgroundColor: '#e8eaed',
+  },
+  popoverItemDisabled: {
+    cursor: 'not-allowed',
+  },
+  popoverItemContent: {
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
+  },
+  popoverItemLabel: {
+    flex: 1,
+  },
+  popoverItemIcon: {
+    marginLeft: '8px',
+    flexShrink: 0,
+  },
+};
 
 export interface PopoverItem {
   /** 아이템 식별자 */
@@ -57,6 +137,8 @@ export const Popover: React.FC<PopoverProps> = ({
   const [animationState, setAnimationState] = useState<
     'entering' | 'entered' | 'exiting' | 'exited'
   >('exited');
+  const [hoveredItemId, setHoveredItemId] = useState<string | null>(null);
+  const [activeItemId, setActiveItemId] = useState<string | null>(null);
 
   // Popover 위치 계산
   const calculatePosition = useCallback(() => {
@@ -189,57 +271,116 @@ export const Popover: React.FC<PopoverProps> = ({
     return null;
   }
 
-  const popoverStyle: React.CSSProperties = {
-    ...popoverPosition,
-    maxHeight,
-    ...style,
+  // 동적 스타일 생성
+  const getPopoverStyle = (): React.CSSProperties => {
+    let dynamicStyle = { ...styles.popover };
+
+    // 위치별 transform-origin 적용
+    if (position === 'top') {
+      dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionTop };
+    } else {
+      dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionBottom };
+    }
+
+    // 애니메이션 상태별 스타일 적용
+    if (animationState === 'entering') {
+      if (position === 'top') {
+        dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionTopEntering };
+      } else {
+        dynamicStyle = { ...dynamicStyle, ...styles.popoverEntering };
+      }
+    } else if (animationState === 'entered') {
+      dynamicStyle = { ...dynamicStyle, ...styles.popoverEntered };
+    } else if (animationState === 'exiting') {
+      if (position === 'top') {
+        dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionTopExiting };
+      } else {
+        dynamicStyle = { ...dynamicStyle, ...styles.popoverExiting };
+      }
+    }
+
+    return {
+      ...dynamicStyle,
+      ...popoverPosition,
+      maxHeight,
+      ...style,
+    };
   };
 
-  const popoverClassName = [
-    'popover',
-    `popover--position-${position}`,
-    `popover--${animationState}`,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const getItemStyle = (item: PopoverItem): React.CSSProperties => {
+    let itemStyle = { ...styles.popoverItem };
+
+    if (item.disabled) {
+      itemStyle = { ...itemStyle, ...styles.popoverItemDisabled };
+    } else if (activeItemId === item.id) {
+      itemStyle = { ...itemStyle, ...styles.popoverItemActive };
+    } else if (hoveredItemId === item.id) {
+      itemStyle = { ...itemStyle, ...styles.popoverItemHover };
+    }
+
+    return {
+      ...itemStyle,
+      ...textStyles.body1,
+      fontWeight: fontWeight.medium,
+      color: item.disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800],
+    };
+  };
 
   const popoverContent = (
-    <div
-      ref={popoverRef}
-      className={popoverClassName}
-      style={popoverStyle}
-      role="menu"
-      aria-orientation="vertical"
-    >
-      <div className="popover__content" style={{ maxHeight }}>
-        {items.map((item) => (
-          <button
-            key={item.id}
-            className="popover__item"
-            onClick={() => handleItemClick(item)}
-            onKeyDown={(e) => handleItemKeyDown(e, item)}
-            disabled={item.disabled}
-            role="menuitem"
-            tabIndex={item.disabled ? -1 : 0}
-            style={{
-              ...textStyles.body1,
-              fontWeight: fontWeight.medium,
-              color: item.disabled
-                ? colors.semantic.disabled.foreground
-                : colors.primary.coolGray[800],
-            }}
-          >
-            <div className="popover__item-content">
-              <span className="popover__item-label">{item.label}</span>
-              {item.disabled && (
-                <Icon type="lock" size={20} color={colors.semantic.text.disabled} />
-              )}
-            </div>
-          </button>
-        ))}
+    <>
+      {/* 스크롤바 스타일을 위한 CSS */}
+      <style>
+        {`
+          .popover-scrollbar::-webkit-scrollbar {
+            width: 4px;
+          }
+          .popover-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+          }
+          .popover-scrollbar::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 2px;
+          }
+          .popover-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #8d97a5;
+          }
+        `}
+      </style>
+      <div ref={popoverRef} style={getPopoverStyle()} role="menu" aria-orientation="vertical">
+        <div
+          className="popover-scrollbar"
+          style={{
+            ...styles.popoverContent,
+            maxHeight: maxHeight || 200,
+          }}
+        >
+          {items.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => handleItemClick(item)}
+              onKeyDown={(e) => handleItemKeyDown(e, item)}
+              onMouseEnter={() => setHoveredItemId(item.id)}
+              onMouseLeave={() => setHoveredItemId(null)}
+              onMouseDown={() => setActiveItemId(item.id)}
+              onMouseUp={() => setActiveItemId(null)}
+              disabled={item.disabled}
+              role="menuitem"
+              tabIndex={item.disabled ? -1 : 0}
+              style={getItemStyle(item)}
+            >
+              <div style={styles.popoverItemContent}>
+                <span style={styles.popoverItemLabel}>{item.label}</span>
+                {item.disabled && (
+                  <div style={styles.popoverItemIcon}>
+                    <Icon type="lock" size={20} color={colors.semantic.text.disabled} />
+                  </div>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 
   // Portal로 body에 렌더링

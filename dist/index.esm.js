@@ -28375,6 +28375,86 @@ var InlineNotification = React__default.memo(function (_a) {
 });
 InlineNotification.displayName = 'InlineNotification';
 
+// 인라인 스타일 정의
+var styles = {
+  popover: {
+    position: 'fixed',
+    zIndex: 1000,
+    background: '#ffffff',
+    borderRadius: '8px',
+    boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
+    overflow: 'hidden',
+    transformOrigin: 'top center',
+    transition: 'all 0.2s ease'
+  },
+  popoverPositionTop: {
+    transformOrigin: 'bottom center'
+  },
+  popoverPositionBottom: {
+    transformOrigin: 'top center'
+  },
+  popoverEntering: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(-4px)'
+  },
+  popoverPositionTopEntering: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(4px)'
+  },
+  popoverEntered: {
+    opacity: 1,
+    transform: 'scale(1) translateY(0)'
+  },
+  popoverExiting: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(-4px)'
+  },
+  popoverPositionTopExiting: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(4px)'
+  },
+  popoverContent: {
+    maxHeight: '200px',
+    overflowY: 'auto'
+    // 웹킷 스크롤바 스타일은 CSS-in-JS로 직접 적용할 수 없으므로 별도 처리 필요
+  },
+  popoverItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '12px 16px',
+    minHeight: '48px',
+    background: 'transparent',
+    border: 'none',
+    width: '100%',
+    textAlign: 'left',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease',
+    outline: 'none',
+    position: 'relative'
+  },
+  popoverItemHover: {
+    backgroundColor: '#f3f5f6'
+  },
+  popoverItemActive: {
+    backgroundColor: '#e8eaed'
+  },
+  popoverItemDisabled: {
+    cursor: 'not-allowed'
+  },
+  popoverItemContent: {
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1
+  },
+  popoverItemLabel: {
+    flex: 1
+  },
+  popoverItemIcon: {
+    marginLeft: '8px',
+    flexShrink: 0
+  }
+};
 var Popover = function (_a) {
   var items = _a.items,
     isOpen = _a.isOpen,
@@ -28382,10 +28462,9 @@ var Popover = function (_a) {
     anchorRef = _a.anchorRef,
     width = _a.width,
     _b = _a.position,
-    position = _b === void 0 ? 'bottom' : _b,
-    _c = _a.className,
-    className = _c === void 0 ? '' : _c,
-    _d = _a.style,
+    position = _b === void 0 ? 'bottom' : _b;
+    _a.className;
+    var _d = _a.style,
     style = _d === void 0 ? {} : _d,
     maxHeight = _a.maxHeight;
   var popoverRef = useRef(null);
@@ -28395,6 +28474,12 @@ var Popover = function (_a) {
   var _f = useState('exited'),
     animationState = _f[0],
     setAnimationState = _f[1];
+  var _g = useState(null),
+    hoveredItemId = _g[0],
+    setHoveredItemId = _g[1];
+  var _h = useState(null),
+    activeItemId = _h[0],
+    setActiveItemId = _h[1];
   // Popover 위치 계산
   var calculatePosition = useCallback(function () {
     if (!(anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current)) return null;
@@ -28497,51 +28582,104 @@ var Popover = function (_a) {
   if (animationState === 'exited' || !popoverPosition) {
     return null;
   }
-  var popoverStyle = __assign(__assign(__assign({}, popoverPosition), {
-    maxHeight: maxHeight
-  }), style);
-  var popoverClassName = ['popover', "popover--position-".concat(position), "popover--".concat(animationState), className].filter(Boolean).join(' ');
-  var popoverContent = jsx("div", {
-    ref: popoverRef,
-    className: popoverClassName,
-    style: popoverStyle,
-    role: "menu",
-    "aria-orientation": "vertical",
-    children: jsx("div", {
-      className: "popover__content",
-      style: {
-        maxHeight: maxHeight
-      },
-      children: items.map(function (item) {
-        return jsx("button", {
-          className: "popover__item",
-          onClick: function () {
-            return handleItemClick(item);
-          },
-          onKeyDown: function (e) {
-            return handleItemKeyDown(e, item);
-          },
-          disabled: item.disabled,
-          role: "menuitem",
-          tabIndex: item.disabled ? -1 : 0,
-          style: __assign(__assign({}, textStyles.body1), {
-            fontWeight: fontWeight.medium,
-            color: item.disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800]
-          }),
-          children: jsxs("div", {
-            className: "popover__item-content",
-            children: [jsx("span", {
-              className: "popover__item-label",
-              children: item.label
-            }), item.disabled && jsx(Icon, {
-              type: "lock",
-              size: 20,
-              color: colors.semantic.text.disabled
-            })]
-          })
-        }, item.id);
+  // 동적 스타일 생성
+  var getPopoverStyle = function () {
+    var dynamicStyle = __assign({}, styles.popover);
+    // 위치별 transform-origin 적용
+    if (position === 'top') {
+      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTop);
+    } else {
+      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionBottom);
+    }
+    // 애니메이션 상태별 스타일 적용
+    if (animationState === 'entering') {
+      if (position === 'top') {
+        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopEntering);
+      } else {
+        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntering);
+      }
+    } else if (animationState === 'entered') {
+      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntered);
+    } else if (animationState === 'exiting') {
+      if (position === 'top') {
+        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopExiting);
+      } else {
+        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverExiting);
+      }
+    }
+    return __assign(__assign(__assign(__assign({}, dynamicStyle), popoverPosition), {
+      maxHeight: maxHeight
+    }), style);
+  };
+  var getItemStyle = function (item) {
+    var itemStyle = __assign({}, styles.popoverItem);
+    if (item.disabled) {
+      itemStyle = __assign(__assign({}, itemStyle), styles.popoverItemDisabled);
+    } else if (activeItemId === item.id) {
+      itemStyle = __assign(__assign({}, itemStyle), styles.popoverItemActive);
+    } else if (hoveredItemId === item.id) {
+      itemStyle = __assign(__assign({}, itemStyle), styles.popoverItemHover);
+    }
+    return __assign(__assign(__assign({}, itemStyle), textStyles.body1), {
+      fontWeight: fontWeight.medium,
+      color: item.disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800]
+    });
+  };
+  var popoverContent = jsxs(Fragment, {
+    children: [jsx("style", {
+      children: "\n          .popover-scrollbar::-webkit-scrollbar {\n            width: 4px;\n          }\n          .popover-scrollbar::-webkit-scrollbar-track {\n            background: transparent;\n          }\n          .popover-scrollbar::-webkit-scrollbar-thumb {\n            background: #d1d5db;\n            border-radius: 2px;\n          }\n          .popover-scrollbar::-webkit-scrollbar-thumb:hover {\n            background: #8d97a5;\n          }\n        "
+    }), jsx("div", {
+      ref: popoverRef,
+      style: getPopoverStyle(),
+      role: "menu",
+      "aria-orientation": "vertical",
+      children: jsx("div", {
+        className: "popover-scrollbar",
+        style: __assign(__assign({}, styles.popoverContent), {
+          maxHeight: maxHeight || 200
+        }),
+        children: items.map(function (item) {
+          return jsx("button", {
+            onClick: function () {
+              return handleItemClick(item);
+            },
+            onKeyDown: function (e) {
+              return handleItemKeyDown(e, item);
+            },
+            onMouseEnter: function () {
+              return setHoveredItemId(item.id);
+            },
+            onMouseLeave: function () {
+              return setHoveredItemId(null);
+            },
+            onMouseDown: function () {
+              return setActiveItemId(item.id);
+            },
+            onMouseUp: function () {
+              return setActiveItemId(null);
+            },
+            disabled: item.disabled,
+            role: "menuitem",
+            tabIndex: item.disabled ? -1 : 0,
+            style: getItemStyle(item),
+            children: jsxs("div", {
+              style: styles.popoverItemContent,
+              children: [jsx("span", {
+                style: styles.popoverItemLabel,
+                children: item.label
+              }), item.disabled && jsx("div", {
+                style: styles.popoverItemIcon,
+                children: jsx(Icon, {
+                  type: "lock",
+                  size: 20,
+                  color: colors.semantic.text.disabled
+                })
+              })]
+            })
+          }, item.id);
+        })
       })
-    })
+    })]
   });
   // Portal로 body에 렌더링
   return createPortal(popoverContent, document.body);

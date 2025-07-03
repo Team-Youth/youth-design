@@ -1,5 +1,4 @@
 import React from 'react';
-import './Popover.css';
 export interface PopoverItem {
     /** 아이템 식별자 */
     id: string;
