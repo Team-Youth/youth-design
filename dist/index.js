@@ -977,11 +977,11 @@ var Button = function (_a) {
       gap: '4px'
     },
     s: {
-      paddingX: isIconOnlyButton ? '16px' : type === 'text' ? '8px' : '8px',
-      paddingY: isIconOnlyButton ? '12px' : type === 'text' ? '0px' : '6px',
+      paddingX: isIconOnlyButton ? '0px' : type === 'text' ? '8px' : '8px',
+      paddingY: isIconOnlyButton ? '0px' : type === 'text' ? '0px' : '6px',
       borderRadius: isIconOnlyButton ? '12px' : type === 'text' ? '12px' : '4px',
       width: 'auto',
-      height: isIconOnlyButton ? '40px' : type === 'text' ? '20px' : '32px',
+      height: isIconOnlyButton ? '32px' : type === 'text' ? '20px' : '32px',
       fontSize: '12px',
       fontWeight: '500',
       iconSize: type === 'text' ? 14 : 16,
@@ -1016,7 +1016,7 @@ var Button = function (_a) {
         return '100%';
       }
       if (isIconOnlyButton) {
-        return config.width;
+        return config.height; // iconOnly 버튼은 정사각형으로 만들기 위해 height와 동일하게 설정
       }
       if (width) {
         return width;
