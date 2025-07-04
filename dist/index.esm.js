@@ -28632,7 +28632,7 @@ var styles = {
   popover: {
     position: 'fixed',
     zIndex: 1000,
-    background: '#ffffff',
+    backgroundColor: '#ffffff',
     borderRadius: '8px',
     boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
     overflow: 'hidden',
@@ -28676,7 +28676,7 @@ var styles = {
     justifyContent: 'space-between',
     padding: '12px 16px',
     minHeight: '48px',
-    background: 'transparent',
+    backgroundColor: 'transparent',
     border: 'none',
     width: '100%',
     textAlign: 'left',
