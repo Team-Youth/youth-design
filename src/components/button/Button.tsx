@@ -122,7 +122,7 @@ export const Button: React.FC<ButtonProps> = ({
         return '100%';
       }
       if (isIconOnlyButton) {
-        return config.width;
+        return config.height; // iconOnly 버튼은 정사각형으로 만들기 위해 height와 동일하게 설정
       }
       if (width) {
         return width;
