@@ -28527,7 +28527,7 @@ var Popover = function (_a) {
 var styles = {
   popover: {
     position: 'fixed',
-    zIndex: 1000,
+    zIndex: 1500,
     backgroundColor: '#ffffff',
     borderRadius: '8px',
     boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
