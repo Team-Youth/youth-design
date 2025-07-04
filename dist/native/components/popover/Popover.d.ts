@@ -20,10 +20,10 @@ export interface PopoverProps {
     anchorRef?: React.RefObject<HTMLElement | null>;
     /** 직접 지정할 너비 (anchorRef가 없을 때 사용) */
     width?: number | string;
+    /** 최소 너비 (anchorRef의 너비보다 작을 때 사용) */
+    minWidth?: number | string;
     /** Popover 위치 (기본값: 'bottom') */
     position?: 'top' | 'bottom';
-    /** 추가 CSS 클래스 */
-    className?: string;
     /** 추가 스타일 */
     style?: React.CSSProperties;
     /** Popover 컨테이너의 최대 높이 */

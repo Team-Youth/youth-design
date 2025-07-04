@@ -3,87 +3,6 @@ import { createPortal } from 'react-dom';
 import { Icon } from '../icon';
 import { colors, textStyles, fontWeight } from '../../tokens';
 
-// 인라인 스타일 정의
-const styles = {
-  popover: {
-    position: 'fixed' as const,
-    zIndex: 1000,
-    background: '#ffffff',
-    borderRadius: '8px',
-    boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
-    overflow: 'hidden' as const,
-    transformOrigin: 'top center',
-    transition: 'all 0.2s ease',
-  },
-  popoverPositionTop: {
-    transformOrigin: 'bottom center',
-  },
-  popoverPositionBottom: {
-    transformOrigin: 'top center',
-  },
-  popoverEntering: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(-4px)',
-  },
-  popoverPositionTopEntering: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(4px)',
-  },
-  popoverEntered: {
-    opacity: 1,
-    transform: 'scale(1) translateY(0)',
-  },
-  popoverExiting: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(-4px)',
-  },
-  popoverPositionTopExiting: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(4px)',
-  },
-  popoverContent: {
-    maxHeight: '200px',
-    overflowY: 'auto' as const,
-    // 웹킷 스크롤바 스타일은 CSS-in-JS로 직접 적용할 수 없으므로 별도 처리 필요
-  },
-  popoverItem: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '12px 16px',
-    minHeight: '48px',
-    background: 'transparent',
-    border: 'none',
-    width: '100%',
-    textAlign: 'left' as const,
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease',
-    outline: 'none',
-    position: 'relative' as const,
-  },
-  popoverItemHover: {
-    backgroundColor: '#f3f5f6',
-  },
-  popoverItemActive: {
-    backgroundColor: '#e8eaed',
-  },
-  popoverItemDisabled: {
-    cursor: 'not-allowed',
-  },
-  popoverItemContent: {
-    display: 'flex',
-    alignItems: 'center',
-    flex: 1,
-  },
-  popoverItemLabel: {
-    flex: 1,
-  },
-  popoverItemIcon: {
-    marginLeft: '8px',
-    flexShrink: 0,
-  },
-};
-
 export interface PopoverItem {
   /** 아이템 식별자 */
   id: string;
@@ -106,10 +25,10 @@ export interface PopoverProps {
   anchorRef?: React.RefObject<HTMLElement | null>;
   /** 직접 지정할 너비 (anchorRef가 없을 때 사용) */
   width?: number | string;
+  /** 최소 너비 (anchorRef의 너비보다 작을 때 사용) */
+  minWidth?: number | string;
   /** Popover 위치 (기본값: 'bottom') */
   position?: 'top' | 'bottom';
-  /** 추가 CSS 클래스 */
-  className?: string;
   /** 추가 스타일 */
   style?: React.CSSProperties;
   /** Popover 컨테이너의 최대 높이 */
@@ -122,8 +41,8 @@ export const Popover: React.FC<PopoverProps> = ({
   onOpenChange,
   anchorRef,
   width,
+  minWidth,
   position = 'bottom',
-  className = '',
   style = {},
   maxHeight,
 }) => {
@@ -147,12 +66,22 @@ export const Popover: React.FC<PopoverProps> = ({
     const anchorRect = anchorRef.current.getBoundingClientRect();
     const popoverWidth = width || anchorRect.width;
 
+    // 기본 width 계산
+    let calculatedWidth =
+      typeof popoverWidth === 'number'
+        ? popoverWidth
+        : parseFloat(popoverWidth as string) || anchorRect.width;
+
+    // minWidth가 있으면 더 큰 값으로 사용
+    if (minWidth) {
+      const minWidthValue =
+        typeof minWidth === 'number' ? minWidth : parseFloat(minWidth as string) || 0;
+      calculatedWidth = Math.max(calculatedWidth, minWidthValue);
+    }
+
     const coords = {
       left: anchorRect.left,
-      width:
-        typeof popoverWidth === 'number'
-          ? popoverWidth
-          : parseFloat(popoverWidth as string) || anchorRect.width,
+      width: calculatedWidth,
     };
 
     if (position === 'bottom') {
@@ -166,7 +95,7 @@ export const Popover: React.FC<PopoverProps> = ({
         bottom: window.innerHeight - anchorRect.top + 8,
       };
     }
-  }, [anchorRef, width, position]);
+  }, [anchorRef, width, minWidth, position]);
 
   // 외부 클릭 감지
   useEffect(() => {
@@ -385,4 +314,85 @@ export const Popover: React.FC<PopoverProps> = ({
 
   // Portal로 body에 렌더링
   return createPortal(popoverContent, document.body);
+};
+
+// 인라인 스타일 정의
+const styles = {
+  popover: {
+    position: 'fixed' as const,
+    zIndex: 1000,
+    background: '#ffffff',
+    borderRadius: '8px',
+    boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
+    overflow: 'hidden' as const,
+    transformOrigin: 'top center',
+    transition: 'all 0.2s ease',
+  },
+  popoverPositionTop: {
+    transformOrigin: 'bottom center',
+  },
+  popoverPositionBottom: {
+    transformOrigin: 'top center',
+  },
+  popoverEntering: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(-4px)',
+  },
+  popoverPositionTopEntering: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(4px)',
+  },
+  popoverEntered: {
+    opacity: 1,
+    transform: 'scale(1) translateY(0)',
+  },
+  popoverExiting: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(-4px)',
+  },
+  popoverPositionTopExiting: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(4px)',
+  },
+  popoverContent: {
+    maxHeight: '200px',
+    overflowY: 'auto' as const,
+    // 웹킷 스크롤바 스타일은 CSS-in-JS로 직접 적용할 수 없으므로 별도 처리 필요
+  },
+  popoverItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '12px 16px',
+    minHeight: '48px',
+    background: 'transparent',
+    border: 'none',
+    width: '100%',
+    textAlign: 'left' as const,
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease',
+    outline: 'none',
+    position: 'relative' as const,
+  },
+  popoverItemHover: {
+    backgroundColor: '#f3f5f6',
+  },
+  popoverItemActive: {
+    backgroundColor: '#e8eaed',
+  },
+  popoverItemDisabled: {
+    cursor: 'not-allowed',
+  },
+  popoverItemContent: {
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1,
+  },
+  popoverItemLabel: {
+    flex: 1,
+  },
+  popoverItemIcon: {
+    marginLeft: '8px',
+    flexShrink: 0,
+  },
 };
