@@ -28308,8 +28308,24 @@ var Popover = function (_a) {
       var minWidthValue = typeof minWidth === 'number' ? minWidth : parseFloat(minWidth) || 0;
       calculatedWidth = Math.max(calculatedWidth, minWidthValue);
     }
+    // 뷰포트 경계 고려하여 left 위치 조정
+    var leftPosition = anchorRect.left;
+    var viewportWidth = window.innerWidth;
+    var rightEdge = leftPosition + calculatedWidth;
+    // 오른쪽으로 잘리는 경우 왼쪽으로 이동
+    if (rightEdge > viewportWidth) {
+      leftPosition = viewportWidth - calculatedWidth - 8; // 8px 여백
+    }
+    // 왼쪽으로 너무 많이 이동한 경우 최소 8px 여백 유지
+    if (leftPosition < 8) {
+      leftPosition = 8;
+      // 여전히 잘리는 경우 width를 줄임
+      if (calculatedWidth > viewportWidth - 16) {
+        calculatedWidth = viewportWidth - 16;
+      }
+    }
     var coords = {
-      left: anchorRect.left,
+      left: leftPosition,
       width: calculatedWidth
     };
     if (position === 'bottom') {
