@@ -977,11 +977,11 @@ var Button = function (_a) {
       gap: '4px'
     },
     s: {
-      paddingX: isIconOnlyButton ? '16px' : type === 'text' ? '8px' : '8px',
-      paddingY: isIconOnlyButton ? '12px' : type === 'text' ? '0px' : '6px',
+      paddingX: isIconOnlyButton ? '0px' : type === 'text' ? '8px' : '8px',
+      paddingY: isIconOnlyButton ? '0px' : type === 'text' ? '0px' : '6px',
       borderRadius: isIconOnlyButton ? '12px' : type === 'text' ? '12px' : '4px',
       width: 'auto',
-      height: isIconOnlyButton ? '40px' : type === 'text' ? '20px' : '32px',
+      height: isIconOnlyButton ? '32px' : type === 'text' ? '20px' : '32px',
       fontSize: '12px',
       fontWeight: '500',
       iconSize: type === 'text' ? 14 : 16,
