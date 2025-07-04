@@ -2,6 +2,7 @@ import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { useState, forwardRef, useRef, useImperativeHandle, useCallback, useLayoutEffect, createContext, useContext, useEffect, useMemo, memo } from 'react';
 import * as ReactDOM from 'react-dom';
+import { createPortal } from 'react-dom';
 
 /**
  * Color Design Tokens
@@ -20016,7 +20017,7 @@ var TabBar = function (_a) {
   });
 };
 
-var Chips = function (_a) {
+var Chip = function (_a) {
   var _b = _a.size,
     size = _b === void 0 ? 'l' : _b,
     _c = _a.type,
@@ -20029,10 +20030,9 @@ var Chips = function (_a) {
     trailingIcon = _a.trailingIcon,
     text = _a.text,
     onClick = _a.onClick,
+    onClickTrailingIcon = _a.onClickTrailingIcon,
     _f = _a.className,
-    className = _f === void 0 ? '' : _f,
-    paddingX = _a.paddingX,
-    paddingY = _a.paddingY;
+    className = _f === void 0 ? '' : _f;
   var _g = useState(false),
     isHovered = _g[0],
     setIsHovered = _g[1];
@@ -20063,16 +20063,8 @@ var Chips = function (_a) {
     var config = sizeConfig[size];
     var hasLeadingIcon = leadingIcon !== undefined;
     var hasTrailingIcon = trailingIcon !== undefined;
-    // padding 값을 CSS 값으로 변환하는 헬퍼 함수
-    var toCssValue = function (value, defaultValue) {
-      if (value === undefined) return defaultValue;
-      return typeof value === 'number' ? "".concat(value, "px") : value;
-    };
-    // props로 전달받은 padding이 있으면 그것을 사용, 없으면 기본값 사용
-    var finalPaddingX = toCssValue(paddingX, config.paddingX);
-    var finalPaddingY = toCssValue(paddingY, config.paddingY);
-    var paddingLeft = finalPaddingX;
-    var paddingRight = finalPaddingX;
+    var paddingLeft = config.paddingX;
+    var paddingRight = config.paddingX;
     if (hasLeadingIcon) {
       paddingLeft = config.paddingWithLeadingIcon;
     }
@@ -20083,7 +20075,7 @@ var Chips = function (_a) {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: "".concat(finalPaddingY, " ").concat(paddingRight, " ").concat(finalPaddingY, " ").concat(paddingLeft),
+      padding: "".concat(config.paddingY, " ").concat(paddingRight, " ").concat(config.paddingY, " ").concat(paddingLeft),
       borderRadius: config.borderRadius,
       height: config.height,
       border: '1px solid transparent',
@@ -20177,6 +20169,12 @@ var Chips = function (_a) {
       onClick();
     }
   };
+  var handleTrailingIconClick = function (event) {
+    if (!disabled && onClickTrailingIcon) {
+      event.stopPropagation(); // 이벤트 전파 방지
+      onClickTrailingIcon();
+    }
+  };
   var handleMouseEnter = function () {
     if (!disabled && !selected) {
       setIsHovered(true);
@@ -20199,10 +20197,21 @@ var Chips = function (_a) {
         fontWeight: fontWeight,
         color: textColor,
         children: text
-      }), trailingIcon && jsx(Icon, {
-        type: trailingIcon,
-        size: sizeConfig[size].iconSize,
-        color: iconColor
+      }), trailingIcon && jsx("span", {
+        onClick: onClickTrailingIcon ? handleTrailingIconClick : undefined,
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          cursor: !disabled && onClickTrailingIcon ? 'pointer' : 'inherit',
+          borderRadius: '4px',
+          padding: '2px',
+          margin: '-2px'
+        },
+        children: jsx(Icon, {
+          type: trailingIcon,
+          size: sizeConfig[size].iconSize,
+          color: iconColor
+        })
       })]
     });
   };
@@ -23885,12 +23894,12 @@ var Modal = function (_a) {
 };
 
 // 스피너 애니메이션을 위한 CSS keyframes 추가
-var spinKeyframes = "\n  @keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n  }\n";
+var spinKeyframes$1 = "\n  @keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n  }\n";
 // 스타일 시트에 keyframes 추가
 if (typeof document !== 'undefined') {
-  var style = document.createElement('style');
-  style.textContent = spinKeyframes;
-  document.head.appendChild(style);
+  var style$1 = document.createElement('style');
+  style$1.textContent = spinKeyframes$1;
+  document.head.appendChild(style$1);
 }
 var Dropdown = function (_a) {
   var _b = _a.placeholder,
@@ -25169,6 +25178,203 @@ var TextField = forwardRef(function (_a, ref) {
   });
 });
 TextField.displayName = 'TextField';
+
+// 스피너 애니메이션을 위한 CSS keyframes 추가
+var spinKeyframes = "\n  @keyframes spin {\n    0% { transform: rotate(0deg); }\n    100% { transform: rotate(360deg); }\n  }\n";
+// 스타일 시트에 keyframes 추가
+if (typeof document !== 'undefined') {
+  var style = document.createElement('style');
+  style.textContent = spinKeyframes;
+  document.head.appendChild(style);
+}
+var SearchField = memo(forwardRef(function (_a, ref) {
+  var _b = _a.suggestions,
+    suggestions = _b === void 0 ? [] : _b,
+    _c = _a.showSuggestions,
+    showSuggestions = _c === void 0 ? false : _c,
+    onSuggestionClick = _a.onSuggestionClick,
+    _d = _a.noResultsText,
+    noResultsText = _d === void 0 ? '검색 결과가 없습니다' : _d,
+    onLoadMore = _a.onLoadMore,
+    hasNextPage = _a.hasNextPage,
+    isLoadingMore = _a.isLoadingMore,
+    textFieldProps = __rest(_a, ["suggestions", "showSuggestions", "onSuggestionClick", "noResultsText", "onLoadMore", "hasNextPage", "isLoadingMore"]);
+  var _e = useState(null),
+    hoveredIndex = _e[0],
+    setHoveredIndex = _e[1];
+  var suggestionsContainerRef = useRef(null);
+  // 무한스크롤 스크롤 이벤트 처리
+  var handleScroll = useCallback(function (event) {
+    if (!onLoadMore || !hasNextPage || isLoadingMore) return;
+    var _a = event.currentTarget,
+      scrollTop = _a.scrollTop,
+      scrollHeight = _a.scrollHeight,
+      clientHeight = _a.clientHeight;
+    var scrollThreshold = 10; // 스크롤 임계값 (px)
+    if (scrollHeight - scrollTop - clientHeight < scrollThreshold) {
+      onLoadMore();
+    }
+  }, [onLoadMore, hasNextPage, isLoadingMore]);
+  var handleSuggestionClick = useCallback(function (suggestion, index) {
+    var _a;
+    if (suggestion.disabled) return;
+    (_a = suggestion.onClick) === null || _a === void 0 ? void 0 : _a.call(suggestion);
+    onSuggestionClick === null || onSuggestionClick === void 0 ? void 0 : onSuggestionClick(suggestion, index);
+  }, [onSuggestionClick]);
+  var getSuggestionStyles = useCallback(function (suggestion, index) {
+    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
+    if (suggestion.disabled) {
+      backgroundColor = colors.semantic.background.primary;
+    } else if (hoveredIndex === index) {
+      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+    }
+    return {
+      display: 'flex',
+      gap: spacing.xs,
+      // 8px
+      padding: "12px ".concat(spacing.m),
+      // 12px 16px
+      backgroundColor: backgroundColor,
+      cursor: suggestion.disabled ? 'not-allowed' : 'pointer',
+      transition: 'background-color 0.2s ease'
+    };
+  }, [hoveredIndex]);
+  var getTextColor = useCallback(function (suggestion) {
+    return suggestion.disabled ? colors.semantic.disabled.foreground // #D1D5DB
+    : colors.semantic.text.primary; // #25282D
+  }, []);
+  var getDescriptionColor = useCallback(function (suggestion) {
+    return suggestion.disabled ? colors.semantic.disabled.foreground // #D1D5DB
+    : colors.semantic.text.tertiary; // #AFB6C0
+  }, []);
+  var getIconColor = useCallback(function (suggestion) {
+    return suggestion.disabled ? colors.semantic.disabled.foreground // #D1D5DB
+    : colors.semantic.text.tertiary; // #AFB6C0
+  }, []);
+  var renderSuggestionItem = useCallback(function (suggestion, index) {
+    var textColor = getTextColor(suggestion);
+    var descriptionColor = getDescriptionColor(suggestion);
+    var iconColor = getIconColor(suggestion);
+    return jsxs("div", {
+      style: getSuggestionStyles(suggestion, index),
+      onMouseEnter: function () {
+        return !suggestion.disabled && setHoveredIndex(index);
+      },
+      onMouseLeave: function () {
+        return setHoveredIndex(null);
+      },
+      onClick: function () {
+        return handleSuggestionClick(suggestion, index);
+      },
+      children: [suggestion.leadingIconType && jsx(Icon, {
+        type: suggestion.leadingIconType,
+        size: 20,
+        color: iconColor
+      }), jsxs("div", {
+        style: {
+          flex: 1,
+          display: 'flex',
+          gap: '8px',
+          alignSelf: 'center'
+        },
+        children: [jsx("span", {
+          style: __assign(__assign({}, textStyles.body1), {
+            fontWeight: fontWeight.medium,
+            color: textColor,
+            whiteSpace: 'nowrap'
+          }),
+          children: suggestion.text
+        }), suggestion.description && jsx("span", {
+          style: __assign(__assign({}, textStyles.body1), {
+            fontWeight: fontWeight.regular,
+            color: descriptionColor
+          }),
+          children: suggestion.description
+        })]
+      }), suggestion.disabled ? jsx(Icon, {
+        type: "lock",
+        size: 20,
+        color: iconColor
+      }) : suggestion.trailingIconType && jsx(Icon, {
+        type: suggestion.trailingIconType,
+        size: 20,
+        color: iconColor
+      })]
+    }, index);
+  }, [getSuggestionStyles, getTextColor, getDescriptionColor, getIconColor, handleSuggestionClick]);
+  return jsxs("div", {
+    style: {
+      position: 'relative',
+      width: textFieldProps.width || '320px'
+    },
+    children: [jsx(TextField, __assign({
+      ref: ref,
+      leadingIconType: "search"
+    }, textFieldProps)), showSuggestions && jsx("div", {
+      ref: suggestionsContainerRef,
+      style: {
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        right: 0,
+        marginTop: spacing.xs,
+        // 8px
+        backgroundColor: colors.semantic.background.primary,
+        // #FFFFFF
+        border: "1px solid ".concat(colors.semantic.border.strong),
+        // #D6D6D6
+        borderRadius: radius.s,
+        // 8px
+        boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
+        zIndex: 1000,
+        overflow: 'hidden',
+        maxHeight: '200px' // 최대 높이 설정
+      },
+      children: jsx("div", {
+        style: {
+          maxHeight: '200px',
+          overflowY: 'auto'
+        },
+        onScroll: handleScroll,
+        children: suggestions.length > 0 ? jsxs(Fragment, {
+          children: [suggestions.map(function (suggestion, index) {
+            return renderSuggestionItem(suggestion, index);
+          }), isLoadingMore && jsx("div", {
+            style: __assign(__assign({
+              padding: "12px ".concat(spacing.m)
+            }, textStyles.body1), {
+              color: colors.semantic.disabled.foreground,
+              textAlign: 'center',
+              userSelect: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }),
+            children: jsx("div", {
+              style: {
+                width: '16px',
+                height: '16px',
+                border: '2px solid #f3f3f3',
+                borderTop: '2px solid #cccccc',
+                borderRadius: '50%',
+                animation: 'spin 1s linear infinite'
+              }
+            })
+          })]
+        }) : jsx("div", {
+          style: __assign(__assign({
+            padding: "12px ".concat(spacing.m),
+            color: colors.semantic.text.tertiary
+          }, textStyles.body1), {
+            textAlign: 'center'
+          }),
+          children: noResultsText
+        })
+      })
+    })]
+  });
+}));
+SearchField.displayName = 'SearchField';
 
 var ExerciseCard = function (_a) {
   var title = _a.title,
@@ -28169,5 +28375,459 @@ var InlineNotification = React__default.memo(function (_a) {
 });
 InlineNotification.displayName = 'InlineNotification';
 
-export { ActivityGoalCard, Button, Checkbox, Chips, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Pagination, Popup, Radio, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
+var Popover = function (_a) {
+  var items = _a.items,
+    isOpen = _a.isOpen,
+    onOpenChange = _a.onOpenChange,
+    anchorRef = _a.anchorRef,
+    width = _a.width,
+    minWidth = _a.minWidth,
+    _b = _a.position,
+    position = _b === void 0 ? 'bottom' : _b,
+    _c = _a.style,
+    style = _c === void 0 ? {} : _c,
+    maxHeight = _a.maxHeight;
+  var popoverRef = useRef(null);
+  var _d = useState(null),
+    popoverPosition = _d[0],
+    setPopoverPosition = _d[1];
+  var _e = useState('exited'),
+    animationState = _e[0],
+    setAnimationState = _e[1];
+  var _f = useState(null),
+    hoveredItemId = _f[0],
+    setHoveredItemId = _f[1];
+  var _g = useState(null),
+    activeItemId = _g[0],
+    setActiveItemId = _g[1];
+  // Popover 위치 계산
+  var calculatePosition = useCallback(function () {
+    if (!(anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current)) return null;
+    var anchorRect = anchorRef.current.getBoundingClientRect();
+    var popoverWidth = width || anchorRect.width;
+    // 기본 width 계산
+    var calculatedWidth = typeof popoverWidth === 'number' ? popoverWidth : parseFloat(popoverWidth) || anchorRect.width;
+    // minWidth가 있으면 더 큰 값으로 사용
+    if (minWidth) {
+      var minWidthValue = typeof minWidth === 'number' ? minWidth : parseFloat(minWidth) || 0;
+      calculatedWidth = Math.max(calculatedWidth, minWidthValue);
+    }
+    var coords = {
+      left: anchorRect.left,
+      width: calculatedWidth
+    };
+    if (position === 'bottom') {
+      return __assign(__assign({}, coords), {
+        top: anchorRect.bottom + 8
+      });
+    } else {
+      return __assign(__assign({}, coords), {
+        bottom: window.innerHeight - anchorRect.top + 8
+      });
+    }
+  }, [anchorRef, width, minWidth, position]);
+  // 외부 클릭 감지
+  useEffect(function () {
+    var handleClickOutside = function (event) {
+      if (popoverRef.current && !popoverRef.current.contains(event.target) && (anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current) && !anchorRef.current.contains(event.target)) {
+        onOpenChange(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return function () {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onOpenChange, anchorRef]);
+  // ESC 키 감지
+  useEffect(function () {
+    var handleKeyDown = function (event) {
+      if (event.key === 'Escape' && isOpen) {
+        onOpenChange(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+    return function () {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onOpenChange]);
+  // 창 크기 변경 시 위치 재계산
+  useEffect(function () {
+    if (!isOpen) return;
+    var handleResize = function () {
+      var newPosition = calculatePosition();
+      setPopoverPosition(newPosition);
+    };
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleResize, true);
+    return function () {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('scroll', handleResize, true);
+    };
+  }, [isOpen, calculatePosition]);
+  // 열림/닫힘 애니메이션 관리
+  useEffect(function () {
+    if (isOpen) {
+      var newPosition = calculatePosition();
+      setPopoverPosition(newPosition);
+      setAnimationState('entering');
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          setAnimationState('entered');
+        });
+      });
+    } else {
+      setAnimationState('exiting');
+      var timer_1 = setTimeout(function () {
+        setAnimationState('exited');
+        setPopoverPosition(null);
+      }, 200);
+      return function () {
+        return clearTimeout(timer_1);
+      };
+    }
+  }, [isOpen, calculatePosition]);
+  // 아이템 클릭 핸들러
+  var handleItemClick = function (item) {
+    var _a;
+    if (item.disabled) return;
+    (_a = item.onClick) === null || _a === void 0 ? void 0 : _a.call(item, item.id);
+    onOpenChange(false);
+  };
+  // 아이템 키보드 이벤트 핸들러
+  var handleItemKeyDown = function (event, item) {
+    if (item.disabled) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleItemClick(item);
+    }
+  };
+  // 렌더링하지 않을 조건
+  if (animationState === 'exited' || !popoverPosition) {
+    return null;
+  }
+  // 동적 스타일 생성
+  var getPopoverStyle = function () {
+    var dynamicStyle = __assign({}, styles.popover);
+    // 위치별 transform-origin 적용
+    if (position === 'top') {
+      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTop);
+    } else {
+      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionBottom);
+    }
+    // 애니메이션 상태별 스타일 적용
+    if (animationState === 'entering') {
+      if (position === 'top') {
+        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopEntering);
+      } else {
+        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntering);
+      }
+    } else if (animationState === 'entered') {
+      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntered);
+    } else if (animationState === 'exiting') {
+      if (position === 'top') {
+        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopExiting);
+      } else {
+        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverExiting);
+      }
+    }
+    return __assign(__assign(__assign(__assign({}, dynamicStyle), popoverPosition), {
+      maxHeight: maxHeight
+    }), style);
+  };
+  var getItemStyle = function (item) {
+    var itemStyle = __assign({}, styles.popoverItem);
+    if (item.disabled) {
+      itemStyle = __assign(__assign({}, itemStyle), styles.popoverItemDisabled);
+    } else if (activeItemId === item.id) {
+      itemStyle = __assign(__assign({}, itemStyle), styles.popoverItemActive);
+    } else if (hoveredItemId === item.id) {
+      itemStyle = __assign(__assign({}, itemStyle), styles.popoverItemHover);
+    }
+    return __assign(__assign(__assign({}, itemStyle), textStyles.body1), {
+      fontWeight: fontWeight.medium,
+      color: item.disabled ? colors.semantic.disabled.foreground : colors.primary.coolGray[800]
+    });
+  };
+  var popoverContent = jsxs(Fragment, {
+    children: [jsx("style", {
+      children: "\n          .popover-scrollbar::-webkit-scrollbar {\n            width: 4px;\n          }\n          .popover-scrollbar::-webkit-scrollbar-track {\n            background: transparent;\n          }\n          .popover-scrollbar::-webkit-scrollbar-thumb {\n            background: #d1d5db;\n            border-radius: 2px;\n          }\n          .popover-scrollbar::-webkit-scrollbar-thumb:hover {\n            background: #8d97a5;\n          }\n        "
+    }), jsx("div", {
+      ref: popoverRef,
+      style: getPopoverStyle(),
+      role: "menu",
+      "aria-orientation": "vertical",
+      children: jsx("div", {
+        className: "popover-scrollbar",
+        style: __assign(__assign({}, styles.popoverContent), {
+          maxHeight: maxHeight || 200
+        }),
+        children: items.map(function (item) {
+          return jsx("button", {
+            onClick: function () {
+              return handleItemClick(item);
+            },
+            onKeyDown: function (e) {
+              return handleItemKeyDown(e, item);
+            },
+            onMouseEnter: function () {
+              return setHoveredItemId(item.id);
+            },
+            onMouseLeave: function () {
+              return setHoveredItemId(null);
+            },
+            onMouseDown: function () {
+              return setActiveItemId(item.id);
+            },
+            onMouseUp: function () {
+              return setActiveItemId(null);
+            },
+            disabled: item.disabled,
+            role: "menuitem",
+            tabIndex: item.disabled ? -1 : 0,
+            style: getItemStyle(item),
+            children: jsxs("div", {
+              style: styles.popoverItemContent,
+              children: [jsx("span", {
+                style: styles.popoverItemLabel,
+                children: item.label
+              }), item.disabled && jsx("div", {
+                style: styles.popoverItemIcon,
+                children: jsx(Icon, {
+                  type: "lock",
+                  size: 20,
+                  color: colors.semantic.text.disabled
+                })
+              })]
+            })
+          }, item.id);
+        })
+      })
+    })]
+  });
+  // Portal로 body에 렌더링
+  return createPortal(popoverContent, document.body);
+};
+// 인라인 스타일 정의
+var styles = {
+  popover: {
+    position: 'fixed',
+    zIndex: 1000,
+    background: '#ffffff',
+    borderRadius: '8px',
+    boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
+    overflow: 'hidden',
+    transformOrigin: 'top center',
+    transition: 'all 0.2s ease'
+  },
+  popoverPositionTop: {
+    transformOrigin: 'bottom center'
+  },
+  popoverPositionBottom: {
+    transformOrigin: 'top center'
+  },
+  popoverEntering: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(-4px)'
+  },
+  popoverPositionTopEntering: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(4px)'
+  },
+  popoverEntered: {
+    opacity: 1,
+    transform: 'scale(1) translateY(0)'
+  },
+  popoverExiting: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(-4px)'
+  },
+  popoverPositionTopExiting: {
+    opacity: 0,
+    transform: 'scale(0.95) translateY(4px)'
+  },
+  popoverContent: {
+    maxHeight: '200px',
+    overflowY: 'auto'
+    // 웹킷 스크롤바 스타일은 CSS-in-JS로 직접 적용할 수 없으므로 별도 처리 필요
+  },
+  popoverItem: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '12px 16px',
+    minHeight: '48px',
+    background: 'transparent',
+    border: 'none',
+    width: '100%',
+    textAlign: 'left',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease',
+    outline: 'none',
+    position: 'relative'
+  },
+  popoverItemHover: {
+    backgroundColor: '#f3f5f6'
+  },
+  popoverItemActive: {
+    backgroundColor: '#e8eaed'
+  },
+  popoverItemDisabled: {
+    cursor: 'not-allowed'
+  },
+  popoverItemContent: {
+    display: 'flex',
+    alignItems: 'center',
+    flex: 1
+  },
+  popoverItemLabel: {
+    flex: 1
+  },
+  popoverItemIcon: {
+    marginLeft: '8px',
+    flexShrink: 0
+  }
+};
+
+var BreadcrumbItem = function (_a) {
+  var item = _a.item,
+    isCurrent = _a.isCurrent;
+  var _b = React__default.useState(false),
+    isHovered = _b[0],
+    setIsHovered = _b[1];
+  var _c = React__default.useState(false),
+    isPressed = _c[0],
+    setIsPressed = _c[1];
+  var handleClick = function () {
+    if (!isCurrent && item.onClick) {
+      item.onClick();
+    }
+  };
+  var handleMouseDown = function () {
+    if (!isCurrent) {
+      setIsPressed(true);
+    }
+  };
+  var handleMouseUp = function () {
+    setIsPressed(false);
+  };
+  var handleMouseLeave = function () {
+    setIsHovered(false);
+    setIsPressed(false);
+  };
+  var getBackgroundColor = function () {
+    if (isCurrent) return 'transparent';
+    if (isHovered) return colors.primary.coolGray[100];
+    if (isPressed) return colors.primary.coolGray[200];
+    return 'transparent';
+  };
+  var getTextColor = function () {
+    if (isCurrent || isPressed) return colors.semantic.text.primary;
+    return colors.semantic.text.secondary;
+  };
+  var itemStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '4px 8px',
+    borderRadius: '8px',
+    backgroundColor: getBackgroundColor(),
+    cursor: isCurrent ? 'default' : 'pointer',
+    transition: 'background-color 0.2s ease',
+    userSelect: 'none',
+    // a 태그 기본 스타일 제거
+    textDecoration: 'none',
+    color: 'inherit'
+  };
+  var ItemComponent = item.href && !isCurrent ? 'a' : 'div';
+  return jsx(ItemComponent, {
+    style: itemStyle,
+    onClick: handleClick,
+    onMouseEnter: function () {
+      return !isCurrent && setIsHovered(true);
+    },
+    onMouseLeave: handleMouseLeave,
+    onMouseDown: handleMouseDown,
+    onMouseUp: handleMouseUp,
+    href: item.href,
+    "aria-current": isCurrent ? 'page' : undefined,
+    role: isCurrent ? undefined : 'button',
+    tabIndex: isCurrent ? -1 : 0,
+    onKeyDown: function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && !isCurrent) {
+        e.preventDefault();
+        handleClick();
+      }
+    },
+    children: jsx(Font, {
+      type: "heading3",
+      fontWeight: "semibold",
+      color: getTextColor(),
+      children: item.label
+    })
+  });
+};
+var Separator = function (_a) {
+  _a.separator;
+  return jsx("div", {
+    style: {
+      width: '20px',
+      height: '20px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative'
+    },
+    children: jsx("svg", {
+      width: "8",
+      height: "16",
+      viewBox: "0 0 8 16",
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      children: jsx("rect", {
+        x: "5.78198",
+        y: "0.667301",
+        width: "1.66667",
+        height: "15",
+        rx: "0.833334",
+        transform: "rotate(20 5.78198 0.667301)",
+        fill: "#D1D5DB"
+      })
+    })
+  });
+};
+var Breadcrumb = function (_a) {
+  var items = _a.items,
+    _b = _a.separator,
+    separator = _b === void 0 ? '/' : _b,
+    className = _a.className,
+    style = _a.style;
+  var containerStyle = __assign({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px'
+  }, style);
+  return jsx("nav", {
+    style: containerStyle,
+    className: className,
+    "aria-label": "breadcrumb",
+    children: items.map(function (item, index) {
+      var isCurrent = index === items.length - 1;
+      var isLast = index === items.length - 1;
+      return jsxs(React__default.Fragment, {
+        children: [jsx(BreadcrumbItem, {
+          item: item,
+          isCurrent: isCurrent
+        }), !isLast && jsx(Separator, {
+          separator: separator
+        })]
+      }, index);
+    })
+  });
+};
+
+export { ActivityGoalCard, Breadcrumb, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Modal, Pagination, Popover, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
 //# sourceMappingURL=index.esm.js.map

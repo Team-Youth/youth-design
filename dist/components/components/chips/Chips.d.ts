@@ -18,6 +18,8 @@ export interface ChipsProps {
     text?: string;
     /** 클릭 이벤트 핸들러 */
     onClick?: () => void;
+    /** 뒤쪽 아이콘 클릭 이벤트 핸들러 */
+    onClickTrailingIcon?: () => void;
     /** 추가 CSS 클래스 */
     className?: string;
     /** 수평 패딩 (기본값을 덮어쓸 때 사용) */

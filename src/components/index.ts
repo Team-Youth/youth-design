@@ -28,8 +28,8 @@ export type { TabProps } from './tab';
 export { TabBar } from './tab-bar';
 export type { TabBarProps } from './tab-bar';
 
-export { Chips } from './chips';
-export type { ChipsProps } from './chips';
+export { Chip } from './chip';
+export type { ChipProps } from './chip';
 
 export { Radio } from './radio';
 export type { RadioProps } from './radio';
@@ -58,6 +58,9 @@ export type { TextAreaProps } from './text-area';
 export { TextField } from './text-field';
 export type { TextFieldProps } from './text-field';
 
+export { SearchField } from './search-field';
+export type { SearchFieldProps, SearchSuggestionItem } from './search-field';
+
 export { ExerciseCard } from './exercise-card';
 export type { ExerciseCardProps } from './exercise-card';
 
@@ -85,3 +88,9 @@ export type {
 
 export { Pagination } from './pagination';
 export type { PaginationProps } from './pagination';
+
+export { Popover } from './popover';
+export type { PopoverProps, PopoverItem } from './popover';
+
+export { Breadcrumb } from './breadcrumb';
+export type { BreadcrumbProps, BreadcrumbItem } from './breadcrumb';
