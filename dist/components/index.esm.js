@@ -1113,6 +1113,7 @@ var Font = function (_a) {
     textOverflow: noWhiteSpace ? 'ellipsis' : undefined,
     overflow: noWhiteSpace ? 'hidden' : undefined,
     textDecoration: underline ? 'underline' : 'none',
+    textUnderlineOffset: underline ? '2px' : '0px',
     margin: 0,
     padding: 0,
     transition: 'color 0.2s ease'
