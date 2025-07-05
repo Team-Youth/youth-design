@@ -391,7 +391,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
               marginTop: spacing.xs, // 8px
             }}
           >
-            <Icon type="question-stroke" size={14} color={colors.semantic.state.error} />
+            <Icon type="caution-stroke" size={14} color={colors.semantic.state.error} />
             <span
               style={{
                 color: colors.semantic.state.error,
