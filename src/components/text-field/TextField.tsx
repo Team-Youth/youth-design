@@ -1,5 +1,4 @@
 import React, { useState, forwardRef, useCallback } from 'react';
-
 import { Icon, IconType } from '../icon/Icon';
 import { colors, spacing, radius, textStyles, fontWeight } from '../../tokens';
 
@@ -392,7 +391,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
               marginTop: spacing.xs, // 8px
             }}
           >
-            <Icon type="dialog" size={16} color={colors.semantic.state.error} />
+            <Icon type="question-stroke" size={14} color={colors.semantic.state.error} />
             <span
               style={{
                 color: colors.semantic.state.error,

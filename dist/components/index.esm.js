@@ -25057,8 +25057,8 @@ var TextField = forwardRef(function (_a, ref) {
         marginTop: spacing.xs // 8px
       },
       children: [jsx(Icon, {
-        type: "dialog",
-        size: 16,
+        type: "question-stroke",
+        size: 14,
         color: colors.semantic.state.error
       }), jsx("span", {
         style: __assign(__assign({

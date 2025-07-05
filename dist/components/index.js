@@ -25077,8 +25077,8 @@ var TextField = React.forwardRef(function (_a, ref) {
         marginTop: spacing.xs // 8px
       },
       children: [jsxRuntime.jsx(Icon, {
-        type: "dialog",
-        size: 16,
+        type: "question-stroke",
+        size: 14,
         color: colors.semantic.state.error
       }), jsxRuntime.jsx("span", {
         style: __assign(__assign({
