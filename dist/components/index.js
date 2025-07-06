@@ -24885,6 +24885,16 @@ var formatPhoneNumber = function (value) {
     return "".concat(numbers.slice(0, 3), "-").concat(numbers.slice(3, 7), "-").concat(numbers.slice(7, 11));
   }
 };
+// 주민등록번호 뒷자리 포맷팅 함수
+var formatResidentNumber = function (value) {
+  // 숫자만 추출하고 7자리로 제한
+  var numbers = value.replace(/\D/g, '').slice(0, 7);
+  if (numbers.length === 0) {
+    return '';
+  }
+  // 첫 번째 숫자만 보여지고 나머지는 마스킹
+  return numbers[0] + '*'.repeat(numbers.length - 1);
+};
 var TextField = React.forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
@@ -24928,6 +24938,9 @@ var TextField = React.forwardRef(function (_a, ref) {
   var _o = React.useState(false),
     showPassword = _o[0],
     setShowPassword = _o[1];
+  var _p = React.useState('');
+    _p[0];
+    var setRawResidentValue = _p[1]; // 주민등록번호 원본 값 저장
   var currentValue = value !== undefined ? value : internalValue;
   var isEmpty = !currentValue || currentValue.length === 0;
   var actualStatus = status || (isEmpty ? 'empty' : 'filled');
@@ -25023,10 +25036,21 @@ var TextField = React.forwardRef(function (_a, ref) {
     if (type === 'tel') {
       newValue = formatPhoneNumber(newValue);
     }
+    // resident 타입일 때 주민등록번호 뒷자리 포맷팅 적용
+    if (type === 'resident') {
+      // 숫자만 추출하고 7자리로 제한
+      var numbers = newValue.replace(/\D/g, '').slice(0, 7);
+      setRawResidentValue(numbers); // 원본 값 저장
+      newValue = formatResidentNumber(numbers);
+      // 원본 숫자 값을 바로 전달
+      onChange === null || onChange === void 0 ? void 0 : onChange(numbers);
+    } else {
+      // 다른 타입일 때는 포맷팅된 값 전달
+      onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
+    }
     if (value === undefined) {
       setInternalValue(newValue);
     }
-    onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
   }, [value, onChange, readOnly, type]);
   var handleMouseEnter = React.useCallback(function () {
     if (!disabled && !readOnly && !isFocused) {

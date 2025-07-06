@@ -24,7 +24,7 @@ export interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInput
     /** 커스텀 클래스명 */
     className?: string;
     /** 입력 타입 */
-    type?: 'text' | 'password' | 'email' | 'number' | 'tel';
+    type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'resident';
     /** Leading 아이콘 */
     leadingIcon?: React.ReactNode;
     /** Trailing 아이콘 */

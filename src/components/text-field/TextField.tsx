@@ -27,7 +27,7 @@ export interface TextFieldProps
   /** 커스텀 클래스명 */
   className?: string;
   /** 입력 타입 */
-  type?: 'text' | 'password' | 'email' | 'number' | 'tel';
+  type?: 'text' | 'password' | 'email' | 'number' | 'tel' | 'resident';
   /** Leading 아이콘 */
   leadingIcon?: React.ReactNode;
   /** Trailing 아이콘 */
@@ -63,6 +63,19 @@ const formatPhoneNumber = (value: string): string => {
   }
 };
 
+// 주민등록번호 뒷자리 포맷팅 함수
+const formatResidentNumber = (value: string): string => {
+  // 숫자만 추출하고 7자리로 제한
+  const numbers = value.replace(/\D/g, '').slice(0, 7);
+
+  if (numbers.length === 0) {
+    return '';
+  }
+
+  // 첫 번째 숫자만 보여지고 나머지는 마스킹
+  return numbers[0] + '*'.repeat(numbers.length - 1);
+};
+
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
@@ -95,6 +108,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const [isHovered, setIsHovered] = useState(false);
     const [internalValue, setInternalValue] = useState(defaultValue || '');
     const [showPassword, setShowPassword] = useState(false);
+    const [rawResidentValue, setRawResidentValue] = useState(''); // 주민등록번호 원본 값 저장
 
     const currentValue = value !== undefined ? value : internalValue;
     const isEmpty = !currentValue || currentValue.length === 0;
@@ -211,10 +225,23 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           newValue = formatPhoneNumber(newValue);
         }
 
+        // resident 타입일 때 주민등록번호 뒷자리 포맷팅 적용
+        if (type === 'resident') {
+          // 숫자만 추출하고 7자리로 제한
+          const numbers = newValue.replace(/\D/g, '').slice(0, 7);
+          setRawResidentValue(numbers); // 원본 값 저장
+          newValue = formatResidentNumber(numbers);
+
+          // 원본 숫자 값을 바로 전달
+          onChange?.(numbers);
+        } else {
+          // 다른 타입일 때는 포맷팅된 값 전달
+          onChange?.(newValue);
+        }
+
         if (value === undefined) {
           setInternalValue(newValue);
         }
-        onChange?.(newValue);
       },
       [value, onChange, readOnly, type],
     );
