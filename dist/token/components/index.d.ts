@@ -4,6 +4,8 @@ export { Font } from './font';
 export type { FontProps, FontType, FontWeight } from './font';
 export { Icon } from './icon';
 export type { IconProps, IconType } from './icon';
+export { Logo } from './logo';
+export type { LogoProps, LogoType } from './logo';
 export { Illust } from './illust';
 export type { IllustProps, IllustType } from './illust';
 export { Label } from './label';
