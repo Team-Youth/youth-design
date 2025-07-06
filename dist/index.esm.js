@@ -28317,9 +28317,6 @@ var Cell = memo(function (_a) {
     }
   }, [cell, updateColumnWidth, columnIndex, columnWidth]);
   var handleClick = function (e) {
-    if (columnIndex === columnLength - 1) {
-      e.stopPropagation();
-    }
   };
   return jsx("div", {
     ref: cellRef,
