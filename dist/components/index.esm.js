@@ -24867,13 +24867,19 @@ var formatPhoneNumber = function (value) {
 };
 // 주민등록번호 뒷자리 포맷팅 함수
 var formatResidentNumber = function (value) {
-  // 숫자만 추출하고 7자리로 제한
-  var numbers = value.replace(/\D/g, '').slice(0, 7);
+  // 숫자만 추출하고 1자리로 제한
+  var numbers = value.replace(/\D/g, '').slice(0, 1);
   if (numbers.length === 0) {
     return '';
   }
-  // 첫 번째 숫자만 보여지고 나머지는 마스킹
-  return numbers[0] + '*'.repeat(numbers.length - 1);
+  // 1, 2, 3, 4만 허용
+  var allowedNumbers = ['1', '2', '3', '4'];
+  var firstDigit = numbers[0];
+  if (!allowedNumbers.includes(firstDigit)) {
+    return '';
+  }
+  // 첫 번째 숫자와 나머지 6자리 마스킹
+  return firstDigit + '******';
 };
 var TextField = forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
@@ -25018,12 +25024,15 @@ var TextField = forwardRef(function (_a, ref) {
     }
     // resident 타입일 때 주민등록번호 뒷자리 포맷팅 적용
     if (type === 'resident') {
-      // 숫자만 추출하고 7자리로 제한
-      var numbers = newValue.replace(/\D/g, '').slice(0, 7);
-      setRawResidentValue(numbers); // 원본 값 저장
-      newValue = formatResidentNumber(numbers);
+      // 숫자만 추출하고 1자리로 제한
+      var numbers = newValue.replace(/\D/g, '').slice(0, 1);
+      // 1, 2, 3, 4만 허용
+      var allowedNumbers = ['1', '2', '3', '4'];
+      var validNumber = numbers && allowedNumbers.includes(numbers[0]) ? numbers[0] : '';
+      setRawResidentValue(validNumber); // 원본 값 저장
+      newValue = validNumber ? formatResidentNumber(validNumber) : '';
       // 원본 숫자 값을 바로 전달
-      onChange === null || onChange === void 0 ? void 0 : onChange(numbers);
+      onChange === null || onChange === void 0 ? void 0 : onChange(validNumber);
     } else {
       // 다른 타입일 때는 포맷팅된 값 전달
       onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
