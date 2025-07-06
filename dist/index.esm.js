@@ -1364,8 +1364,7 @@ var Logo = function (_a) {
       fill: "none",
       className: "logo logo--".concat(type, " ").concat(className),
       style: __assign({
-        cursor: onClick ? 'pointer' : 'inherit',
-        transition: 'all 0.2s ease'
+        cursor: onClick ? 'pointer' : 'inherit'
       }, style),
       onClick: handleClick,
       role: onClick ? 'button' : 'img',
@@ -1403,8 +1402,10 @@ var Logo = function (_a) {
     style: __assign({
       width: width,
       height: height,
-      overflow: 'hidden',
       display: 'inline-block',
+      lineHeight: 0,
+      padding: 0,
+      margin: 0,
       cursor: onClick ? 'pointer' : 'inherit'
     }, style),
     onClick: handleClick,
@@ -1412,22 +1413,20 @@ var Logo = function (_a) {
     tabIndex: onClick ? 0 : undefined,
     onKeyDown: handleKeyDown,
     children: jsx("svg", {
-      width: width,
-      height: height,
+      width: "100%",
+      height: "100%",
       viewBox: viewBox,
       fill: "none",
       xmlns: "http://www.w3.org/2000/svg",
-      style: {
-        display: 'block',
-        width: '100%',
-        height: '100%'
-      },
       preserveAspectRatio: "none",
-      children: paths.map(function (pathData, index) {
+      style: {
+        display: 'block'
+      },
+      children: paths.map(function (d, i) {
         return jsx("path", {
-          d: pathData,
+          d: d,
           fill: color
-        }, index);
+        }, i);
       })
     })
   });

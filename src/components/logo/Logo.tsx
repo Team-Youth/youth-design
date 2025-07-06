@@ -54,7 +54,6 @@ export const Logo: React.FC<LogoProps> = ({
         className={`logo logo--${type} ${className}`}
         style={{
           cursor: onClick ? 'pointer' : 'inherit',
-          transition: 'all 0.2s ease',
           ...style,
         }}
         onClick={handleClick}
@@ -94,10 +93,12 @@ export const Logo: React.FC<LogoProps> = ({
     <div
       className={`logo logo--${type} ${className}`}
       style={{
-        width: width,
-        height: height,
-        overflow: 'hidden',
+        width,
+        height,
         display: 'inline-block',
+        lineHeight: 0,
+        padding: 0,
+        margin: 0,
         cursor: onClick ? 'pointer' : 'inherit',
         ...style,
       }}
@@ -107,20 +108,16 @@ export const Logo: React.FC<LogoProps> = ({
       onKeyDown={handleKeyDown}
     >
       <svg
-        width={width}
-        height={height}
+        width="100%"
+        height="100%"
         viewBox={viewBox}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        style={{
-          display: 'block',
-          width: '100%',
-          height: '100%',
-        }}
         preserveAspectRatio="none"
+        style={{ display: 'block' }}
       >
-        {paths.map((pathData, index) => (
-          <path key={index} d={pathData} fill={color} />
+        {paths.map((d, i) => (
+          <path key={i} d={d} fill={color} />
         ))}
       </svg>
     </div>
