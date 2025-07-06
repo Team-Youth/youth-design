@@ -20,7 +20,7 @@ export interface LogoProps {
 }
 
 export const Logo: React.FC<LogoProps> = ({
-  type,
+  type = 'symbol',
   width,
   height,
   color = colors.primary.mainviolet,
@@ -29,18 +29,6 @@ export const Logo: React.FC<LogoProps> = ({
   style = {},
 }) => {
   const svgContent = logoMap[type];
-
-  const logoStyle: React.CSSProperties = {
-    width: width,
-    height: height,
-    color: color,
-    cursor: 'inherit',
-    transition: 'all 0.2s ease',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...style,
-  };
 
   const handleClick = () => {
     if (onClick) {
@@ -58,48 +46,83 @@ export const Logo: React.FC<LogoProps> = ({
   if (!svgContent) {
     console.warn(`Logo type "${type}" not found or empty`);
     return (
-      <div
+      <svg
+        width={width}
+        height={height}
+        viewBox="0 0 100 40"
+        fill="none"
         className={`logo logo--${type} ${className}`}
-        style={logoStyle}
+        style={{
+          cursor: onClick ? 'pointer' : 'inherit',
+          transition: 'all 0.2s ease',
+          ...style,
+        }}
         onClick={handleClick}
         role={onClick ? 'button' : 'img'}
         tabIndex={onClick ? 0 : undefined}
         onKeyDown={handleKeyDown}
       >
-        <svg width={width} height={height} viewBox="0 0 100 40" fill="none">
-          <rect x="0" y="0" width="100" height="40" fill={color} opacity="0.1" />
-          <text
-            x="50%"
-            y="50%"
-            textAnchor="middle"
-            dominantBaseline="middle"
-            fontSize="12"
-            fill={color}
-          >
-            {type}
-          </text>
-        </svg>
-      </div>
+        <rect x="0" y="0" width="100" height="40" fill={color} opacity="0.1" />
+        <text
+          x="50%"
+          y="50%"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="12"
+          fill={color}
+        >
+          {type}
+        </text>
+      </svg>
     );
   }
 
-  // SVG 내용에서 색상과 크기를 동적으로 변경
-  const processedSvg =
-    svgContent
-      ?.replace(/fill="[^"]*"/g, `fill="${color}"`)
-      ?.replace(/stroke="[^"]*"/g, `stroke="${color}"`)
-      ?.replace(/width="[^"]*"/g, `width="${width}"`)
-      ?.replace(/height="[^"]*"/g, `height="${height}"`) || '';
+  // SVG 내용에서 viewBox 추출
+  const viewBoxMatch = svgContent.match(/viewBox="([^"]*)"/);
+  const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 100 100';
+
+  // SVG 내용에서 path 요소들 추출
+  const pathMatches = svgContent.match(/<path[^>]*>/g) || [];
+  const paths = pathMatches
+    .map((pathStr) => {
+      const dMatch = pathStr.match(/d="([^"]*)"/);
+      return dMatch ? dMatch[1] : '';
+    })
+    .filter(Boolean);
 
   return (
     <div
       className={`logo logo--${type} ${className}`}
-      style={logoStyle}
+      style={{
+        width: width,
+        height: height,
+        overflow: 'hidden',
+        display: 'inline-block',
+        cursor: onClick ? 'pointer' : 'inherit',
+        ...style,
+      }}
       onClick={handleClick}
       role={onClick ? 'button' : 'img'}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={handleKeyDown}
-      dangerouslySetInnerHTML={{ __html: processedSvg }}
-    />
+    >
+      <svg
+        width={width}
+        height={height}
+        viewBox={viewBox}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '100%',
+        }}
+        preserveAspectRatio="none"
+      >
+        {paths.map((pathData, index) => (
+          <path key={index} d={pathData} fill={color} />
+        ))}
+      </svg>
+    </div>
   );
 };

@@ -1165,28 +1165,18 @@ var logoMap = {
 };
 
 var Logo = function (_a) {
-  var _b, _c, _d;
-  var type = _a.type,
+  var _b = _a.type,
+    type = _b === void 0 ? 'symbol' : _b,
     width = _a.width,
     height = _a.height,
-    _e = _a.color,
-    color = _e === void 0 ? colors.primary.mainviolet : _e,
+    _c = _a.color,
+    color = _c === void 0 ? colors.primary.mainviolet : _c,
     onClick = _a.onClick,
-    _f = _a.className,
-    className = _f === void 0 ? '' : _f,
-    _g = _a.style,
-    style = _g === void 0 ? {} : _g;
+    _d = _a.className,
+    className = _d === void 0 ? '' : _d,
+    _e = _a.style,
+    style = _e === void 0 ? {} : _e;
   var svgContent = logoMap[type];
-  var logoStyle = __assign({
-    width: width,
-    height: height,
-    color: color,
-    cursor: 'inherit',
-    transition: 'all 0.2s ease',
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }, style);
   var handleClick = function () {
     if (onClick) {
       onClick();
@@ -1200,49 +1190,79 @@ var Logo = function (_a) {
   };
   if (!svgContent) {
     console.warn("Logo type \"".concat(type, "\" not found or empty"));
-    return jsxRuntime.jsx("div", {
+    return jsxRuntime.jsxs("svg", {
+      width: width,
+      height: height,
+      viewBox: "0 0 100 40",
+      fill: "none",
       className: "logo logo--".concat(type, " ").concat(className),
-      style: logoStyle,
+      style: __assign({
+        cursor: onClick ? 'pointer' : 'inherit',
+        transition: 'all 0.2s ease'
+      }, style),
       onClick: handleClick,
       role: onClick ? 'button' : 'img',
       tabIndex: onClick ? 0 : undefined,
       onKeyDown: handleKeyDown,
-      children: jsxRuntime.jsxs("svg", {
-        width: width,
-        height: height,
-        viewBox: "0 0 100 40",
-        fill: "none",
-        children: [jsxRuntime.jsx("rect", {
-          x: "0",
-          y: "0",
-          width: "100",
-          height: "40",
-          fill: color,
-          opacity: "0.1"
-        }), jsxRuntime.jsx("text", {
-          x: "50%",
-          y: "50%",
-          textAnchor: "middle",
-          dominantBaseline: "middle",
-          fontSize: "12",
-          fill: color,
-          children: type
-        })]
-      })
+      children: [jsxRuntime.jsx("rect", {
+        x: "0",
+        y: "0",
+        width: "100",
+        height: "40",
+        fill: color,
+        opacity: "0.1"
+      }), jsxRuntime.jsx("text", {
+        x: "50%",
+        y: "50%",
+        textAnchor: "middle",
+        dominantBaseline: "middle",
+        fontSize: "12",
+        fill: color,
+        children: type
+      })]
     });
   }
-  // SVG 내용에서 색상과 크기를 동적으로 변경
-  var processedSvg = ((_d = (_c = (_b = svgContent === null || svgContent === void 0 ? void 0 : svgContent.replace(/fill="[^"]*"/g, "fill=\"".concat(color, "\""))) === null || _b === void 0 ? void 0 : _b.replace(/stroke="[^"]*"/g, "stroke=\"".concat(color, "\""))) === null || _c === void 0 ? void 0 : _c.replace(/width="[^"]*"/g, "width=\"".concat(width, "\""))) === null || _d === void 0 ? void 0 : _d.replace(/height="[^"]*"/g, "height=\"".concat(height, "\""))) || '';
+  // SVG 내용에서 viewBox 추출
+  var viewBoxMatch = svgContent.match(/viewBox="([^"]*)"/);
+  var viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 100 100';
+  // SVG 내용에서 path 요소들 추출
+  var pathMatches = svgContent.match(/<path[^>]*>/g) || [];
+  var paths = pathMatches.map(function (pathStr) {
+    var dMatch = pathStr.match(/d="([^"]*)"/);
+    return dMatch ? dMatch[1] : '';
+  }).filter(Boolean);
   return jsxRuntime.jsx("div", {
     className: "logo logo--".concat(type, " ").concat(className),
-    style: logoStyle,
+    style: __assign({
+      width: width,
+      height: height,
+      overflow: 'hidden',
+      display: 'inline-block',
+      cursor: onClick ? 'pointer' : 'inherit'
+    }, style),
     onClick: handleClick,
     role: onClick ? 'button' : 'img',
     tabIndex: onClick ? 0 : undefined,
     onKeyDown: handleKeyDown,
-    dangerouslySetInnerHTML: {
-      __html: processedSvg
-    }
+    children: jsxRuntime.jsx("svg", {
+      width: width,
+      height: height,
+      viewBox: viewBox,
+      fill: "none",
+      xmlns: "http://www.w3.org/2000/svg",
+      style: {
+        display: 'block',
+        width: '100%',
+        height: '100%'
+      },
+      preserveAspectRatio: "none",
+      children: paths.map(function (pathData, index) {
+        return jsxRuntime.jsx("path", {
+          d: pathData,
+          fill: color
+        }, index);
+      })
+    })
   });
 };
 
