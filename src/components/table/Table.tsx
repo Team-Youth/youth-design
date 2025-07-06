@@ -493,7 +493,7 @@ const Cell = memo(
 
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (columnIndex === columnLength - 1) {
-        e.stopPropagation();
+        // e.stopPropagation();
       }
     };
 

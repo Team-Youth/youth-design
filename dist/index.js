@@ -28338,9 +28338,6 @@ var Cell = React.memo(function (_a) {
     }
   }, [cell, updateColumnWidth, columnIndex, columnWidth]);
   var handleClick = function (e) {
-    if (columnIndex === columnLength - 1) {
-      e.stopPropagation();
-    }
   };
   return jsxRuntime.jsx("div", {
     ref: cellRef,
