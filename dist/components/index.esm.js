@@ -24865,22 +24865,6 @@ var formatPhoneNumber = function (value) {
     return "".concat(numbers.slice(0, 3), "-").concat(numbers.slice(3, 7), "-").concat(numbers.slice(7, 11));
   }
 };
-// 주민등록번호 뒷자리 포맷팅 함수
-var formatResidentNumber = function (value) {
-  // 숫자만 추출하고 1자리로 제한
-  var numbers = value.replace(/\D/g, '').slice(0, 1);
-  if (numbers.length === 0) {
-    return '';
-  }
-  // 1, 2, 3, 4만 허용
-  var allowedNumbers = ['1', '2', '3', '4'];
-  var firstDigit = numbers[0];
-  if (!allowedNumbers.includes(firstDigit)) {
-    return '';
-  }
-  // 첫 번째 숫자와 나머지 6자리 마스킹
-  return firstDigit + '******';
-};
 var TextField = forwardRef(function (_a, ref) {
   var _b = _a.placeholder,
     placeholder = _b === void 0 ? 'Placeholder' : _b,
@@ -24924,9 +24908,6 @@ var TextField = forwardRef(function (_a, ref) {
   var _o = useState(false),
     showPassword = _o[0],
     setShowPassword = _o[1];
-  var _p = useState('');
-    _p[0];
-    var setRawResidentValue = _p[1]; // 주민등록번호 원본 값 저장
   var currentValue = value !== undefined ? value : internalValue;
   var isEmpty = !currentValue || currentValue.length === 0;
   var actualStatus = status || (isEmpty ? 'empty' : 'filled');
@@ -24971,7 +24952,8 @@ var TextField = forwardRef(function (_a, ref) {
       borderRadius: radius.s,
       // 8px
       transition: 'all 0.2s ease',
-      width: getWidth()
+      width: getWidth(),
+      position: 'relative' // resident 타입을 위한 상대 위치
     };
   }, [disabled, readOnly, error, isFocused, isHovered, width, size]);
   var getInputStyles = useCallback(function () {
@@ -25022,21 +25004,15 @@ var TextField = forwardRef(function (_a, ref) {
     if (type === 'tel') {
       newValue = formatPhoneNumber(newValue);
     }
-    // resident 타입일 때 주민등록번호 뒷자리 포맷팅 적용
+    // resident 타입일 때 1,2,3,4만 허용
     if (type === 'resident') {
-      // 숫자만 추출하고 1자리로 제한
-      var numbers = newValue.replace(/\D/g, '').slice(0, 1);
       // 1, 2, 3, 4만 허용
       var allowedNumbers = ['1', '2', '3', '4'];
-      var validNumber = numbers && allowedNumbers.includes(numbers[0]) ? numbers[0] : '';
-      setRawResidentValue(validNumber); // 원본 값 저장
-      newValue = validNumber ? formatResidentNumber(validNumber) : '';
-      // 원본 숫자 값을 바로 전달
-      onChange === null || onChange === void 0 ? void 0 : onChange(validNumber);
-    } else {
-      // 다른 타입일 때는 포맷팅된 값 전달
-      onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
+      if (newValue && !allowedNumbers.includes(newValue)) {
+        return; // 허용되지 않는 값이면 변경하지 않음
+      }
     }
+    onChange === null || onChange === void 0 ? void 0 : onChange(newValue);
     if (value === undefined) {
       setInternalValue(newValue);
     }
@@ -25049,6 +25025,15 @@ var TextField = forwardRef(function (_a, ref) {
   var handleMouseLeave = useCallback(function () {
     setIsHovered(false);
   }, []);
+  var handleKeyDown = useCallback(function (e) {
+    if (type === 'resident') {
+      // 허용된 숫자키 (1,2,3,4)와 제어키만 허용
+      var allowedKeys = ['1', '2', '3', '4', 'Backspace', 'Delete', 'Tab', 'Shift', 'Control', 'Alt', 'ArrowLeft', 'ArrowRight'];
+      if (!allowedKeys.includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+  }, [type]);
   var iconColor = getIconColor();
   // Leading 아이콘 렌더링
   var renderLeadingIcon = function () {
@@ -25169,6 +25154,26 @@ var TextField = forwardRef(function (_a, ref) {
     }
     return null;
   };
+  // resident 타입일 때 별표 마스킹 렌더링
+  var renderResidentMask = function () {
+    if (type !== 'resident') return null;
+    var textStyle = size === 'm' ? textStyles.body2 : textStyles.body1;
+    // error state일 때 에러 색상, 아닐 때 primary 색상
+    var maskColor = error ? colors.semantic.state.error : colors.semantic.text.primary;
+    return jsx("div", {
+      style: __assign(__assign({
+        position: 'absolute',
+        left: "calc(".concat(spacing.xs, " + 1ch)"),
+        top: '50%',
+        transform: 'translateY(-50%)',
+        pointerEvents: 'none',
+        color: maskColor
+      }, textStyle), {
+        zIndex: 1
+      }),
+      children: "******"
+    });
+  };
   return jsxs("div", {
     className: "text-field-wrapper ".concat(className),
     style: {
@@ -25178,18 +25183,30 @@ var TextField = forwardRef(function (_a, ref) {
       style: getContainerStyles(),
       onMouseEnter: handleMouseEnter,
       onMouseLeave: handleMouseLeave,
-      children: [renderLeadingIcon(), jsx("input", __assign({
-        ref: ref,
-        type: inputType,
-        value: currentValue,
-        placeholder: placeholder,
-        onChange: handleChange,
-        onFocus: handleFocus,
-        onBlur: handleBlur,
-        disabled: disabled,
-        readOnly: readOnly,
-        style: getInputStyles()
-      }, restProps)), renderTrailingIcon()]
+      children: [renderLeadingIcon(), jsxs("div", {
+        style: {
+          position: 'relative',
+          width: '100%'
+        },
+        children: [jsx("input", __assign({
+          ref: ref,
+          type: inputType,
+          value: currentValue,
+          placeholder: placeholder,
+          onChange: handleChange,
+          onFocus: handleFocus,
+          onBlur: handleBlur,
+          onKeyDown: handleKeyDown,
+          disabled: disabled,
+          readOnly: readOnly,
+          style: __assign(__assign({}, getInputStyles()), {
+            zIndex: 2,
+            position: 'relative',
+            backgroundColor: 'transparent'
+          }),
+          maxLength: type === 'resident' ? 1 : undefined
+        }, restProps)), renderResidentMask()]
+      }), renderTrailingIcon()]
     }), error && errorMessage && jsxs("div", {
       style: {
         display: 'flex',

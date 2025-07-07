@@ -63,27 +63,6 @@ const formatPhoneNumber = (value: string): string => {
   }
 };
 
-// 주민등록번호 뒷자리 포맷팅 함수
-const formatResidentNumber = (value: string): string => {
-  // 숫자만 추출하고 1자리로 제한
-  const numbers = value.replace(/\D/g, '').slice(0, 1);
-
-  if (numbers.length === 0) {
-    return '';
-  }
-
-  // 1, 2, 3, 4만 허용
-  const allowedNumbers = ['1', '2', '3', '4'];
-  const firstDigit = numbers[0];
-
-  if (!allowedNumbers.includes(firstDigit)) {
-    return '';
-  }
-
-  // 첫 번째 숫자와 나머지 6자리 마스킹
-  return firstDigit + '******';
-};
-
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
@@ -116,7 +95,6 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const [isHovered, setIsHovered] = useState(false);
     const [internalValue, setInternalValue] = useState(defaultValue || '');
     const [showPassword, setShowPassword] = useState(false);
-    const [rawResidentValue, setRawResidentValue] = useState(''); // 주민등록번호 원본 값 저장
 
     const currentValue = value !== undefined ? value : internalValue;
     const isEmpty = !currentValue || currentValue.length === 0;
@@ -168,6 +146,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         borderRadius: radius.s, // 8px
         transition: 'all 0.2s ease',
         width: getWidth(),
+        position: 'relative', // resident 타입을 위한 상대 위치
       };
     }, [disabled, readOnly, error, isFocused, isHovered, width, size]);
 
@@ -233,24 +212,16 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           newValue = formatPhoneNumber(newValue);
         }
 
-        // resident 타입일 때 주민등록번호 뒷자리 포맷팅 적용
+        // resident 타입일 때 1,2,3,4만 허용
         if (type === 'resident') {
-          // 숫자만 추출하고 1자리로 제한
-          const numbers = newValue.replace(/\D/g, '').slice(0, 1);
-
           // 1, 2, 3, 4만 허용
           const allowedNumbers = ['1', '2', '3', '4'];
-          const validNumber = numbers && allowedNumbers.includes(numbers[0]) ? numbers[0] : '';
-
-          setRawResidentValue(validNumber); // 원본 값 저장
-          newValue = validNumber ? formatResidentNumber(validNumber) : '';
-
-          // 원본 숫자 값을 바로 전달
-          onChange?.(validNumber);
-        } else {
-          // 다른 타입일 때는 포맷팅된 값 전달
-          onChange?.(newValue);
+          if (newValue && !allowedNumbers.includes(newValue)) {
+            return; // 허용되지 않는 값이면 변경하지 않음
+          }
         }
+
+        onChange?.(newValue);
 
         if (value === undefined) {
           setInternalValue(newValue);
@@ -268,6 +239,32 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const handleMouseLeave = useCallback(() => {
       setIsHovered(false);
     }, []);
+
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (type === 'resident') {
+          // 허용된 숫자키 (1,2,3,4)와 제어키만 허용
+          const allowedKeys = [
+            '1',
+            '2',
+            '3',
+            '4',
+            'Backspace',
+            'Delete',
+            'Tab',
+            'Shift',
+            'Control',
+            'Alt',
+            'ArrowLeft',
+            'ArrowRight',
+          ];
+          if (!allowedKeys.includes(e.key)) {
+            e.preventDefault();
+          }
+        }
+      },
+      [type],
+    );
 
     const iconColor = getIconColor();
 
@@ -393,6 +390,33 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       return null;
     };
 
+    // resident 타입일 때 별표 마스킹 렌더링
+    const renderResidentMask = () => {
+      if (type !== 'resident') return null;
+
+      const textStyle = size === 'm' ? textStyles.body2 : textStyles.body1;
+
+      // error state일 때 에러 색상, 아닐 때 primary 색상
+      const maskColor = error ? colors.semantic.state.error : colors.semantic.text.primary;
+
+      return (
+        <div
+          style={{
+            position: 'absolute',
+            left: `calc(${spacing.xs} + 1ch)`, // 패딩 + 한 글자 너비만큼 오른쪽으로
+            top: '50%',
+            transform: 'translateY(-50%)',
+            pointerEvents: 'none',
+            color: maskColor, // error state에 따라 색상 변경
+            ...textStyle,
+            zIndex: 1,
+          }}
+        >
+          ******
+        </div>
+      );
+    };
+
     return (
       <div
         className={`text-field-wrapper ${className}`}
@@ -405,19 +429,29 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         >
           {renderLeadingIcon()}
 
-          <input
-            ref={ref}
-            type={inputType}
-            value={currentValue}
-            placeholder={placeholder}
-            onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            disabled={disabled}
-            readOnly={readOnly}
-            style={getInputStyles()}
-            {...restProps}
-          />
+          <div style={{ position: 'relative', width: '100%' }}>
+            <input
+              ref={ref}
+              type={inputType}
+              value={currentValue}
+              placeholder={placeholder}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              disabled={disabled}
+              readOnly={readOnly}
+              style={{
+                ...getInputStyles(),
+                zIndex: 2,
+                position: 'relative',
+                backgroundColor: 'transparent',
+              }}
+              maxLength={type === 'resident' ? 1 : undefined}
+              {...restProps}
+            />
+            {renderResidentMask()}
+          </div>
 
           {renderTrailingIcon()}
         </div>
