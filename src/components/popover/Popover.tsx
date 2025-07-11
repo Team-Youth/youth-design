@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { Icon } from '../icon';
+import { Icon, IconType } from '../icon';
 import { colors, textStyles, fontWeight } from '../../tokens';
 
 export interface PopoverItem {
@@ -8,6 +8,8 @@ export interface PopoverItem {
   id: string;
   /** 아이템 라벨 텍스트 */
   label: string;
+  /** 아이템 아이콘 */
+  icon?: IconType;
   /** 아이템 비활성화 여부 */
   disabled?: boolean;
   /** 클릭 시 호출되는 콜백 */
@@ -317,6 +319,17 @@ export const Popover: React.FC<PopoverProps> = ({
               style={getItemStyle(item)}
             >
               <div style={styles.popoverItemContent}>
+                {item.icon && (
+                  <div style={styles.popoverItemLeadingIcon}>
+                    <Icon
+                      type={item.icon}
+                      size={20}
+                      color={
+                        item.disabled ? colors.semantic.text.disabled : colors.primary.coolGray[800]
+                      }
+                    />
+                  </div>
+                )}
                 <span style={styles.popoverItemLabel}>{item.label}</span>
                 {item.disabled && (
                   <div style={styles.popoverItemIcon}>
@@ -409,6 +422,10 @@ const styles = {
   },
   popoverItemLabel: {
     flex: 1,
+  },
+  popoverItemLeadingIcon: {
+    marginRight: '8px',
+    flexShrink: 0,
   },
   popoverItemIcon: {
     marginLeft: '8px',

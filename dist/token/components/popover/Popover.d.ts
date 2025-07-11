@@ -1,9 +1,12 @@
 import React from 'react';
+import { IconType } from '../icon';
 export interface PopoverItem {
     /** 아이템 식별자 */
     id: string;
     /** 아이템 라벨 텍스트 */
     label: string;
+    /** 아이템 아이콘 */
+    icon?: IconType;
     /** 아이템 비활성화 여부 */
     disabled?: boolean;
     /** 클릭 시 호출되는 콜백 */

@@ -28679,7 +28679,14 @@ var Popover = function (_a) {
             style: getItemStyle(item),
             children: jsxRuntime.jsxs("div", {
               style: styles.popoverItemContent,
-              children: [jsxRuntime.jsx("span", {
+              children: [item.icon && jsxRuntime.jsx("div", {
+                style: styles.popoverItemLeadingIcon,
+                children: jsxRuntime.jsx(Icon, {
+                  type: item.icon,
+                  size: 20,
+                  color: item.disabled ? colors.semantic.text.disabled : colors.primary.coolGray[800]
+                })
+              }), jsxRuntime.jsx("span", {
                 style: styles.popoverItemLabel,
                 children: item.label
               }), item.disabled && jsxRuntime.jsx("div", {
@@ -28773,6 +28780,10 @@ var styles = {
   },
   popoverItemLabel: {
     flex: 1
+  },
+  popoverItemLeadingIcon: {
+    marginRight: '8px',
+    flexShrink: 0
   },
   popoverItemIcon: {
     marginLeft: '8px',
