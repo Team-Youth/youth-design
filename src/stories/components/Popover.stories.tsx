@@ -55,6 +55,7 @@ const BasicExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'sorting-arrow-heads'
     },
     {
       id: 'settings',
@@ -69,6 +70,7 @@ const BasicExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'reset'
     },
     {
       id: 'logout',
