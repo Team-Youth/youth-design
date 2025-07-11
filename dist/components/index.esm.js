@@ -28764,6 +28764,9 @@ var styles = {
     flex: 1
   },
   popoverItemLeadingIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: '8px',
     flexShrink: 0
   },
