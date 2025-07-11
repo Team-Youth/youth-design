@@ -114,7 +114,8 @@ export type IconType =
   | 'bookmark-stroke'
   | 'bookmark-filled'
   | 'bell-stroke'
-  | 'bell-filled';
+  | 'bell-filled'
+  | 'sorting-arrow-heads';
 
 export interface IconProps {
   /** 아이콘 타입 */
