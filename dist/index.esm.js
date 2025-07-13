@@ -23446,11 +23446,13 @@ var Toast = React__default.memo(function (_a) {
   };
   var titleStyle = __assign(__assign({}, textStyles.heading3), {
     color: colors.semantic.text.primary,
-    margin: 0
+    margin: 0,
+    whiteSpace: 'pre-line'
   });
   var descriptionStyle = __assign(__assign({}, textStyles.body2), {
     color: colors.semantic.text.secondary,
-    margin: 0
+    margin: 0,
+    whiteSpace: 'pre-line'
   });
   var closeButtonStyle = {
     background: 'none',

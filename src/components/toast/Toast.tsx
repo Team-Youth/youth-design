@@ -132,12 +132,14 @@ export const Toast: React.FC<ToastProps> = React.memo(
       ...textStyles.heading3,
       color: colors.semantic.text.primary,
       margin: 0,
+      whiteSpace: 'pre-line',
     };
 
     const descriptionStyle: React.CSSProperties = {
       ...textStyles.body2,
       color: colors.semantic.text.secondary,
       margin: 0,
+      whiteSpace: 'pre-line',
     };
 
     const closeButtonStyle: React.CSSProperties = {
