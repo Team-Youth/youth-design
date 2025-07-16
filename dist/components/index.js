@@ -548,20 +548,32 @@ var Icon = function (_a) {
 };
 
 var LoadingIcon = function () {
-  return jsxRuntime.jsx("svg", {
-    width: "16",
-    height: "16",
-    viewBox: "0 0 50 50",
-    className: "loading-icon",
-    children: jsxRuntime.jsx("circle", {
-      cx: "25",
-      cy: "25",
-      r: "20",
-      fill: "none",
-      stroke: "currentColor",
-      strokeWidth: "4",
-      strokeLinecap: "round"
-    })
+  var loadingKeyframes = "\n    @keyframes loading-spin {\n      0% { transform: rotate(0deg); }\n      100% { transform: rotate(360deg); }\n    }\n    @keyframes loading-dash {\n      0% {\n        stroke-dasharray: 1, 150;\n        stroke-dashoffset: 0;\n      }\n      50% {\n        stroke-dasharray: 90, 150;\n        stroke-dashoffset: -35;\n      }\n      100% {\n        stroke-dasharray: 90, 150;\n        stroke-dashoffset: -124;\n      }\n    }\n  ";
+  return jsxRuntime.jsxs(jsxRuntime.Fragment, {
+    children: [jsxRuntime.jsx("style", {
+      children: loadingKeyframes
+    }), jsxRuntime.jsx("svg", {
+      width: "16",
+      height: "16",
+      viewBox: "0 0 50 50",
+      style: {
+        animation: 'loading-spin 2s linear infinite'
+      },
+      children: jsxRuntime.jsx("circle", {
+        cx: "25",
+        cy: "25",
+        r: "20",
+        fill: "none",
+        stroke: "currentColor",
+        strokeWidth: "4",
+        strokeLinecap: "round",
+        strokeDasharray: "1, 150",
+        strokeDashoffset: "0",
+        style: {
+          animation: 'loading-dash 1.5s ease-in-out infinite'
+        }
+      })
+    })]
   });
 };
 var Button = function (_a) {

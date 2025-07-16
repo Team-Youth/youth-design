@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { colors } from '../../tokens/colors';
 import { Icon, IconType } from '../icon/Icon';
-import './Button.css';
 
 export interface ButtonProps {
   type?: 'solid' | 'outlined' | 'text';
@@ -19,19 +18,57 @@ export interface ButtonProps {
   underline?: boolean; // text 타입에서 사용
 }
 
-const LoadingIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 50 50" className="loading-icon">
-    <circle
-      cx="25"
-      cy="25"
-      r="20"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="4"
-      strokeLinecap="round"
-    />
-  </svg>
-);
+const LoadingIcon = () => {
+  const loadingKeyframes = `
+    @keyframes loading-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes loading-dash {
+      0% {
+        stroke-dasharray: 1, 150;
+        stroke-dashoffset: 0;
+      }
+      50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35;
+      }
+      100% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -124;
+      }
+    }
+  `;
+
+  return (
+    <>
+      <style>{loadingKeyframes}</style>
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 50 50"
+        style={{
+          animation: 'loading-spin 2s linear infinite',
+        }}
+      >
+        <circle
+          cx="25"
+          cy="25"
+          r="20"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray="1, 150"
+          strokeDashoffset="0"
+          style={{
+            animation: 'loading-dash 1.5s ease-in-out infinite',
+          }}
+        />
+      </svg>
+    </>
+  );
+};
 
 export const Button: React.FC<ButtonProps> = ({
   type = 'solid',

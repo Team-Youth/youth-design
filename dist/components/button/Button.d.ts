@@ -1,6 +1,5 @@
 import React from 'react';
 import { IconType } from '../icon/Icon';
-import './Button.css';
 export interface ButtonProps {
     type?: 'solid' | 'outlined' | 'text';
     level?: 'CTA' | 'secondary' | 'tertiary';
