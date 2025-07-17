@@ -28032,110 +28032,19 @@ var Table = function (_a) {
     _d = _a.emptyIconColor,
     emptyIconColor = _d === void 0 ? colors.primary.coolGray[300] : _d,
     emptyText = _a.emptyText,
+    _e = _a.tableMinWidth,
+    tableMinWidth = _e === void 0 ? 600 : _e,
+    // 기본 최소 너비
     // Infinite Query 페이지네이션 관련 props
     hasNextPage = _a.hasNextPage,
     isFetchingNextPage = _a.isFetchingNextPage,
     onLoadMore = _a.onLoadMore,
-    _e = _a.totalPages,
-    totalPages = _e === void 0 ? 1 : _e,
-    _f = _a.currentPage,
-    currentPage = _f === void 0 ? 1 : _f,
+    _f = _a.totalPages,
+    totalPages = _f === void 0 ? 1 : _f,
+    _g = _a.currentPage,
+    currentPage = _g === void 0 ? 1 : _g,
     onPageJump = _a.onPageJump,
     totalCount = _a.totalCount;
-  // 각 열의 최대 너비를 저장하는 상태
-  var _g = React.useState({}),
-    columnLayouts = _g[0],
-    setColumnLayouts = _g[1];
-  // 너비 계산이 완료되었는지 추적하는 상태
-  var _h = React.useState(false),
-    isWidthCalculationComplete = _h[0],
-    setIsWidthCalculationComplete = _h[1];
-  // 헤더 셀의 참조를 저장할 배열
-  var headerRefs = React.useRef([]);
-  // Infinite Query에서는 data가 이미 플랫한 배열로 전달됨
-  var currentPageData = data;
-  // 열 너비를 업데이트하는 함수
-  var updateColumnWidth = function (index, width) {
-    setColumnLayouts(function (prevLayouts) {
-      var _a;
-      var currentWidth = prevLayouts[index] || 0;
-      if (width > currentWidth) {
-        return __assign(__assign({}, prevLayouts), (_a = {}, _a[index] = width, _a));
-      }
-      return prevLayouts;
-    });
-  };
-  // 컬럼 레이아웃을 완전히 리셋하는 함수
-  var resetColumnLayouts = function () {
-    setColumnLayouts({});
-    setIsWidthCalculationComplete(false);
-  };
-  var formattedColumns = React.useMemo(function () {
-    if (type === 'child') return columns;
-    return __spreadArray([], columns, true);
-  }, [columns]);
-  // 헤더 너비를 정확하게 측정하는 함수
-  var measureHeaderWidths = React.useCallback(function () {
-    formattedColumns.forEach(function (column, index) {
-      var headerEl = headerRefs.current[index];
-      if (headerEl) {
-        // 실제 텍스트 컨텐츠의 너비를 측정하기 위해 임시 요소 생성
-        var tempEl = document.createElement('div');
-        tempEl.style.position = 'absolute';
-        tempEl.style.visibility = 'hidden';
-        tempEl.style.whiteSpace = 'nowrap';
-        tempEl.style.fontSize = window.getComputedStyle(headerEl).fontSize;
-        tempEl.style.fontWeight = window.getComputedStyle(headerEl).fontWeight;
-        tempEl.style.fontFamily = window.getComputedStyle(headerEl).fontFamily;
-        tempEl.textContent = column.header;
-        document.body.appendChild(tempEl);
-        var textWidth = tempEl.getBoundingClientRect().width;
-        document.body.removeChild(tempEl);
-        // 패딩을 포함한 실제 필요한 너비 계산 (padding: 8px 12px = 24px)
-        var totalWidth = Math.ceil(textWidth + 24);
-        var currentWidth = Math.ceil(headerEl.getBoundingClientRect().width);
-        updateColumnWidth(index, Math.max(totalWidth, currentWidth));
-      }
-    });
-  }, [formattedColumns, updateColumnWidth]);
-  // 컴포넌트 마운트 시 헤더 셀의 너비를 측정하여 초기화
-  React.useLayoutEffect(function () {
-    // 즉시 실행
-    measureHeaderWidths();
-    // 약간의 지연 후 재측정 (레이아웃이 완전히 안정화된 후)
-    setTimeout(measureHeaderWidths, 30);
-  }, [formattedColumns, currentPageData]);
-  // 모든 컬럼의 너비 계산이 완료되었는지 확인
-  React.useEffect(function () {
-    if (currentPageData.length > 0 && formattedColumns.length > 0) {
-      // 모든 컬럼에 너비가 설정되었는지 확인
-      var allColumnsHaveWidth = formattedColumns.every(function (_, index) {
-        return columnLayouts[index] > 0;
-      });
-      if (allColumnsHaveWidth && !isWidthCalculationComplete) {
-        // 약간의 지연을 주어 모든 셀의 너비 계산이 완료되도록 함
-        setTimeout(function () {
-          setIsWidthCalculationComplete(true);
-        }, 50);
-      }
-    }
-  }, [columnLayouts, currentPageData.length, formattedColumns.length, isWidthCalculationComplete]);
-  // 데이터나 컬럼이 변경되면 계산 완료 상태와 컬럼 레이아웃 리셋
-  React.useEffect(function () {
-    resetColumnLayouts();
-  }, [data, columns]);
-  // 창 크기 변경 시 열 너비를 재측정하도록 초기화
-  React.useEffect(function () {
-    var handleResize = function () {
-      resetColumnLayouts();
-      // 약간의 지연 후 헤더 너비 재측정
-      setTimeout(measureHeaderWidths, 30);
-    };
-    window.addEventListener('resize', handleResize);
-    return function () {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [measureHeaderWidths]);
   if (isLoading) {
     return jsxRuntime.jsx("div", {
       style: {
@@ -28160,97 +28069,75 @@ var Table = function (_a) {
       flexDirection: 'column',
       flex: 1
     },
-    children: [jsxRuntime.jsxs("div", {
+    children: [jsxRuntime.jsx("div", {
       style: {
-        visibility: isWidthCalculationComplete || currentPageData.length === 0 ? 'visible' : 'hidden'
+        overflowX: 'auto',
+        borderBottom: "1px solid ".concat(colors.semantic.border.default)
       },
-      children: [jsxRuntime.jsx("div", {
+      children: jsxRuntime.jsxs("div", {
         style: {
-          display: 'flex'
+          minWidth: tableMinWidth
         },
-        children: formattedColumns.map(function (column, index) {
-          return jsxRuntime.jsx("div", {
-            ref: function (el) {
-              headerRefs.current[index] = el;
-            },
-            style: __assign(__assign(__assign(__assign({
+        children: [jsxRuntime.jsx("div", {
+          style: {
+            display: 'flex'
+          },
+          children: columns.map(function (column, index) {
+            return jsxRuntime.jsx("div", {
+              style: {
+                display: 'flex',
+                alignItems: 'center',
+                backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
+                padding: '8px 12px',
+                height: 48,
+                boxSizing: 'border-box',
+                // 컬럼 너비 설정
+                width: column.width || 'auto',
+                minWidth: column.minWidth || 'auto',
+                flex: column.width ? '0 0 auto' : '1 1 auto'
+              },
+              children: jsxRuntime.jsx(Font, __assign({}, type === 'parent' && {
+                hide: index === 0 || column.header === 'empty'
+              }, {
+                type: "body2",
+                fontWeight: "medium",
+                color: type === 'parent' ? colors.primary.coolGray[800] : colors.primary.coolGray[500],
+                noWhiteSpace: true,
+                children: column.header
+              }))
+            }, "header-".concat(index));
+          })
+        }), jsxRuntime.jsx("div", {
+          children: data.length === 0 ? jsxRuntime.jsxs("div", {
+            style: {
               display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: type === 'parent' ? colors.primary.coolGray[50] : 'transparent',
-              whiteSpace: 'nowrap',
-              padding: '8px 12px',
-              width: columnLayouts[index] ? "".concat(columnLayouts[index], "px") : 'auto',
-              boxSizing: 'border-box',
-              overflow: 'visible',
-              height: 48
-            }, isWidthCalculationComplete && {
-              transition: 'width 0.2s ease-out, flex 0.2s ease-out'
-            }), currentPageData.length === 0 && {
-              flex: 1,
-              minWidth: index === 0 ? 40 : index === formattedColumns.length - 1 ? 100 : 120,
-              width: 'auto'
-            }), currentPageData.length > 0 && __assign(__assign({}, type === 'parent' ? index === formattedColumns.length - 2 && {
-              flex: 1,
-              minWidth: 80,
-              width: 'auto'
-            } : index === formattedColumns.length - 1 && {
-              flex: 2,
-              minWidth: 80,
-              width: 'auto'
-            }), type === 'child' && index !== formattedColumns.length - 1 && {
-              flex: 1,
-              width: 'auto'
-            })), column.style),
-            children: jsxRuntime.jsx(Font, __assign({}, type === 'parent' && {
-              hide: index === 0 || column.header === 'empty'
-            }, {
+              width: '100%',
+              height: 200,
+              gap: 10
+            },
+            children: [emptyIcon && jsxRuntime.jsx(Icon, {
+              type: emptyIcon,
+              size: emptyIconSize,
+              color: emptyIconColor
+            }), emptyText && jsxRuntime.jsx(Font, {
               type: "body2",
               fontWeight: "medium",
-              color: type === 'parent' ? colors.primary.coolGray[800] : colors.primary.coolGray[500],
-              noWhiteSpace: true,
-              children: column.header
-            }))
-          }, "header-".concat(index));
-        })
-      }), jsxRuntime.jsx("div", {
-        style: {
-          display: 'flex',
-          flexDirection: 'column',
-          flexWrap: 'nowrap',
-          borderBottom: "1px solid ".concat(colors.semantic.border.default)
-        },
-        children: currentPageData.length === 0 ? jsxRuntime.jsxs("div", {
-          style: {
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            height: 200,
-            gap: 10
-          },
-          children: [emptyIcon && jsxRuntime.jsx(Icon, {
-            type: emptyIcon,
-            size: emptyIconSize,
-            color: emptyIconColor
-          }), emptyText && jsxRuntime.jsx(Font, {
-            type: "body2",
-            fontWeight: "medium",
-            color: colors.primary.coolGray[300],
-            children: emptyText
-          })]
-        }) : currentPageData.map(function (rowData, rowIndex) {
-          return jsxRuntime.jsx(Row, {
-            data: rowData,
-            columns: formattedColumns,
-            updateColumnWidth: updateColumnWidth,
-            columnLayouts: columnLayouts,
-            isWidthCalculationComplete: isWidthCalculationComplete,
-            rowAccordion: rowAccordion,
-            tableType: type
-          }, "row-".concat(rowIndex));
-        })
-      })]
+              color: colors.primary.coolGray[300],
+              children: emptyText
+            })]
+          }) : data.map(function (rowData, rowIndex) {
+            return jsxRuntime.jsx(Row, {
+              data: rowData,
+              columns: columns,
+              rowAccordion: rowAccordion,
+              tableType: type
+            }, "row-".concat(rowIndex));
+          })
+        })]
+      })
     }), totalPages > 1 && jsxRuntime.jsxs("div", {
       style: {
         display: 'flex',
@@ -28318,9 +28205,6 @@ var Table = function (_a) {
 var Row = function (_a) {
   var data = _a.data,
     columns = _a.columns,
-    updateColumnWidth = _a.updateColumnWidth,
-    columnLayouts = _a.columnLayouts,
-    isWidthCalculationComplete = _a.isWidthCalculationComplete,
     rowAccordion = _a.rowAccordion,
     tableType = _a.tableType;
   var _b = React.useState(false),
@@ -28343,97 +28227,64 @@ var Row = function (_a) {
   }, data.status === '등록 완료');
   React.useEffect(function () {
     if (rowAccordion && data && rowDetailRef.current) {
-      var calculatedHeight = rowDetailRef.current.scrollHeight; // 자식 요소의 실제 높이 계산
+      var calculatedHeight = rowDetailRef.current.scrollHeight;
       setRowDetailHeight(calculatedHeight);
     }
-  }, [rowAccordion, data]); // 자식 요소가 변경될 때마다 높이 계산
+  }, [rowAccordion, data]);
   return jsxRuntime.jsxs("div", {
     children: [jsxRuntime.jsx("div", {
       onClick: onPressRow,
       style: {
-        display: 'flex'
+        display: 'flex',
+        cursor: rowAccordion ? 'pointer' : 'default'
       },
       children: columns.map(function (column, index) {
         return jsxRuntime.jsx(Cell, {
           cell: column.cell(data),
-          updateColumnWidth: updateColumnWidth,
           columnIndex: index,
-          columnWidth: columnLayouts[index],
-          columnLength: columns.length,
+          column: column,
           isRowAccordionOpen: isRowAccordionOpen,
           tableType: tableType,
-          style: column.style,
-          isWidthCalculationComplete: isWidthCalculationComplete,
           hasRowAccordion: !!rowAccordion
         }, "cell-".concat(index));
       })
-    }), jsxRuntime.jsx("div", {
+    }), rowAccordion && jsxRuntime.jsx("div", {
       ref: rowDetailRef,
       style: {
-        display: 'flex',
-        flexDirection: 'column',
-        flex: 1,
         height: isRowAccordionOpen ? rowDetailHeight : 0,
         transition: 'height 330ms ease-in-out',
         overflow: 'hidden'
       },
-      children: rowAccordion && rowAccordion(data)
+      children: rowAccordion(data)
     })]
   });
 };
 var Cell = React.memo(function (_a) {
   var cell = _a.cell,
-    updateColumnWidth = _a.updateColumnWidth,
     columnIndex = _a.columnIndex,
-    columnWidth = _a.columnWidth,
-    columnLength = _a.columnLength,
+    column = _a.column,
     isRowAccordionOpen = _a.isRowAccordionOpen,
     tableType = _a.tableType,
-    style = _a.style,
-    isWidthCalculationComplete = _a.isWidthCalculationComplete,
     hasRowAccordion = _a.hasRowAccordion;
-  var cellRef = React.useRef(null);
-  React.useLayoutEffect(function () {
-    if (cellRef.current) {
-      var width = cellRef.current.getBoundingClientRect().width;
-      var ceilWidth = Math.ceil(width);
-      if (ceilWidth > (columnWidth || 0)) {
-        updateColumnWidth(columnIndex, ceilWidth);
-      }
-    }
-  }, [cell, updateColumnWidth, columnIndex, columnWidth]);
-  var handleClick = function (e) {
-  };
   return jsxRuntime.jsx("div", {
-    ref: cellRef,
-    onClick: handleClick,
-    style: __assign(__assign(__assign(__assign({
+    style: {
       display: 'flex',
       borderBottom: tableType === 'parent' ? '1px solid #eee' : 'none',
-      padding: tableType === 'parent' && columnIndex === columnLength - 1 ? '16px 12px' : '8px 12px',
-      whiteSpace: 'nowrap',
+      padding: '8px 12px',
       boxSizing: 'border-box',
-      minWidth: columnIndex === 1 ? 84 : columnWidth ? "".concat(columnWidth, "px") : '0',
-      width: columnWidth ? "".concat(columnWidth, "px") : 'auto',
-      overflow: 'visible'
-    }, isWidthCalculationComplete && {
-      transition: 'width 0.2s ease-out, flex 0.2s ease-out'
-    }), tableType === 'parent' ? columnIndex === columnLength - 2 && {
-      flex: 1,
-      minWidth: 0
-    } : columnIndex === columnLength - 1 && {
-      flex: 2,
-      minWidth: 0
-    }), tableType === 'child' && columnIndex !== columnLength - 1 && {
-      flex: 1
-    }), style),
-    children: columnIndex === 0 ? jsxRuntime.jsx("div", {
-      style: __assign({
-        display: 'flex'
-      }, columnIndex === 0 && hasRowAccordion && {
+      // 컬럼 너비 설정
+      width: column.width || 'auto',
+      minWidth: column.minWidth || 'auto',
+      flex: column.width ? '0 0 auto' : '1 1 auto',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
+    },
+    children: columnIndex === 0 && hasRowAccordion ? jsxRuntime.jsx("div", {
+      style: {
+        display: 'flex',
         transition: 'transform 0.3s ease',
         transform: isRowAccordionOpen && tableType === 'parent' ? 'rotate(180deg)' : 'rotate(0deg)'
-      }),
+      },
       children: cell
     }) : jsxRuntime.jsx(jsxRuntime.Fragment, {
       children: cell

@@ -3,7 +3,8 @@ import { IconType } from '../icon';
 interface Column<T> {
     header: string;
     cell: (row: T) => React.ReactNode;
-    style?: React.CSSProperties;
+    width?: string | number;
+    minWidth?: string | number;
 }
 export interface TableProps<T> {
     data: T[];
@@ -15,6 +16,7 @@ export interface TableProps<T> {
     emptyIconSize?: number;
     emptyIconColor?: string;
     emptyText?: string;
+    tableMinWidth?: string | number;
     hasNextPage?: boolean;
     isFetchingNextPage?: boolean;
     onLoadMore?: () => void;
@@ -23,5 +25,5 @@ export interface TableProps<T> {
     onPageJump?: (page: number) => void;
     totalCount?: number;
 }
-export declare const Table: <T>({ data, columns, rowAccordion, type, isLoading, emptyIcon, emptyIconSize, emptyIconColor, emptyText, hasNextPage, isFetchingNextPage, onLoadMore, totalPages, currentPage, onPageJump, totalCount, }: TableProps<T>) => import("react/jsx-runtime").JSX.Element;
+export declare const Table: <T>({ data, columns, rowAccordion, type, isLoading, emptyIcon, emptyIconSize, emptyIconColor, emptyText, tableMinWidth, hasNextPage, isFetchingNextPage, onLoadMore, totalPages, currentPage, onPageJump, totalCount, }: TableProps<T>) => import("react/jsx-runtime").JSX.Element;
 export {};
