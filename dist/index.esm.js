@@ -28225,7 +28225,8 @@ var Row = function (_a) {
           column: column,
           isRowAccordionOpen: isRowAccordionOpen,
           tableType: tableType,
-          hasRowAccordion: !!rowAccordion
+          hasRowAccordion: !!rowAccordion,
+          isLastColumn: index === columns.length - 1
         }, "cell-".concat(index));
       })
     }), rowAccordion && jsx("div", {
@@ -28245,7 +28246,8 @@ var Cell = memo(function (_a) {
     column = _a.column,
     isRowAccordionOpen = _a.isRowAccordionOpen,
     tableType = _a.tableType,
-    hasRowAccordion = _a.hasRowAccordion;
+    hasRowAccordion = _a.hasRowAccordion,
+    isLastColumn = _a.isLastColumn;
   return jsx("div", {
     style: {
       display: 'flex',
@@ -28257,7 +28259,8 @@ var Cell = memo(function (_a) {
       minWidth: column.minWidth || 'auto',
       flex: column.width ? '0 0 auto' : '1 1 auto',
       overflow: 'hidden',
-      textOverflow: 'ellipsis'
+      textOverflow: 'ellipsis',
+      justifyContent: isLastColumn ? 'flex-end' : 'flex-start'
     },
     children: columnIndex === 0 && hasRowAccordion ? jsx("div", {
       style: {

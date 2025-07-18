@@ -282,6 +282,7 @@ const Row = <T,>({ data, columns, rowAccordion, tableType }: RowProps<T>) => {
             isRowAccordionOpen={isRowAccordionOpen}
             tableType={tableType}
             hasRowAccordion={!!rowAccordion}
+            isLastColumn={index === columns.length - 1}
           />
         ))}
       </div>
@@ -311,10 +312,11 @@ interface CellProps {
   isRowAccordionOpen?: boolean;
   tableType?: 'parent' | 'child';
   hasRowAccordion?: boolean;
+  isLastColumn?: boolean;
 }
 
 const Cell = memo(
-  ({ cell, columnIndex, column, isRowAccordionOpen, tableType, hasRowAccordion }: CellProps) => {
+  ({ cell, columnIndex, column, isRowAccordionOpen, tableType, hasRowAccordion, isLastColumn }: CellProps) => {
     return (
       <div
         style={{
@@ -328,6 +330,7 @@ const Cell = memo(
           flex: column.width ? '0 0 auto' : '1 1 auto',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
+          justifyContent: isLastColumn ? 'flex-end' : 'flex-start',
         }}
       >
         {columnIndex === 0 && hasRowAccordion ? (
