@@ -850,7 +850,10 @@ var Button = function (_a) {
       return jsx(Icon, {
         type: iconOnly,
         size: config.iconSize,
-        color: iconColor
+        color: iconColor,
+        style: {
+          pointerEvents: 'none'
+        }
       });
     }
     // 일반 버튼인 경우
@@ -863,13 +866,19 @@ var Button = function (_a) {
       children: [leftIcon && jsx(Icon, {
         type: leftIcon,
         size: config.iconSize,
-        color: iconColor
+        color: iconColor,
+        style: {
+          pointerEvents: 'none'
+        }
       }), children && jsx("span", {
         children: children
       }), rightIcon && jsx(Icon, {
         type: rightIcon,
         size: config.iconSize,
-        color: iconColor
+        color: iconColor,
+        style: {
+          pointerEvents: 'none'
+        }
       })]
     });
   };

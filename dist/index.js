@@ -1231,7 +1231,10 @@ var Button = function (_a) {
       return jsxRuntime.jsx(Icon, {
         type: iconOnly,
         size: config.iconSize,
-        color: iconColor
+        color: iconColor,
+        style: {
+          pointerEvents: 'none'
+        }
       });
     }
     // 일반 버튼인 경우
@@ -1244,13 +1247,19 @@ var Button = function (_a) {
       children: [leftIcon && jsxRuntime.jsx(Icon, {
         type: leftIcon,
         size: config.iconSize,
-        color: iconColor
+        color: iconColor,
+        style: {
+          pointerEvents: 'none'
+        }
       }), children && jsxRuntime.jsx("span", {
         children: children
       }), rightIcon && jsxRuntime.jsx(Icon, {
         type: rightIcon,
         size: config.iconSize,
-        color: iconColor
+        color: iconColor,
+        style: {
+          pointerEvents: 'none'
+        }
       })]
     });
   };

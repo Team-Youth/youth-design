@@ -316,7 +316,15 @@ interface CellProps {
 }
 
 const Cell = memo(
-  ({ cell, columnIndex, column, isRowAccordionOpen, tableType, hasRowAccordion, isLastColumn }: CellProps) => {
+  ({
+    cell,
+    columnIndex,
+    column,
+    isRowAccordionOpen,
+    tableType,
+    hasRowAccordion,
+    isLastColumn,
+  }: CellProps) => {
     return (
       <div
         style={{

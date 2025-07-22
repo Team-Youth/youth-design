@@ -366,7 +366,14 @@ export const Button: React.FC<ButtonProps> = ({
 
     // iconOnly 버튼인 경우
     if (isIconOnlyButton && iconOnly) {
-      return <Icon type={iconOnly} size={config.iconSize} color={iconColor} />;
+      return (
+        <Icon
+          type={iconOnly}
+          size={config.iconSize}
+          color={iconColor}
+          style={{ pointerEvents: 'none' }}
+        />
+      );
     }
 
     // 일반 버튼인 경우
@@ -378,9 +385,23 @@ export const Button: React.FC<ButtonProps> = ({
           gap: leftIcon || rightIcon ? config.gap : '0',
         }}
       >
-        {leftIcon && <Icon type={leftIcon} size={config.iconSize} color={iconColor} />}
+        {leftIcon && (
+          <Icon
+            type={leftIcon}
+            size={config.iconSize}
+            color={iconColor}
+            style={{ pointerEvents: 'none' }}
+          />
+        )}
         {children && <span>{children}</span>}
-        {rightIcon && <Icon type={rightIcon} size={config.iconSize} color={iconColor} />}
+        {rightIcon && (
+          <Icon
+            type={rightIcon}
+            size={config.iconSize}
+            color={iconColor}
+            style={{ pointerEvents: 'none' }}
+          />
+        )}
       </div>
     );
   };
