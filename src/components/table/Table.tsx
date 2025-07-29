@@ -12,6 +12,9 @@ interface Column<T> {
   cell: (row: T) => React.ReactNode;
   width?: string | number; // 컬럼 너비 (px, %, auto 등)
   minWidth?: string | number; // 최소 너비
+  justifyContent?: 'flex-start' | 'center' | 'flex-end' | string; // 컬럼 정렬
+  alignItems?: 'flex-start' | 'center' | 'flex-end' | string; // 컬럼 정렬
+  headerJustifyContent?: 'flex-start' | 'center' | 'flex-end' | string; // 헤더 정렬
 }
 
 export interface TableProps<T> {
@@ -110,6 +113,7 @@ export const Table = <T,>({
                   width: column.width || 'auto',
                   minWidth: column.minWidth || 'auto',
                   flex: column.width ? '0 0 auto' : '1 1 auto',
+                  justifyContent: column.headerJustifyContent || 'flex-start',
                 }}
               >
                 <Font
@@ -308,6 +312,9 @@ interface CellProps {
   column: {
     width?: string | number;
     minWidth?: string | number;
+    justifyContent?: 'flex-start' | 'center' | 'flex-end' | string;
+    headerJustifyContent?: 'flex-start' | 'center' | 'flex-end' | string;
+    alignItems?: 'flex-start' | 'center' | 'flex-end' | string;
   };
   isRowAccordionOpen?: boolean;
   tableType?: 'parent' | 'child';
@@ -338,7 +345,8 @@ const Cell = memo(
           flex: column.width ? '0 0 auto' : '1 1 auto',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
-          justifyContent: isLastColumn ? 'flex-end' : 'flex-start',
+          justifyContent: column.justifyContent || 'flex-start',
+          alignItems: column.alignItems || 'flex-start',
         }}
       >
         {columnIndex === 0 && hasRowAccordion ? (

@@ -27979,7 +27979,8 @@ var Table = function (_a) {
                 // 컬럼 너비 설정
                 width: column.width || 'auto',
                 minWidth: column.minWidth || 'auto',
-                flex: column.width ? '0 0 auto' : '1 1 auto'
+                flex: column.width ? '0 0 auto' : '1 1 auto',
+                justifyContent: column.headerJustifyContent || 'flex-start'
               },
               children: jsx(Font, __assign({}, type === 'parent' && {
                 hide: index === 0 || column.header === 'empty'
@@ -28151,8 +28152,8 @@ var Cell = memo(function (_a) {
     column = _a.column,
     isRowAccordionOpen = _a.isRowAccordionOpen,
     tableType = _a.tableType,
-    hasRowAccordion = _a.hasRowAccordion,
-    isLastColumn = _a.isLastColumn;
+    hasRowAccordion = _a.hasRowAccordion;
+    _a.isLastColumn;
   return jsx("div", {
     style: {
       display: 'flex',
@@ -28165,7 +28166,8 @@ var Cell = memo(function (_a) {
       flex: column.width ? '0 0 auto' : '1 1 auto',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      justifyContent: isLastColumn ? 'flex-end' : 'flex-start'
+      justifyContent: column.justifyContent || 'flex-start',
+      alignItems: column.alignItems || 'flex-start'
     },
     children: columnIndex === 0 && hasRowAccordion ? jsx("div", {
       style: {
