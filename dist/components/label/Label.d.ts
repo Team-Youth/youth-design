@@ -1,16 +1,17 @@
 import React from 'react';
-import './Label.css';
+import { IconType } from '../icon/Icon';
+export type LabelColor = 'lightGray' | 'darkGray' | 'lightViolet' | 'violet' | 'lightRed' | 'red' | 'lightGreen' | 'green' | 'lightYellow' | 'yellow' | 'grey';
 export interface LabelProps {
     /** 라벨의 크기 */
-    size?: 'm' | 's';
+    size?: 'l' | 'm' | 's';
     /** 라벨의 모양 */
     type?: 'square' | 'capsule';
     /** 라벨의 색상 */
-    color?: 'grey' | 'dark' | 'violet' | 'accent' | 'red' | 'green' | 'yellow';
+    color?: LabelColor;
     /** 선행 아이콘 */
-    leadingIcon?: React.ReactNode;
+    leadingIcon?: IconType;
     /** 후행 아이콘 */
-    trailingIcon?: React.ReactNode;
+    trailingIcon?: IconType;
     /** 텍스트 내용 */
     children?: React.ReactNode;
     /** 추가 CSS 클래스 */

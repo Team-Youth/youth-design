@@ -1384,7 +1384,7 @@ var Label = function (_a) {
     _c = _a.type,
     type = _c === void 0 ? 'square' : _c,
     _d = _a.color,
-    color = _d === void 0 ? 'grey' : _d,
+    color = _d === void 0 ? 'darkGray' : _d,
     leadingIcon = _a.leadingIcon,
     trailingIcon = _a.trailingIcon,
     children = _a.children,
@@ -1392,22 +1392,32 @@ var Label = function (_a) {
     className = _e === void 0 ? '' : _e;
   // Size configurations
   var sizeConfig = {
-    m: {
+    l: {
       padding: type === 'square' ? '3px 8px' : '3px 10px',
       paddingWithLeadingIcon: type === 'square' ? '3px 8px 3px 6px' : '3px 10px 3px 8px',
       paddingWithTrailingIcon: type === 'square' ? '3px 6px 3px 8px' : '3px 8px 3px 10px',
       borderRadius: type === 'square' ? '4px' : '16px',
-      height: '24px',
+      height: '28px',
       iconSize: '14px',
       gap: '2px',
       fontSize: 'body2'
     },
-    s: {
-      padding: type === 'square' ? '2px 6px' : '2px 8px',
-      paddingWithLeadingIcon: type === 'square' ? '2px 6px 2px 4px' : '2px 8px 2px 6px',
-      paddingWithTrailingIcon: type === 'square' ? '2px 4px 2px 6px' : '2px 6px 2px 8px',
+    m: {
+      padding: type === 'square' ? '3px 6px' : '3px 8px',
+      paddingWithLeadingIcon: type === 'square' ? '3px 6px 3px 4px' : '3px 8px 3px 6px',
+      paddingWithTrailingIcon: type === 'square' ? '3px 4px 3px 6px' : '3px 6px 3px 8px',
       borderRadius: type === 'square' ? '4px' : '12px',
-      height: '22px',
+      height: '24px',
+      iconSize: '12px',
+      gap: '2px',
+      fontSize: 'body3'
+    },
+    s: {
+      padding: type === 'square' ? '2px 5px' : '2px 7px',
+      paddingWithLeadingIcon: type === 'square' ? '2px 5px 2px 3px' : '2px 7px 2px 5px',
+      paddingWithTrailingIcon: type === 'square' ? '2px 3px 2px 5px' : '2px 5px 2px 7px',
+      borderRadius: type === 'square' ? '4px' : '12px',
+      height: '20px',
       iconSize: '12px',
       gap: '2px',
       fontSize: 'caption'
@@ -1415,41 +1425,74 @@ var Label = function (_a) {
   };
   // Color configurations
   var colorConfig = {
-    grey: {
-      backgroundColor: colors.primary.coolGray[100],
+    lightGray: {
+      backgroundColor: colors.primary.coolGray[50],
       textColor: colors.primary.coolGray[600],
-      iconColor: colors.primary.coolGray[700]
+      iconColor: colors.primary.coolGray[600]
     },
-    dark: {
+    darkGray: {
       backgroundColor: colors.primary.coolGray[600],
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
     },
-    violet: {
+    lightViolet: {
       backgroundColor: colors.primary.tint.violet[50],
-      textColor: colors.primary.tint.violet[500],
-      iconColor: colors.primary.tint.violet[500]
+      textColor: colors.primary.mainviolet,
+      iconColor: colors.primary.mainviolet
     },
-    accent: {
-      backgroundColor: colors.primary.tint.violet[500],
+    violet: {
+      backgroundColor: colors.primary.mainviolet,
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
+    },
+    lightRed: {
+      backgroundColor: colors.primary.tint.red[50],
+      textColor: colors.primary.tint.red[400],
+      iconColor: colors.primary.tint.red[400]
     },
     red: {
-      backgroundColor: colors.primary.tint.red[500],
+      backgroundColor: colors.primary.tint.red[400],
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
+    },
+    lightGreen: {
+      backgroundColor: colors.primary.tint.green[100],
+      textColor: colors.primary.tint.green[500],
+      iconColor: colors.primary.tint.green[500]
     },
     green: {
       backgroundColor: colors.primary.tint.green[500],
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
     },
+    lightYellow: {
+      backgroundColor: colors.primary.tint.yellow[100],
+      textColor: colors.primary.tint.yellow[600],
+      iconColor: colors.primary.tint.yellow[600]
+    },
     yellow: {
-      backgroundColor: colors.primary.tint.yellow[500],
+      backgroundColor: colors.primary.tint.yellow[600],
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
+    },
+    // grey > deprecated, darkGray 사용 요망
+    grey: {
+      backgroundColor: colors.primary.coolGray[100],
+      textColor: colors.primary.coolGray[600],
+      iconColor: colors.primary.coolGray[700]
     }
+    // dark 대신 darkGray 사용
+    // dark: {
+    //   backgroundColor: colors.primary.coolGray[600],
+    //   textColor: colors.primary.gray.white,
+    //   iconColor: colors.primary.gray.white,
+    // },
+    // violet으로 대체
+    // accent: {
+    //   backgroundColor: colors.primary.tint.violet[500],
+    //   textColor: colors.primary.gray.white,
+    //   iconColor: colors.primary.gray.white,
+    // },
   };
   var config = sizeConfig[size];
   var colorStyle = colorConfig[color];
@@ -1475,18 +1518,8 @@ var Label = function (_a) {
       height: config.height,
       gap: config.gap,
       whiteSpace: 'nowrap',
-      boxSizing: 'border-box'
-    };
-  };
-  var getIconStyles = function () {
-    return {
-      width: config.iconSize,
-      height: config.iconSize,
-      color: colorStyle.iconColor,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexShrink: 0
+      boxSizing: 'border-box',
+      userSelect: 'none'
     };
   };
   return jsxRuntime.jsxs("div", {
@@ -1494,8 +1527,14 @@ var Label = function (_a) {
     style: getStyles(),
     children: [leadingIcon && jsxRuntime.jsx("span", {
       className: "label__leading-icon",
-      style: getIconStyles(),
-      children: leadingIcon
+      style: {
+        lineHeight: 0
+      },
+      children: jsxRuntime.jsx(Icon, {
+        type: leadingIcon,
+        size: parseInt(config.iconSize),
+        color: colorStyle.iconColor
+      })
     }), children && jsxRuntime.jsx(Font, {
       type: config.fontSize,
       fontWeight: "medium",
@@ -1503,8 +1542,14 @@ var Label = function (_a) {
       children: children
     }), trailingIcon && jsxRuntime.jsx("span", {
       className: "label__trailing-icon",
-      style: getIconStyles(),
-      children: trailingIcon
+      style: {
+        lineHeight: 0
+      },
+      children: jsxRuntime.jsx(Icon, {
+        type: trailingIcon,
+        size: parseInt(config.iconSize),
+        color: colorStyle.iconColor
+      })
     })]
   });
 };
