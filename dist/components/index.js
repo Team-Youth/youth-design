@@ -1496,10 +1496,9 @@ var Label = function (_a) {
   };
   var config = sizeConfig[size];
   var colorStyle = colorConfig[color];
-  // Determine padding based on icon presence
   var getPadding = function () {
     if (leadingIcon && trailingIcon) {
-      return config.paddingWithLeadingIcon; // Use leading icon padding style
+      return config.paddingWithLeadingIcon;
     } else if (leadingIcon) {
       return config.paddingWithLeadingIcon;
     } else if (trailingIcon) {

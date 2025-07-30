@@ -10,7 +10,7 @@ const meta: Meta<typeof Popover> = {
     docs: {
       description: {
         component:
-          '기준 요소의 너비에 맞춰 표시되는 팝오버 컴포넌트입니다. 메뉴 아이템들을 리스트 형태로 제공하며, disabled 상태일 때 lock 아이콘을 표시합니다.',
+          '기준 요소의 위치를 기반으로 표시되는 팝오버 컴포넌트입니다. 메뉴 아이템들을 리스트 형태로 제공하며, disabled 상태일 때 lock 아이콘을 표시합니다.',
       },
     },
   },
@@ -24,14 +24,31 @@ const meta: Meta<typeof Popover> = {
       description: '팝오버가 열려있는지 여부',
       control: { type: 'boolean' },
     },
-    position: {
-      description: '팝오버 표시 위치',
+    onOpenChange: {
+      description: '팝오버 열림/닫힘 상태 변경 콜백',
+      action: 'onOpenChange',
+    },
+    anchorRef: {
+      description: '기준이 되는 요소의 ref',
+      control: false,
+    },
+    width: {
+      description: '직접 지정할 너비',
+      control: { type: 'number' },
+    },
+    minWidth: {
+      description: '최소 너비',
+      control: { type: 'number' },
+    },
+    verticalPosition: {
+      description: '팝오버 수직 위치',
       control: { type: 'select' },
       options: ['top', 'bottom'],
     },
-    width: {
-      description: '팝오버 너비 (기본값은 anchorRef 요소의 너비)',
-      control: { type: 'text' },
+    horizontalAlign: {
+      description: '팝오버 수평 정렬',
+      control: { type: 'select' },
+      options: ['left', 'center', 'right'],
     },
     maxHeight: {
       description: '팝오버 최대 높이',
@@ -55,7 +72,7 @@ const BasicExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
-      icon: 'sorting-arrow-heads'
+      icon: 'profile-stroke' as const,
     },
     {
       id: 'settings',
@@ -63,6 +80,7 @@ const BasicExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'settings-stroke' as const,
     },
     {
       id: 'help',
@@ -70,7 +88,7 @@ const BasicExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
-      icon: 'reset'
+      icon: 'question-stroke' as const,
     },
     {
       id: 'logout',
@@ -117,6 +135,7 @@ const DisabledItemsExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'check' as const,
     },
     {
       id: 'available2',
@@ -124,6 +143,7 @@ const DisabledItemsExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'heart-stroke' as const,
     },
     {
       id: 'disabled1',
@@ -179,6 +199,7 @@ const CustomWidthExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'minus' as const,
     },
     {
       id: 'long',
@@ -186,6 +207,7 @@ const CustomWidthExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'add' as const,
     },
   ];
 
@@ -231,6 +253,7 @@ const TopPositionExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'arrow-up' as const,
     },
     {
       id: 'option2',
@@ -238,6 +261,7 @@ const TopPositionExample = () => {
       onClick: (id: string) => {
         console.log('클릭된 아이템:', id);
       },
+      icon: 'chevron-up' as const,
     },
     {
       id: 'option3',
@@ -272,7 +296,107 @@ const TopPositionExample = () => {
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         anchorRef={buttonRef}
-        position="top"
+        verticalPosition="top"
+      />
+    </div>
+  );
+};
+
+// 수평 정렬 예시
+const HorizontalAlignExample = () => {
+  const [leftOpen, setLeftOpen] = useState(false);
+  const [centerOpen, setCenterOpen] = useState(false);
+  const [rightOpen, setRightOpen] = useState(false);
+
+  const leftRef = useRef<HTMLButtonElement>(null);
+  const centerRef = useRef<HTMLButtonElement>(null);
+  const rightRef = useRef<HTMLButtonElement>(null);
+
+  const items = [
+    {
+      id: 'option1',
+      label: '옵션 1',
+      onClick: (id: string) => console.log('클릭된 아이템:', id),
+    },
+    {
+      id: 'option2',
+      label: '옵션 2',
+      onClick: (id: string) => console.log('클릭된 아이템:', id),
+    },
+  ];
+
+  return (
+    <div style={{ padding: '100px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
+      <button
+        ref={leftRef}
+        onClick={() => setLeftOpen(!leftOpen)}
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#3B82F6',
+          color: 'white',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer',
+        }}
+      >
+        Left Align
+      </button>
+
+      <button
+        ref={centerRef}
+        onClick={() => setCenterOpen(!centerOpen)}
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#10B981',
+          color: 'white',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer',
+        }}
+      >
+        Center Align
+      </button>
+
+      <button
+        ref={rightRef}
+        onClick={() => setRightOpen(!rightOpen)}
+        style={{
+          padding: '8px 16px',
+          backgroundColor: '#F59E0B',
+          color: 'white',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer',
+        }}
+      >
+        Right Align
+      </button>
+
+      <Popover
+        items={items}
+        isOpen={leftOpen}
+        onOpenChange={setLeftOpen}
+        anchorRef={leftRef}
+        horizontalAlign="left"
+        width={200}
+      />
+
+      <Popover
+        items={items}
+        isOpen={centerOpen}
+        onOpenChange={setCenterOpen}
+        anchorRef={centerRef}
+        horizontalAlign="center"
+        width={200}
+      />
+
+      <Popover
+        items={items}
+        isOpen={rightOpen}
+        onOpenChange={setRightOpen}
+        anchorRef={rightRef}
+        horizontalAlign="right"
+        width={200}
       />
     </div>
   );
@@ -292,4 +416,8 @@ export const CustomWidth: Story = {
 
 export const TopPosition: Story = {
   render: () => <TopPositionExample />,
+};
+
+export const HorizontalAlignment: Story = {
+  render: () => <HorizontalAlignExample />,
 };
