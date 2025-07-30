@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Button, ButtonProps } from '../button';
 import { Icon } from '../icon';
 import { colors } from '../../tokens/colors';
@@ -67,8 +68,42 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const [isContentOverflowing, setIsContentOverflowing] = React.useState(false);
   const [isPrimaryDefaultDisabled, setIsPrimaryDefaultDisabled] = React.useState(true);
+  const [portalRoot, setPortalRoot] = React.useState<Element | null>(null);
 
   const contentRef = React.useRef<HTMLDivElement>(null);
+
+  // Portal root 설정
+  useEffect(() => {
+    // 기존 portal root가 있는지 확인
+    let modalRoot = document.getElementById('modal-root');
+
+    // 없으면 생성
+    if (!modalRoot) {
+      modalRoot = document.createElement('div');
+      modalRoot.id = 'modal-root';
+      modalRoot.style.position = 'relative';
+      modalRoot.style.zIndex = '9999';
+      document.body.appendChild(modalRoot);
+    }
+
+    setPortalRoot(modalRoot);
+
+    // 컴포넌트 언마운트 시 정리는 하지 않음 (다른 모달들이 사용할 수 있으므로)
+  }, []);
+
+  // 모달이 열려있을 때 body 스크롤 방지
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // 컴포넌트 언마운트 시 정리
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (children && contentRef.current) {
@@ -87,7 +122,7 @@ export const Modal: React.FC<ModalProps> = ({
     }
   }, [primaryDefaultDisabledButton?.disabled]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !portalRoot) return null;
 
   const overlayStyleConfig: React.CSSProperties = {
     position: 'fixed',
@@ -200,7 +235,7 @@ export const Modal: React.FC<ModalProps> = ({
     onClose();
   };
 
-  return (
+  const modalContent = (
     <div
       className={`modal-overlay ${className}`}
       style={overlayStyleConfig}
@@ -270,4 +305,6 @@ export const Modal: React.FC<ModalProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(modalContent, portalRoot);
 };

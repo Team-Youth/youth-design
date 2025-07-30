@@ -23734,7 +23734,37 @@ var Modal = function (_a) {
   var _j = React__default.useState(true),
     isPrimaryDefaultDisabled = _j[0],
     setIsPrimaryDefaultDisabled = _j[1];
+  var _k = React__default.useState(null),
+    portalRoot = _k[0],
+    setPortalRoot = _k[1];
   var contentRef = React__default.useRef(null);
+  // Portal root 설정
+  useEffect(function () {
+    // 기존 portal root가 있는지 확인
+    var modalRoot = document.getElementById('modal-root');
+    // 없으면 생성
+    if (!modalRoot) {
+      modalRoot = document.createElement('div');
+      modalRoot.id = 'modal-root';
+      modalRoot.style.position = 'relative';
+      modalRoot.style.zIndex = '9999';
+      document.body.appendChild(modalRoot);
+    }
+    setPortalRoot(modalRoot);
+    // 컴포넌트 언마운트 시 정리는 하지 않음 (다른 모달들이 사용할 수 있으므로)
+  }, []);
+  // 모달이 열려있을 때 body 스크롤 방지
+  useEffect(function () {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    // 컴포넌트 언마운트 시 정리
+    return function () {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
   useEffect(function () {
     if (children && contentRef.current) {
       var _a = contentRef.current,
@@ -23751,7 +23781,7 @@ var Modal = function (_a) {
       setIsPrimaryDefaultDisabled(primaryDefaultDisabledButton.disabled);
     }
   }, [primaryDefaultDisabledButton === null || primaryDefaultDisabledButton === void 0 ? void 0 : primaryDefaultDisabledButton.disabled]);
-  if (!isOpen) return null;
+  if (!isOpen || !portalRoot) return null;
   var overlayStyleConfig = __assign({
     position: 'fixed',
     top: 0,
@@ -23839,7 +23869,7 @@ var Modal = function (_a) {
   var handleCloseClick = function () {
     onClose();
   };
-  return jsx("div", {
+  var modalContent = jsx("div", {
     className: "modal-overlay ".concat(className),
     style: overlayStyleConfig,
     onClick: handleOverlayClick,
@@ -23921,6 +23951,7 @@ var Modal = function (_a) {
       })]
     })
   });
+  return createPortal(modalContent, portalRoot);
 };
 
 // 스피너 애니메이션을 위한 CSS keyframes 추가
