@@ -28450,24 +28450,26 @@ var Popover = function (_a) {
     anchorRef = _a.anchorRef,
     width = _a.width,
     minWidth = _a.minWidth,
-    _b = _a.position,
-    position = _b === void 0 ? 'bottom' : _b,
-    _c = _a.style,
-    style = _c === void 0 ? {} : _c,
+    _b = _a.verticalPosition,
+    verticalPosition = _b === void 0 ? 'bottom' : _b,
+    _c = _a.horizontalAlign,
+    horizontalAlign = _c === void 0 ? 'center' : _c,
+    _d = _a.style,
+    style = _d === void 0 ? {} : _d,
     maxHeight = _a.maxHeight;
   var popoverRef = useRef(null);
-  var _d = useState(null),
-    popoverPosition = _d[0],
-    setPopoverPosition = _d[1];
-  var _e = useState('exited'),
-    animationState = _e[0],
-    setAnimationState = _e[1];
-  var _f = useState(null),
-    hoveredItemId = _f[0],
-    setHoveredItemId = _f[1];
+  var _e = useState(null),
+    popoverPosition = _e[0],
+    setPopoverPosition = _e[1];
+  var _f = useState('exited'),
+    animationState = _f[0],
+    setAnimationState = _f[1];
   var _g = useState(null),
-    activeItemId = _g[0],
-    setActiveItemId = _g[1];
+    hoveredItemId = _g[0],
+    setHoveredItemId = _g[1];
+  var _h = useState(null),
+    activeItemId = _h[0],
+    setActiveItemId = _h[1];
   // Popover 위치 계산
   var calculatePosition = useCallback(function () {
     if (!(anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current)) return null;
@@ -28480,8 +28482,21 @@ var Popover = function (_a) {
       var minWidthValue = typeof minWidth === 'number' ? minWidth : parseFloat(minWidth) || 0;
       calculatedWidth = Math.max(calculatedWidth, minWidthValue);
     }
+    // horizontalAlign에 따른 기본 left 위치 계산
+    var leftPosition;
+    switch (horizontalAlign) {
+      case 'left':
+        leftPosition = anchorRect.left;
+        break;
+      case 'right':
+        leftPosition = anchorRect.right - calculatedWidth;
+        break;
+      case 'center':
+      default:
+        leftPosition = anchorRect.left + (anchorRect.width - calculatedWidth) / 2;
+        break;
+    }
     // 뷰포트 경계 고려하여 left 위치 조정
-    var leftPosition = anchorRect.left;
     var viewportWidth = window.innerWidth;
     var rightEdge = leftPosition + calculatedWidth;
     // 오른쪽으로 잘리는 경우 왼쪽으로 이동
@@ -28500,7 +28515,7 @@ var Popover = function (_a) {
       left: leftPosition,
       width: calculatedWidth
     };
-    if (position === 'bottom') {
+    if (verticalPosition === 'bottom') {
       return __assign(__assign({}, coords), {
         top: anchorRect.bottom + 8
       });
@@ -28509,7 +28524,7 @@ var Popover = function (_a) {
         bottom: window.innerHeight - anchorRect.top + 8
       });
     }
-  }, [anchorRef, width, minWidth, position]);
+  }, [anchorRef, width, minWidth, verticalPosition, horizontalAlign]);
   // 외부 클릭 감지
   useEffect(function () {
     var handleClickOutside = function (event) {
@@ -28596,15 +28611,13 @@ var Popover = function (_a) {
   // 동적 스타일 생성
   var getPopoverStyle = function () {
     var dynamicStyle = __assign({}, styles.popover);
-    // 위치별 transform-origin 적용
-    if (position === 'top') {
-      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTop);
-    } else {
-      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionBottom);
-    }
+    // transform-origin 계산 (수직 + 수평 위치 조합)
+    var verticalOrigin = verticalPosition === 'top' ? 'bottom' : 'top';
+    var horizontalOrigin = horizontalAlign === 'left' ? 'left' : horizontalAlign === 'right' ? 'right' : 'center';
+    dynamicStyle.transformOrigin = "".concat(horizontalOrigin, " ").concat(verticalOrigin);
     // 애니메이션 상태별 스타일 적용
     if (animationState === 'entering') {
-      if (position === 'top') {
+      if (verticalPosition === 'top') {
         dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopEntering);
       } else {
         dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntering);
@@ -28612,7 +28625,7 @@ var Popover = function (_a) {
     } else if (animationState === 'entered') {
       dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntered);
     } else if (animationState === 'exiting') {
-      if (position === 'top') {
+      if (verticalPosition === 'top') {
         dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopExiting);
       } else {
         dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverExiting);

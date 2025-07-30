@@ -29,8 +29,10 @@ export interface PopoverProps {
   width?: number | string;
   /** 최소 너비 (anchorRef의 너비보다 작을 때 사용) */
   minWidth?: number | string;
-  /** Popover 위치 (기본값: 'bottom') */
-  position?: 'top' | 'bottom';
+  /** Popover 수직 위치 (기본값: 'bottom') */
+  verticalPosition?: 'top' | 'bottom';
+  /** Popover 수평 정렬 (기본값: 'center') */
+  horizontalAlign?: 'left' | 'center' | 'right';
   /** 추가 스타일 */
   style?: React.CSSProperties;
   /** Popover 컨테이너의 최대 높이 */
@@ -44,7 +46,8 @@ export const Popover: React.FC<PopoverProps> = ({
   anchorRef,
   width,
   minWidth,
-  position = 'bottom',
+  verticalPosition = 'bottom',
+  horizontalAlign = 'center',
   style = {},
   maxHeight,
 }) => {
@@ -81,8 +84,23 @@ export const Popover: React.FC<PopoverProps> = ({
       calculatedWidth = Math.max(calculatedWidth, minWidthValue);
     }
 
+    // horizontalAlign에 따른 기본 left 위치 계산
+    let leftPosition: number;
+
+    switch (horizontalAlign) {
+      case 'left':
+        leftPosition = anchorRect.left;
+        break;
+      case 'right':
+        leftPosition = anchorRect.right - calculatedWidth;
+        break;
+      case 'center':
+      default:
+        leftPosition = anchorRect.left + (anchorRect.width - calculatedWidth) / 2;
+        break;
+    }
+
     // 뷰포트 경계 고려하여 left 위치 조정
-    let leftPosition = anchorRect.left;
     const viewportWidth = window.innerWidth;
     const rightEdge = leftPosition + calculatedWidth;
 
@@ -105,7 +123,7 @@ export const Popover: React.FC<PopoverProps> = ({
       width: calculatedWidth,
     };
 
-    if (position === 'bottom') {
+    if (verticalPosition === 'bottom') {
       return {
         ...coords,
         top: anchorRect.bottom + 8,
@@ -116,7 +134,7 @@ export const Popover: React.FC<PopoverProps> = ({
         bottom: window.innerHeight - anchorRect.top + 8,
       };
     }
-  }, [anchorRef, width, minWidth, position]);
+  }, [anchorRef, width, minWidth, verticalPosition, horizontalAlign]);
 
   // 외부 클릭 감지
   useEffect(() => {
@@ -225,16 +243,15 @@ export const Popover: React.FC<PopoverProps> = ({
   const getPopoverStyle = (): React.CSSProperties => {
     let dynamicStyle = { ...styles.popover };
 
-    // 위치별 transform-origin 적용
-    if (position === 'top') {
-      dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionTop };
-    } else {
-      dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionBottom };
-    }
+    // transform-origin 계산 (수직 + 수평 위치 조합)
+    const verticalOrigin = verticalPosition === 'top' ? 'bottom' : 'top';
+    const horizontalOrigin =
+      horizontalAlign === 'left' ? 'left' : horizontalAlign === 'right' ? 'right' : 'center';
+    dynamicStyle.transformOrigin = `${horizontalOrigin} ${verticalOrigin}`;
 
     // 애니메이션 상태별 스타일 적용
     if (animationState === 'entering') {
-      if (position === 'top') {
+      if (verticalPosition === 'top') {
         dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionTopEntering };
       } else {
         dynamicStyle = { ...dynamicStyle, ...styles.popoverEntering };
@@ -242,7 +259,7 @@ export const Popover: React.FC<PopoverProps> = ({
     } else if (animationState === 'entered') {
       dynamicStyle = { ...dynamicStyle, ...styles.popoverEntered };
     } else if (animationState === 'exiting') {
-      if (position === 'top') {
+      if (verticalPosition === 'top') {
         dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionTopExiting };
       } else {
         dynamicStyle = { ...dynamicStyle, ...styles.popoverExiting };
