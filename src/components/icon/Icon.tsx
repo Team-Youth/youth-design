@@ -7,6 +7,8 @@ export type IconType =
   | 'hamburger'
   | 'search'
   | 'close'
+  | 'close-circle-filled'
+  | 'close-circle-stroke'
   | 'check'
   | 'add'
   | 'minus'
