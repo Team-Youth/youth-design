@@ -24248,13 +24248,87 @@ var Dropdown = function (_a) {
   }, [isPopulatedDisabled, value, onChange, options, enableSearch]);
   // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
   var actuallyDisabled = disabled || isPopulatedDisabled;
-  // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
+  // 캔버스 인스턴스를 재사용하기 위한 ref
+  var canvasRef = React.useRef(null);
+  // 자주 사용되는 색상들 메모이제이션
+  var colorPalette = React.useMemo(function () {
+    return {
+      primary: colors.semantic.background.primary,
+      // #FFFFFF
+      disabled: colors.semantic.disabled.background,
+      // #F3F5F6
+      disabledText: colors.semantic.disabled.foreground,
+      // #D1D5DB
+      primaryText: colors.semantic.text.primary,
+      // #25282D
+      selectedBg: colors.primary.tint.violet[50],
+      selectedText: colors.primary.mainviolet,
+      placeholder: colors.primary.coolGray[300],
+      error: colors.semantic.state.error,
+      // #FF2E2E
+      border: colors.semantic.border.strong // #D6D6D6
+    };
+  }, []);
+  // 텍스트 스타일 메모이제이션
+  var textStyle = React.useMemo(function () {
+    var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
+    return __assign(__assign({}, baseStyle), {
+      fontWeight: typography.fontWeight.medium
+    });
+  }, [size]);
+  // 텍스트 측정 함수 (메모이제이션)
+  var measureText = React.useCallback(function (text) {
+    if (!canvasRef.current) {
+      canvasRef.current = document.createElement('canvas');
+    }
+    var context = canvasRef.current.getContext('2d');
+    if (!context) return 0;
+    var fontSize = textStyle.fontSize || 16;
+    var fontWeight = typography.fontWeight.medium || 500;
+    context.font = "".concat(fontWeight, " ").concat(fontSize, "px system-ui, -apple-system, sans-serif");
+    return context.measureText(text).width;
+  }, [textStyle]);
+  // 옵션 텍스트들의 최대 너비 계산 (메모이제이션)
+  var maxOptionTextWidth = React.useMemo(function () {
+    if (options.length === 0) return 0;
+    return Math.max.apply(Math, options.map(function (option) {
+      return measureText(option.label);
+    }));
+  }, [options, measureText]);
+  // 옵션 리스트의 최적 너비 계산 함수 (개선됨)
+  var calculateOptimalWidth = React.useCallback(function () {
+    var _a;
+    // 옵션이 없으면 기본값 반환
+    if (options.length === 0) return 335;
+    // customContent가 있는 경우 triggerWidth 사용 (마운트 후에만)
+    if (hasCustomContent && triggerRef.current) {
+      var triggerWidth_1 = triggerRef.current.getBoundingClientRect().width;
+      return triggerWidth_1 > 0 ? triggerWidth_1 : 335;
+    }
+    // 텍스트 기반 너비 계산: 패딩(32px) + 아이콘(20px) + 여유(16px) = 68px
+    var textBasedWidth = maxOptionTextWidth + 68;
+    // 최소 너비 계산 (triggerRef가 있고 측정 가능할 때만 고려)
+    var triggerWidth = (_a = triggerRef.current) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect().width;
+    var hasValidTriggerWidth = triggerWidth && triggerWidth > 0;
+    var minWidth = hasValidTriggerWidth ? Math.max(triggerWidth, textBasedWidth) : textBasedWidth;
+    // 최대 너비 제한
+    var maxWidth = Math.min(window.innerWidth * 0.8, 600);
+    // 최종 너비: 최소 120px, 최대 maxWidth, 기본 계산값 사용
+    return Math.min(Math.max(minWidth, 120), maxWidth);
+  }, [options.length, hasCustomContent, maxOptionTextWidth, triggerRef]);
+  // width prop이 있으면 우선 적용, 없으면 최적 너비 계산
   var finalWidth = React.useMemo(function () {
     if (width) {
       return width;
     }
-    return '335px';
-  }, [width, size]);
+    // 최적 너비 계산 함수 사용, 계산 안되면 335px 폴백
+    try {
+      var optimalWidth = calculateOptimalWidth();
+      return "".concat(optimalWidth, "px");
+    } catch (_a) {
+      return '335px';
+    }
+  }, [width, calculateOptimalWidth]);
   // 무한스크롤 스크롤 이벤트 처리
   var handleScroll = React.useCallback(function (event) {
     if (!onLoadMore || !hasNextPage || isLoadingMore) return;
@@ -24294,47 +24368,6 @@ var Dropdown = function (_a) {
       return spaceBelow >= spaceAbove ? 'bottom' : 'top';
     }
   }, [hasCustomContent, customContentMaxHeight]);
-  // 옵션 리스트의 최적 너비 계산 함수
-  var calculateOptimalWidth = React.useCallback(function () {
-    if (!triggerRef.current) {
-      // finalWidth가 문자열인 경우 숫자로 변환하거나 기본값 사용
-      if (typeof finalWidth === 'number') return finalWidth;
-      if (typeof finalWidth === 'string' && finalWidth !== 'fill') {
-        var numWidth = parseFloat(finalWidth);
-        if (!isNaN(numWidth)) return numWidth;
-      }
-      return 335; // 기본값
-    }
-    var triggerWidth = triggerRef.current.getBoundingClientRect().width;
-    // customContent가 있는 경우 triggerWidth를 기본값으로 사용 (컨텐츠가 더 넓어질 수 있음)
-    if (hasCustomContent) {
-      return triggerWidth; // 트리거 너비를 기본값으로 사용
-    }
-    var minWidth = triggerWidth;
-    // 뷰포트 너비의 80% 또는 600px 중 작은 값을 최대 너비로 설정
-    var maxWidth = Math.min(window.innerWidth * 0.8, 600);
-    // 간단한 텍스트 너비 측정을 위한 임시 element 생성
-    var measureText = function (text) {
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
-      if (!context) return 0;
-      // 텍스트 스타일을 직접 계산
-      var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
-      var fontSize = baseStyle.fontSize || 16;
-      var fontWeight = typography.fontWeight.medium || 500;
-      context.font = "".concat(fontWeight, " ").concat(fontSize, "px system-ui, -apple-system, sans-serif");
-      return context.measureText(text).width;
-    };
-    // 옵션이 없으면 최소 너비 반환
-    if (filteredOptions.length === 0) return minWidth;
-    // 모든 옵션 텍스트의 최대 너비 계산 (패딩 + 아이콘 공간 포함)
-    var maxTextWidth = Math.max.apply(Math, filteredOptions.map(function (option) {
-      return measureText(option.label);
-    }));
-    // 패딩(32px) + 아이콘 공간(20px) + 여유 공간(16px) = 68px
-    var optimalWidth = Math.min(Math.max(minWidth, maxTextWidth + 68), maxWidth);
-    return optimalWidth;
-  }, [triggerRef, finalWidth, filteredOptions, size, hasCustomContent]);
   // 선택된 옵션의 인덱스를 찾기 위한 함수
   var getSelectedOptionIndex = React.useCallback(function () {
     if (!hasSelectedOption) return -1;
@@ -24497,24 +24530,17 @@ var Dropdown = function (_a) {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [actualIsOpen, setActualIsOpen]);
-  // 텍스트 스타일 계산 (size에 따라 body1/body2 + medium)
-  var getTextStyle = React.useCallback(function () {
-    var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
-    return __assign(__assign({}, baseStyle), {
-      fontWeight: typography.fontWeight.medium
-    });
-  }, [size]);
   // 컨테이너 스타일
   var getContainerStyles = React.useCallback(function () {
-    var borderColor = colors.semantic.border.strong; // #D6D6D6
-    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
+    var borderColor = colorPalette.border;
+    var backgroundColor = colorPalette.primary;
     if (actuallyDisabled) {
-      borderColor = colors.semantic.border.strong;
-      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+      borderColor = colorPalette.border;
+      backgroundColor = colorPalette.disabled;
     } else if (error) {
-      borderColor = colors.semantic.state.error; // #FF2E2E
+      borderColor = colorPalette.error;
     } else if (actualIsOpen) {
-      borderColor = colors.semantic.text.primary; // #25282D
+      borderColor = colorPalette.primaryText;
     }
     // size에 따른 패딩 설정
     var padding = size === 'l' ? '12px 16px' : '9px 16px';
@@ -24535,24 +24561,23 @@ var Dropdown = function (_a) {
     }, hideOption && {
       userSelect: 'none'
     });
-  }, [actuallyDisabled, error, actualIsOpen, finalWidth, hideOption, enableSearch, size]);
+  }, [actuallyDisabled, error, actualIsOpen, finalWidth, hideOption, enableSearch, size, colorPalette]);
   var getTextStyles = React.useCallback(function () {
     var textColor;
     if (actuallyDisabled) {
       // populated disabled 상태에서는 선택된 값이 있으면 일반 텍스트 색상, 없으면 비활성화 색상
       if (isPopulatedDisabled && hasSelectedOption) {
-        textColor = colors.semantic.text.primary; // #25282D
+        textColor = colorPalette.primaryText;
       } else {
-        textColor = colors.semantic.disabled.foreground; // #D1D5DB
+        textColor = colorPalette.disabledText;
       }
     } else if (error) {
-      textColor = colors.semantic.state.error; // #FF2E2E
+      textColor = colorPalette.error;
     } else if (hasSelectedOption) {
-      textColor = colors.semantic.text.primary; // #25282D
+      textColor = colorPalette.primaryText;
     } else {
-      textColor = '#AFB6C0'; // Figma 스펙의 placeholder 색상
+      textColor = colorPalette.placeholder;
     }
-    var textStyle = getTextStyle();
     return __assign(__assign({}, textStyle), {
       flex: 1,
       color: textColor,
@@ -24562,28 +24587,27 @@ var Dropdown = function (_a) {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis'
     });
-  }, [actuallyDisabled, isPopulatedDisabled, error, hasSelectedOption, enableSearch, hideOption, getTextStyle]);
+  }, [actuallyDisabled, isPopulatedDisabled, error, hasSelectedOption, enableSearch, hideOption, textStyle, colorPalette]);
   var getInputStyles = React.useCallback(function () {
-    var textStyle = getTextStyle();
     return __assign(__assign({}, textStyle), {
       flex: 1,
-      color: colors.semantic.text.primary,
+      color: colorPalette.primaryText,
       backgroundColor: 'transparent',
       border: 'none',
       outline: 'none',
       width: '100%'
     });
-  }, [getTextStyle]);
+  }, [textStyle, colorPalette]);
   var getIconColor = React.useCallback(function () {
     if (actuallyDisabled) {
       // populated disabled 상태에서는 chevron 아이콘을 비활성화 색상으로 표시
-      return colors.semantic.disabled.foreground; // #D1D5DB
+      return colorPalette.disabledText;
     } else if (error) {
-      return colors.semantic.state.error; // #FF2E2E
+      return colorPalette.error;
     } else {
-      return colors.semantic.text.primary; // #25282D
+      return colorPalette.primaryText;
     }
-  }, [actuallyDisabled, error]);
+  }, [actuallyDisabled, error, colorPalette]);
   var getChevronIcon = React.useCallback(function () {
     return jsxRuntime.jsx(Icon, {
       type: actualIsOpen ? 'chevron-up' : 'chevron-down',
@@ -24638,17 +24662,21 @@ var Dropdown = function (_a) {
     onSearchChange === null || onSearchChange === void 0 ? void 0 : onSearchChange(newSearchValue);
   }, [enableSearch, onSearchChange]);
   var getOptionStyles = React.useCallback(function (option, index, isSelected) {
-    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
-    var textColor = colors.semantic.text.primary; // #25282D
-    if (option.disabled) {
-      textColor = colors.semantic.disabled.foreground; // #D1D5DB
+    var backgroundColor = colorPalette.primary;
+    var textColor = colorPalette.primaryText;
+    if (option.disabled && isSelected) {
+      // disabled이면서 selected인 경우 (완료된 세션 등)
+      backgroundColor = colorPalette.disabled;
+      textColor = colorPalette.disabledText;
+    } else if (option.disabled) {
+      backgroundColor = colorPalette.disabled;
+      textColor = colorPalette.disabledText;
     } else if (isSelected) {
-      backgroundColor = '#F8F4FE'; // Figma 스펙의 선택된 옵션 배경색
-      textColor = '#7248D9'; // Figma 스펙의 선택된 옵션 텍스트 색상
+      backgroundColor = colorPalette.selectedBg;
+      textColor = colorPalette.selectedText;
     } else if (hoveredOptionIndex === index) {
-      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+      backgroundColor = colorPalette.disabled;
     }
-    var textStyle = getTextStyle();
     return __assign(__assign({
       display: 'flex',
       alignItems: 'center',
@@ -24660,7 +24688,7 @@ var Dropdown = function (_a) {
       cursor: option.disabled ? 'not-allowed' : 'pointer',
       transition: 'background-color 0.2s ease'
     });
-  }, [hoveredOptionIndex, getTextStyle]);
+  }, [hoveredOptionIndex, textStyle, colorPalette]);
   var dropdownOptionsStyle = React.useMemo(function () {
     return __assign(__assign(__assign(__assign({
       position: 'fixed',
@@ -24793,7 +24821,7 @@ var Dropdown = function (_a) {
       children: hasCustomContent ? customContent : filteredOptions.length === 0 ? jsxRuntime.jsx("div", {
         style: __assign(__assign({
           padding: '13px 16px'
-        }, getTextStyle()), {
+        }, textStyle), {
           color: colors.semantic.disabled.foreground,
           textAlign: 'center',
           userSelect: !enableSearch ? 'none' : 'auto'
@@ -24827,7 +24855,7 @@ var Dropdown = function (_a) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#7248D9'
+                color: option.disabled ? colorPalette.disabledText : colorPalette.selectedText
               },
               children: getCheckIcon()
             }) : option.disabled ? jsxRuntime.jsx("div", {
@@ -24845,7 +24873,7 @@ var Dropdown = function (_a) {
         }), isLoadingMore && jsxRuntime.jsx("div", {
           style: __assign(__assign({
             padding: '13px 16px'
-          }, getTextStyle()), {
+          }, textStyle), {
             color: colors.semantic.disabled.foreground,
             textAlign: 'center',
             userSelect: 'none',
@@ -24874,7 +24902,7 @@ var Dropdown = function (_a) {
         marginTop: spacing.xxs // 4px
       },
       children: jsxRuntime.jsx("span", {
-        style: __assign(__assign({}, getTextStyle()), {
+        style: __assign(__assign({}, textStyle), {
           color: colors.semantic.state.error
         }),
         children: errorMessage
