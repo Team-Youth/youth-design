@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Button, ButtonProps } from '../button';
 import { colors } from '../../tokens/colors';
 import { textStyles } from '../../tokens/typography';
@@ -42,7 +43,42 @@ export const Popup: React.FC<PopupProps> = ({
   width = '480px',
   style = {},
 }) => {
-  if (!isOpen) return null;
+  const [portalRoot, setPortalRoot] = React.useState<Element | null>(null);
+
+  // Portal root 설정
+  useEffect(() => {
+    // 기존 portal root가 있는지 확인
+    let popupRoot = document.getElementById('popup-root');
+
+    // 없으면 생성
+    if (!popupRoot) {
+      popupRoot = document.createElement('div');
+      popupRoot.id = 'popup-root';
+      popupRoot.style.position = 'relative';
+      popupRoot.style.zIndex = '9999';
+      document.body.appendChild(popupRoot);
+    }
+
+    setPortalRoot(popupRoot);
+
+    // 컴포넌트 언마운트 시 정리는 하지 않음 (다른 팝업들이 사용할 수 있으므로)
+  }, []);
+
+  // 팝업이 열려있을 때 body 스크롤 방지
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    // 컴포넌트 언마운트 시 정리
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
+  if (!isOpen || !portalRoot) return null;
 
   const overlayStyle: React.CSSProperties = {
     position: 'fixed',
@@ -54,7 +90,7 @@ export const Popup: React.FC<PopupProps> = ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1000,
+    zIndex: 9999,
     ...style,
   };
 
@@ -102,7 +138,7 @@ export const Popup: React.FC<PopupProps> = ({
     }
   };
 
-  return (
+  const popupContent = (
     <div className={`popup-overlay ${className}`} style={overlayStyle} onClick={handleOverlayClick}>
       <div className="popup" style={popupStyle}>
         <div className="popup-content" style={contentStyle}>
@@ -135,4 +171,6 @@ export const Popup: React.FC<PopupProps> = ({
       </div>
     </div>
   );
+
+  return createPortal(popupContent, portalRoot);
 };

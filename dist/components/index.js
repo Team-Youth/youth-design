@@ -23675,7 +23675,37 @@ var Popup = function (_a) {
     width = _c === void 0 ? '480px' : _c,
     _d = _a.style,
     style = _d === void 0 ? {} : _d;
-  if (!isOpen) return null;
+  var _e = React.useState(null),
+    portalRoot = _e[0],
+    setPortalRoot = _e[1];
+  // Portal root 설정
+  React.useEffect(function () {
+    // 기존 portal root가 있는지 확인
+    var popupRoot = document.getElementById('popup-root');
+    // 없으면 생성
+    if (!popupRoot) {
+      popupRoot = document.createElement('div');
+      popupRoot.id = 'popup-root';
+      popupRoot.style.position = 'relative';
+      popupRoot.style.zIndex = '9999';
+      document.body.appendChild(popupRoot);
+    }
+    setPortalRoot(popupRoot);
+    // 컴포넌트 언마운트 시 정리는 하지 않음 (다른 팝업들이 사용할 수 있으므로)
+  }, []);
+  // 팝업이 열려있을 때 body 스크롤 방지
+  React.useEffect(function () {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    // 컴포넌트 언마운트 시 정리
+    return function () {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+  if (!isOpen || !portalRoot) return null;
   var overlayStyle = __assign({
     position: 'fixed',
     top: 0,
@@ -23686,7 +23716,7 @@ var Popup = function (_a) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1000
+    zIndex: 9999
   }, style);
   var popupStyle = {
     backgroundColor: colors.semantic.background.primary,
@@ -23724,7 +23754,7 @@ var Popup = function (_a) {
       onClose();
     }
   };
-  return jsxRuntime.jsx("div", {
+  var popupContent = jsxRuntime.jsx("div", {
     className: "popup-overlay ".concat(className),
     style: overlayStyle,
     onClick: handleOverlayClick,
@@ -23772,6 +23802,7 @@ var Popup = function (_a) {
       })]
     })
   });
+  return ReactDOM.createPortal(popupContent, portalRoot);
 };
 
 var Modal = function (_a) {
