@@ -19782,7 +19782,7 @@ var Tab = function (_a) {
             text: colors.primary.coolGray[800],
             background: 'transparent',
             border: colors.primary.coolGray[800],
-            number: colors.primary.tint.violet[500]
+            number: colors.primary.tint.violet[300]
           };
         }
         return {
@@ -19797,11 +19797,11 @@ var Tab = function (_a) {
             text: colors.primary.gray.white,
             background: colors.primary.coolGray[800],
             border: 'transparent',
-            number: colors.primary.tint.violet[500]
+            number: colors.primary.tint.violet[300]
           };
         }
         return {
-          text: colors.primary.coolGray[800],
+          text: colors.primary.coolGray[600],
           background: 'transparent',
           border: colors.primary.coolGray[300],
           number: colors.primary.coolGray[400]
@@ -19812,7 +19812,7 @@ var Tab = function (_a) {
             text: colors.primary.coolGray[800],
             background: colors.primary.gray.white,
             border: 'transparent',
-            number: colors.primary.tint.violet[500]
+            number: colors.primary.tint.violet[300]
           };
         }
         return {
