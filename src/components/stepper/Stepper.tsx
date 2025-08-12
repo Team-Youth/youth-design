@@ -39,6 +39,8 @@ export interface StepperProps {
   timeBaseUnit?: 'sec' | 'min' | 'hour';
   /** 입력값을 step 단위로 자동 반올림할지 여부 (기본값: false) */
   autoRound?: boolean;
+  /** 플레이스홀더 */
+  placeholder?: string;
 }
 
 // 시간 변환 유틸리티 함수들
@@ -214,6 +216,7 @@ export const Stepper: React.FC<StepperProps> = ({
   isTime = false,
   timeBaseUnit = 'min',
   autoRound = false,
+  placeholder = '',
 }) => {
   // value가 string인지 체크
   const isStringValue = typeof value === 'string';
@@ -425,8 +428,16 @@ export const Stepper: React.FC<StepperProps> = ({
     }
   };
 
+  const shouldShowPlaceholder = useMemo(() => {
+    return placeholder && !value;
+  }, [placeholder, value]);
+
   // 표시할 값 계산
   const displayValue = useMemo(() => {
+    if (shouldShowPlaceholder) {
+      return placeholder;
+    }
+
     // string 값이면 그대로 표시
     if (isStringValue) {
       return String(value);
@@ -438,7 +449,7 @@ export const Stepper: React.FC<StepperProps> = ({
       return `${currentValue}${unit}`;
     }
     return String(currentValue);
-  }, [currentValue, isTime, timeBaseUnit, unit, isStringValue, value]);
+  }, [currentValue, isTime, timeBaseUnit, unit, isStringValue, value, shouldShowPlaceholder]);
 
   // 스타일 계산
   const containerStyle: React.CSSProperties = {
@@ -523,6 +534,7 @@ export const Stepper: React.FC<StepperProps> = ({
               onBlur={handleInputBlur}
               onKeyDown={handleInputKeyDown}
               style={inputStyle}
+              {...(editValue === '' && placeholder && { placeholder })}
             />
           ) : (
             <Font
@@ -538,6 +550,9 @@ export const Stepper: React.FC<StepperProps> = ({
               align="center"
               style={{
                 userSelect: 'none',
+                color: shouldShowPlaceholder
+                  ? colors.primary.coolGray[400]
+                  : colors.primary.coolGray[800],
               }}
             >
               {displayValue}
