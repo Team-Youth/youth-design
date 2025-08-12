@@ -32,6 +32,8 @@ export interface TextAreaProps
   status?: 'filled' | 'empty';
   /** 너비 설정 (기본값: '320px') */
   width?: 'fill' | (string & {}) | number;
+  /** 스타일 숨김 여부 */
+  hideStyle?: boolean;
 }
 
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
@@ -52,6 +54,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       status,
       width = '320px',
       rows = 4,
+      hideStyle = false,
       ...restProps
     },
     ref,
@@ -91,7 +94,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         display: 'flex',
         flexDirection: 'column',
         width: getWidth(),
-        border: `1px solid ${borderColor}`,
+        border: hideStyle ? 'none' : `1px solid ${borderColor}`,
         borderRadius: radius.s, // 8px
         backgroundColor,
         transition: 'all 0.2s ease',
@@ -113,7 +116,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       return {
         width: '100%',
         minHeight: '120px',
-        padding: `14px ${spacing.m}`, // 14px 16px
+        padding: hideStyle ? '0' : `14px ${spacing.m}`, // 14px 16px
         border: 'none',
         outline: 'none',
         backgroundColor: 'transparent',
