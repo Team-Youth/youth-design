@@ -1488,6 +1488,7 @@ var idCardSvg = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"no
 var thumbupSvg = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M15.5416 2.31131C14.0743 0.857441 11.5756 1.44185 10.9194 3.39243L10.2204 5.46997C10.1227 5.76038 9.95956 6.02446 9.7436 6.24182L7.64664 8.35241C7.55278 8.44688 7.42511 8.5 7.29194 8.5H5.93053C5.41662 8.5 5 8.94929 5 9.45845V20.5219C5 21.0311 5.41662 21.5 5.93053 21.5H18.7057C20.0141 21.5 21.147 20.5435 21.4309 19.278L22.9174 12.6504C23.3908 10.5392 21.7695 8.5365 19.5867 8.5365H16.4001C16.0798 8.5365 15.8421 8.23959 15.9122 7.92708L16.5429 5.11486C16.75 4.19173 16.4666 3.22778 15.7918 2.55911L15.5416 2.31131Z\" fill=\"#FBC9AD\"/>\n<path d=\"M1 9.5C1 8.94772 1.44772 8.5 2 8.5H7V21.5H2C1.44772 21.5 1 21.0523 1 20.5V9.5Z\" fill=\"#2F6EFF\"/>\n</svg>\n";
 var thumbdownSvg = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M15.5416 21.6887C14.0743 23.1426 11.5756 22.5582 10.9194 20.6076L10.2204 18.53C10.1227 18.2396 9.95956 17.9755 9.7436 17.7582L7.64664 15.6476C7.55278 15.5531 7.42511 15.5 7.29194 15.5H5.93053C5.41662 15.5 5 15.0507 5 14.5415V3.47811C5 2.96894 5.41662 2.5 5.93053 2.5H18.7057C20.0141 2.5 21.147 3.45647 21.4309 4.72201L22.9174 11.3496C23.3908 13.4608 21.7695 15.4635 19.5867 15.4635H16.4001C16.0798 15.4635 15.8421 15.7604 15.9122 16.0729L16.5429 18.8851C16.75 19.8083 16.4666 20.7722 15.7918 21.4409L15.5416 21.6887Z\" fill=\"#FBC9AD\"/>\n<path d=\"M1 3.5C1 2.94772 1.44772 2.5 2 2.5H7V15.5H2C1.44772 15.5 1 15.0523 1 14.5V3.5Z\" fill=\"#474A52\"/>\n</svg>\n";
 var couponSvg = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M3 6.5C3 5.39543 3.89543 4.5 5 4.5H21C22.1046 4.5 23 5.39543 23 6.5V14.5C23 15.6046 22.1046 16.5 21 16.5H5C3.89543 16.5 3 15.6046 3 14.5V6.5Z\" fill=\"#FFE066\"/>\n<path d=\"M3 6.5C1.89543 6.5 1 7.39543 1 8.5V10C1 10.2761 1.22733 10.4936 1.49494 10.5617C2.36012 10.782 3 11.5663 3 12.5C3 13.4337 2.36012 14.218 1.49494 14.4383C1.22733 14.5064 1 14.7239 1 15V16.5C1 17.6046 1.89543 18.5 3 18.5H19C20.1046 18.5 21 17.6046 21 16.5V8.5C21 7.39543 20.1046 6.5 19 6.5H3Z\" fill=\"#FFB200\"/>\n<path d=\"M15.5 6.5H16.5V8.5C16.5 8.77614 16.2761 9 16 9C15.7239 9 15.5 8.77614 15.5 8.5V6.5Z\" fill=\"white\"/>\n<path d=\"M15.5 16.5C15.5 16.2239 15.7239 16 16 16C16.2761 16 16.5 16.2239 16.5 16.5V18.5H15.5V16.5Z\" fill=\"white\"/>\n<path d=\"M15.5 10.5C15.5 10.2239 15.7239 10 16 10C16.2761 10 16.5 10.2239 16.5 10.5V11.5C16.5 11.7761 16.2761 12 16 12C15.7239 12 15.5 11.7761 15.5 11.5V10.5Z\" fill=\"white\"/>\n<path d=\"M15.5 13.5C15.5 13.2239 15.7239 13 16 13C16.2761 13 16.5 13.2239 16.5 13.5V14.5C16.5 14.7761 16.2761 15 16 15C15.7239 15 15.5 14.7761 15.5 14.5V13.5Z\" fill=\"white\"/>\n<path d=\"M6 10C6 9.72386 6.22386 9.5 6.5 9.5H13C13.2761 9.5 13.5 9.72386 13.5 10C13.5 10.2761 13.2761 10.5 13 10.5H6.5C6.22386 10.5 6 10.2761 6 10Z\" fill=\"white\"/>\n<path d=\"M6 12.5C6 12.2239 6.22386 12 6.5 12H13C13.2761 12 13.5 12.2239 13.5 12.5C13.5 12.7761 13.2761 13 13 13H6.5C6.22386 13 6 12.7761 6 12.5Z\" fill=\"white\"/>\n<path d=\"M6 15C6 14.7239 6.22386 14.5 6.5 14.5H13C13.2761 14.5 13.5 14.7239 13.5 15C13.5 15.2761 13.2761 15.5 13 15.5H6.5C6.22386 15.5 6 15.2761 6 15Z\" fill=\"white\"/>\n</svg>\n";
+var star = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"56\" height=\"56\" viewBox=\"0 0 56 56\" fill=\"none\">\n<path d=\"M21.5838 8.93391C22.6731 6.35537 26.3272 6.35536 27.4165 8.9339L32.059 19.9235C32.3798 20.6828 32.984 21.2871 33.7434 21.6078L44.7329 26.2503C47.3115 27.3396 47.3115 30.9937 44.7329 32.083L33.7434 36.7255C32.984 37.0463 32.3798 37.6505 32.059 38.4099L27.4165 49.3994C26.3272 51.978 22.6731 51.978 21.5838 49.3994L16.9413 38.4099C16.6206 37.6505 16.0163 37.0463 15.257 36.7255L4.2674 32.083C1.68886 30.9937 1.68886 27.3396 4.2674 26.2503L15.257 21.6078C16.0163 21.2871 16.6206 20.6828 16.9413 19.9235L21.5838 8.93391Z\" fill=\"#7248D9\"/>\n<path d=\"M43.1054 3.14765C43.564 2.06195 45.1026 2.06195 45.5613 3.14765L47.516 7.77484C47.6511 8.09455 47.9055 8.34898 48.2252 8.48404L52.8524 10.4388C53.9381 10.8974 53.9381 12.436 52.8524 12.8946L48.2252 14.8494C47.9055 14.9844 47.6511 15.2389 47.516 15.5586L45.5613 20.1858C45.1026 21.2715 43.564 21.2715 43.1054 20.1858L41.1507 15.5586C41.0156 15.2389 40.7612 14.9844 40.4415 14.8494L35.8143 12.8946C34.7286 12.436 34.7286 10.8974 35.8143 10.4388L40.4415 8.48404C40.7612 8.34898 41.0156 8.09455 41.1507 7.77484L43.1054 3.14765Z\" fill=\"#C8B7F4\"/>\n</svg>";
 // 일러스트 맵 - 실제 일러스트 파일들을 추가할 때 여기에 등록
 var illustMap = {
   empty: emptySvg,
@@ -1498,7 +1499,8 @@ var illustMap = {
   idCard: idCardSvg,
   thumbup: thumbupSvg,
   thumbdown: thumbdownSvg,
-  coupon: couponSvg
+  coupon: couponSvg,
+  star: star
 };
 
 var Illust = function (_a) {
@@ -26874,31 +26876,33 @@ var Stepper = function (_a) {
     _q = _a.timeBaseUnit,
     timeBaseUnit = _q === void 0 ? 'min' : _q,
     _r = _a.autoRound,
-    autoRound = _r === void 0 ? false : _r;
+    autoRound = _r === void 0 ? false : _r,
+    _s = _a.placeholder,
+    placeholder = _s === void 0 ? '' : _s;
   // value가 string인지 체크
   var isStringValue = typeof value === 'string';
   // string이면 자동으로 disabled 처리
   var isDisabled = disabled || isStringValue;
   // 숫자 값만 관리 (string일 때는 0으로 초기화하되 실제로는 사용하지 않음)
   var numericValue = typeof value === 'number' ? value : 0;
-  var _s = React.useState(numericValue),
-    internalValue = _s[0],
-    setInternalValue = _s[1];
-  var _t = React.useState(focused),
-    isFocused = _t[0],
-    setIsFocused = _t[1];
-  var _u = React.useState(false),
-    isEditing = _u[0],
-    setIsEditing = _u[1];
-  var _v = React.useState(String(numericValue)),
-    editValue = _v[0],
-    setEditValue = _v[1];
-  var _w = React.useState(function () {
+  var _t = React.useState(numericValue),
+    internalValue = _t[0],
+    setInternalValue = _t[1];
+  var _u = React.useState(focused),
+    isFocused = _u[0],
+    setIsFocused = _u[1];
+  var _v = React.useState(false),
+    isEditing = _v[0],
+    setIsEditing = _v[1];
+  var _w = React.useState(String(numericValue)),
+    editValue = _w[0],
+    setEditValue = _w[1];
+  var _x = React.useState(function () {
       // 초기 stepCount 계산 - value를 step으로 나눈 값의 반올림
       return step > 0 ? Math.round(numericValue / step) : 0;
     });
-    _w[0];
-    var setStepCount = _w[1];
+    _x[0];
+    var setStepCount = _x[1];
   var inputRef = React.useRef(null);
   // value prop이 변경될 때 internalValue 동기화 (숫자일 때만)
   React.useEffect(function () {
@@ -26916,14 +26920,14 @@ var Stepper = function (_a) {
     return Math.max(min, Math.min(max, stepValue));
   };
   // min/max 도달 상태를 useMemo로 계산
-  var _x = React.useMemo(function () {
+  var _y = React.useMemo(function () {
       return {
         isMinReached: currentValue <= min,
         isMaxReached: currentValue >= max
       };
     }, [currentValue, min, max]),
-    isMinReached = _x.isMinReached,
-    isMaxReached = _x.isMaxReached;
+    isMinReached = _y.isMinReached,
+    isMaxReached = _y.isMaxReached;
   React.useEffect(function () {
     if (!isEditing) {
       if (isTime) {
@@ -27065,8 +27069,14 @@ var Stepper = function (_a) {
       }
     }
   };
+  var shouldShowPlaceholder = React.useMemo(function () {
+    return placeholder && !value;
+  }, [placeholder, value]);
   // 표시할 값 계산
   var displayValue = React.useMemo(function () {
+    if (shouldShowPlaceholder) {
+      return placeholder;
+    }
     // string 값이면 그대로 표시
     if (isStringValue) {
       return String(value);
@@ -27077,7 +27087,7 @@ var Stepper = function (_a) {
       return "".concat(currentValue).concat(unit);
     }
     return String(currentValue);
-  }, [currentValue, isTime, timeBaseUnit, unit, isStringValue, value]);
+  }, [currentValue, isTime, timeBaseUnit, unit, isStringValue, value, shouldShowPlaceholder]);
   // 스타일 계산
   var containerStyle = __assign({
     display: 'flex',
@@ -27140,7 +27150,7 @@ var Stepper = function (_a) {
       }), jsxRuntime.jsx("div", {
         style: valueContainerStyle,
         onClick: handleValueClick,
-        children: isEditing ? jsxRuntime.jsx("input", {
+        children: isEditing ? jsxRuntime.jsx("input", __assign({
           ref: inputRef,
           type: "text",
           value: editValue,
@@ -27148,13 +27158,16 @@ var Stepper = function (_a) {
           onBlur: handleInputBlur,
           onKeyDown: handleInputKeyDown,
           style: inputStyle
-        }) : jsxRuntime.jsx(Font, {
+        }, editValue === '' && placeholder && {
+          placeholder: placeholder
+        })) : jsxRuntime.jsx(Font, {
           type: "heading3",
           fontWeight: "semibold",
           color: isDisabled ? colors.primary.coolGray[400] : error ? colors.semantic.state.error : colors.primary.coolGray[800],
           align: "center",
           style: {
-            userSelect: 'none'
+            userSelect: 'none',
+            color: shouldShowPlaceholder ? colors.primary.coolGray[400] : colors.primary.coolGray[800]
           },
           children: displayValue
         })

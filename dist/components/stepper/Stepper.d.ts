@@ -34,5 +34,7 @@ export interface StepperProps {
     timeBaseUnit?: 'sec' | 'min' | 'hour';
     /** 입력값을 step 단위로 자동 반올림할지 여부 (기본값: false) */
     autoRound?: boolean;
+    /** 플레이스홀더 */
+    placeholder?: string;
 }
 export declare const Stepper: React.FC<StepperProps>;
