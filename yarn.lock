@@ -9358,10 +9358,10 @@ rollup@^4.20.0:
     "@rollup/rollup-win32-x64-msvc" "4.41.1"
     fsevents "~2.3.2"
 
-rooks@^8.0.1:
-  version "8.0.1"
-  resolved "https://registry.yarnpkg.com/rooks/-/rooks-8.0.1.tgz#101872dc6bef485ae7b5e4f6ad04aab984ca532a"
-  integrity sha512-61PUmThdzVPHM47RwRxcBHxS39g97YmlwJLDNxM44QbYA9QrX/qtFWsgK9wRsxP7D9Ao161nUVIqKXkuIebS/w==
+rooks@^8.4.0:
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/rooks/-/rooks-8.4.0.tgz#3cf803828248162e73bda4d83eddcd2fc0ac100f"
+  integrity sha512-pcBsWe3aF91ec5M+4T1kNQvkWZ/FLFmtDKKwPqi/sh9JAUb4HWB4QoRV8fLLVp3oAhEF8TN2P3xpyYKwJ6E07A==
   dependencies:
     fast-deep-equal "^3.1.3"
     lodash.debounce "^4.0.8"

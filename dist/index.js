@@ -646,6 +646,8 @@ var chevronLeft = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"
 var chevronRight = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M9.29289 5.29289C9.68342 4.90237 10.3166 4.90237 10.7071 5.29289L10 6L9.29289 6.70711C8.90237 6.31658 8.90237 5.68342 9.29289 5.29289ZM14.5858 12L9.29289 6.70711C9.29286 6.70708 9.29289 6.70711 10 6C10.7071 5.29289 10.7071 5.29286 10.7071 5.29289L16.7071 11.2929C17.0976 11.6834 17.0976 12.3166 16.7071 12.7071L10.7071 18.7071C10.3166 19.0976 9.68342 19.0976 9.29289 18.7071C8.90237 18.3166 8.90237 17.6834 9.29289 17.2929L14.5858 12Z\" fill=\"#000000\"/></svg>";
 var chevronUp = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M5.29289 14.7071C4.90237 14.3166 4.90237 13.6834 5.29289 13.2929L6 14L6.70711 14.7071C6.31658 15.0976 5.68342 15.0976 5.29289 14.7071ZM12 9.41421L6.70711 14.7071C6.70708 14.7071 6.70711 14.7071 6 14C5.29289 13.2929 5.29286 13.2929 5.29289 13.2929L11.2929 7.29289C11.6834 6.90237 12.3166 6.90237 12.7071 7.29289L18.7071 13.2929C19.0976 13.6834 19.0976 14.3166 18.7071 14.7071C18.3166 15.0976 17.6834 15.0976 17.2929 14.7071L12 9.41421Z\" fill=\"#000000\"/></svg>";
 var close = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M17.2929 18.7071C17.6834 19.0976 18.3166 19.0976 18.7071 18.7071C19.0976 18.3166 19.0976 17.6834 18.7071 17.2929L13.4142 12L18.7071 6.70711C19.0976 6.31658 19.0976 5.68342 18.7071 5.29289C18.3166 4.90237 17.6834 4.90237 17.2929 5.29289L12 10.5858L6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L10.5858 12L5.29289 17.2929C4.90237 17.6834 4.90237 18.3166 5.29289 18.7071C5.68342 19.0976 6.31658 19.0976 6.70711 18.7071L12 13.4142L17.2929 18.7071Z\" fill=\"#25282D\"/></svg>";
+var closeCircleStoke = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M16.0659 7.93388C16.4564 8.3244 16.4564 8.95757 16.0659 9.34809L13.4142 11.9997L16.0659 14.6514C16.4564 15.0419 16.4564 15.6751 16.0659 16.0656C15.6753 16.4561 15.0422 16.4561 14.6517 16.0656L12 13.414L9.34835 16.0656C8.95782 16.4561 8.32466 16.4561 7.93414 16.0656C7.54361 15.6751 7.54361 15.0419 7.93414 14.6514L10.5858 11.9997L7.93414 9.34809C7.54361 8.95757 7.54361 8.3244 7.93414 7.93388C8.32466 7.54335 8.95783 7.54335 9.34835 7.93388L12 10.5855L14.6517 7.93388C15.0422 7.54335 15.6753 7.54335 16.0659 7.93388Z\" fill=\"#25282D\"/>\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12C1 18.0751 5.92487 23 12 23ZM12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z\" fill=\"#25282D\"/>\n</svg>\n";
+var closeCircleFilled = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12C1 5.92487 5.92487 1 12 1ZM16.0664 7.93359C15.6759 7.54317 15.0428 7.54318 14.6523 7.93359L12 10.585L9.34863 7.93359C8.95812 7.54328 8.32504 7.54321 7.93457 7.93359C7.54411 8.32406 7.54423 8.95712 7.93457 9.34766L10.5859 11.999L7.93457 14.6514C7.54425 15.0419 7.54418 15.675 7.93457 16.0654C8.32505 16.4557 8.95815 16.4557 9.34863 16.0654L12 13.4131L14.6523 16.0654C15.0429 16.4557 15.676 16.4559 16.0664 16.0654C16.4568 15.675 16.4567 15.0419 16.0664 14.6514L13.4141 11.999L16.0664 9.34766C16.4568 8.95718 16.4567 8.3241 16.0664 7.93359Z\" fill=\"#25282D\"/>\n</svg>\n";
 var customerService = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M11 3C8.23858 3 6 5.23858 6 8V11.5H4V8C4 4.13401 7.13401 1 11 1H13C16.8659 1 20 4.13373 20 7.99977V18.0004C20 20.2097 18.209 22 16 22H12.5V20H16C17.1047 20 18 19.1048 18 18.0004V7.99977C18 5.2384 15.7615 3 13 3H11Z\" fill=\"#25282D\"/><path d=\"M16.5 10C16.5 8.89543 17.3954 8 18.5 8H19.5C20.6046 8 21.5 8.89543 21.5 10V15C21.5 16.1046 20.6046 17 19.5 17H18.5C17.3954 17 16.5 16.1046 16.5 15V10Z\" fill=\"#25282D\"/><path d=\"M2.5 10C2.5 8.89543 3.39543 8 4.5 8H5.5C6.60457 8 7.5 8.89543 7.5 10V15C7.5 16.1046 6.60457 17 5.5 17H4.5C3.39543 17 2.5 16.1046 2.5 15V10Z\" fill=\"#25282D\"/><path d=\"M21.5 10C22.3284 10 23 10.6716 23 11.5V13.5C23 14.3284 22.3284 15 21.5 15V10Z\" fill=\"#25282D\"/><path d=\"M2.5 10C1.67157 10 1 10.6716 1 11.5V13.5C1 14.3284 1.67157 15 2.5 15V10Z\" fill=\"#25282D\"/><path d=\"M9 21C9 19.8954 9.89543 19 11 19H13C14.1046 19 15 19.8954 15 21C15 22.1046 14.1046 23 13 23H11C9.89543 23 9 22.1046 9 21Z\" fill=\"#25282D\"/></svg>";
 var dashboardFilled = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M2 4C2 2.89543 2.89543 2 4 2H9C10.1046 2 11 2.89543 11 4V9C11 10.1046 10.1046 11 9 11H4C2.89543 11 2 10.1046 2 9V4Z\" fill=\"#25282D\"/><path d=\"M2 15C2 13.8954 2.89543 13 4 13H9C10.1046 13 11 13.8954 11 15V20C11 21.1046 10.1046 22 9 22H4C2.89543 22 2 21.1046 2 20V15Z\" fill=\"#25282D\"/><path d=\"M13 4C13 2.89543 13.8954 2 15 2H20C21.1046 2 22 2.89543 22 4V9C22 10.1046 21.1046 11 20 11H15C13.8954 11 13 10.1046 13 9V4Z\" fill=\"#25282D\"/><path d=\"M13 15C13 13.8954 13.8954 13 15 13H20C21.1046 13 22 13.8954 22 15V20C22 21.1046 21.1046 22 20 22H15C13.8954 22 13 21.1046 13 20V15Z\" fill=\"#25282D\"/></svg>";
 var dashboardStroke = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M9 2C10.1046 2 11 2.89543 11 4V9C11 10.1046 10.1046 11 9 11H4C2.89543 11 2 10.1046 2 9V4C2 2.89543 2.89543 2 4 2H9ZM4.5 4C4.22386 4 4 4.22386 4 4.5V8.5C4 8.77614 4.22386 9 4.5 9H8.5C8.77614 9 9 8.77614 9 8.5V4.5C9 4.22386 8.77614 4 8.5 4H4.5Z\" fill=\"#25282D\"/><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M20 2C21.1046 2 22 2.89543 22 4V9C22 10.1046 21.1046 11 20 11H15C13.8954 11 13 10.1046 13 9V4C13 2.89543 13.8954 2 15 2H20ZM15.5 4C15.2239 4 15 4.22386 15 4.5V8.5C15 8.77614 15.2239 9 15.5 9H19.5C19.7761 9 20 8.77614 20 8.5V4.5C20 4.22386 19.7761 4 19.5 4H15.5Z\" fill=\"#25282D\"/><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M9 13C10.1046 13 11 13.8954 11 15V20C11 21.1046 10.1046 22 9 22H4C2.89543 22 2 21.1046 2 20V15C2 13.8954 2.89543 13 4 13H9ZM4.5 15C4.22386 15 4 15.2239 4 15.5V19.5C4 19.7761 4.22386 20 4.5 20H8.5C8.77614 20 9 19.7761 9 19.5V15.5C9 15.2239 8.77614 15 8.5 15H4.5Z\" fill=\"#25282D\"/><path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M20 13C21.1046 13 22 13.8954 22 15V20C22 21.1046 21.1046 22 20 22H15C13.8954 22 13 21.1046 13 20V15C13 13.8954 13.8954 13 15 13H20ZM15.5 15C15.2239 15 15 15.2239 15 15.5V19.5C15 19.7761 15.2239 20 15.5 20H19.5C19.7761 20 20 19.7761 20 19.5V15.5C20 15.2239 19.7761 15 19.5 15H15.5Z\" fill=\"#25282D\"/></svg>";
@@ -759,6 +761,8 @@ var iconMap = {
   'chevron-right': chevronRight,
   'chevron-up': chevronUp,
   close: close,
+  'close-circle-filled': closeCircleFilled,
+  'close-circle-stroke': closeCircleStoke,
   'customer-service': customerService,
   'dashboard-filled': dashboardFilled,
   'dashboard-stroke': dashboardStroke,
@@ -1476,7 +1480,7 @@ var Logo = function (_a) {
 };
 
 var emptySvg = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M19 1H5C3.89543 1 3 1.89543 3 3V21C3 22.1046 3.89543 23 5 23H13L17 19L21 15V3C21 1.89543 20.1046 1 19 1Z\" fill=\"#F3F5F6\"/>\n<path d=\"M21 15L13 23V15H21Z\" fill=\"#E8EAED\"/>\n</svg>\n";
-var manSvg = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<circle cx=\"12\" cy=\"12\" r=\"11\" fill=\"#4785FF\"/>\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M6.70173 7.54579C7.22887 7.38105 7.78975 7.67485 7.95448 8.20199L8.51644 10.0003H10.4836L11.0455 8.20199C11.176 7.78452 11.5626 7.50027 12 7.50027C12.4374 7.50027 12.824 7.78452 12.9545 8.20199L13.5164 10.0003H15.4836L16.0455 8.20199C16.2103 7.67485 16.7711 7.38105 17.2983 7.54579C17.8254 7.71052 18.1192 8.2714 17.9545 8.79854L17.5789 10.0003H18C18.5523 10.0003 19 10.448 19 11.0003C19 11.5526 18.5523 12.0003 18 12.0003H16.9539L15.4545 16.7985C15.324 17.216 14.9374 17.5003 14.5 17.5003C14.0626 17.5003 13.676 17.216 13.5455 16.7985L12.0461 12.0003H11.9539L10.4545 16.7985C10.324 17.216 9.93739 17.5003 9.5 17.5003C9.06261 17.5003 8.67598 17.216 8.54552 16.7985L7.04606 12.0003H6C5.44772 12.0003 5 11.5526 5 11.0003C5 10.448 5.44772 10.0003 6 10.0003H6.42106L6.04552 8.79854C5.88079 8.2714 6.17458 7.71052 6.70173 7.54579ZM9.14144 12.0003L9.5 13.5L9.85856 12.0003H9.14144ZM14.1414 12.0003L14.5 13.5L14.8586 12.0003H14.1414Z\" fill=\"white\"/>\n</svg>\n";
+var manSvg = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M19.0004 3.125C20.0359 3.12509 20.8754 3.96452 20.8754 5V11C20.8754 11.7593 20.2598 12.3749 19.5004 12.375C18.7411 12.375 18.1254 11.7594 18.1254 11V7.99609L15.0669 11.0537C16.8055 13.7633 16.4912 17.4086 14.1215 19.7783C11.3878 22.5115 6.95565 22.5118 4.22213 19.7783C1.48846 17.0447 1.48846 12.6116 4.22213 9.87793C6.59152 7.50858 10.2363 7.19472 12.9458 8.93262L16.0034 5.875H13.0004C12.2411 5.875 11.6254 5.25939 11.6254 4.5C11.6254 3.74061 12.2411 3.125 13.0004 3.125H19.0004ZM12.0004 12C10.4384 10.4379 7.9063 10.4379 6.3442 12C4.7821 13.5621 4.7821 16.0942 6.3442 17.6562C7.9063 19.2183 10.4384 19.2183 12.0004 17.6562C13.5625 16.0942 13.5625 13.5621 12.0004 12Z\" fill=\"#5C92FF\"/>\n</svg>\n";
 var muscleSvg = "<svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M23 18.069C23 19.2069 19.5862 23 14.2759 23C10.6117 23 7.74793 21.9897 6.5 21.25C6.1684 21.7862 5.99039 22.3696 6 23H1V11.2414C3.09 11.2414 6.13965 10.9228 8.38896 14.1014C9.46595 13.4189 10.7262 13.0826 12 13.1379C13.2242 13.0888 14.4364 13.3958 15.4897 14.0217C15.8558 12.8424 16.336 11.7016 16.9234 10.6155C16.9234 7.80862 16.1686 6.65552 16.1686 6.65552C15.5664 6.90188 14.926 7.04177 14.2759 7.06897C13.3999 7.03319 12.5332 6.87618 11.7003 6.60241C11.5953 6.56947 11.4986 6.51408 11.4171 6.44008C11.3356 6.36608 11.2711 6.27524 11.2282 6.17386C11.1853 6.07247 11.1649 5.96296 11.1685 5.85292C11.172 5.74288 11.1995 5.63493 11.249 5.53655L11.6207 4.8L11.0972 3.48448C11.0316 3.31908 11.026 3.13589 11.0814 2.96679C11.1369 2.79769 11.2498 2.65337 11.4007 2.55897L13.3428 1.34517C13.705 1.1204 14.1227 1.00088 14.549 1H17.4848C17.9074 0.999509 18.3218 1.1167 18.6816 1.33846C19.0414 1.56021 19.3323 1.87775 19.5217 2.25552C20.709 4.61862 23 10.1983 23 18.069Z\" fill=\"#FFDAC4\"/>\n<path d=\"M16.1695 6.65C16.4111 7.09116 16.6288 7.79784 16.7195 8.29259C17.3091 7.72868 17.9325 6.56312 17.9995 5.75C17.9995 5.75 17.0995 6.40224 16.7495 6.5C16.4358 6.59466 16.1695 6.65 16.1695 6.65ZM11.6193 4.8L11.3193 5.39655H13.5857C13.8874 5.39622 14.1767 5.27623 14.39 5.0629C14.6033 4.84956 14.7233 4.56032 14.7237 4.25862V3.87931C14.7237 3.77871 14.6837 3.68223 14.6126 3.6111C14.5414 3.53996 14.445 3.5 14.3444 3.5C14.2438 3.5 14.1473 3.53996 14.0761 3.6111C14.005 3.68223 13.965 3.77871 13.965 3.87931V4.25862C13.965 4.3592 13.925 4.45564 13.8539 4.52676C13.7828 4.59788 13.6863 4.63786 13.5857 4.63793H11.5581L11.6193 4.8Z\" fill=\"#F9B995\"/>\n</svg>\n";
 var womanSvg = "<svg width=\"14\" height=\"22\" viewBox=\"0 0 14 22\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M5.5 13.5C5.5 12.6716 6.17157 12 7 12C7.82843 12 8.5 12.6716 8.5 13.5V20.5C8.5 21.3284 7.82843 22 7 22C6.17157 22 5.5 21.3284 5.5 20.5V13.5Z\" fill=\"#FF8F8F\"/>\n<path d=\"M10 15.5C10.8284 15.5 11.5 16.1716 11.5 17C11.5 17.8284 10.8284 18.5 10 18.5L4 18.5C3.17157 18.5 2.5 17.8284 2.5 17C2.5 16.1716 3.17157 15.5 4 15.5L10 15.5Z\" fill=\"#FF8F8F\"/>\n<path d=\"M5.5 12.5H8.5V15.5H5.5V12.5Z\" fill=\"#D36666\"/>\n<path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M7 11C9.20914 11 11 9.20914 11 7C11 4.79086 9.20914 3 7 3C4.79086 3 3 4.79086 3 7C3 9.20914 4.79086 11 7 11ZM7 14C10.866 14 14 10.866 14 7C14 3.13401 10.866 0 7 0C3.13401 0 0 3.13401 0 7C0 10.866 3.13401 14 7 14Z\" fill=\"#FF8F8F\"/>\n</svg>\n";
 var moneySvg = "<svg width=\"19\" height=\"19\" viewBox=\"0 0 19 19\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M17 0.125C18.0355 0.125 18.875 0.964466 18.875 2V8C18.875 8.75939 18.2594 9.375 17.5 9.375C16.7406 9.375 16.125 8.75939 16.125 8V4.99609L13.0664 8.05371C14.8051 10.7633 14.4917 14.4086 12.122 16.7783C9.38851 19.5118 4.95631 19.5115 2.22262 16.7783C-0.511054 14.0447 -0.511054 9.6116 2.22262 6.87793C4.59198 4.50898 8.236 4.1949 10.9453 5.93262L14.0039 2.875H11C10.2406 2.875 9.62496 2.25939 9.62496 1.5C9.62496 0.740608 10.2406 0.125 11 0.125H17ZM9.99996 9C8.43786 7.43794 5.90579 7.43792 4.34371 9C2.78167 10.5621 2.78167 13.0942 4.34371 14.6562C5.90579 16.2183 8.43786 16.2183 9.99996 14.6562C11.5621 13.0942 11.5621 10.5621 9.99996 9Z\" fill=\"#93D8CC\"/>\n</svg>\n";
@@ -1571,7 +1575,7 @@ var Label = function (_a) {
     _c = _a.type,
     type = _c === void 0 ? 'square' : _c,
     _d = _a.color,
-    color = _d === void 0 ? 'grey' : _d,
+    color = _d === void 0 ? 'darkGray' : _d,
     leadingIcon = _a.leadingIcon,
     trailingIcon = _a.trailingIcon,
     children = _a.children,
@@ -1579,22 +1583,32 @@ var Label = function (_a) {
     className = _e === void 0 ? '' : _e;
   // Size configurations
   var sizeConfig = {
-    m: {
+    l: {
       padding: type === 'square' ? '3px 8px' : '3px 10px',
       paddingWithLeadingIcon: type === 'square' ? '3px 8px 3px 6px' : '3px 10px 3px 8px',
       paddingWithTrailingIcon: type === 'square' ? '3px 6px 3px 8px' : '3px 8px 3px 10px',
       borderRadius: type === 'square' ? '4px' : '16px',
-      height: '24px',
+      height: '28px',
       iconSize: '14px',
       gap: '2px',
       fontSize: 'body2'
     },
-    s: {
-      padding: type === 'square' ? '2px 6px' : '2px 8px',
-      paddingWithLeadingIcon: type === 'square' ? '2px 6px 2px 4px' : '2px 8px 2px 6px',
-      paddingWithTrailingIcon: type === 'square' ? '2px 4px 2px 6px' : '2px 6px 2px 8px',
+    m: {
+      padding: type === 'square' ? '3px 6px' : '3px 8px',
+      paddingWithLeadingIcon: type === 'square' ? '3px 6px 3px 4px' : '3px 8px 3px 6px',
+      paddingWithTrailingIcon: type === 'square' ? '3px 4px 3px 6px' : '3px 6px 3px 8px',
       borderRadius: type === 'square' ? '4px' : '12px',
-      height: '22px',
+      height: '24px',
+      iconSize: '12px',
+      gap: '2px',
+      fontSize: 'body3'
+    },
+    s: {
+      padding: type === 'square' ? '2px 5px' : '2px 7px',
+      paddingWithLeadingIcon: type === 'square' ? '2px 5px 2px 3px' : '2px 7px 2px 5px',
+      paddingWithTrailingIcon: type === 'square' ? '2px 3px 2px 5px' : '2px 5px 2px 7px',
+      borderRadius: type === 'square' ? '4px' : '12px',
+      height: '20px',
       iconSize: '12px',
       gap: '2px',
       fontSize: 'caption'
@@ -1602,48 +1616,80 @@ var Label = function (_a) {
   };
   // Color configurations
   var colorConfig = {
-    grey: {
-      backgroundColor: colors.primary.coolGray[100],
+    lightGray: {
+      backgroundColor: colors.primary.coolGray[50],
       textColor: colors.primary.coolGray[600],
-      iconColor: colors.primary.coolGray[700]
+      iconColor: colors.primary.coolGray[600]
     },
-    dark: {
+    darkGray: {
       backgroundColor: colors.primary.coolGray[600],
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
     },
-    violet: {
+    lightViolet: {
       backgroundColor: colors.primary.tint.violet[50],
-      textColor: colors.primary.tint.violet[500],
-      iconColor: colors.primary.tint.violet[500]
+      textColor: colors.primary.mainviolet,
+      iconColor: colors.primary.mainviolet
     },
-    accent: {
-      backgroundColor: colors.primary.tint.violet[500],
+    violet: {
+      backgroundColor: colors.primary.mainviolet,
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
+    },
+    lightRed: {
+      backgroundColor: colors.primary.tint.red[50],
+      textColor: colors.primary.tint.red[400],
+      iconColor: colors.primary.tint.red[400]
     },
     red: {
-      backgroundColor: colors.primary.tint.red[500],
+      backgroundColor: colors.primary.tint.red[400],
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
+    },
+    lightGreen: {
+      backgroundColor: colors.primary.tint.green[100],
+      textColor: colors.primary.tint.green[500],
+      iconColor: colors.primary.tint.green[500]
     },
     green: {
       backgroundColor: colors.primary.tint.green[500],
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
     },
+    lightYellow: {
+      backgroundColor: colors.primary.tint.yellow[100],
+      textColor: colors.primary.tint.yellow[600],
+      iconColor: colors.primary.tint.yellow[600]
+    },
     yellow: {
-      backgroundColor: colors.primary.tint.yellow[500],
+      backgroundColor: colors.primary.tint.yellow[600],
       textColor: colors.primary.gray.white,
       iconColor: colors.primary.gray.white
+    },
+    // grey > deprecated, darkGray 사용 요망
+    grey: {
+      backgroundColor: colors.primary.coolGray[100],
+      textColor: colors.primary.coolGray[600],
+      iconColor: colors.primary.coolGray[700]
     }
+    // dark 대신 darkGray 사용
+    // dark: {
+    //   backgroundColor: colors.primary.coolGray[600],
+    //   textColor: colors.primary.gray.white,
+    //   iconColor: colors.primary.gray.white,
+    // },
+    // violet으로 대체
+    // accent: {
+    //   backgroundColor: colors.primary.tint.violet[500],
+    //   textColor: colors.primary.gray.white,
+    //   iconColor: colors.primary.gray.white,
+    // },
   };
   var config = sizeConfig[size];
   var colorStyle = colorConfig[color];
-  // Determine padding based on icon presence
   var getPadding = function () {
     if (leadingIcon && trailingIcon) {
-      return config.paddingWithLeadingIcon; // Use leading icon padding style
+      return config.paddingWithLeadingIcon;
     } else if (leadingIcon) {
       return config.paddingWithLeadingIcon;
     } else if (trailingIcon) {
@@ -1662,18 +1708,8 @@ var Label = function (_a) {
       height: config.height,
       gap: config.gap,
       whiteSpace: 'nowrap',
-      boxSizing: 'border-box'
-    };
-  };
-  var getIconStyles = function () {
-    return {
-      width: config.iconSize,
-      height: config.iconSize,
-      color: colorStyle.iconColor,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flexShrink: 0
+      boxSizing: 'border-box',
+      userSelect: 'none'
     };
   };
   return jsxRuntime.jsxs("div", {
@@ -1681,8 +1717,14 @@ var Label = function (_a) {
     style: getStyles(),
     children: [leadingIcon && jsxRuntime.jsx("span", {
       className: "label__leading-icon",
-      style: getIconStyles(),
-      children: leadingIcon
+      style: {
+        lineHeight: 0
+      },
+      children: jsxRuntime.jsx(Icon, {
+        type: leadingIcon,
+        size: parseInt(config.iconSize),
+        color: colorStyle.iconColor
+      })
     }), children && jsxRuntime.jsx(Font, {
       type: config.fontSize,
       fontWeight: "medium",
@@ -1690,8 +1732,14 @@ var Label = function (_a) {
       children: children
     }), trailingIcon && jsxRuntime.jsx("span", {
       className: "label__trailing-icon",
-      style: getIconStyles(),
-      children: trailingIcon
+      style: {
+        lineHeight: 0
+      },
+      children: jsxRuntime.jsx(Icon, {
+        type: trailingIcon,
+        size: parseInt(config.iconSize),
+        color: colorStyle.iconColor
+      })
     })]
   });
 };
@@ -19851,7 +19899,7 @@ var Tab = function (_a) {
             text: colors.primary.coolGray[800],
             background: 'transparent',
             border: colors.primary.coolGray[800],
-            number: colors.primary.tint.violet[500]
+            number: colors.primary.tint.violet[300]
           };
         }
         return {
@@ -19866,11 +19914,11 @@ var Tab = function (_a) {
             text: colors.primary.gray.white,
             background: colors.primary.coolGray[800],
             border: 'transparent',
-            number: colors.primary.tint.violet[500]
+            number: colors.primary.tint.violet[300]
           };
         }
         return {
-          text: colors.primary.coolGray[800],
+          text: colors.primary.coolGray[600],
           background: 'transparent',
           border: colors.primary.coolGray[300],
           number: colors.primary.coolGray[400]
@@ -19881,7 +19929,7 @@ var Tab = function (_a) {
             text: colors.primary.coolGray[800],
             background: colors.primary.gray.white,
             border: 'transparent',
-            number: colors.primary.tint.violet[500]
+            number: colors.primary.tint.violet[300]
           };
         }
         return {
@@ -23724,7 +23772,37 @@ var Popup = function (_a) {
     width = _c === void 0 ? '480px' : _c,
     _d = _a.style,
     style = _d === void 0 ? {} : _d;
-  if (!isOpen) return null;
+  var _e = React.useState(null),
+    portalRoot = _e[0],
+    setPortalRoot = _e[1];
+  // Portal root 설정
+  React.useEffect(function () {
+    // 기존 portal root가 있는지 확인
+    var popupRoot = document.getElementById('popup-root');
+    // 없으면 생성
+    if (!popupRoot) {
+      popupRoot = document.createElement('div');
+      popupRoot.id = 'popup-root';
+      popupRoot.style.position = 'relative';
+      popupRoot.style.zIndex = '9999';
+      document.body.appendChild(popupRoot);
+    }
+    setPortalRoot(popupRoot);
+    // 컴포넌트 언마운트 시 정리는 하지 않음 (다른 팝업들이 사용할 수 있으므로)
+  }, []);
+  // 팝업이 열려있을 때 body 스크롤 방지
+  React.useEffect(function () {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    // 컴포넌트 언마운트 시 정리
+    return function () {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+  if (!isOpen || !portalRoot) return null;
   var overlayStyle = __assign({
     position: 'fixed',
     top: 0,
@@ -23735,7 +23813,7 @@ var Popup = function (_a) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1000
+    zIndex: 9999
   }, style);
   var popupStyle = {
     backgroundColor: colors.semantic.background.primary,
@@ -23773,7 +23851,7 @@ var Popup = function (_a) {
       onClose();
     }
   };
-  return jsxRuntime.jsx("div", {
+  var popupContent = jsxRuntime.jsx("div", {
     className: "popup-overlay ".concat(className),
     style: overlayStyle,
     onClick: handleOverlayClick,
@@ -23821,6 +23899,7 @@ var Popup = function (_a) {
       })]
     })
   });
+  return ReactDOM.createPortal(popupContent, portalRoot);
 };
 
 var Modal = function (_a) {
@@ -23851,7 +23930,37 @@ var Modal = function (_a) {
   var _j = React.useState(true),
     isPrimaryDefaultDisabled = _j[0],
     setIsPrimaryDefaultDisabled = _j[1];
+  var _k = React.useState(null),
+    portalRoot = _k[0],
+    setPortalRoot = _k[1];
   var contentRef = React.useRef(null);
+  // Portal root 설정
+  React.useEffect(function () {
+    // 기존 portal root가 있는지 확인
+    var modalRoot = document.getElementById('modal-root');
+    // 없으면 생성
+    if (!modalRoot) {
+      modalRoot = document.createElement('div');
+      modalRoot.id = 'modal-root';
+      modalRoot.style.position = 'relative';
+      modalRoot.style.zIndex = '9999';
+      document.body.appendChild(modalRoot);
+    }
+    setPortalRoot(modalRoot);
+    // 컴포넌트 언마운트 시 정리는 하지 않음 (다른 모달들이 사용할 수 있으므로)
+  }, []);
+  // 모달이 열려있을 때 body 스크롤 방지
+  React.useEffect(function () {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    // 컴포넌트 언마운트 시 정리
+    return function () {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
   React.useEffect(function () {
     if (children && contentRef.current) {
       var _a = contentRef.current,
@@ -23868,7 +23977,7 @@ var Modal = function (_a) {
       setIsPrimaryDefaultDisabled(primaryDefaultDisabledButton.disabled);
     }
   }, [primaryDefaultDisabledButton === null || primaryDefaultDisabledButton === void 0 ? void 0 : primaryDefaultDisabledButton.disabled]);
-  if (!isOpen) return null;
+  if (!isOpen || !portalRoot) return null;
   var overlayStyleConfig = __assign({
     position: 'fixed',
     top: 0,
@@ -23963,7 +24072,7 @@ var Modal = function (_a) {
   var handleCloseClick = function () {
     onClose();
   };
-  return jsxRuntime.jsx("div", {
+  var modalContent = jsxRuntime.jsx("div", {
     className: "modal-overlay ".concat(className),
     style: overlayStyleConfig,
     onClick: handleOverlayClick,
@@ -24045,6 +24154,7 @@ var Modal = function (_a) {
       })]
     })
   });
+  return ReactDOM.createPortal(modalContent, portalRoot);
 };
 
 // 스피너 애니메이션을 위한 CSS keyframes 추가
@@ -24169,13 +24279,87 @@ var Dropdown = function (_a) {
   }, [isPopulatedDisabled, value, onChange, options, enableSearch]);
   // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
   var actuallyDisabled = disabled || isPopulatedDisabled;
-  // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
+  // 캔버스 인스턴스를 재사용하기 위한 ref
+  var canvasRef = React.useRef(null);
+  // 자주 사용되는 색상들 메모이제이션
+  var colorPalette = React.useMemo(function () {
+    return {
+      primary: colors.semantic.background.primary,
+      // #FFFFFF
+      disabled: colors.semantic.disabled.background,
+      // #F3F5F6
+      disabledText: colors.semantic.disabled.foreground,
+      // #D1D5DB
+      primaryText: colors.semantic.text.primary,
+      // #25282D
+      selectedBg: colors.primary.tint.violet[50],
+      selectedText: colors.primary.mainviolet,
+      placeholder: colors.primary.coolGray[300],
+      error: colors.semantic.state.error,
+      // #FF2E2E
+      border: colors.semantic.border.strong // #D6D6D6
+    };
+  }, []);
+  // 텍스트 스타일 메모이제이션
+  var textStyle = React.useMemo(function () {
+    var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
+    return __assign(__assign({}, baseStyle), {
+      fontWeight: typography.fontWeight.medium
+    });
+  }, [size]);
+  // 텍스트 측정 함수 (메모이제이션)
+  var measureText = React.useCallback(function (text) {
+    if (!canvasRef.current) {
+      canvasRef.current = document.createElement('canvas');
+    }
+    var context = canvasRef.current.getContext('2d');
+    if (!context) return 0;
+    var fontSize = textStyle.fontSize || 16;
+    var fontWeight = typography.fontWeight.medium || 500;
+    context.font = "".concat(fontWeight, " ").concat(fontSize, "px system-ui, -apple-system, sans-serif");
+    return context.measureText(text).width;
+  }, [textStyle]);
+  // 옵션 텍스트들의 최대 너비 계산 (메모이제이션)
+  var maxOptionTextWidth = React.useMemo(function () {
+    if (options.length === 0) return 0;
+    return Math.max.apply(Math, options.map(function (option) {
+      return measureText(option.label);
+    }));
+  }, [options, measureText]);
+  // 옵션 리스트의 최적 너비 계산 함수 (개선됨)
+  var calculateOptimalWidth = React.useCallback(function () {
+    var _a;
+    // 옵션이 없으면 기본값 반환
+    if (options.length === 0) return 335;
+    // customContent가 있는 경우 triggerWidth 사용 (마운트 후에만)
+    if (hasCustomContent && triggerRef.current) {
+      var triggerWidth_1 = triggerRef.current.getBoundingClientRect().width;
+      return triggerWidth_1 > 0 ? triggerWidth_1 : 335;
+    }
+    // 텍스트 기반 너비 계산: 패딩(32px) + 아이콘(20px) + 여유(16px) = 68px
+    var textBasedWidth = maxOptionTextWidth + 68;
+    // 최소 너비 계산 (triggerRef가 있고 측정 가능할 때만 고려)
+    var triggerWidth = (_a = triggerRef.current) === null || _a === void 0 ? void 0 : _a.getBoundingClientRect().width;
+    var hasValidTriggerWidth = triggerWidth && triggerWidth > 0;
+    var minWidth = hasValidTriggerWidth ? Math.max(triggerWidth, textBasedWidth) : textBasedWidth;
+    // 최대 너비 제한
+    var maxWidth = Math.min(window.innerWidth * 0.8, 600);
+    // 최종 너비: 최소 120px, 최대 maxWidth, 기본 계산값 사용
+    return Math.min(Math.max(minWidth, 120), maxWidth);
+  }, [options.length, hasCustomContent, maxOptionTextWidth, triggerRef]);
+  // width prop이 있으면 우선 적용, 없으면 최적 너비 계산
   var finalWidth = React.useMemo(function () {
     if (width) {
       return width;
     }
-    return '335px';
-  }, [width, size]);
+    // 최적 너비 계산 함수 사용, 계산 안되면 335px 폴백
+    try {
+      var optimalWidth = calculateOptimalWidth();
+      return "".concat(optimalWidth, "px");
+    } catch (_a) {
+      return '335px';
+    }
+  }, [width, calculateOptimalWidth]);
   // 무한스크롤 스크롤 이벤트 처리
   var handleScroll = React.useCallback(function (event) {
     if (!onLoadMore || !hasNextPage || isLoadingMore) return;
@@ -24215,47 +24399,6 @@ var Dropdown = function (_a) {
       return spaceBelow >= spaceAbove ? 'bottom' : 'top';
     }
   }, [hasCustomContent, customContentMaxHeight]);
-  // 옵션 리스트의 최적 너비 계산 함수
-  var calculateOptimalWidth = React.useCallback(function () {
-    if (!triggerRef.current) {
-      // finalWidth가 문자열인 경우 숫자로 변환하거나 기본값 사용
-      if (typeof finalWidth === 'number') return finalWidth;
-      if (typeof finalWidth === 'string' && finalWidth !== 'fill') {
-        var numWidth = parseFloat(finalWidth);
-        if (!isNaN(numWidth)) return numWidth;
-      }
-      return 335; // 기본값
-    }
-    var triggerWidth = triggerRef.current.getBoundingClientRect().width;
-    // customContent가 있는 경우 triggerWidth를 기본값으로 사용 (컨텐츠가 더 넓어질 수 있음)
-    if (hasCustomContent) {
-      return triggerWidth; // 트리거 너비를 기본값으로 사용
-    }
-    var minWidth = triggerWidth;
-    // 뷰포트 너비의 80% 또는 600px 중 작은 값을 최대 너비로 설정
-    var maxWidth = Math.min(window.innerWidth * 0.8, 600);
-    // 간단한 텍스트 너비 측정을 위한 임시 element 생성
-    var measureText = function (text) {
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
-      if (!context) return 0;
-      // 텍스트 스타일을 직접 계산
-      var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
-      var fontSize = baseStyle.fontSize || 16;
-      var fontWeight = typography.fontWeight.medium || 500;
-      context.font = "".concat(fontWeight, " ").concat(fontSize, "px system-ui, -apple-system, sans-serif");
-      return context.measureText(text).width;
-    };
-    // 옵션이 없으면 최소 너비 반환
-    if (filteredOptions.length === 0) return minWidth;
-    // 모든 옵션 텍스트의 최대 너비 계산 (패딩 + 아이콘 공간 포함)
-    var maxTextWidth = Math.max.apply(Math, filteredOptions.map(function (option) {
-      return measureText(option.label);
-    }));
-    // 패딩(32px) + 아이콘 공간(20px) + 여유 공간(16px) = 68px
-    var optimalWidth = Math.min(Math.max(minWidth, maxTextWidth + 68), maxWidth);
-    return optimalWidth;
-  }, [triggerRef, finalWidth, filteredOptions, size, hasCustomContent]);
   // 선택된 옵션의 인덱스를 찾기 위한 함수
   var getSelectedOptionIndex = React.useCallback(function () {
     if (!hasSelectedOption) return -1;
@@ -24418,24 +24561,17 @@ var Dropdown = function (_a) {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [actualIsOpen, setActualIsOpen]);
-  // 텍스트 스타일 계산 (size에 따라 body1/body2 + medium)
-  var getTextStyle = React.useCallback(function () {
-    var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
-    return __assign(__assign({}, baseStyle), {
-      fontWeight: typography.fontWeight.medium
-    });
-  }, [size]);
   // 컨테이너 스타일
   var getContainerStyles = React.useCallback(function () {
-    var borderColor = colors.semantic.border.strong; // #D6D6D6
-    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
+    var borderColor = colorPalette.border;
+    var backgroundColor = colorPalette.primary;
     if (actuallyDisabled) {
-      borderColor = colors.semantic.border.strong;
-      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+      borderColor = colorPalette.border;
+      backgroundColor = colorPalette.disabled;
     } else if (error) {
-      borderColor = colors.semantic.state.error; // #FF2E2E
+      borderColor = colorPalette.error;
     } else if (actualIsOpen) {
-      borderColor = colors.semantic.text.primary; // #25282D
+      borderColor = colorPalette.primaryText;
     }
     // size에 따른 패딩 설정
     var padding = size === 'l' ? '12px 16px' : '9px 16px';
@@ -24456,24 +24592,23 @@ var Dropdown = function (_a) {
     }, hideOption && {
       userSelect: 'none'
     });
-  }, [actuallyDisabled, error, actualIsOpen, finalWidth, hideOption, enableSearch, size]);
+  }, [actuallyDisabled, error, actualIsOpen, finalWidth, hideOption, enableSearch, size, colorPalette]);
   var getTextStyles = React.useCallback(function () {
     var textColor;
     if (actuallyDisabled) {
       // populated disabled 상태에서는 선택된 값이 있으면 일반 텍스트 색상, 없으면 비활성화 색상
       if (isPopulatedDisabled && hasSelectedOption) {
-        textColor = colors.semantic.text.primary; // #25282D
+        textColor = colorPalette.primaryText;
       } else {
-        textColor = colors.semantic.disabled.foreground; // #D1D5DB
+        textColor = colorPalette.disabledText;
       }
     } else if (error) {
-      textColor = colors.semantic.state.error; // #FF2E2E
+      textColor = colorPalette.error;
     } else if (hasSelectedOption) {
-      textColor = colors.semantic.text.primary; // #25282D
+      textColor = colorPalette.primaryText;
     } else {
-      textColor = '#AFB6C0'; // Figma 스펙의 placeholder 색상
+      textColor = colorPalette.placeholder;
     }
-    var textStyle = getTextStyle();
     return __assign(__assign({}, textStyle), {
       flex: 1,
       color: textColor,
@@ -24483,28 +24618,27 @@ var Dropdown = function (_a) {
       whiteSpace: 'nowrap',
       textOverflow: 'ellipsis'
     });
-  }, [actuallyDisabled, isPopulatedDisabled, error, hasSelectedOption, enableSearch, hideOption, getTextStyle]);
+  }, [actuallyDisabled, isPopulatedDisabled, error, hasSelectedOption, enableSearch, hideOption, textStyle, colorPalette]);
   var getInputStyles = React.useCallback(function () {
-    var textStyle = getTextStyle();
     return __assign(__assign({}, textStyle), {
       flex: 1,
-      color: colors.semantic.text.primary,
+      color: colorPalette.primaryText,
       backgroundColor: 'transparent',
       border: 'none',
       outline: 'none',
       width: '100%'
     });
-  }, [getTextStyle]);
+  }, [textStyle, colorPalette]);
   var getIconColor = React.useCallback(function () {
     if (actuallyDisabled) {
       // populated disabled 상태에서는 chevron 아이콘을 비활성화 색상으로 표시
-      return colors.semantic.disabled.foreground; // #D1D5DB
+      return colorPalette.disabledText;
     } else if (error) {
-      return colors.semantic.state.error; // #FF2E2E
+      return colorPalette.error;
     } else {
-      return colors.semantic.text.primary; // #25282D
+      return colorPalette.primaryText;
     }
-  }, [actuallyDisabled, error]);
+  }, [actuallyDisabled, error, colorPalette]);
   var getChevronIcon = React.useCallback(function () {
     return jsxRuntime.jsx(Icon, {
       type: actualIsOpen ? 'chevron-up' : 'chevron-down',
@@ -24559,17 +24693,21 @@ var Dropdown = function (_a) {
     onSearchChange === null || onSearchChange === void 0 ? void 0 : onSearchChange(newSearchValue);
   }, [enableSearch, onSearchChange]);
   var getOptionStyles = React.useCallback(function (option, index, isSelected) {
-    var backgroundColor = colors.semantic.background.primary; // #FFFFFF
-    var textColor = colors.semantic.text.primary; // #25282D
-    if (option.disabled) {
-      textColor = colors.semantic.disabled.foreground; // #D1D5DB
+    var backgroundColor = colorPalette.primary;
+    var textColor = colorPalette.primaryText;
+    if (option.disabled && isSelected) {
+      // disabled이면서 selected인 경우 (완료된 세션 등)
+      backgroundColor = colorPalette.disabled;
+      textColor = colorPalette.disabledText;
+    } else if (option.disabled) {
+      backgroundColor = colorPalette.disabled;
+      textColor = colorPalette.disabledText;
     } else if (isSelected) {
-      backgroundColor = '#F8F4FE'; // Figma 스펙의 선택된 옵션 배경색
-      textColor = '#7248D9'; // Figma 스펙의 선택된 옵션 텍스트 색상
+      backgroundColor = colorPalette.selectedBg;
+      textColor = colorPalette.selectedText;
     } else if (hoveredOptionIndex === index) {
-      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+      backgroundColor = colorPalette.disabled;
     }
-    var textStyle = getTextStyle();
     return __assign(__assign({
       display: 'flex',
       alignItems: 'center',
@@ -24581,7 +24719,7 @@ var Dropdown = function (_a) {
       cursor: option.disabled ? 'not-allowed' : 'pointer',
       transition: 'background-color 0.2s ease'
     });
-  }, [hoveredOptionIndex, getTextStyle]);
+  }, [hoveredOptionIndex, textStyle, colorPalette]);
   var dropdownOptionsStyle = React.useMemo(function () {
     return __assign(__assign(__assign(__assign({
       position: 'fixed',
@@ -24714,7 +24852,7 @@ var Dropdown = function (_a) {
       children: hasCustomContent ? customContent : filteredOptions.length === 0 ? jsxRuntime.jsx("div", {
         style: __assign(__assign({
           padding: '13px 16px'
-        }, getTextStyle()), {
+        }, textStyle), {
           color: colors.semantic.disabled.foreground,
           textAlign: 'center',
           userSelect: !enableSearch ? 'none' : 'auto'
@@ -24748,7 +24886,7 @@ var Dropdown = function (_a) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#7248D9'
+                color: option.disabled ? colorPalette.disabledText : colorPalette.selectedText
               },
               children: getCheckIcon()
             }) : option.disabled ? jsxRuntime.jsx("div", {
@@ -24766,7 +24904,7 @@ var Dropdown = function (_a) {
         }), isLoadingMore && jsxRuntime.jsx("div", {
           style: __assign(__assign({
             padding: '13px 16px'
-          }, getTextStyle()), {
+          }, textStyle), {
             color: colors.semantic.disabled.foreground,
             textAlign: 'center',
             userSelect: 'none',
@@ -24795,7 +24933,7 @@ var Dropdown = function (_a) {
         marginTop: spacing.xxs // 4px
       },
       children: jsxRuntime.jsx("span", {
-        style: __assign(__assign({}, getTextStyle()), {
+        style: __assign(__assign({}, textStyle), {
           color: colors.semantic.state.error
         }),
         children: errorMessage
@@ -28103,7 +28241,8 @@ var Table = function (_a) {
                 // 컬럼 너비 설정
                 width: column.width || 'auto',
                 minWidth: column.minWidth || 'auto',
-                flex: column.width ? '0 0 auto' : '1 1 auto'
+                flex: column.width ? '0 0 auto' : '1 1 auto',
+                justifyContent: column.headerJustifyContent || 'flex-start'
               },
               children: jsxRuntime.jsx(Font, __assign({}, type === 'parent' && {
                 hide: index === 0 || column.header === 'empty'
@@ -28275,8 +28414,8 @@ var Cell = React.memo(function (_a) {
     column = _a.column,
     isRowAccordionOpen = _a.isRowAccordionOpen,
     tableType = _a.tableType,
-    hasRowAccordion = _a.hasRowAccordion,
-    isLastColumn = _a.isLastColumn;
+    hasRowAccordion = _a.hasRowAccordion;
+    _a.isLastColumn;
   return jsxRuntime.jsx("div", {
     style: {
       display: 'flex',
@@ -28289,7 +28428,8 @@ var Cell = React.memo(function (_a) {
       flex: column.width ? '0 0 auto' : '1 1 auto',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
-      justifyContent: isLastColumn ? 'flex-end' : 'flex-start'
+      justifyContent: column.justifyContent || 'flex-start',
+      alignItems: column.alignItems || 'flex-start'
     },
     children: columnIndex === 0 && hasRowAccordion ? jsxRuntime.jsx("div", {
       style: {
@@ -28437,24 +28577,26 @@ var Popover = function (_a) {
     anchorRef = _a.anchorRef,
     width = _a.width,
     minWidth = _a.minWidth,
-    _b = _a.position,
-    position = _b === void 0 ? 'bottom' : _b,
-    _c = _a.style,
-    style = _c === void 0 ? {} : _c,
+    _b = _a.verticalPosition,
+    verticalPosition = _b === void 0 ? 'bottom' : _b,
+    _c = _a.horizontalAlign,
+    horizontalAlign = _c === void 0 ? 'center' : _c,
+    _d = _a.style,
+    style = _d === void 0 ? {} : _d,
     maxHeight = _a.maxHeight;
   var popoverRef = React.useRef(null);
-  var _d = React.useState(null),
-    popoverPosition = _d[0],
-    setPopoverPosition = _d[1];
-  var _e = React.useState('exited'),
-    animationState = _e[0],
-    setAnimationState = _e[1];
-  var _f = React.useState(null),
-    hoveredItemId = _f[0],
-    setHoveredItemId = _f[1];
+  var _e = React.useState(null),
+    popoverPosition = _e[0],
+    setPopoverPosition = _e[1];
+  var _f = React.useState('exited'),
+    animationState = _f[0],
+    setAnimationState = _f[1];
   var _g = React.useState(null),
-    activeItemId = _g[0],
-    setActiveItemId = _g[1];
+    hoveredItemId = _g[0],
+    setHoveredItemId = _g[1];
+  var _h = React.useState(null),
+    activeItemId = _h[0],
+    setActiveItemId = _h[1];
   // Popover 위치 계산
   var calculatePosition = React.useCallback(function () {
     if (!(anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current)) return null;
@@ -28467,8 +28609,21 @@ var Popover = function (_a) {
       var minWidthValue = typeof minWidth === 'number' ? minWidth : parseFloat(minWidth) || 0;
       calculatedWidth = Math.max(calculatedWidth, minWidthValue);
     }
+    // horizontalAlign에 따른 기본 left 위치 계산
+    var leftPosition;
+    switch (horizontalAlign) {
+      case 'left':
+        leftPosition = anchorRect.left;
+        break;
+      case 'right':
+        leftPosition = anchorRect.right - calculatedWidth;
+        break;
+      case 'center':
+      default:
+        leftPosition = anchorRect.left + (anchorRect.width - calculatedWidth) / 2;
+        break;
+    }
     // 뷰포트 경계 고려하여 left 위치 조정
-    var leftPosition = anchorRect.left;
     var viewportWidth = window.innerWidth;
     var rightEdge = leftPosition + calculatedWidth;
     // 오른쪽으로 잘리는 경우 왼쪽으로 이동
@@ -28487,7 +28642,7 @@ var Popover = function (_a) {
       left: leftPosition,
       width: calculatedWidth
     };
-    if (position === 'bottom') {
+    if (verticalPosition === 'bottom') {
       return __assign(__assign({}, coords), {
         top: anchorRect.bottom + 8
       });
@@ -28496,7 +28651,7 @@ var Popover = function (_a) {
         bottom: window.innerHeight - anchorRect.top + 8
       });
     }
-  }, [anchorRef, width, minWidth, position]);
+  }, [anchorRef, width, minWidth, verticalPosition, horizontalAlign]);
   // 외부 클릭 감지
   React.useEffect(function () {
     var handleClickOutside = function (event) {
@@ -28583,15 +28738,13 @@ var Popover = function (_a) {
   // 동적 스타일 생성
   var getPopoverStyle = function () {
     var dynamicStyle = __assign({}, styles.popover);
-    // 위치별 transform-origin 적용
-    if (position === 'top') {
-      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTop);
-    } else {
-      dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionBottom);
-    }
+    // transform-origin 계산 (수직 + 수평 위치 조합)
+    var verticalOrigin = verticalPosition === 'top' ? 'bottom' : 'top';
+    var horizontalOrigin = horizontalAlign === 'left' ? 'left' : horizontalAlign === 'right' ? 'right' : 'center';
+    dynamicStyle.transformOrigin = "".concat(horizontalOrigin, " ").concat(verticalOrigin);
     // 애니메이션 상태별 스타일 적용
     if (animationState === 'entering') {
-      if (position === 'top') {
+      if (verticalPosition === 'top') {
         dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopEntering);
       } else {
         dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntering);
@@ -28599,7 +28752,7 @@ var Popover = function (_a) {
     } else if (animationState === 'entered') {
       dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntered);
     } else if (animationState === 'exiting') {
-      if (position === 'top') {
+      if (verticalPosition === 'top') {
         dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopExiting);
       } else {
         dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverExiting);

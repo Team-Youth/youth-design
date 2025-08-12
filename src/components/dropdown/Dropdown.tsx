@@ -173,13 +173,98 @@ export const Dropdown: React.FC<DropdownProps> = ({
   // 실제 disabled 상태 (사용자가 설정한 disabled 또는 populated disabled)
   const actuallyDisabled = disabled || isPopulatedDisabled;
 
-  // size에 따른 기본 width 계산, width prop이 있으면 우선 적용
+  // 캔버스 인스턴스를 재사용하기 위한 ref
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // 자주 사용되는 색상들 메모이제이션
+  const colorPalette = useMemo(
+    () => ({
+      primary: colors.semantic.background.primary, // #FFFFFF
+      disabled: colors.semantic.disabled.background, // #F3F5F6
+      disabledText: colors.semantic.disabled.foreground, // #D1D5DB
+      primaryText: colors.semantic.text.primary, // #25282D
+      selectedBg: colors.primary.tint.violet[50],
+      selectedText: colors.primary.mainviolet,
+      placeholder: colors.primary.coolGray[300],
+      error: colors.semantic.state.error, // #FF2E2E
+      border: colors.semantic.border.strong, // #D6D6D6
+    }),
+    [],
+  );
+
+  // 텍스트 스타일 메모이제이션
+  const textStyle = useMemo(() => {
+    const baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
+    return {
+      ...baseStyle,
+      fontWeight: typography.fontWeight.medium,
+    };
+  }, [size]);
+
+  // 텍스트 측정 함수 (메모이제이션)
+  const measureText = useCallback(
+    (text: string): number => {
+      if (!canvasRef.current) {
+        canvasRef.current = document.createElement('canvas');
+      }
+
+      const context = canvasRef.current.getContext('2d');
+      if (!context) return 0;
+
+      const fontSize = textStyle.fontSize || 16;
+      const fontWeight = typography.fontWeight.medium || 500;
+
+      context.font = `${fontWeight} ${fontSize}px system-ui, -apple-system, sans-serif`;
+      return context.measureText(text).width;
+    },
+    [textStyle],
+  );
+
+  // 옵션 텍스트들의 최대 너비 계산 (메모이제이션)
+  const maxOptionTextWidth = useMemo(() => {
+    if (options.length === 0) return 0;
+    return Math.max(...options.map((option) => measureText(option.label)));
+  }, [options, measureText]);
+
+  // 옵션 리스트의 최적 너비 계산 함수 (개선됨)
+  const calculateOptimalWidth = useCallback((): number => {
+    // 옵션이 없으면 기본값 반환
+    if (options.length === 0) return 335;
+
+    // customContent가 있는 경우 triggerWidth 사용 (마운트 후에만)
+    if (hasCustomContent && triggerRef.current) {
+      const triggerWidth = triggerRef.current.getBoundingClientRect().width;
+      return triggerWidth > 0 ? triggerWidth : 335;
+    }
+
+    // 텍스트 기반 너비 계산: 패딩(32px) + 아이콘(20px) + 여유(16px) = 68px
+    const textBasedWidth = maxOptionTextWidth + 68;
+
+    // 최소 너비 계산 (triggerRef가 있고 측정 가능할 때만 고려)
+    const triggerWidth = triggerRef.current?.getBoundingClientRect().width;
+    const hasValidTriggerWidth = triggerWidth && triggerWidth > 0;
+    const minWidth = hasValidTriggerWidth ? Math.max(triggerWidth, textBasedWidth) : textBasedWidth;
+
+    // 최대 너비 제한
+    const maxWidth = Math.min(window.innerWidth * 0.8, 600);
+
+    // 최종 너비: 최소 120px, 최대 maxWidth, 기본 계산값 사용
+    return Math.min(Math.max(minWidth, 120), maxWidth);
+  }, [options.length, hasCustomContent, maxOptionTextWidth, triggerRef]);
+
+  // width prop이 있으면 우선 적용, 없으면 최적 너비 계산
   const finalWidth = useMemo(() => {
     if (width) {
       return width;
     }
-    return '335px';
-  }, [width, size]);
+    // 최적 너비 계산 함수 사용, 계산 안되면 335px 폴백
+    try {
+      const optimalWidth = calculateOptimalWidth();
+      return `${optimalWidth}px`;
+    } catch {
+      return '335px';
+    }
+  }, [width, calculateOptimalWidth]);
 
   // 무한스크롤 스크롤 이벤트 처리
   const handleScroll = useCallback(
@@ -227,57 +312,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
       return spaceBelow >= spaceAbove ? 'bottom' : 'top';
     }
   }, [hasCustomContent, customContentMaxHeight]);
-
-  // 옵션 리스트의 최적 너비 계산 함수
-  const calculateOptimalWidth = useCallback((): number => {
-    if (!triggerRef.current) {
-      // finalWidth가 문자열인 경우 숫자로 변환하거나 기본값 사용
-      if (typeof finalWidth === 'number') return finalWidth;
-      if (typeof finalWidth === 'string' && finalWidth !== 'fill') {
-        const numWidth = parseFloat(finalWidth);
-        if (!isNaN(numWidth)) return numWidth;
-      }
-      return 335; // 기본값
-    }
-
-    const triggerWidth = triggerRef.current.getBoundingClientRect().width;
-
-    // customContent가 있는 경우 triggerWidth를 기본값으로 사용 (컨텐츠가 더 넓어질 수 있음)
-    if (hasCustomContent) {
-      return triggerWidth; // 트리거 너비를 기본값으로 사용
-    }
-
-    const minWidth = triggerWidth;
-
-    // 뷰포트 너비의 80% 또는 600px 중 작은 값을 최대 너비로 설정
-    const maxWidth = Math.min(window.innerWidth * 0.8, 600);
-
-    // 간단한 텍스트 너비 측정을 위한 임시 element 생성
-    const measureText = (text: string) => {
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      if (!context) return 0;
-
-      // 텍스트 스타일을 직접 계산
-      const baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
-      const fontSize = baseStyle.fontSize || 16;
-      const fontWeight = typography.fontWeight.medium || 500;
-
-      context.font = `${fontWeight} ${fontSize}px system-ui, -apple-system, sans-serif`;
-      return context.measureText(text).width;
-    };
-
-    // 옵션이 없으면 최소 너비 반환
-    if (filteredOptions.length === 0) return minWidth;
-
-    // 모든 옵션 텍스트의 최대 너비 계산 (패딩 + 아이콘 공간 포함)
-    const maxTextWidth = Math.max(...filteredOptions.map((option) => measureText(option.label)));
-
-    // 패딩(32px) + 아이콘 공간(20px) + 여유 공간(16px) = 68px
-    const optimalWidth = Math.min(Math.max(minWidth, maxTextWidth + 68), maxWidth);
-
-    return optimalWidth;
-  }, [triggerRef, finalWidth, filteredOptions, size, hasCustomContent]);
 
   // 선택된 옵션의 인덱스를 찾기 위한 함수
   const getSelectedOptionIndex = useCallback(() => {
@@ -475,27 +509,18 @@ export const Dropdown: React.FC<DropdownProps> = ({
     };
   }, [actualIsOpen, setActualIsOpen]);
 
-  // 텍스트 스타일 계산 (size에 따라 body1/body2 + medium)
-  const getTextStyle = useCallback(() => {
-    const baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
-    return {
-      ...baseStyle,
-      fontWeight: typography.fontWeight.medium,
-    };
-  }, [size]);
-
   // 컨테이너 스타일
   const getContainerStyles = useCallback((): React.CSSProperties => {
-    let borderColor: string = colors.semantic.border.strong; // #D6D6D6
-    let backgroundColor: string = colors.semantic.background.primary; // #FFFFFF
+    let borderColor: string = colorPalette.border;
+    let backgroundColor: string = colorPalette.primary;
 
     if (actuallyDisabled) {
-      borderColor = colors.semantic.border.strong;
-      backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+      borderColor = colorPalette.border;
+      backgroundColor = colorPalette.disabled;
     } else if (error) {
-      borderColor = colors.semantic.state.error; // #FF2E2E
+      borderColor = colorPalette.error;
     } else if (actualIsOpen) {
-      borderColor = colors.semantic.text.primary; // #25282D
+      borderColor = colorPalette.primaryText;
     }
 
     // size에 따른 패딩 설정
@@ -516,7 +541,16 @@ export const Dropdown: React.FC<DropdownProps> = ({
       userSelect: !enableSearch ? 'none' : 'auto',
       ...(hideOption && { userSelect: 'none' }),
     };
-  }, [actuallyDisabled, error, actualIsOpen, finalWidth, hideOption, enableSearch, size]);
+  }, [
+    actuallyDisabled,
+    error,
+    actualIsOpen,
+    finalWidth,
+    hideOption,
+    enableSearch,
+    size,
+    colorPalette,
+  ]);
 
   const getTextStyles = useCallback((): React.CSSProperties => {
     let textColor: string;
@@ -524,19 +558,17 @@ export const Dropdown: React.FC<DropdownProps> = ({
     if (actuallyDisabled) {
       // populated disabled 상태에서는 선택된 값이 있으면 일반 텍스트 색상, 없으면 비활성화 색상
       if (isPopulatedDisabled && hasSelectedOption) {
-        textColor = colors.semantic.text.primary; // #25282D
+        textColor = colorPalette.primaryText;
       } else {
-        textColor = colors.semantic.disabled.foreground; // #D1D5DB
+        textColor = colorPalette.disabledText;
       }
     } else if (error) {
-      textColor = colors.semantic.state.error; // #FF2E2E
+      textColor = colorPalette.error;
     } else if (hasSelectedOption) {
-      textColor = colors.semantic.text.primary; // #25282D
+      textColor = colorPalette.primaryText;
     } else {
-      textColor = '#AFB6C0'; // Figma 스펙의 placeholder 색상
+      textColor = colorPalette.placeholder;
     }
-
-    const textStyle = getTextStyle();
 
     return {
       ...textStyle,
@@ -555,33 +587,32 @@ export const Dropdown: React.FC<DropdownProps> = ({
     hasSelectedOption,
     enableSearch,
     hideOption,
-    getTextStyle,
+    textStyle,
+    colorPalette,
   ]);
 
   const getInputStyles = useCallback((): React.CSSProperties => {
-    const textStyle = getTextStyle();
-
     return {
       ...textStyle,
       flex: 1,
-      color: colors.semantic.text.primary,
+      color: colorPalette.primaryText,
       backgroundColor: 'transparent',
       border: 'none',
       outline: 'none',
       width: '100%',
     };
-  }, [getTextStyle]);
+  }, [textStyle, colorPalette]);
 
   const getIconColor = useCallback(() => {
     if (actuallyDisabled) {
       // populated disabled 상태에서는 chevron 아이콘을 비활성화 색상으로 표시
-      return colors.semantic.disabled.foreground; // #D1D5DB
+      return colorPalette.disabledText;
     } else if (error) {
-      return colors.semantic.state.error; // #FF2E2E
+      return colorPalette.error;
     } else {
-      return colors.semantic.text.primary; // #25282D
+      return colorPalette.primaryText;
     }
-  }, [actuallyDisabled, error]);
+  }, [actuallyDisabled, error, colorPalette]);
 
   const getChevronIcon = useCallback(
     () => (
@@ -656,19 +687,22 @@ export const Dropdown: React.FC<DropdownProps> = ({
 
   const getOptionStyles = useCallback(
     (option: DropdownOption, index: number, isSelected: boolean) => {
-      let backgroundColor: string = colors.semantic.background.primary; // #FFFFFF
-      let textColor: string = colors.semantic.text.primary; // #25282D
+      let backgroundColor: string = colorPalette.primary;
+      let textColor: string = colorPalette.primaryText;
 
-      if (option.disabled) {
-        textColor = colors.semantic.disabled.foreground; // #D1D5DB
+      if (option.disabled && isSelected) {
+        // disabled이면서 selected인 경우 (완료된 세션 등)
+        backgroundColor = colorPalette.disabled;
+        textColor = colorPalette.disabledText;
+      } else if (option.disabled) {
+        backgroundColor = colorPalette.disabled;
+        textColor = colorPalette.disabledText;
       } else if (isSelected) {
-        backgroundColor = '#F8F4FE'; // Figma 스펙의 선택된 옵션 배경색
-        textColor = '#7248D9'; // Figma 스펙의 선택된 옵션 텍스트 색상
+        backgroundColor = colorPalette.selectedBg;
+        textColor = colorPalette.selectedText;
       } else if (hoveredOptionIndex === index) {
-        backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+        backgroundColor = colorPalette.disabled;
       }
-
-      const textStyle = getTextStyle();
 
       return {
         display: 'flex',
@@ -682,7 +716,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         transition: 'background-color 0.2s ease',
       };
     },
-    [hoveredOptionIndex, getTextStyle],
+    [hoveredOptionIndex, textStyle, colorPalette],
   );
 
   const dropdownOptionsStyle: React.CSSProperties = useMemo(
@@ -843,7 +877,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             <div
               style={{
                 padding: '13px 16px',
-                ...getTextStyle(),
+                ...textStyle,
                 color: colors.semantic.disabled.foreground,
                 textAlign: 'center',
                 userSelect: !enableSearch ? 'none' : 'auto',
@@ -878,7 +912,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          color: '#7248D9',
+                          color: option.disabled
+                            ? colorPalette.disabledText
+                            : colorPalette.selectedText,
                         }}
                       >
                         {getCheckIcon()}
@@ -905,7 +941,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 <div
                   style={{
                     padding: '13px 16px',
-                    ...getTextStyle(),
+                    ...textStyle,
                     color: colors.semantic.disabled.foreground,
                     textAlign: 'center',
                     userSelect: 'none',
@@ -942,7 +978,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         >
           <span
             style={{
-              ...getTextStyle(),
+              ...textStyle,
               color: colors.semantic.state.error,
             }}
           >

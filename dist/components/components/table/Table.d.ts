@@ -5,6 +5,9 @@ interface Column<T> {
     cell: (row: T) => React.ReactNode;
     width?: string | number;
     minWidth?: string | number;
+    justifyContent?: 'flex-start' | 'center' | 'flex-end' | string;
+    alignItems?: 'flex-start' | 'center' | 'flex-end' | string;
+    headerJustifyContent?: 'flex-start' | 'center' | 'flex-end' | string;
 }
 export interface TableProps<T> {
     data: T[];
