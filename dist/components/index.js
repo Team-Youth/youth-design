@@ -24865,16 +24865,18 @@ var TextArea = React.forwardRef(function (_a, ref) {
     width = _h === void 0 ? '320px' : _h,
     _j = _a.rows,
     rows = _j === void 0 ? 4 : _j,
-    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "showCharacterCounter", "maxLength", "status", "width", "rows"]);
-  var _k = React.useState(false),
-    isFocused = _k[0],
-    setIsFocused = _k[1];
+    _k = _a.hideStyle,
+    hideStyle = _k === void 0 ? false : _k,
+    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "showCharacterCounter", "maxLength", "status", "width", "rows", "hideStyle"]);
   var _l = React.useState(false),
-    isHovered = _l[0],
-    setIsHovered = _l[1];
-  var _m = React.useState(defaultValue || ''),
-    internalValue = _m[0],
-    setInternalValue = _m[1];
+    isFocused = _l[0],
+    setIsFocused = _l[1];
+  var _m = React.useState(false),
+    isHovered = _m[0],
+    setIsHovered = _m[1];
+  var _o = React.useState(defaultValue || ''),
+    internalValue = _o[0],
+    setInternalValue = _o[1];
   var currentValue = value !== undefined ? value : internalValue;
   var isEmpty = !currentValue || currentValue.length === 0;
   var actualStatus = status || (isEmpty ? 'empty' : 'filled');
@@ -24902,7 +24904,7 @@ var TextArea = React.forwardRef(function (_a, ref) {
       display: 'flex',
       flexDirection: 'column',
       width: getWidth(),
-      border: "1px solid ".concat(borderColor),
+      border: hideStyle ? 'none' : "1px solid ".concat(borderColor),
       borderRadius: radius.s,
       // 8px
       backgroundColor: backgroundColor,
@@ -24922,7 +24924,7 @@ var TextArea = React.forwardRef(function (_a, ref) {
     return {
       width: '100%',
       minHeight: '120px',
-      padding: "14px ".concat(spacing.m),
+      padding: hideStyle ? '0' : "14px ".concat(spacing.m),
       // 14px 16px
       border: 'none',
       outline: 'none',

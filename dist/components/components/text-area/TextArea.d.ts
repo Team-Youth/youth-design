@@ -28,5 +28,7 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
     status?: 'filled' | 'empty';
     /** 너비 설정 (기본값: '320px') */
     width?: 'fill' | (string & {}) | number;
+    /** 스타일 숨김 여부 */
+    hideStyle?: boolean;
 }
 export declare const TextArea: React.ForwardRefExoticComponent<TextAreaProps & React.RefAttributes<HTMLTextAreaElement>>;
