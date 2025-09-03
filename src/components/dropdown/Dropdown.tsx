@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { colors, spacing, typography } from '../../tokens';
 import { IconType, Icon } from '../icon';
 
@@ -749,7 +750,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             borderRadius: '8px',
             boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
           }),
-      // 모달(9999)보다 높은 z-index 사용하여 iPad Chrome에서도 확실히 위에 표시
+      // 모달보다 높게!
       zIndex: 10000,
       maxHeight: hasCustomContent ? `${customContentMaxHeight}px` : '200px',
       overflowY: hasCustomContent ? 'visible' : 'auto', // customContent일 때는 overflow 처리를 컨텐츠에 맡김
@@ -766,9 +767,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
       transition: positionCalculated ? 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
       userSelect: !enableSearch ? 'none' : 'auto',
       boxSizing: 'border-box',
-      // iPad Chrome에서 stacking context 문제 해결을 위한 추가 속성
-      isolation: 'isolate',
-      // 모바일 브라우저에서 하드웨어 가속 활용
+      // 하드웨어 가속 활용
       willChange: isAnimating ? 'transform, opacity' : 'auto',
     }),
     [
@@ -821,8 +820,6 @@ export const Dropdown: React.FC<DropdownProps> = ({
       style={{
         position: 'relative',
         width: finalWidth === 'fill' ? '100%' : finalWidth,
-        // 드롭다운이 열려도 높이에 영향을 주지 않도록 설정, 모달보다 높은 z-index 사용
-        zIndex: actualIsOpen ? 10001 : 'auto',
       }}
     >
       <div
@@ -869,108 +866,112 @@ export const Dropdown: React.FC<DropdownProps> = ({
         </div>
       </div>
 
-      {shouldRender && !hideOption && dropdownCoordinates && (
-        <div
-          style={dropdownOptionsStyle}
-          role="listbox"
-          ref={optionsContainerRef}
-          onScroll={handleScroll}
-        >
-          {hasCustomContent ? (
-            customContent
-          ) : filteredOptions.length === 0 ? (
-            <div
-              style={{
-                padding: '13px 16px',
-                ...textStyle,
-                color: colors.semantic.disabled.foreground,
-                textAlign: 'center',
-                userSelect: !enableSearch ? 'none' : 'auto',
-              }}
-            >
-              {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
-            </div>
-          ) : (
-            <>
-              {filteredOptions.map((option, index) => {
-                const isSelected = value === option.value;
-                return (
+      {shouldRender &&
+        !hideOption &&
+        dropdownCoordinates &&
+        createPortal(
+          <div
+            style={dropdownOptionsStyle}
+            role="listbox"
+            ref={optionsContainerRef}
+            onScroll={handleScroll}
+          >
+            {hasCustomContent ? (
+              customContent
+            ) : filteredOptions.length === 0 ? (
+              <div
+                style={{
+                  padding: '13px 16px',
+                  ...textStyle,
+                  color: colors.semantic.disabled.foreground,
+                  textAlign: 'center',
+                  userSelect: !enableSearch ? 'none' : 'auto',
+                }}
+              >
+                {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
+              </div>
+            ) : (
+              <>
+                {filteredOptions.map((option, index) => {
+                  const isSelected = value === option.value;
+                  return (
+                    <div
+                      key={option.value}
+                      style={{
+                        ...getOptionStyles(option, index, isSelected),
+                        userSelect: !enableSearch ? 'none' : 'auto',
+                      }}
+                      onClick={() => !option.disabled && handleOptionClick(option.value)}
+                      onMouseEnter={() => setHoveredOptionIndex(index)}
+                      onMouseLeave={() => setHoveredOptionIndex(null)}
+                      role="option"
+                      aria-selected={isSelected}
+                      aria-disabled={option.disabled}
+                    >
+                      <span>{option.label}</span>
+                      {isSelected ? (
+                        <div
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: option.disabled
+                              ? colorPalette.disabledText
+                              : colorPalette.selectedText,
+                          }}
+                        >
+                          {getCheckIcon()}
+                        </div>
+                      ) : option.disabled ? (
+                        <div
+                          style={{
+                            width: '20px',
+                            height: '20px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: colors.semantic.disabled.foreground,
+                          }}
+                        >
+                          {getLockIcon()}
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+                {/* 무한스크롤 로딩 인디케이터 */}
+                {isLoadingMore && (
                   <div
-                    key={option.value}
                     style={{
-                      ...getOptionStyles(option, index, isSelected),
-                      userSelect: !enableSearch ? 'none' : 'auto',
+                      padding: '13px 16px',
+                      ...textStyle,
+                      color: colors.semantic.disabled.foreground,
+                      textAlign: 'center',
+                      userSelect: 'none',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
-                    onClick={() => !option.disabled && handleOptionClick(option.value)}
-                    onMouseEnter={() => setHoveredOptionIndex(index)}
-                    onMouseLeave={() => setHoveredOptionIndex(null)}
-                    role="option"
-                    aria-selected={isSelected}
-                    aria-disabled={option.disabled}
                   >
-                    <span>{option.label}</span>
-                    {isSelected ? (
-                      <div
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: option.disabled
-                            ? colorPalette.disabledText
-                            : colorPalette.selectedText,
-                        }}
-                      >
-                        {getCheckIcon()}
-                      </div>
-                    ) : option.disabled ? (
-                      <div
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: colors.semantic.disabled.foreground,
-                        }}
-                      >
-                        {getLockIcon()}
-                      </div>
-                    ) : null}
+                    <div
+                      style={{
+                        width: '16px',
+                        height: '16px',
+                        border: '2px solid #f3f3f3',
+                        borderTop: '2px solid #cccccc',
+                        borderRadius: '50%',
+                        animation: 'spin 1s linear infinite',
+                      }}
+                    />
                   </div>
-                );
-              })}
-              {/* 무한스크롤 로딩 인디케이터 */}
-              {isLoadingMore && (
-                <div
-                  style={{
-                    padding: '13px 16px',
-                    ...textStyle,
-                    color: colors.semantic.disabled.foreground,
-                    textAlign: 'center',
-                    userSelect: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '16px',
-                      height: '16px',
-                      border: '2px solid #f3f3f3',
-                      borderTop: '2px solid #cccccc',
-                      borderRadius: '50%',
-                      animation: 'spin 1s linear infinite',
-                    }}
-                  />
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
+                )}
+              </>
+            )}
+          </div>,
+          document.body,
+        )}
 
       {error && errorMessage && (
         <div

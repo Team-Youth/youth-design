@@ -24741,7 +24741,7 @@ var Dropdown = function (_a) {
       borderRadius: '8px',
       boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)'
     }), {
-      // 모달(9999)보다 높은 z-index 사용하여 iPad Chrome에서도 확실히 위에 표시
+      // 모달보다 높게!
       zIndex: 10000,
       maxHeight: hasCustomContent ? "".concat(customContentMaxHeight, "px") : '200px',
       overflowY: hasCustomContent ? 'visible' : 'auto',
@@ -24754,9 +24754,7 @@ var Dropdown = function (_a) {
       transition: positionCalculated ? 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
       userSelect: !enableSearch ? 'none' : 'auto',
       boxSizing: 'border-box',
-      // iPad Chrome에서 stacking context 문제 해결을 위한 추가 속성
-      isolation: 'isolate',
-      // 모바일 브라우저에서 하드웨어 가속 활용
+      // 하드웨어 가속 활용
       willChange: isAnimating ? 'transform, opacity' : 'auto'
     });
   }, [isAnimating, enableSearch, dropdownPosition, positionCalculated, dropdownCoordinates, hasCustomContent, customContentMaxHeight]);
@@ -24805,9 +24803,7 @@ var Dropdown = function (_a) {
     ref: dropdownRef,
     style: {
       position: 'relative',
-      width: finalWidth === 'fill' ? '100%' : finalWidth,
-      // 드롭다운이 열려도 높이에 영향을 주지 않도록 설정, 모달보다 높은 z-index 사용
-      zIndex: actualIsOpen ? 10001 : 'auto'
+      width: finalWidth === 'fill' ? '100%' : finalWidth
     },
     children: [jsxs("div", {
       ref: triggerRef,
@@ -24845,7 +24841,7 @@ var Dropdown = function (_a) {
         onClick: actualIsOpen && enableSearch ? handleClick : undefined,
         children: getChevronIcon()
       })]
-    }), shouldRender && !hideOption && dropdownCoordinates && jsx("div", {
+    }), shouldRender && !hideOption && dropdownCoordinates && createPortal(jsx("div", {
       style: dropdownOptionsStyle,
       role: "listbox",
       ref: optionsContainerRef,
@@ -24925,7 +24921,7 @@ var Dropdown = function (_a) {
           })
         })]
       })
-    }), error && errorMessage && jsx("div", {
+    }), document.body), error && errorMessage && jsx("div", {
       style: {
         display: 'flex',
         alignItems: 'center',
