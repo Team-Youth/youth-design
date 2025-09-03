@@ -51,6 +51,8 @@ export interface SearchFieldProps
   hasNextPage?: boolean;
   /** 무한스크롤: 로딩 중인지 여부 */
   isLoadingMore?: boolean;
+  /** 모바일/태블릿 키보드 타입 (검색에 최적화된 기본값 'search') */
+  inputMode?: 'search' | 'text' | 'email' | 'tel' | 'url' | 'numeric' | 'decimal' | 'none';
 }
 
 export const SearchField = memo(
@@ -64,6 +66,7 @@ export const SearchField = memo(
         onLoadMore,
         hasNextPage,
         isLoadingMore,
+        inputMode = 'search',
         ...textFieldProps
       },
       ref,
@@ -202,7 +205,7 @@ export const SearchField = memo(
       return (
         <div style={{ position: 'relative', width: textFieldProps.width || '320px' }}>
           {/* TextField */}
-          <TextField ref={ref} leadingIconType="search" {...textFieldProps} />
+          <TextField ref={ref} leadingIconType="search" inputMode={inputMode} {...textFieldProps} />
 
           {/* Search Suggestions */}
           {showSuggestions && (

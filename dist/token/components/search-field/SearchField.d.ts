@@ -29,5 +29,7 @@ export interface SearchFieldProps extends Omit<TextFieldProps, 'leadingIconType'
     hasNextPage?: boolean;
     /** 무한스크롤: 로딩 중인지 여부 */
     isLoadingMore?: boolean;
+    /** 모바일/태블릿 키보드 타입 (검색에 최적화된 기본값 'search') */
+    inputMode?: 'search' | 'text' | 'email' | 'tel' | 'url' | 'numeric' | 'decimal' | 'none';
 }
 export declare const SearchField: import("react").NamedExoticComponent<SearchFieldProps & import("react").RefAttributes<HTMLInputElement>>;

@@ -25573,10 +25573,12 @@ var SearchField = React.memo(React.forwardRef(function (_a, ref) {
     onLoadMore = _a.onLoadMore,
     hasNextPage = _a.hasNextPage,
     isLoadingMore = _a.isLoadingMore,
-    textFieldProps = __rest(_a, ["suggestions", "showSuggestions", "onSuggestionClick", "noResultsText", "onLoadMore", "hasNextPage", "isLoadingMore"]);
-  var _e = React.useState(null),
-    hoveredIndex = _e[0],
-    setHoveredIndex = _e[1];
+    _e = _a.inputMode,
+    inputMode = _e === void 0 ? 'search' : _e,
+    textFieldProps = __rest(_a, ["suggestions", "showSuggestions", "onSuggestionClick", "noResultsText", "onLoadMore", "hasNextPage", "isLoadingMore", "inputMode"]);
+  var _f = React.useState(null),
+    hoveredIndex = _f[0],
+    setHoveredIndex = _f[1];
   var suggestionsContainerRef = React.useRef(null);
   // 무한스크롤 스크롤 이벤트 처리
   var handleScroll = React.useCallback(function (event) {
@@ -25684,7 +25686,8 @@ var SearchField = React.memo(React.forwardRef(function (_a, ref) {
     },
     children: [jsxRuntime.jsx(TextField, __assign({
       ref: ref,
-      leadingIconType: "search"
+      leadingIconType: "search",
+      inputMode: inputMode
     }, textFieldProps)), showSuggestions && jsxRuntime.jsx("div", {
       ref: suggestionsContainerRef,
       style: {
