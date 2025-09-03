@@ -25687,7 +25687,8 @@ var SearchField = React.memo(React.forwardRef(function (_a, ref) {
     children: [jsxRuntime.jsx(TextField, __assign({
       ref: ref,
       leadingIconType: "search",
-      inputMode: inputMode
+      inputMode: inputMode,
+      type: "text"
     }, textFieldProps)), showSuggestions && jsxRuntime.jsx("div", {
       ref: suggestionsContainerRef,
       style: {

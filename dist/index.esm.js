@@ -25667,7 +25667,8 @@ var SearchField = memo(forwardRef(function (_a, ref) {
     children: [jsx(TextField, __assign({
       ref: ref,
       leadingIconType: "search",
-      inputMode: inputMode
+      inputMode: inputMode,
+      type: "text"
     }, textFieldProps)), showSuggestions && jsx("div", {
       ref: suggestionsContainerRef,
       style: {
