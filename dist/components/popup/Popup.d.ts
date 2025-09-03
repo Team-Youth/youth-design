@@ -5,6 +5,8 @@ export interface PopupProps {
     title: string;
     /** 팝업 설명 (선택사항) */
     description?: string;
+    /** 오버레이(dimmed) 클릭 시 팝업 닫기 여부 (기본값: false) */
+    closeOnOverlayClick?: boolean;
     /** 메인 버튼 props */
     primaryButton: {
         text: string;

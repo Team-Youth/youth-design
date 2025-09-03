@@ -10,6 +10,8 @@ export interface PopupProps {
   title: string;
   /** 팝업 설명 (선택사항) */
   description?: string;
+  /** 오버레이(dimmed) 클릭 시 팝업 닫기 여부 (기본값: false) */
+  closeOnOverlayClick?: boolean;
   /** 메인 버튼 props */
   primaryButton: {
     text: string;
@@ -35,6 +37,7 @@ export interface PopupProps {
 export const Popup: React.FC<PopupProps> = ({
   title,
   description,
+  closeOnOverlayClick = false,
   primaryButton,
   secondaryButton,
   isOpen,
@@ -133,7 +136,7 @@ export const Popup: React.FC<PopupProps> = ({
   };
 
   const handleOverlayClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+    if (closeOnOverlayClick && e.target === e.currentTarget) {
       onClose();
     }
   };
