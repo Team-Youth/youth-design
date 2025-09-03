@@ -128,7 +128,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         fontFamily: 'Pretendard',
         resize: 'none',
         wordWrap: 'break-word',
-        whiteSpace: 'pre-wrap',
+        whiteSpace: 'pre-line',
         overflowWrap: 'break-word',
         boxSizing: 'border-box',
       };

@@ -24947,7 +24947,7 @@ var TextArea = React.forwardRef(function (_a, ref) {
       fontFamily: 'Pretendard',
       resize: 'none',
       wordWrap: 'break-word',
-      whiteSpace: 'pre-wrap',
+      whiteSpace: 'pre-line',
       overflowWrap: 'break-word',
       boxSizing: 'border-box'
     };
