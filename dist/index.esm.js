@@ -24846,6 +24846,9 @@ var Dropdown = function (_a) {
       role: "listbox",
       ref: optionsContainerRef,
       onScroll: handleScroll,
+      onMouseDown: function (e) {
+        return e.stopPropagation();
+      },
       children: hasCustomContent ? customContent : filteredOptions.length === 0 ? jsx("div", {
         style: __assign(__assign({
           padding: '13px 16px'
@@ -24858,9 +24861,14 @@ var Dropdown = function (_a) {
       }) : jsxs(Fragment, {
         children: [filteredOptions.map(function (option, index) {
           var isSelected = value === option.value;
-          return jsxs("div", {
+          return jsxs("button", {
+            type: "button",
             style: __assign(__assign({}, getOptionStyles(option, index, isSelected)), {
-              userSelect: !enableSearch ? 'none' : 'auto'
+              userSelect: !enableSearch ? 'none' : 'auto',
+              border: 'none',
+              // background: 'transparent' 제거 - getOptionStyles에서 backgroundColor로 제어
+              width: '100%',
+              textAlign: 'left'
             }),
             onClick: function () {
               return !option.disabled && handleOptionClick(option.value);
@@ -24871,6 +24879,7 @@ var Dropdown = function (_a) {
             onMouseLeave: function () {
               return setHoveredOptionIndex(null);
             },
+            disabled: option.disabled,
             role: "option",
             "aria-selected": isSelected,
             "aria-disabled": option.disabled,

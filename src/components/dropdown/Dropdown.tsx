@@ -875,6 +875,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             role="listbox"
             ref={optionsContainerRef}
             onScroll={handleScroll}
+            onMouseDown={(e) => e.stopPropagation()}
           >
             {hasCustomContent ? (
               customContent
@@ -895,15 +896,21 @@ export const Dropdown: React.FC<DropdownProps> = ({
                 {filteredOptions.map((option, index) => {
                   const isSelected = value === option.value;
                   return (
-                    <div
+                    <button
                       key={option.value}
+                      type="button"
                       style={{
                         ...getOptionStyles(option, index, isSelected),
                         userSelect: !enableSearch ? 'none' : 'auto',
+                        border: 'none', // button 기본 스타일 제거
+                        // background: 'transparent' 제거 - getOptionStyles에서 backgroundColor로 제어
+                        width: '100%',
+                        textAlign: 'left',
                       }}
                       onClick={() => !option.disabled && handleOptionClick(option.value)}
                       onMouseEnter={() => setHoveredOptionIndex(index)}
                       onMouseLeave={() => setHoveredOptionIndex(null)}
+                      disabled={option.disabled}
                       role="option"
                       aria-selected={isSelected}
                       aria-disabled={option.disabled}
@@ -938,7 +945,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                           {getLockIcon()}
                         </div>
                       ) : null}
-                    </div>
+                    </button>
                   );
                 })}
                 {/* 무한스크롤 로딩 인디케이터 */}
