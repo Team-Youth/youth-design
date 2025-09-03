@@ -16,6 +16,8 @@ export interface ModalProps {
     showCloseButton?: boolean;
     /** 모달 너비 (기본값: 480px) */
     width?: string | number;
+    /** 오버레이(dimmed) 클릭 시 모달 닫기 여부 (기본값: false) */
+    closeOnOverlayClick?: boolean;
     /** 메인 버튼 props */
     primaryButton?: {
         text: string;
