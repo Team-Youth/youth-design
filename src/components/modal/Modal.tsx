@@ -59,7 +59,7 @@ export const Modal: React.FC<ModalProps> = ({
   showScrollbar = false,
   showCloseButton = true,
   width,
-  closeOnOverlayClick = false,
+  closeOnOverlayClick = true,
   primaryButton,
   primaryDefaultDisabledButton,
   secondaryButton,

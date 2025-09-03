@@ -37,7 +37,7 @@ export interface PopupProps {
 export const Popup: React.FC<PopupProps> = ({
   title,
   description,
-  closeOnOverlayClick = false,
+  closeOnOverlayClick = true,
   primaryButton,
   secondaryButton,
   isOpen,
