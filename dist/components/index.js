@@ -24985,16 +24985,7 @@ var TextArea = React.forwardRef(function (_a, ref) {
   var handleKeyDown = function (e) {
     if (e.key === 'Enter') {
       if (e.shiftKey) {
-        // Shift+Enter: 줄바꿈 허용 (기본 동작을 통해 handleChange에서 처리됨)
-        // 최대 길이 체크만 수행
-        var textarea = e.target;
-        var cursorPosition = textarea.selectionStart;
-        var newValue = currentValue.slice(0, cursorPosition) + '\n' + currentValue.slice(cursorPosition);
-        if (maxLength && newValue.length > maxLength) {
-          e.preventDefault();
-          return;
-        }
-        // 기본 동작 허용 - handleChange에서 자동으로 처리됨
+        // Shift+Enter: 줄바꿈 허용 (기본 동작)
         return;
       } else {
         // Enter만: 기본 동작 방지하고 onEnter 콜백 호출
