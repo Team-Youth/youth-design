@@ -23774,19 +23774,21 @@ var useToast = function () {
 var Popup = function (_a) {
   var title = _a.title,
     description = _a.description,
+    _b = _a.closeOnOverlayClick,
+    closeOnOverlayClick = _b === void 0 ? false : _b,
     primaryButton = _a.primaryButton,
     secondaryButton = _a.secondaryButton,
     isOpen = _a.isOpen,
     onClose = _a.onClose,
-    _b = _a.className,
-    className = _b === void 0 ? '' : _b,
-    _c = _a.width,
-    width = _c === void 0 ? '480px' : _c,
-    _d = _a.style,
-    style = _d === void 0 ? {} : _d;
-  var _e = React.useState(null),
-    portalRoot = _e[0],
-    setPortalRoot = _e[1];
+    _c = _a.className,
+    className = _c === void 0 ? '' : _c,
+    _d = _a.width,
+    width = _d === void 0 ? '480px' : _d,
+    _e = _a.style,
+    style = _e === void 0 ? {} : _e;
+  var _f = React.useState(null),
+    portalRoot = _f[0],
+    setPortalRoot = _f[1];
   // Portal root 설정
   React.useEffect(function () {
     // 기존 portal root가 있는지 확인
@@ -23859,7 +23861,7 @@ var Popup = function (_a) {
     flexDirection: secondaryButton ? 'row' : 'column'
   };
   var handleOverlayClick = function (e) {
-    if (e.target === e.currentTarget) {
+    if (closeOnOverlayClick && e.target === e.currentTarget) {
       onClose();
     }
   };
@@ -23925,26 +23927,28 @@ var Modal = function (_a) {
     _d = _a.showCloseButton,
     showCloseButton = _d === void 0 ? true : _d,
     width = _a.width,
+    _e = _a.closeOnOverlayClick,
+    closeOnOverlayClick = _e === void 0 ? false : _e,
     primaryButton = _a.primaryButton,
     primaryDefaultDisabledButton = _a.primaryDefaultDisabledButton,
     secondaryButton = _a.secondaryButton,
     isOpen = _a.isOpen,
     onClose = _a.onClose,
-    _e = _a.className,
-    className = _e === void 0 ? '' : _e,
-    _f = _a.style,
-    style = _f === void 0 ? {} : _f,
-    _g = _a.overlayStyle,
-    overlayStyle = _g === void 0 ? {} : _g;
-  var _h = React.useState(false),
-    isContentOverflowing = _h[0],
-    setIsContentOverflowing = _h[1];
-  var _j = React.useState(true),
-    isPrimaryDefaultDisabled = _j[0],
-    setIsPrimaryDefaultDisabled = _j[1];
-  var _k = React.useState(null),
-    portalRoot = _k[0],
-    setPortalRoot = _k[1];
+    _f = _a.className,
+    className = _f === void 0 ? '' : _f,
+    _g = _a.style,
+    style = _g === void 0 ? {} : _g,
+    _h = _a.overlayStyle,
+    overlayStyle = _h === void 0 ? {} : _h;
+  var _j = React.useState(false),
+    isContentOverflowing = _j[0],
+    setIsContentOverflowing = _j[1];
+  var _k = React.useState(true),
+    isPrimaryDefaultDisabled = _k[0],
+    setIsPrimaryDefaultDisabled = _k[1];
+  var _l = React.useState(null),
+    portalRoot = _l[0],
+    setPortalRoot = _l[1];
   var contentRef = React.useRef(null);
   // Portal root 설정
   React.useEffect(function () {
@@ -24077,7 +24081,7 @@ var Modal = function (_a) {
     paddingRight: '32px'
   });
   var handleOverlayClick = function (e) {
-    if (e.target === e.currentTarget) {
+    if (closeOnOverlayClick && e.target === e.currentTarget) {
       onClose();
     }
   };
