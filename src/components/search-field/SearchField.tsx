@@ -205,7 +205,13 @@ export const SearchField = memo(
       return (
         <div style={{ position: 'relative', width: textFieldProps.width || '320px' }}>
           {/* TextField */}
-          <TextField ref={ref} leadingIconType="search" inputMode={inputMode} {...textFieldProps} />
+          <TextField
+            ref={ref}
+            leadingIconType="search"
+            inputMode={inputMode}
+            type="text"
+            {...textFieldProps}
+          />
 
           {/* Search Suggestions */}
           {showSuggestions && (
