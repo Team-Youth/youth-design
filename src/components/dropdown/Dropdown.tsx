@@ -749,7 +749,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
             borderRadius: '8px',
             boxShadow: '0px 1px 6px 0px rgba(0, 0, 0, 0.06)',
           }),
-      zIndex: 1000,
+      // 모달(9999)보다 높은 z-index 사용하여 iPad Chrome에서도 확실히 위에 표시
+      zIndex: 10000,
       maxHeight: hasCustomContent ? `${customContentMaxHeight}px` : '200px',
       overflowY: hasCustomContent ? 'visible' : 'auto', // customContent일 때는 overflow 처리를 컨텐츠에 맡김
       // 위치 계산이 완료되기 전에는 보이지 않게 함
@@ -765,6 +766,10 @@ export const Dropdown: React.FC<DropdownProps> = ({
       transition: positionCalculated ? 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
       userSelect: !enableSearch ? 'none' : 'auto',
       boxSizing: 'border-box',
+      // iPad Chrome에서 stacking context 문제 해결을 위한 추가 속성
+      isolation: 'isolate',
+      // 모바일 브라우저에서 하드웨어 가속 활용
+      willChange: isAnimating ? 'transform, opacity' : 'auto',
     }),
     [
       isAnimating,
@@ -816,8 +821,8 @@ export const Dropdown: React.FC<DropdownProps> = ({
       style={{
         position: 'relative',
         width: finalWidth === 'fill' ? '100%' : finalWidth,
-        // 드롭다운이 열려도 높이에 영향을 주지 않도록 설정
-        zIndex: actualIsOpen ? 1001 : 'auto',
+        // 드롭다운이 열려도 높이에 영향을 주지 않도록 설정, 모달보다 높은 z-index 사용
+        zIndex: actualIsOpen ? 10001 : 'auto',
       }}
     >
       <div
