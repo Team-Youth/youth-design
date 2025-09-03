@@ -24839,6 +24839,7 @@ var TextArea = forwardRef(function (_a, ref) {
     onChange = _a.onChange,
     onFocus = _a.onFocus,
     onBlur = _a.onBlur,
+    onEnter = _a.onEnter,
     _c = _a.disabled,
     disabled = _c === void 0 ? false : _c,
     _d = _a.error,
@@ -24857,7 +24858,7 @@ var TextArea = forwardRef(function (_a, ref) {
     rows = _j === void 0 ? 4 : _j,
     _k = _a.hideStyle,
     hideStyle = _k === void 0 ? false : _k,
-    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "disabled", "error", "errorMessage", "className", "showCharacterCounter", "maxLength", "status", "width", "rows", "hideStyle"]);
+    restProps = __rest(_a, ["placeholder", "value", "defaultValue", "onChange", "onFocus", "onBlur", "onEnter", "disabled", "error", "errorMessage", "className", "showCharacterCounter", "maxLength", "status", "width", "rows", "hideStyle"]);
   var _l = useState(false),
     isFocused = _l[0],
     setIsFocused = _l[1];
@@ -24961,6 +24962,18 @@ var TextArea = forwardRef(function (_a, ref) {
   var handleMouseLeave = function () {
     setIsHovered(false);
   };
+  var handleKeyDown = function (e) {
+    if (e.key === 'Enter') {
+      if (e.shiftKey) {
+        // Shift+Enter: 줄바꿈 허용 (기본 동작)
+        return;
+      } else {
+        // Enter만: 기본 동작 방지하고 onEnter 콜백 호출
+        e.preventDefault();
+        onEnter === null || onEnter === void 0 ? void 0 : onEnter();
+      }
+    }
+  };
   return jsxs("div", {
     className: "text-area-wrapper ".concat(className),
     style: {
@@ -24977,6 +24990,7 @@ var TextArea = forwardRef(function (_a, ref) {
         onChange: handleChange,
         onFocus: handleFocus,
         onBlur: handleBlur,
+        onKeyDown: handleKeyDown,
         disabled: disabled,
         style: getTextAreaStyles(),
         rows: rows,

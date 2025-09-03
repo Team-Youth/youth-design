@@ -16,6 +16,8 @@ export interface TextAreaProps
   onFocus?: () => void;
   /** 블러 시 호출되는 콜백 */
   onBlur?: () => void;
+  /** Enter 키 입력 시 호출되는 콜백 (Shift+Enter는 줄바꿈) */
+  onEnter?: () => void;
   /** 비활성화 상태 */
   disabled?: boolean;
   /** 에러 상태 */
@@ -45,6 +47,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       onChange,
       onFocus,
       onBlur,
+      onEnter,
       disabled = false,
       error = false,
       errorMessage,
@@ -170,6 +173,19 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       setIsHovered(false);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter') {
+        if (e.shiftKey) {
+          // Shift+Enter: 줄바꿈 허용 (기본 동작)
+          return;
+        } else {
+          // Enter만: 기본 동작 방지하고 onEnter 콜백 호출
+          e.preventDefault();
+          onEnter?.();
+        }
+      }
+    };
+
     return (
       <div
         className={`text-area-wrapper ${className}`}
@@ -187,6 +203,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             onChange={handleChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
             disabled={disabled}
             style={getTextAreaStyles()}
             rows={rows}
