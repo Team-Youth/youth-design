@@ -176,7 +176,19 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
       if (e.key === 'Enter') {
         if (e.shiftKey) {
-          // Shift+Enter: 줄바꿈 허용 (기본 동작)
+          // Shift+Enter: 줄바꿈 허용 (기본 동작을 통해 handleChange에서 처리됨)
+          // 최대 길이 체크만 수행
+          const textarea = e.target as HTMLTextAreaElement;
+          const cursorPosition = textarea.selectionStart;
+          const newValue =
+            currentValue.slice(0, cursorPosition) + '\n' + currentValue.slice(cursorPosition);
+
+          if (maxLength && newValue.length > maxLength) {
+            e.preventDefault();
+            return;
+          }
+
+          // 기본 동작 허용 - handleChange에서 자동으로 처리됨
           return;
         } else {
           // Enter만: 기본 동작 방지하고 onEnter 콜백 호출
