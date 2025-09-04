@@ -103,7 +103,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
         <BaseToast.Viewport
           style={{
             position: 'fixed',
-            zIndex: 9999,
+            zIndex: 99999, // Modal(9999)과 Popup(9999)보다 훨씬 높게 설정
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',

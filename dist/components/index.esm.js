@@ -23571,7 +23571,7 @@ var ToastProvider = function (_a) {
       children: [children, jsx(ToastViewport, {
         style: __assign({
           position: 'fixed',
-          zIndex: 9999,
+          zIndex: 99999,
           display: 'flex',
           flexDirection: 'column',
           gap: '8px',
