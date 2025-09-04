@@ -23615,7 +23615,7 @@ var positionStyles = {
     left: '16px'
   },
   'top-center': {
-    top: '16px',
+    top: '40px',
     left: '50%',
     transform: 'translateX(-50%)'
   },
@@ -23668,7 +23668,7 @@ var ToastProvider = function (_a) {
       children: [children, jsx(ToastViewport, {
         style: __assign({
           position: 'fixed',
-          zIndex: 99999,
+          zIndex: 9999,
           display: 'flex',
           flexDirection: 'column',
           gap: '8px',

@@ -47,7 +47,7 @@ const positionStyles = {
     left: '16px',
   },
   'top-center': {
-    top: '16px',
+    top: '40px',
     left: '50%',
     transform: 'translateX(-50%)',
   },
@@ -103,7 +103,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
         <BaseToast.Viewport
           style={{
             position: 'fixed',
-            zIndex: 99999, // Modal(9999)과 Popup(9999)보다 훨씬 높게 설정
+            zIndex: 9999,
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
