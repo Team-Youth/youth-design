@@ -154,7 +154,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       let textColor: string = colors.semantic.text.tertiary; // #8D97A5 for placeholder
 
       if (disabled) {
-        textColor = colors.semantic.text.tertiary;
+        textColor = colors.semantic.disabled.foreground;
       } else if (error) {
         textColor = colors.semantic.state.error; // #FF2E2E
       } else if (actualStatus === 'filled') {
