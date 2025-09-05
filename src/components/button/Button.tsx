@@ -107,7 +107,7 @@ export const Button: React.FC<ButtonProps> = ({
     m: {
       paddingX: isIconOnlyButton ? '16px' : type === 'text' ? '12px' : '12px',
       paddingY: isIconOnlyButton ? '12px' : type === 'text' ? '0px' : '8px',
-      borderRadius: isIconOnlyButton ? '12px' : type === 'text' ? '12px' : '8px',
+      borderRadius: type === 'text' ? '12px' : '8px',
       width: 'auto',
       height: isIconOnlyButton ? '40px' : type === 'text' ? '24px' : '40px',
       fontSize: '14px',
@@ -118,7 +118,7 @@ export const Button: React.FC<ButtonProps> = ({
     s: {
       paddingX: isIconOnlyButton ? '0px' : type === 'text' ? '8px' : '8px',
       paddingY: isIconOnlyButton ? '0px' : type === 'text' ? '0px' : '6px',
-      borderRadius: isIconOnlyButton ? '12px' : type === 'text' ? '12px' : '4px',
+      borderRadius: type === 'text' ? '12px' : '4px',
       width: 'auto',
       height: isIconOnlyButton ? '32px' : type === 'text' ? '20px' : '32px',
       fontSize: '12px',
