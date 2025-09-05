@@ -23641,7 +23641,7 @@ var ToastRenderer = function () {
         title: toast.title || '',
         description: toast.description,
         showLeadingIcon: true,
-        showCloseButton: true,
+        showCloseButton: false,
         position: position
       }, toast.id);
     })
@@ -23657,7 +23657,7 @@ var ToastProvider = function (_a) {
     _b = _a.position,
     position = _b === void 0 ? 'top-right' : _b,
     _c = _a.defaultDuration,
-    defaultDuration = _c === void 0 ? 4000 : _c,
+    defaultDuration = _c === void 0 ? 3000 : _c,
     _d = _a.limit,
     limit = _d === void 0 ? 3 : _d;
   return jsx(ToastProvider$1, {

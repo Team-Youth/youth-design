@@ -77,7 +77,7 @@ const ToastRenderer: React.FC = () => {
           title={toast.title || ''}
           description={toast.description}
           showLeadingIcon={true}
-          showCloseButton={true}
+          showCloseButton={false}
           position={position}
         />
       ))}
@@ -93,7 +93,7 @@ const ToastRenderer: React.FC = () => {
 export const ToastProvider: React.FC<ToastProviderProps> = ({
   children,
   position = 'top-right',
-  defaultDuration = 4000,
+  defaultDuration = 3000,
   limit = 3,
 }) => {
   return (
