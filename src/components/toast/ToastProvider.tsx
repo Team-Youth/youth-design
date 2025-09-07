@@ -130,64 +130,79 @@ export const useToast = () => {
 
   const success = useCallback(
     (title: string, description?: string, options?: Partial<ToastItem>) => {
-      return toastManager.add({
+      const payload: any = {
         id: options?.id,
         type: 'success',
         title,
         description,
-        timeout: options?.duration,
-      });
+      };
+      if (options?.duration != null) {
+        payload.timeout = options.duration;
+      }
+      return toastManager.add(payload);
     },
     [toastManager],
   );
 
   const error = useCallback(
     (title: string, description?: string, options?: Partial<ToastItem>) => {
-      return toastManager.add({
+      const payload: any = {
         id: options?.id,
         type: 'error',
         title,
         description,
-        timeout: options?.duration,
-      });
+      };
+      if (options?.duration != null) {
+        payload.timeout = options.duration;
+      }
+      return toastManager.add(payload);
     },
     [toastManager],
   );
 
   const warning = useCallback(
     (title: string, description?: string, options?: Partial<ToastItem>) => {
-      return toastManager.add({
+      const payload: any = {
         id: options?.id,
         type: 'warning',
         title,
         description,
-        timeout: options?.duration,
-      });
+      };
+      if (options?.duration != null) {
+        payload.timeout = options.duration;
+      }
+      return toastManager.add(payload);
     },
     [toastManager],
   );
 
   const info = useCallback(
     (title: string, description?: string, options?: Partial<ToastItem>) => {
-      return toastManager.add({
+      const payload: any = {
         id: options?.id,
         type: 'info',
         title,
         description,
-        timeout: options?.duration,
-      });
+      };
+      if (options?.duration != null) {
+        payload.timeout = options.duration;
+      }
+      return toastManager.add(payload);
     },
     [toastManager],
   );
 
   const custom = useCallback(
     (options: Omit<ToastItem, 'id'>) => {
-      return toastManager.add({
+      const payload: any = {
         type: options.status,
         title: options.title,
         description: options.description,
-        timeout: options.duration,
-      });
+      };
+      if (options.duration != null) {
+        payload.timeout = options.duration;
+      }
+      return toastManager.add(payload);
     },
     [toastManager],
   );

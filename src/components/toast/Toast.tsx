@@ -6,7 +6,6 @@ import { shadows } from '../../tokens/shadows';
 import { spacing } from '../../tokens/spacing';
 import { textStyles } from '../../tokens/typography';
 import { Icon } from '../icon';
-import './Toast.css';
 
 // 토스트 상태 타입 정의
 export type ToastStatus = 'success' | 'error' | 'warning' | 'info';
@@ -91,6 +90,21 @@ export interface ToastProps {
   position?: string;
 }
 
+// 위치별 진입/퇴장 변환 계산
+const getEnterTransform = (position?: string) => {
+  if (!position) return 'translateX(100%) scale(0.95)';
+  if (position.includes('left')) return 'translateX(-100%) scale(0.95)';
+  if (position.includes('right')) return 'translateX(100%) scale(0.95)';
+  if (position.includes('top')) return 'translateY(-100%) scale(0.95)';
+  if (position.includes('bottom')) return 'translateY(100%) scale(0.95)';
+  return 'translateX(100%) scale(0.95)';
+};
+
+const getExitTransform = (position?: string) => {
+  // 퇴장 방향은 진입과 동일한 반대방향으로 살짝 축소
+  return getEnterTransform(position);
+};
+
 /**
  * Base UI Toast를 youth-design 스타일로 래핑한 컴포넌트
  */
@@ -107,7 +121,12 @@ export const Toast: React.FC<ToastProps> = React.memo(
     const config = statusConfig[status];
     const IconComponent = config.icon;
 
-    const toastStyle: React.CSSProperties = {
+    const isStarting = toast?.transitionStatus === 'starting';
+    const isEnding = toast?.transitionStatus === 'ending';
+
+    const baseTransition = 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease';
+
+    const rootStyle: React.CSSProperties = {
       display: 'flex',
       alignItems: 'center',
       gap: spacing.m,
@@ -119,6 +138,13 @@ export const Toast: React.FC<ToastProps> = React.memo(
       minHeight: 'fit-content',
       position: 'relative',
       pointerEvents: 'auto',
+      transition: baseTransition,
+      opacity: isStarting || isEnding ? 0 : 1,
+      transform: isStarting
+        ? getEnterTransform(position)
+        : isEnding
+          ? getExitTransform(position)
+          : 'translateX(0) translateY(0) scale(1)',
     };
 
     const contentStyle: React.CSSProperties = {
@@ -126,6 +152,9 @@ export const Toast: React.FC<ToastProps> = React.memo(
       flexDirection: 'column',
       gap: spacing.xxs,
       flex: 1,
+      transition: 'opacity 250ms ease, transform 250ms ease',
+      opacity: isStarting ? 0 : 1,
+      transform: isStarting ? 'translateY(8px)' : 'none',
     };
 
     const titleStyle: React.CSSProperties = {
@@ -142,6 +171,15 @@ export const Toast: React.FC<ToastProps> = React.memo(
       whiteSpace: 'pre-line',
     };
 
+    const iconWrapperStyle: React.CSSProperties = {
+      opacity: isStarting ? 0 : 1,
+      transform: isStarting ? 'scale(0.8)' : 'scale(1)',
+      transition: 'opacity 250ms ease 100ms, transform 250ms ease 100ms',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+    };
+
     const closeButtonStyle: React.CSSProperties = {
       background: 'none',
       border: 'none',
@@ -151,7 +189,7 @@ export const Toast: React.FC<ToastProps> = React.memo(
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: radius.xs,
-      transition: 'background-color 0.2s ease',
+      transition: 'background-color 0.2s ease, transform 0.15s ease',
       position: 'absolute',
       top: spacing.m,
       right: spacing.m,
@@ -160,14 +198,14 @@ export const Toast: React.FC<ToastProps> = React.memo(
     return (
       <BaseToast.Root
         toast={toast}
-        style={toastStyle}
+        style={rootStyle}
         className={`toast-root toast toast--${status}`}
         data-transition-status={toast?.transitionStatus}
         data-position={position}
         data-swiping={toast?.swiping ? 'true' : 'false'}
       >
         {showLeadingIcon && (
-          <div className="toast__icon">
+          <div className="toast__icon" style={iconWrapperStyle}>
             <IconComponent color={config.color} />
           </div>
         )}
@@ -190,9 +228,11 @@ export const Toast: React.FC<ToastProps> = React.memo(
             aria-label="알림 닫기"
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
               (e.target as HTMLElement).style.backgroundColor = colors.primary.coolGray[100];
+              (e.target as HTMLElement).style.transform = 'scale(1.05)';
             }}
             onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
               (e.target as HTMLElement).style.backgroundColor = 'transparent';
+              (e.target as HTMLElement).style.transform = 'scale(1)';
             }}
           >
             <Icon type="close" size={16} color={colors.semantic.text.tertiary} />

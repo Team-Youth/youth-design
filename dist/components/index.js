@@ -23414,6 +23414,19 @@ var statusConfig = {
     color: colors.semantic.state.info
   }
 };
+// 위치별 진입/퇴장 변환 계산
+var getEnterTransform = function (position) {
+  if (!position) return 'translateX(100%) scale(0.95)';
+  if (position.includes('left')) return 'translateX(-100%) scale(0.95)';
+  if (position.includes('right')) return 'translateX(100%) scale(0.95)';
+  if (position.includes('top')) return 'translateY(-100%) scale(0.95)';
+  if (position.includes('bottom')) return 'translateY(100%) scale(0.95)';
+  return 'translateX(100%) scale(0.95)';
+};
+var getExitTransform = function (position) {
+  // 퇴장 방향은 진입과 동일한 반대방향으로 살짝 축소
+  return getEnterTransform(position);
+};
 /**
  * Base UI Toast를 youth-design 스타일로 래핑한 컴포넌트
  */
@@ -23429,7 +23442,10 @@ var Toast = React.memo(function (_a) {
     position = _a.position;
   var config = statusConfig[status];
   var IconComponent = config.icon;
-  var toastStyle = {
+  var isStarting = (toast === null || toast === void 0 ? void 0 : toast.transitionStatus) === 'starting';
+  var isEnding = (toast === null || toast === void 0 ? void 0 : toast.transitionStatus) === 'ending';
+  var baseTransition = 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease';
+  var rootStyle = {
     display: 'flex',
     alignItems: 'center',
     gap: spacing.m,
@@ -23440,13 +23456,19 @@ var Toast = React.memo(function (_a) {
     width: '360px',
     minHeight: 'fit-content',
     position: 'relative',
-    pointerEvents: 'auto'
+    pointerEvents: 'auto',
+    transition: baseTransition,
+    opacity: isStarting || isEnding ? 0 : 1,
+    transform: isStarting ? getEnterTransform(position) : isEnding ? getExitTransform(position) : 'translateX(0) translateY(0) scale(1)'
   };
   var contentStyle = {
     display: 'flex',
     flexDirection: 'column',
     gap: spacing.xxs,
-    flex: 1
+    flex: 1,
+    transition: 'opacity 250ms ease, transform 250ms ease',
+    opacity: isStarting ? 0 : 1,
+    transform: isStarting ? 'translateY(8px)' : 'none'
   };
   var titleStyle = __assign(__assign({}, textStyles.heading3), {
     color: colors.semantic.text.primary,
@@ -23458,6 +23480,14 @@ var Toast = React.memo(function (_a) {
     margin: 0,
     whiteSpace: 'pre-line'
   });
+  var iconWrapperStyle = {
+    opacity: isStarting ? 0 : 1,
+    transform: isStarting ? 'scale(0.8)' : 'scale(1)',
+    transition: 'opacity 250ms ease 100ms, transform 250ms ease 100ms',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  };
   var closeButtonStyle = {
     background: 'none',
     border: 'none',
@@ -23467,20 +23497,21 @@ var Toast = React.memo(function (_a) {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: radius.xs,
-    transition: 'background-color 0.2s ease',
+    transition: 'background-color 0.2s ease, transform 0.15s ease',
     position: 'absolute',
     top: spacing.m,
     right: spacing.m
   };
   return jsxRuntime.jsxs(ToastRoot, {
     toast: toast,
-    style: toastStyle,
+    style: rootStyle,
     className: "toast-root toast toast--".concat(status),
     "data-transition-status": toast === null || toast === void 0 ? void 0 : toast.transitionStatus,
     "data-position": position,
     "data-swiping": (toast === null || toast === void 0 ? void 0 : toast.swiping) ? 'true' : 'false',
     children: [showLeadingIcon && jsxRuntime.jsx("div", {
       className: "toast__icon",
+      style: iconWrapperStyle,
       children: jsxRuntime.jsx(IconComponent, {
         color: config.color
       })
@@ -23502,9 +23533,11 @@ var Toast = React.memo(function (_a) {
       "aria-label": "\uC54C\uB9BC \uB2EB\uAE30",
       onMouseEnter: function (e) {
         e.target.style.backgroundColor = colors.primary.coolGray[100];
+        e.target.style.transform = 'scale(1.05)';
       },
       onMouseLeave: function (e) {
         e.target.style.backgroundColor = 'transparent';
+        e.target.style.transform = 'scale(1)';
       },
       children: jsxRuntime.jsx(Icon, {
         type: "close",
@@ -23612,48 +23645,63 @@ var ToastProvider = function (_a) {
 var useToast = function () {
   var toastManager = useToastManager();
   var success = React.useCallback(function (title, description, options) {
-    return toastManager.add({
+    var payload = {
       id: options === null || options === void 0 ? void 0 : options.id,
       type: 'success',
       title: title,
-      description: description,
-      timeout: options === null || options === void 0 ? void 0 : options.duration
-    });
+      description: description
+    };
+    if ((options === null || options === void 0 ? void 0 : options.duration) != null) {
+      payload.timeout = options.duration;
+    }
+    return toastManager.add(payload);
   }, [toastManager]);
   var error = React.useCallback(function (title, description, options) {
-    return toastManager.add({
+    var payload = {
       id: options === null || options === void 0 ? void 0 : options.id,
       type: 'error',
       title: title,
-      description: description,
-      timeout: options === null || options === void 0 ? void 0 : options.duration
-    });
+      description: description
+    };
+    if ((options === null || options === void 0 ? void 0 : options.duration) != null) {
+      payload.timeout = options.duration;
+    }
+    return toastManager.add(payload);
   }, [toastManager]);
   var warning = React.useCallback(function (title, description, options) {
-    return toastManager.add({
+    var payload = {
       id: options === null || options === void 0 ? void 0 : options.id,
       type: 'warning',
       title: title,
-      description: description,
-      timeout: options === null || options === void 0 ? void 0 : options.duration
-    });
+      description: description
+    };
+    if ((options === null || options === void 0 ? void 0 : options.duration) != null) {
+      payload.timeout = options.duration;
+    }
+    return toastManager.add(payload);
   }, [toastManager]);
   var info = React.useCallback(function (title, description, options) {
-    return toastManager.add({
+    var payload = {
       id: options === null || options === void 0 ? void 0 : options.id,
       type: 'info',
       title: title,
-      description: description,
-      timeout: options === null || options === void 0 ? void 0 : options.duration
-    });
+      description: description
+    };
+    if ((options === null || options === void 0 ? void 0 : options.duration) != null) {
+      payload.timeout = options.duration;
+    }
+    return toastManager.add(payload);
   }, [toastManager]);
   var custom = React.useCallback(function (options) {
-    return toastManager.add({
+    var payload = {
       type: options.status,
       title: options.title,
-      description: options.description,
-      timeout: options.duration
-    });
+      description: options.description
+    };
+    if (options.duration != null) {
+      payload.timeout = options.duration;
+    }
+    return toastManager.add(payload);
   }, [toastManager]);
   var remove = React.useCallback(function (id) {
     return toastManager.close(id);

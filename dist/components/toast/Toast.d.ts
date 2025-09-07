@@ -1,5 +1,4 @@
 import React from 'react';
-import './Toast.css';
 export type ToastStatus = 'success' | 'error' | 'warning' | 'info';
 export interface ToastProps {
     /** 토스트 상태 */
