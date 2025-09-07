@@ -25045,15 +25045,9 @@ var TextArea = React.forwardRef(function (_a, ref) {
     setIsHovered(false);
   };
   var handleKeyDown = function (e) {
-    if (e.key === 'Enter') {
-      if (e.shiftKey) {
-        // Shift+Enter: 줄바꿈 허용 (기본 동작)
-        return;
-      } else {
-        // Enter만: 기본 동작 방지하고 onEnter 콜백 호출
-        e.preventDefault();
-        onEnter === null || onEnter === void 0 ? void 0 : onEnter();
-      }
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+      e.preventDefault();
+      onEnter === null || onEnter === void 0 ? void 0 : onEnter();
     }
   };
   return jsxRuntime.jsxs("div", {

@@ -16,7 +16,7 @@ export interface TextAreaProps
   onFocus?: () => void;
   /** 블러 시 호출되는 콜백 */
   onBlur?: () => void;
-  /** Enter 키 입력 시 호출되는 콜백 (Shift+Enter는 줄바꿈) */
+  /** Cmd/Ctrl+Enter 입력 시 호출되는 콜백 (Enter는 줄바꿈 유지) */
   onEnter?: () => void;
   /** 비활성화 상태 */
   disabled?: boolean;
@@ -174,15 +174,9 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Enter') {
-        if (e.shiftKey) {
-          // Shift+Enter: 줄바꿈 허용 (기본 동작)
-          return;
-        } else {
-          // Enter만: 기본 동작 방지하고 onEnter 콜백 호출
-          e.preventDefault();
-          onEnter?.();
-        }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        onEnter?.();
       }
     };
 

@@ -12,7 +12,7 @@ export interface TextAreaProps extends Omit<React.TextareaHTMLAttributes<HTMLTex
     onFocus?: () => void;
     /** 블러 시 호출되는 콜백 */
     onBlur?: () => void;
-    /** Enter 키 입력 시 호출되는 콜백 (Shift+Enter는 줄바꿈) */
+    /** Cmd/Ctrl+Enter 입력 시 호출되는 콜백 (Enter는 줄바꿈 유지) */
     onEnter?: () => void;
     /** 비활성화 상태 */
     disabled?: boolean;
