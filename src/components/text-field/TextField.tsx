@@ -115,11 +115,12 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       if (disabled) {
         borderColor = colors.semantic.border.strong;
         backgroundColor = colors.semantic.disabled.background; // #F3F5F6
+      } else if (error) {
+        // 에러 상태가 readOnly보다 우선 적용되도록 순서 조정
+        borderColor = colors.semantic.state.error; // #FF2E2E
       } else if (readOnly) {
         borderColor = colors.semantic.border.strong;
         backgroundColor = colors.semantic.background.primary;
-      } else if (error) {
-        borderColor = colors.semantic.state.error; // #FF2E2E
       } else if (isFocused) {
         borderColor = colors.semantic.text.primary; // #25282D
       } else if (isHovered) {
