@@ -25,10 +25,10 @@ export interface PopoverProps {
     width?: number | string;
     /** 최소 너비 (anchorRef의 너비보다 작을 때 사용) */
     minWidth?: number | string;
-    /** Popover 수직 위치 (기본값: 'bottom') */
-    verticalPosition?: 'top' | 'bottom';
-    /** Popover 수평 정렬 (기본값: 'center') */
-    horizontalAlign?: 'left' | 'center' | 'right';
+    /** Popover 위치 (기본값: 'bottom') */
+    position?: 'top' | 'bottom' | 'left' | 'right';
+    /** Popover 정렬 (기본값: 'center') */
+    align?: 'start' | 'center' | 'end';
     /** 추가 스타일 */
     style?: React.CSSProperties;
     /** Popover 컨테이너의 최대 높이 */

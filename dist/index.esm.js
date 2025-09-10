@@ -28659,10 +28659,10 @@ var Popover = function (_a) {
     anchorRef = _a.anchorRef,
     width = _a.width,
     minWidth = _a.minWidth,
-    _b = _a.verticalPosition,
-    verticalPosition = _b === void 0 ? 'bottom' : _b,
-    _c = _a.horizontalAlign,
-    horizontalAlign = _c === void 0 ? 'center' : _c,
+    _b = _a.position,
+    position = _b === void 0 ? 'bottom' : _b,
+    _c = _a.align,
+    align = _c === void 0 ? 'center' : _c,
     _d = _a.style,
     style = _d === void 0 ? {} : _d,
     maxHeight = _a.maxHeight;
@@ -28683,57 +28683,141 @@ var Popover = function (_a) {
   var calculatePosition = useCallback(function () {
     if (!(anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current)) return null;
     var anchorRect = anchorRef.current.getBoundingClientRect();
+    var viewportWidth = window.innerWidth;
+    var viewportHeight = window.innerHeight;
+    var gap = 8; // anchor와 popover 사이 간격
+    // 기본 크기 계산
     var popoverWidth = width || anchorRect.width;
-    // 기본 width 계산
-    var calculatedWidth = typeof popoverWidth === 'number' ? popoverWidth : parseFloat(popoverWidth) || anchorRect.width;
-    // minWidth가 있으면 더 큰 값으로 사용
+    var popoverHeight = maxHeight || 200; // 기본 높이
+    if (typeof popoverWidth === 'string') {
+      popoverWidth = parseFloat(popoverWidth) || anchorRect.width;
+    }
+    // minWidth 적용
     if (minWidth) {
       var minWidthValue = typeof minWidth === 'number' ? minWidth : parseFloat(minWidth) || 0;
-      calculatedWidth = Math.max(calculatedWidth, minWidthValue);
+      popoverWidth = Math.max(popoverWidth, minWidthValue);
     }
-    // horizontalAlign에 따른 기본 left 위치 계산
-    var leftPosition;
-    switch (horizontalAlign) {
+    var coords = {};
+    // position에 따른 기본 위치 계산
+    switch (position) {
+      case 'top':
+        coords.bottom = viewportHeight - anchorRect.top + gap;
+        coords.width = popoverWidth;
+        // align에 따른 수평 위치
+        switch (align) {
+          case 'start':
+            coords.left = anchorRect.left;
+            break;
+          case 'end':
+            // 우측 정렬: Popover의 우측이 anchor의 우측과 일치
+            coords.right = viewportWidth - anchorRect.right;
+            break;
+          case 'center':
+          default:
+            coords.left = anchorRect.left + (anchorRect.width - popoverWidth) / 2;
+            break;
+        }
+        break;
+      case 'bottom':
+        coords.top = anchorRect.bottom + gap;
+        coords.width = popoverWidth;
+        // align에 따른 수평 위치
+        switch (align) {
+          case 'start':
+            coords.left = anchorRect.left;
+            break;
+          case 'end':
+            // 우측 정렬: Popover의 우측이 anchor의 우측과 일치
+            coords.right = viewportWidth - anchorRect.right;
+            break;
+          case 'center':
+          default:
+            coords.left = anchorRect.left + (anchorRect.width - popoverWidth) / 2;
+            break;
+        }
+        break;
       case 'left':
-        leftPosition = anchorRect.left;
+        coords.right = viewportWidth - anchorRect.left + gap;
+        coords.width = popoverWidth;
+        // align에 따른 수직 위치
+        switch (align) {
+          case 'start':
+            coords.top = anchorRect.top;
+            break;
+          case 'end':
+            // 하단 정렬: Popover의 하단이 anchor의 하단과 일치
+            coords.bottom = viewportHeight - anchorRect.bottom;
+            break;
+          case 'center':
+          default:
+            coords.top = anchorRect.top + (anchorRect.height - popoverHeight) / 2;
+            break;
+        }
         break;
       case 'right':
-        leftPosition = anchorRect.right - calculatedWidth;
-        break;
-      case 'center':
-      default:
-        leftPosition = anchorRect.left + (anchorRect.width - calculatedWidth) / 2;
+        coords.left = anchorRect.right + gap;
+        coords.width = popoverWidth;
+        // align에 따른 수직 위치
+        switch (align) {
+          case 'start':
+            coords.top = anchorRect.top;
+            break;
+          case 'end':
+            // 하단 정렬: Popover의 하단이 anchor의 하단과 일치
+            coords.bottom = viewportHeight - anchorRect.bottom;
+            break;
+          case 'center':
+          default:
+            coords.top = anchorRect.top + (anchorRect.height - popoverHeight) / 2;
+            break;
+        }
         break;
     }
-    // 뷰포트 경계 고려하여 left 위치 조정
-    var viewportWidth = window.innerWidth;
-    var rightEdge = leftPosition + calculatedWidth;
-    // 오른쪽으로 잘리는 경우 왼쪽으로 이동
-    if (rightEdge > viewportWidth) {
-      leftPosition = viewportWidth - calculatedWidth - 8; // 8px 여백
-    }
-    // 왼쪽으로 너무 많이 이동한 경우 최소 8px 여백 유지
-    if (leftPosition < 8) {
-      leftPosition = 8;
-      // 여전히 잘리는 경우 width를 줄임
-      if (calculatedWidth > viewportWidth - 16) {
-        calculatedWidth = viewportWidth - 16;
+    // 뷰포트 경계 조정
+    if (coords.left !== undefined) {
+      var rightEdge = coords.left + (coords.width || 0);
+      if (rightEdge > viewportWidth) {
+        coords.left = Math.max(gap, viewportWidth - (coords.width || 0) - gap);
+      }
+      if (coords.left < gap) {
+        coords.left = gap;
+        if (coords.width && coords.width > viewportWidth - 2 * gap) {
+          coords.width = viewportWidth - 2 * gap;
+        }
       }
     }
-    var coords = {
-      left: leftPosition,
-      width: calculatedWidth
-    };
-    if (verticalPosition === 'bottom') {
-      return __assign(__assign({}, coords), {
-        top: anchorRect.bottom + 8
-      });
-    } else {
-      return __assign(__assign({}, coords), {
-        bottom: window.innerHeight - anchorRect.top + 8
-      });
+    if (coords.right !== undefined) {
+      var leftEdge = viewportWidth - coords.right - (coords.width || 0);
+      if (leftEdge < gap) {
+        coords.right = Math.max(gap, viewportWidth - (coords.width || 0) - gap);
+      }
+      if (coords.right < gap) {
+        coords.right = gap;
+        if (coords.width && coords.width > viewportWidth - 2 * gap) {
+          coords.width = viewportWidth - 2 * gap;
+        }
+      }
     }
-  }, [anchorRef, width, minWidth, verticalPosition, horizontalAlign]);
+    if (coords.top !== undefined) {
+      var bottomEdge = coords.top + popoverHeight;
+      if (bottomEdge > viewportHeight) {
+        coords.top = Math.max(gap, viewportHeight - popoverHeight - gap);
+      }
+      if (coords.top < gap) {
+        coords.top = gap;
+      }
+    }
+    if (coords.bottom !== undefined) {
+      var topEdge = viewportHeight - coords.bottom - popoverHeight;
+      if (topEdge < gap) {
+        coords.bottom = Math.max(gap, viewportHeight - popoverHeight - gap);
+      }
+      if (coords.bottom < gap) {
+        coords.bottom = gap;
+      }
+    }
+    return coords;
+  }, [anchorRef, width, minWidth, position, align, maxHeight]);
   // 외부 클릭 감지
   useEffect(function () {
     var handleClickOutside = function (event) {
@@ -28798,6 +28882,65 @@ var Popover = function (_a) {
       };
     }
   }, [isOpen, calculatePosition]);
+  // 애니메이션 스타일 헬퍼 함수들
+  var getEnteringStyle = function (pos) {
+    switch (pos) {
+      case 'top':
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateY(4px)'
+        };
+      case 'bottom':
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateY(-4px)'
+        };
+      case 'left':
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateX(4px)'
+        };
+      case 'right':
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateX(-4px)'
+        };
+      default:
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateY(-4px)'
+        };
+    }
+  };
+  var getExitingStyle = function (pos) {
+    switch (pos) {
+      case 'top':
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateY(4px)'
+        };
+      case 'bottom':
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateY(-4px)'
+        };
+      case 'left':
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateX(4px)'
+        };
+      case 'right':
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateX(-4px)'
+        };
+      default:
+        return {
+          opacity: 0,
+          transform: 'scale(0.95) translateY(-4px)'
+        };
+    }
+  };
   // 아이템 클릭 핸들러
   var handleItemClick = function (item) {
     var _a;
@@ -28820,25 +28963,30 @@ var Popover = function (_a) {
   // 동적 스타일 생성
   var getPopoverStyle = function () {
     var dynamicStyle = __assign({}, styles.popover);
-    // transform-origin 계산 (수직 + 수평 위치 조합)
-    var verticalOrigin = verticalPosition === 'top' ? 'bottom' : 'top';
-    var horizontalOrigin = horizontalAlign === 'left' ? 'left' : horizontalAlign === 'right' ? 'right' : 'center';
-    dynamicStyle.transformOrigin = "".concat(horizontalOrigin, " ").concat(verticalOrigin);
+    // transform-origin 계산
+    var transformOrigin = 'center center';
+    switch (position) {
+      case 'top':
+        transformOrigin = align === 'start' ? 'left bottom' : align === 'end' ? 'right bottom' : 'center bottom';
+        break;
+      case 'bottom':
+        transformOrigin = align === 'start' ? 'left top' : align === 'end' ? 'right top' : 'center top';
+        break;
+      case 'left':
+        transformOrigin = align === 'start' ? 'right top' : align === 'end' ? 'right bottom' : 'right center';
+        break;
+      case 'right':
+        transformOrigin = align === 'start' ? 'left top' : align === 'end' ? 'left bottom' : 'left center';
+        break;
+    }
+    dynamicStyle.transformOrigin = transformOrigin;
     // 애니메이션 상태별 스타일 적용
     if (animationState === 'entering') {
-      if (verticalPosition === 'top') {
-        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopEntering);
-      } else {
-        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntering);
-      }
+      dynamicStyle = __assign(__assign({}, dynamicStyle), getEnteringStyle(position));
     } else if (animationState === 'entered') {
       dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverEntered);
     } else if (animationState === 'exiting') {
-      if (verticalPosition === 'top') {
-        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverPositionTopExiting);
-      } else {
-        dynamicStyle = __assign(__assign({}, dynamicStyle), styles.popoverExiting);
-      }
+      dynamicStyle = __assign(__assign({}, dynamicStyle), getExitingStyle(position));
     }
     return __assign(__assign(__assign(__assign({}, dynamicStyle), popoverPosition), {
       maxHeight: maxHeight
@@ -28933,34 +29081,11 @@ var styles = {
     borderRadius: '8px',
     boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
     overflow: 'hidden',
-    transformOrigin: 'top center',
     transition: 'all 0.2s ease'
-  },
-  popoverPositionTop: {
-    transformOrigin: 'bottom center'
-  },
-  popoverPositionBottom: {
-    transformOrigin: 'top center'
-  },
-  popoverEntering: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(-4px)'
-  },
-  popoverPositionTopEntering: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(4px)'
   },
   popoverEntered: {
     opacity: 1,
-    transform: 'scale(1) translateY(0)'
-  },
-  popoverExiting: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(-4px)'
-  },
-  popoverPositionTopExiting: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(4px)'
+    transform: 'scale(1) translate(0, 0)'
   },
   popoverContent: {
     maxHeight: '200px',

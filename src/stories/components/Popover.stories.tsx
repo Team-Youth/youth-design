@@ -40,15 +40,15 @@ const meta: Meta<typeof Popover> = {
       description: '최소 너비',
       control: { type: 'number' },
     },
-    verticalPosition: {
-      description: '팝오버 수직 위치',
+    position: {
+      description: '팝오버 위치',
       control: { type: 'select' },
-      options: ['top', 'bottom'],
+      options: ['top', 'bottom', 'left', 'right'],
     },
-    horizontalAlign: {
-      description: '팝오버 수평 정렬',
+    align: {
+      description: '팝오버 정렬',
       control: { type: 'select' },
-      options: ['left', 'center', 'right'],
+      options: ['start', 'center', 'end'],
     },
     maxHeight: {
       description: '팝오버 최대 높이',
@@ -296,31 +296,117 @@ const TopPositionExample = () => {
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         anchorRef={buttonRef}
-        verticalPosition="top"
+        position="top"
       />
     </div>
   );
 };
 
-// 수평 정렬 예시
-const HorizontalAlignExample = () => {
+// 좌우 위치 예시
+const LeftRightPositionExample = () => {
   const [leftOpen, setLeftOpen] = useState(false);
-  const [centerOpen, setCenterOpen] = useState(false);
   const [rightOpen, setRightOpen] = useState(false);
 
   const leftRef = useRef<HTMLButtonElement>(null);
-  const centerRef = useRef<HTMLButtonElement>(null);
   const rightRef = useRef<HTMLButtonElement>(null);
 
   const items = [
     {
       id: 'option1',
-      label: '옵션 1',
+      label: '사이드 메뉴 옵션 1',
+      onClick: (id: string) => console.log('클릭된 아이템:', id),
+      icon: 'arrow-left' as const,
+    },
+    {
+      id: 'option2',
+      label: '사이드 메뉴 옵션 2',
+      onClick: (id: string) => console.log('클릭된 아이템:', id),
+      icon: 'arrow-right' as const,
+    },
+    {
+      id: 'option3',
+      label: '사이드 메뉴 옵션 3',
+      onClick: (id: string) => console.log('클릭된 아이템:', id),
+    },
+  ];
+
+  return (
+    <div style={{ padding: '100px', display: 'flex', gap: '300px', justifyContent: 'center' }}>
+      <button
+        ref={leftRef}
+        onClick={() => setLeftOpen(!leftOpen)}
+        style={{
+          padding: '12px 24px',
+          backgroundColor: '#EF4444',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          fontSize: '16px',
+          fontWeight: '500',
+        }}
+      >
+        왼쪽으로 열기
+      </button>
+
+      <button
+        ref={rightRef}
+        onClick={() => setRightOpen(!rightOpen)}
+        style={{
+          padding: '12px 24px',
+          backgroundColor: '#06B6D4',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          fontSize: '16px',
+          fontWeight: '500',
+        }}
+      >
+        오른쪽으로 열기
+      </button>
+
+      <Popover
+        items={items}
+        isOpen={leftOpen}
+        onOpenChange={setLeftOpen}
+        anchorRef={leftRef}
+        position="left"
+        width={200}
+      />
+
+      <Popover
+        items={items}
+        isOpen={rightOpen}
+        onOpenChange={setRightOpen}
+        anchorRef={rightRef}
+        position="right"
+        align="end"
+        width={200}
+      />
+    </div>
+  );
+};
+
+// 정렬 옵션 예시
+const AlignmentExample = () => {
+  const [startOpen, setStartOpen] = useState(false);
+  const [centerOpen, setCenterOpen] = useState(false);
+  const [endOpen, setEndOpen] = useState(false);
+
+  const startRef = useRef<HTMLButtonElement>(null);
+  const centerRef = useRef<HTMLButtonElement>(null);
+  const endRef = useRef<HTMLButtonElement>(null);
+
+  const items = [
+    {
+      id: 'option1',
+      label: '정렬 옵션 1',
       onClick: (id: string) => console.log('클릭된 아이템:', id),
     },
     {
       id: 'option2',
-      label: '옵션 2',
+      label: '정렬 옵션 2',
       onClick: (id: string) => console.log('클릭된 아이템:', id),
     },
   ];
@@ -328,8 +414,8 @@ const HorizontalAlignExample = () => {
   return (
     <div style={{ padding: '100px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
       <button
-        ref={leftRef}
-        onClick={() => setLeftOpen(!leftOpen)}
+        ref={startRef}
+        onClick={() => setStartOpen(!startOpen)}
         style={{
           padding: '8px 16px',
           backgroundColor: '#3B82F6',
@@ -339,7 +425,7 @@ const HorizontalAlignExample = () => {
           cursor: 'pointer',
         }}
       >
-        Left Align
+        Start Align
       </button>
 
       <button
@@ -358,8 +444,8 @@ const HorizontalAlignExample = () => {
       </button>
 
       <button
-        ref={rightRef}
-        onClick={() => setRightOpen(!rightOpen)}
+        ref={endRef}
+        onClick={() => setEndOpen(!endOpen)}
         style={{
           padding: '8px 16px',
           backgroundColor: '#F59E0B',
@@ -369,15 +455,15 @@ const HorizontalAlignExample = () => {
           cursor: 'pointer',
         }}
       >
-        Right Align
+        End Align
       </button>
 
       <Popover
         items={items}
-        isOpen={leftOpen}
-        onOpenChange={setLeftOpen}
-        anchorRef={leftRef}
-        horizontalAlign="left"
+        isOpen={startOpen}
+        onOpenChange={setStartOpen}
+        anchorRef={startRef}
+        align="start"
         width={200}
       />
 
@@ -386,16 +472,16 @@ const HorizontalAlignExample = () => {
         isOpen={centerOpen}
         onOpenChange={setCenterOpen}
         anchorRef={centerRef}
-        horizontalAlign="center"
+        align="center"
         width={200}
       />
 
       <Popover
         items={items}
-        isOpen={rightOpen}
-        onOpenChange={setRightOpen}
-        anchorRef={rightRef}
-        horizontalAlign="right"
+        isOpen={endOpen}
+        onOpenChange={setEndOpen}
+        anchorRef={endRef}
+        align="end"
         width={200}
       />
     </div>
@@ -418,6 +504,10 @@ export const TopPosition: Story = {
   render: () => <TopPositionExample />,
 };
 
-export const HorizontalAlignment: Story = {
-  render: () => <HorizontalAlignExample />,
+export const LeftRightPosition: Story = {
+  render: () => <LeftRightPositionExample />,
+};
+
+export const Alignment: Story = {
+  render: () => <AlignmentExample />,
 };

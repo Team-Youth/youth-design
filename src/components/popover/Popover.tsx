@@ -29,10 +29,10 @@ export interface PopoverProps {
   width?: number | string;
   /** 최소 너비 (anchorRef의 너비보다 작을 때 사용) */
   minWidth?: number | string;
-  /** Popover 수직 위치 (기본값: 'bottom') */
-  verticalPosition?: 'top' | 'bottom';
-  /** Popover 수평 정렬 (기본값: 'center') */
-  horizontalAlign?: 'left' | 'center' | 'right';
+  /** Popover 위치 (기본값: 'bottom') */
+  position?: 'top' | 'bottom' | 'left' | 'right';
+  /** Popover 정렬 (기본값: 'center') */
+  align?: 'start' | 'center' | 'end';
   /** 추가 스타일 */
   style?: React.CSSProperties;
   /** Popover 컨테이너의 최대 높이 */
@@ -46,8 +46,8 @@ export const Popover: React.FC<PopoverProps> = ({
   anchorRef,
   width,
   minWidth,
-  verticalPosition = 'bottom',
-  horizontalAlign = 'center',
+  position = 'bottom',
+  align = 'center',
   style = {},
   maxHeight,
 }) => {
@@ -55,8 +55,10 @@ export const Popover: React.FC<PopoverProps> = ({
   const [popoverPosition, setPopoverPosition] = useState<{
     top?: number;
     bottom?: number;
-    left: number;
-    width: number;
+    left?: number;
+    right?: number;
+    width?: number;
+    height?: number;
   } | null>(null);
   const [animationState, setAnimationState] = useState<
     'entering' | 'entered' | 'exiting' | 'exited'
@@ -69,72 +71,159 @@ export const Popover: React.FC<PopoverProps> = ({
     if (!anchorRef?.current) return null;
 
     const anchorRect = anchorRef.current.getBoundingClientRect();
-    const popoverWidth = width || anchorRect.width;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const gap = 8; // anchor와 popover 사이 간격
 
-    // 기본 width 계산
-    let calculatedWidth =
-      typeof popoverWidth === 'number'
-        ? popoverWidth
-        : parseFloat(popoverWidth as string) || anchorRect.width;
+    // 기본 크기 계산
+    let popoverWidth = width || anchorRect.width;
+    const popoverHeight = maxHeight || 200; // 기본 높이
 
-    // minWidth가 있으면 더 큰 값으로 사용
+    if (typeof popoverWidth === 'string') {
+      popoverWidth = parseFloat(popoverWidth) || anchorRect.width;
+    }
+
+    // minWidth 적용
     if (minWidth) {
       const minWidthValue =
         typeof minWidth === 'number' ? minWidth : parseFloat(minWidth as string) || 0;
-      calculatedWidth = Math.max(calculatedWidth, minWidthValue);
+      popoverWidth = Math.max(popoverWidth as number, minWidthValue);
     }
 
-    // horizontalAlign에 따른 기본 left 위치 계산
-    let leftPosition: number;
+    const coords: any = {};
 
-    switch (horizontalAlign) {
+    // position에 따른 기본 위치 계산
+    switch (position) {
+      case 'top':
+        coords.bottom = viewportHeight - anchorRect.top + gap;
+        coords.width = popoverWidth;
+
+        // align에 따른 수평 위치
+        switch (align) {
+          case 'start':
+            coords.left = anchorRect.left;
+            break;
+          case 'end':
+            // 우측 정렬: Popover의 우측이 anchor의 우측과 일치
+            coords.right = viewportWidth - anchorRect.right;
+            break;
+          case 'center':
+          default:
+            coords.left = anchorRect.left + (anchorRect.width - (popoverWidth as number)) / 2;
+            break;
+        }
+        break;
+
+      case 'bottom':
+        coords.top = anchorRect.bottom + gap;
+        coords.width = popoverWidth;
+
+        // align에 따른 수평 위치
+        switch (align) {
+          case 'start':
+            coords.left = anchorRect.left;
+            break;
+          case 'end':
+            // 우측 정렬: Popover의 우측이 anchor의 우측과 일치
+            coords.right = viewportWidth - anchorRect.right;
+            break;
+          case 'center':
+          default:
+            coords.left = anchorRect.left + (anchorRect.width - (popoverWidth as number)) / 2;
+            break;
+        }
+        break;
+
       case 'left':
-        leftPosition = anchorRect.left;
+        coords.right = viewportWidth - anchorRect.left + gap;
+        coords.width = popoverWidth;
+
+        // align에 따른 수직 위치
+        switch (align) {
+          case 'start':
+            coords.top = anchorRect.top;
+            break;
+          case 'end':
+            // 하단 정렬: Popover의 하단이 anchor의 하단과 일치
+            coords.bottom = viewportHeight - anchorRect.bottom;
+            break;
+          case 'center':
+          default:
+            coords.top = anchorRect.top + (anchorRect.height - popoverHeight) / 2;
+            break;
+        }
         break;
+
       case 'right':
-        leftPosition = anchorRect.right - calculatedWidth;
-        break;
-      case 'center':
-      default:
-        leftPosition = anchorRect.left + (anchorRect.width - calculatedWidth) / 2;
+        coords.left = anchorRect.right + gap;
+        coords.width = popoverWidth;
+
+        // align에 따른 수직 위치
+        switch (align) {
+          case 'start':
+            coords.top = anchorRect.top;
+            break;
+          case 'end':
+            // 하단 정렬: Popover의 하단이 anchor의 하단과 일치
+            coords.bottom = viewportHeight - anchorRect.bottom;
+            break;
+          case 'center':
+          default:
+            coords.top = anchorRect.top + (anchorRect.height - popoverHeight) / 2;
+            break;
+        }
         break;
     }
 
-    // 뷰포트 경계 고려하여 left 위치 조정
-    const viewportWidth = window.innerWidth;
-    const rightEdge = leftPosition + calculatedWidth;
-
-    // 오른쪽으로 잘리는 경우 왼쪽으로 이동
-    if (rightEdge > viewportWidth) {
-      leftPosition = viewportWidth - calculatedWidth - 8; // 8px 여백
-    }
-
-    // 왼쪽으로 너무 많이 이동한 경우 최소 8px 여백 유지
-    if (leftPosition < 8) {
-      leftPosition = 8;
-      // 여전히 잘리는 경우 width를 줄임
-      if (calculatedWidth > viewportWidth - 16) {
-        calculatedWidth = viewportWidth - 16;
+    // 뷰포트 경계 조정
+    if (coords.left !== undefined) {
+      const rightEdge = coords.left + (coords.width || 0);
+      if (rightEdge > viewportWidth) {
+        coords.left = Math.max(gap, viewportWidth - (coords.width || 0) - gap);
+      }
+      if (coords.left < gap) {
+        coords.left = gap;
+        if (coords.width && coords.width > viewportWidth - 2 * gap) {
+          coords.width = viewportWidth - 2 * gap;
+        }
       }
     }
 
-    const coords = {
-      left: leftPosition,
-      width: calculatedWidth,
-    };
-
-    if (verticalPosition === 'bottom') {
-      return {
-        ...coords,
-        top: anchorRect.bottom + 8,
-      };
-    } else {
-      return {
-        ...coords,
-        bottom: window.innerHeight - anchorRect.top + 8,
-      };
+    if (coords.right !== undefined) {
+      const leftEdge = viewportWidth - coords.right - (coords.width || 0);
+      if (leftEdge < gap) {
+        coords.right = Math.max(gap, viewportWidth - (coords.width || 0) - gap);
+      }
+      if (coords.right < gap) {
+        coords.right = gap;
+        if (coords.width && coords.width > viewportWidth - 2 * gap) {
+          coords.width = viewportWidth - 2 * gap;
+        }
+      }
     }
-  }, [anchorRef, width, minWidth, verticalPosition, horizontalAlign]);
+
+    if (coords.top !== undefined) {
+      const bottomEdge = coords.top + popoverHeight;
+      if (bottomEdge > viewportHeight) {
+        coords.top = Math.max(gap, viewportHeight - popoverHeight - gap);
+      }
+      if (coords.top < gap) {
+        coords.top = gap;
+      }
+    }
+
+    if (coords.bottom !== undefined) {
+      const topEdge = viewportHeight - coords.bottom - popoverHeight;
+      if (topEdge < gap) {
+        coords.bottom = Math.max(gap, viewportHeight - popoverHeight - gap);
+      }
+      if (coords.bottom < gap) {
+        coords.bottom = gap;
+      }
+    }
+
+    return coords;
+  }, [anchorRef, width, minWidth, position, align, maxHeight]);
 
   // 외부 클릭 감지
   useEffect(() => {
@@ -216,6 +305,37 @@ export const Popover: React.FC<PopoverProps> = ({
     }
   }, [isOpen, calculatePosition]);
 
+  // 애니메이션 스타일 헬퍼 함수들
+  const getEnteringStyle = (pos: string): React.CSSProperties => {
+    switch (pos) {
+      case 'top':
+        return { opacity: 0, transform: 'scale(0.95) translateY(4px)' };
+      case 'bottom':
+        return { opacity: 0, transform: 'scale(0.95) translateY(-4px)' };
+      case 'left':
+        return { opacity: 0, transform: 'scale(0.95) translateX(4px)' };
+      case 'right':
+        return { opacity: 0, transform: 'scale(0.95) translateX(-4px)' };
+      default:
+        return { opacity: 0, transform: 'scale(0.95) translateY(-4px)' };
+    }
+  };
+
+  const getExitingStyle = (pos: string): React.CSSProperties => {
+    switch (pos) {
+      case 'top':
+        return { opacity: 0, transform: 'scale(0.95) translateY(4px)' };
+      case 'bottom':
+        return { opacity: 0, transform: 'scale(0.95) translateY(-4px)' };
+      case 'left':
+        return { opacity: 0, transform: 'scale(0.95) translateX(4px)' };
+      case 'right':
+        return { opacity: 0, transform: 'scale(0.95) translateX(-4px)' };
+      default:
+        return { opacity: 0, transform: 'scale(0.95) translateY(-4px)' };
+    }
+  };
+
   // 아이템 클릭 핸들러
   const handleItemClick = (item: PopoverItem) => {
     if (item.disabled) return;
@@ -243,27 +363,37 @@ export const Popover: React.FC<PopoverProps> = ({
   const getPopoverStyle = (): React.CSSProperties => {
     let dynamicStyle = { ...styles.popover };
 
-    // transform-origin 계산 (수직 + 수평 위치 조합)
-    const verticalOrigin = verticalPosition === 'top' ? 'bottom' : 'top';
-    const horizontalOrigin =
-      horizontalAlign === 'left' ? 'left' : horizontalAlign === 'right' ? 'right' : 'center';
-    dynamicStyle.transformOrigin = `${horizontalOrigin} ${verticalOrigin}`;
+    // transform-origin 계산
+    let transformOrigin = 'center center';
+
+    switch (position) {
+      case 'top':
+        transformOrigin =
+          align === 'start' ? 'left bottom' : align === 'end' ? 'right bottom' : 'center bottom';
+        break;
+      case 'bottom':
+        transformOrigin =
+          align === 'start' ? 'left top' : align === 'end' ? 'right top' : 'center top';
+        break;
+      case 'left':
+        transformOrigin =
+          align === 'start' ? 'right top' : align === 'end' ? 'right bottom' : 'right center';
+        break;
+      case 'right':
+        transformOrigin =
+          align === 'start' ? 'left top' : align === 'end' ? 'left bottom' : 'left center';
+        break;
+    }
+
+    (dynamicStyle as any).transformOrigin = transformOrigin;
 
     // 애니메이션 상태별 스타일 적용
     if (animationState === 'entering') {
-      if (verticalPosition === 'top') {
-        dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionTopEntering };
-      } else {
-        dynamicStyle = { ...dynamicStyle, ...styles.popoverEntering };
-      }
+      dynamicStyle = { ...dynamicStyle, ...getEnteringStyle(position) } as any;
     } else if (animationState === 'entered') {
-      dynamicStyle = { ...dynamicStyle, ...styles.popoverEntered };
+      dynamicStyle = { ...dynamicStyle, ...styles.popoverEntered } as any;
     } else if (animationState === 'exiting') {
-      if (verticalPosition === 'top') {
-        dynamicStyle = { ...dynamicStyle, ...styles.popoverPositionTopExiting };
-      } else {
-        dynamicStyle = { ...dynamicStyle, ...styles.popoverExiting };
-      }
+      dynamicStyle = { ...dynamicStyle, ...getExitingStyle(position) } as any;
     }
 
     return {
@@ -374,34 +504,11 @@ const styles = {
     borderRadius: '8px',
     boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
     overflow: 'hidden' as const,
-    transformOrigin: 'top center',
     transition: 'all 0.2s ease',
-  },
-  popoverPositionTop: {
-    transformOrigin: 'bottom center',
-  },
-  popoverPositionBottom: {
-    transformOrigin: 'top center',
-  },
-  popoverEntering: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(-4px)',
-  },
-  popoverPositionTopEntering: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(4px)',
   },
   popoverEntered: {
     opacity: 1,
-    transform: 'scale(1) translateY(0)',
-  },
-  popoverExiting: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(-4px)',
-  },
-  popoverPositionTopExiting: {
-    opacity: 0,
-    transform: 'scale(0.95) translateY(4px)',
+    transform: 'scale(1) translate(0, 0)',
   },
   popoverContent: {
     maxHeight: '200px',
