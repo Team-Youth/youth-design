@@ -122,6 +122,7 @@ export const InlineNotification: React.FC<InlineNotificationProps> = React.memo(
       flex: 1,
       display: 'flex',
       alignItems: 'center',
+      whiteSpace: 'pre-wrap',
     };
 
     return (

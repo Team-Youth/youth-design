@@ -28634,7 +28634,8 @@ var InlineNotification = React.memo(function (_a) {
     margin: 0,
     flex: 1,
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    whiteSpace: 'pre-wrap'
   });
   return jsxRuntime.jsxs("div", {
     className: "inline-notification inline-notification--".concat(type, " inline-notification--").concat(size, " ").concat(className),
