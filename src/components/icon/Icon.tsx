@@ -118,7 +118,8 @@ export type IconType =
   | 'bell-stroke'
   | 'bell-filled'
   | 'sorting-arrow-heads'
-  | 'send';
+  | 'send'
+  | 'logout';
 
 export interface IconProps {
   /** 아이콘 타입 */
