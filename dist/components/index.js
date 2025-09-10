@@ -28581,27 +28581,29 @@ var Popover = function (_a) {
     align = _c === void 0 ? 'center' : _c,
     _d = _a.style,
     style = _d === void 0 ? {} : _d,
-    maxHeight = _a.maxHeight;
+    maxHeight = _a.maxHeight,
+    _e = _a.gapBetweenAnchorAndPopover,
+    gapBetweenAnchorAndPopover = _e === void 0 ? 8 : _e;
   var popoverRef = React.useRef(null);
-  var _e = React.useState(null),
-    popoverPosition = _e[0],
-    setPopoverPosition = _e[1];
-  var _f = React.useState('exited'),
-    animationState = _f[0],
-    setAnimationState = _f[1];
-  var _g = React.useState(null),
-    hoveredItemId = _g[0],
-    setHoveredItemId = _g[1];
+  var _f = React.useState(null),
+    popoverPosition = _f[0],
+    setPopoverPosition = _f[1];
+  var _g = React.useState('exited'),
+    animationState = _g[0],
+    setAnimationState = _g[1];
   var _h = React.useState(null),
-    activeItemId = _h[0],
-    setActiveItemId = _h[1];
+    hoveredItemId = _h[0],
+    setHoveredItemId = _h[1];
+  var _j = React.useState(null),
+    activeItemId = _j[0],
+    setActiveItemId = _j[1];
   // Popover 위치 계산
   var calculatePosition = React.useCallback(function () {
     if (!(anchorRef === null || anchorRef === void 0 ? void 0 : anchorRef.current)) return null;
     var anchorRect = anchorRef.current.getBoundingClientRect();
     var viewportWidth = window.innerWidth;
     var viewportHeight = window.innerHeight;
-    var gap = 8; // anchor와 popover 사이 간격
+    var gap = gapBetweenAnchorAndPopover; // anchor와 popover 사이 간격
     // 기본 크기 계산
     var popoverWidth = width || anchorRect.width;
     var popoverHeight = maxHeight || 200; // 기본 높이

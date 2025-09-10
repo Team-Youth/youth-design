@@ -33,5 +33,6 @@ export interface PopoverProps {
     style?: React.CSSProperties;
     /** Popover 컨테이너의 최대 높이 */
     maxHeight?: number;
+    gapBetweenAnchorAndPopover?: number;
 }
 export declare const Popover: React.FC<PopoverProps>;

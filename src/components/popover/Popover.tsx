@@ -37,6 +37,8 @@ export interface PopoverProps {
   style?: React.CSSProperties;
   /** Popover 컨테이너의 최대 높이 */
   maxHeight?: number;
+  // anchor와 popover 사이 간격
+  gapBetweenAnchorAndPopover?: number;
 }
 
 export const Popover: React.FC<PopoverProps> = ({
@@ -50,6 +52,7 @@ export const Popover: React.FC<PopoverProps> = ({
   align = 'center',
   style = {},
   maxHeight,
+  gapBetweenAnchorAndPopover = 8,
 }) => {
   const popoverRef = useRef<HTMLDivElement>(null);
   const [popoverPosition, setPopoverPosition] = useState<{
@@ -73,7 +76,7 @@ export const Popover: React.FC<PopoverProps> = ({
     const anchorRect = anchorRef.current.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const gap = 8; // anchor와 popover 사이 간격
+    const gap = gapBetweenAnchorAndPopover; // anchor와 popover 사이 간격
 
     // 기본 크기 계산
     let popoverWidth = width || anchorRect.width;
