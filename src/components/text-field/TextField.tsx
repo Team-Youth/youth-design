@@ -1,6 +1,6 @@
 import React, { useState, forwardRef, useCallback } from 'react';
 import { Icon, IconType } from '../icon/Icon';
-import { colors, spacing, radius, textStyles, fontWeight } from '../../tokens';
+import { colors, spacing, radius, textStyles, fontWeight, fontFamily } from '../../tokens';
 
 export interface TextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange'> {
@@ -134,20 +134,23 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         return typeof width === 'number' ? `${width}px` : width;
       };
 
-      // size에 따른 패딩 설정
-      const padding = size === 'm' ? `9px ${spacing.m}` : `13px ${spacing.m}`; // m: 9px 16px, l: 13px 16px
+      // size에 따른 패딩과 높이 설정
+      const padding = size === 'm' ? `9px 16px` : `12px 16px`; // m: 9px 16px, l: 12px 16px
+      const height = size === 'm' ? '40px' : '48px'; // m: 40px, l: 48px
 
       return {
         display: 'flex',
         alignItems: 'center',
         gap: spacing.xs, // 8px
         padding,
+        height,
         backgroundColor,
         border: `1px solid ${borderColor}`,
         borderRadius: radius.s, // 8px
         transition: 'all 0.2s ease',
         width: getWidth(),
         position: 'relative', // resident 타입을 위한 상대 위치
+        boxSizing: 'border-box', // 높이에 border 포함
       };
     }, [disabled, readOnly, error, isFocused, isHovered, width, size]);
 
@@ -177,6 +180,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         cursor: cursorStyle,
         // size에 따른 텍스트 스타일 적용
         ...textStyle,
+        fontWeight: fontWeight.regular,
+        fontFamily: fontFamily.primary,
       };
     }, [disabled, error, actualStatus, readOnly, size]);
 
@@ -410,6 +415,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             pointerEvents: 'none',
             color: maskColor, // error state에 따라 색상 변경
             ...textStyle,
+            fontFamily: fontFamily.primary,
             zIndex: 1,
           }}
         >
@@ -473,6 +479,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
                 // size에 따른 텍스트 스타일 적용
                 ...(size === 'm' ? textStyles.body3 : textStyles.body2),
                 fontWeight: fontWeight.regular,
+                fontFamily: fontFamily.primary,
               }}
             >
               {errorMessage}

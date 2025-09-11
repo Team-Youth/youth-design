@@ -24352,7 +24352,8 @@ var Dropdown = function (_a) {
   var textStyle = useMemo(function () {
     var baseStyle = size === 'l' ? typography.textStyles.body1 : typography.textStyles.body2;
     return __assign(__assign({}, baseStyle), {
-      fontWeight: typography.fontWeight.medium
+      fontWeight: typography.fontWeight.medium,
+      fontFamily: fontFamily.primary
     });
   }, [size]);
   // 텍스트 측정 함수 (메모이제이션)
@@ -24907,7 +24908,8 @@ var Dropdown = function (_a) {
         }, textStyle), {
           color: colors.semantic.disabled.foreground,
           textAlign: 'center',
-          userSelect: !enableSearch ? 'none' : 'auto'
+          userSelect: !enableSearch ? 'none' : 'auto',
+          fontFamily: fontFamily.primary
         }),
         children: enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'
       }) : jsxs(Fragment, {
@@ -24968,7 +24970,8 @@ var Dropdown = function (_a) {
             userSelect: 'none',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            fontFamily: fontFamily.primary
           }),
           children: jsx("div", {
             style: {
@@ -24992,7 +24995,8 @@ var Dropdown = function (_a) {
       },
       children: jsx("span", {
         style: __assign(__assign({}, textStyle), {
-          color: colors.semantic.state.error
+          color: colors.semantic.state.error,
+          fontFamily: fontFamily.primary
         }),
         children: errorMessage
       })
@@ -25295,21 +25299,25 @@ var TextField = forwardRef(function (_a, ref) {
       }
       return typeof width === 'number' ? "".concat(width, "px") : width;
     };
-    // size에 따른 패딩 설정
-    var padding = size === 'm' ? "9px ".concat(spacing.m) : "13px ".concat(spacing.m); // m: 9px 16px, l: 13px 16px
+    // size에 따른 패딩과 높이 설정
+    var padding = size === 'm' ? "9px 16px" : "12px 16px"; // m: 9px 16px, l: 12px 16px
+    var height = size === 'm' ? '40px' : '48px'; // m: 40px, l: 48px
     return {
       display: 'flex',
       alignItems: 'center',
       gap: spacing.xs,
       // 8px
       padding: padding,
+      height: height,
       backgroundColor: backgroundColor,
       border: "1px solid ".concat(borderColor),
       borderRadius: radius.s,
       // 8px
       transition: 'all 0.2s ease',
       width: getWidth(),
-      position: 'relative' // resident 타입을 위한 상대 위치
+      position: 'relative',
+      // resident 타입을 위한 상대 위치
+      boxSizing: 'border-box' // 높이에 border 포함
     };
   }, [disabled, readOnly, error, isFocused, isHovered, width, size]);
   var getInputStyles = useCallback(function () {
@@ -25325,14 +25333,17 @@ var TextField = forwardRef(function (_a, ref) {
     var cursorStyle = readOnly ? 'default' : 'text';
     // size에 따른 폰트 스타일 설정
     var textStyle = size === 'm' ? textStyles.body2 : textStyles.body1;
-    return __assign({
+    return __assign(__assign({
       width: '100%',
       border: 'none',
       outline: 'none',
       backgroundColor: 'transparent',
       color: textColor,
       cursor: cursorStyle
-    }, textStyle);
+    }, textStyle), {
+      fontWeight: fontWeight.regular,
+      fontFamily: fontFamily.primary
+    });
   }, [disabled, error, actualStatus, readOnly, size]);
   var getIconColor = useCallback(function () {
     if (disabled) {
@@ -25525,6 +25536,7 @@ var TextField = forwardRef(function (_a, ref) {
         pointerEvents: 'none',
         color: maskColor
       }, textStyle), {
+        fontFamily: fontFamily.primary,
         zIndex: 1
       }),
       children: "******"
@@ -25579,7 +25591,8 @@ var TextField = forwardRef(function (_a, ref) {
         style: __assign(__assign({
           color: colors.semantic.state.error
         }, size === 'm' ? textStyles.body3 : textStyles.body2), {
-          fontWeight: fontWeight.regular
+          fontWeight: fontWeight.regular,
+          fontFamily: fontFamily.primary
         }),
         children: errorMessage
       })]
@@ -28610,6 +28623,7 @@ var InlineNotification = React__default.memo(function (_a) {
   };
   var contentStyle = __assign(__assign({}, textStyle || sizeConf.textStyle), {
     fontWeight: customFontWeight || sizeConf.fontWeight,
+    fontFamily: fontFamily.primary,
     color: typeConf.textColor,
     margin: 0,
     flex: 1,

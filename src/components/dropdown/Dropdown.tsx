@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { colors, spacing, typography } from '../../tokens';
+import { colors, spacing, typography, fontFamily } from '../../tokens';
 import { IconType, Icon } from '../icon';
 
 // 스피너 애니메이션을 위한 CSS keyframes 추가
@@ -199,6 +199,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     return {
       ...baseStyle,
       fontWeight: typography.fontWeight.medium,
+      fontFamily: fontFamily.primary,
     };
   }, [size]);
 
@@ -887,6 +888,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                   color: colors.semantic.disabled.foreground,
                   textAlign: 'center',
                   userSelect: !enableSearch ? 'none' : 'auto',
+                  fontFamily: fontFamily.primary,
                 }}
               >
                 {enableSearch && searchText.trim() ? '검색 결과가 없습니다' : '옵션이 없습니다'}
@@ -960,6 +962,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      fontFamily: fontFamily.primary,
                     }}
                   >
                     <div
@@ -993,6 +996,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
             style={{
               ...textStyle,
               color: colors.semantic.state.error,
+              fontFamily: fontFamily.primary,
             }}
           >
             {errorMessage}

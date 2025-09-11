@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { colors } from '../../tokens/colors';
-import { fontWeight, textStyles } from '../../tokens/typography';
+import { fontWeight, textStyles, fontFamily } from '../../tokens/typography';
 import { Icon } from '../icon';
 
 // inline notification 타입 정의
@@ -117,6 +117,7 @@ export const InlineNotification: React.FC<InlineNotificationProps> = React.memo(
     const contentStyle: React.CSSProperties = {
       ...(textStyle || sizeConf.textStyle),
       fontWeight: customFontWeight || sizeConf.fontWeight,
+      fontFamily: fontFamily.primary,
       color: typeConf.textColor,
       margin: 0,
       flex: 1,
