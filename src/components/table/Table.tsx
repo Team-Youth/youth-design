@@ -4,6 +4,7 @@ import { YouthLottie } from '../lottie/Lottie';
 import Font from '../font/Font';
 import { colors } from '../../tokens/colors';
 import { Icon, IconType } from '../icon';
+import { Illust } from '../illust';
 import { Pagination } from '../pagination';
 import loadingSpinnerData from './loadingSpinner.json';
 
@@ -147,7 +148,11 @@ export const Table = <T,>({
                   gap: 10,
                 }}
               >
-                {emptyIcon && <Icon type={emptyIcon} size={emptyIconSize} color={emptyIconColor} />}
+                {emptyIcon ? (
+                  <Icon type={emptyIcon} size={emptyIconSize} color={emptyIconColor} />
+                ) : (
+                  <Illust type="empty" size={32} />
+                )}
                 {emptyText && (
                   <Font type="body2" fontWeight="medium" color={colors.primary.coolGray[300]}>
                     {emptyText}
