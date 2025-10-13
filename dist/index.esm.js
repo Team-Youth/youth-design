@@ -28279,6 +28279,7 @@ var Table = function (_a) {
     _e = _a.tableMinWidth,
     tableMinWidth = _e === void 0 ? 600 : _e,
     // 기본 최소 너비
+    onRowClick = _a.onRowClick,
     // Infinite Query 페이지네이션 관련 props
     hasNextPage = _a.hasNextPage,
     isFetchingNextPage = _a.isFetchingNextPage,
@@ -28363,10 +28364,13 @@ var Table = function (_a) {
               height: 200,
               gap: 10
             },
-            children: [emptyIcon && jsx(Icon, {
+            children: [emptyIcon ? jsx(Icon, {
               type: emptyIcon,
               size: emptyIconSize,
               color: emptyIconColor
+            }) : jsx(Illust, {
+              type: "empty",
+              size: 32
             }), emptyText && jsx(Font, {
               type: "body2",
               fontWeight: "medium",
@@ -28378,7 +28382,9 @@ var Table = function (_a) {
               data: rowData,
               columns: columns,
               rowAccordion: rowAccordion,
-              tableType: type
+              tableType: type,
+              rowIndex: rowIndex,
+              onRowClick: onRowClick
             }, "row-".concat(rowIndex));
           })
         })]
@@ -28451,7 +28457,9 @@ var Row = function (_a) {
   var data = _a.data,
     columns = _a.columns,
     rowAccordion = _a.rowAccordion,
-    tableType = _a.tableType;
+    tableType = _a.tableType,
+    rowIndex = _a.rowIndex,
+    onRowClick = _a.onRowClick;
   var _b = useState(false),
     isRowAccordionOpen = _b[0],
     setIsRowAccordionOpen = _b[1];
@@ -28460,11 +28468,18 @@ var Row = function (_a) {
     rowDetailHeight = _c[0],
     setRowDetailHeight = _c[1];
   var onPressRow = function () {
-    // @ts-ignore
-    if (data.status === '미등록') return;
-    setIsRowAccordionOpen(function (prev) {
-      return !prev;
-    });
+    // rowAccordion이 있는 경우 아코디언 토글
+    if (rowAccordion) {
+      // @ts-ignore
+      if (data.status === '미등록') return;
+      setIsRowAccordionOpen(function (prev) {
+        return !prev;
+      });
+    }
+    // onRowClick이 있는 경우 호출
+    if (onRowClick) {
+      onRowClick(data, rowIndex);
+    }
   };
   useEffectOnceWhen(function () {
     setIsRowAccordionOpen(true);
@@ -28476,12 +28491,28 @@ var Row = function (_a) {
       setRowDetailHeight(calculatedHeight);
     }
   }, [rowAccordion, data]);
+  var isClickable = !!(rowAccordion || onRowClick);
   return jsxs("div", {
     children: [jsx("div", {
       onClick: onPressRow,
-      style: {
+      style: __assign({
         display: 'flex',
-        cursor: rowAccordion ? 'pointer' : 'default'
+        cursor: isClickable ? 'pointer' : 'default',
+        transition: 'background-color 0.2s ease'
+      }, isClickable && {
+        '&:hover': {
+          backgroundColor: colors.primary.coolGray[50]
+        }
+      }),
+      onMouseEnter: function (e) {
+        if (isClickable) {
+          e.currentTarget.style.backgroundColor = colors.primary.coolGray[50];
+        }
+      },
+      onMouseLeave: function (e) {
+        if (isClickable) {
+          e.currentTarget.style.backgroundColor = 'transparent';
+        }
       },
       children: columns.map(function (column, index) {
         return jsx(Cell, {

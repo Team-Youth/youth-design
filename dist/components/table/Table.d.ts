@@ -20,6 +20,7 @@ export interface TableProps<T> {
     emptyIconColor?: string;
     emptyText?: string;
     tableMinWidth?: string | number;
+    onRowClick?: (rowData: T, rowIndex: number) => void;
     hasNextPage?: boolean;
     isFetchingNextPage?: boolean;
     onLoadMore?: () => void;
@@ -28,5 +29,5 @@ export interface TableProps<T> {
     onPageJump?: (page: number) => void;
     totalCount?: number;
 }
-export declare const Table: <T>({ data, columns, rowAccordion, type, isLoading, emptyIcon, emptyIconSize, emptyIconColor, emptyText, tableMinWidth, hasNextPage, isFetchingNextPage, onLoadMore, totalPages, currentPage, onPageJump, totalCount, }: TableProps<T>) => import("react/jsx-runtime").JSX.Element;
+export declare const Table: <T>({ data, columns, rowAccordion, type, isLoading, emptyIcon, emptyIconSize, emptyIconColor, emptyText, tableMinWidth, onRowClick, hasNextPage, isFetchingNextPage, onLoadMore, totalPages, currentPage, onPageJump, totalCount, }: TableProps<T>) => import("react/jsx-runtime").JSX.Element;
 export {};
