@@ -29,6 +29,7 @@ export interface TableProps<T> {
   emptyIconColor?: string;
   emptyText?: string;
   tableMinWidth?: string | number; // 테이블 최소 너비
+  onRowClick?: (rowData: T, rowIndex: number) => void; // 행 클릭 이벤트
   // Infinite Query 페이지네이션 관련 props
   hasNextPage?: boolean;
   isFetchingNextPage?: boolean;
@@ -50,6 +51,7 @@ export const Table = <T,>({
   emptyIconColor = colors.primary.coolGray[300],
   emptyText,
   tableMinWidth = 600, // 기본 최소 너비
+  onRowClick,
   // Infinite Query 페이지네이션 관련 props
   hasNextPage,
   isFetchingNextPage,
@@ -167,6 +169,8 @@ export const Table = <T,>({
                   columns={columns}
                   rowAccordion={rowAccordion}
                   tableType={type}
+                  rowIndex={rowIndex}
+                  onRowClick={onRowClick}
                 />
               ))
             )}
@@ -251,17 +255,27 @@ interface RowProps<T> {
   columns: Column<T>[];
   rowAccordion?: (rowData: T) => JSX.Element;
   tableType?: 'parent' | 'child';
+  rowIndex: number;
+  onRowClick?: (rowData: T, rowIndex: number) => void;
 }
 
-const Row = <T,>({ data, columns, rowAccordion, tableType }: RowProps<T>) => {
+const Row = <T,>({ data, columns, rowAccordion, tableType, rowIndex, onRowClick }: RowProps<T>) => {
   const [isRowAccordionOpen, setIsRowAccordionOpen] = useState(false);
   const rowDetailRef = useRef<HTMLDivElement>(null);
   const [rowDetailHeight, setRowDetailHeight] = useState<string | number>('auto');
 
   const onPressRow = () => {
-    // @ts-ignore
-    if (data.status === '미등록') return;
-    setIsRowAccordionOpen((prev) => !prev);
+    // rowAccordion이 있는 경우 아코디언 토글
+    if (rowAccordion) {
+      // @ts-ignore
+      if (data.status === '미등록') return;
+      setIsRowAccordionOpen((prev) => !prev);
+    }
+
+    // onRowClick이 있는 경우 호출
+    if (onRowClick) {
+      onRowClick(data, rowIndex);
+    }
   };
 
   useEffectOnceWhen(() => {
@@ -276,11 +290,32 @@ const Row = <T,>({ data, columns, rowAccordion, tableType }: RowProps<T>) => {
     }
   }, [rowAccordion, data]);
 
+  const isClickable = !!(rowAccordion || onRowClick);
+
   return (
     <div>
       <div
         onClick={onPressRow}
-        style={{ display: 'flex', cursor: rowAccordion ? 'pointer' : 'default' }}
+        style={{
+          display: 'flex',
+          cursor: isClickable ? 'pointer' : 'default',
+          transition: 'background-color 0.2s ease',
+          ...(isClickable && {
+            '&:hover': {
+              backgroundColor: colors.primary.coolGray[50],
+            },
+          }),
+        }}
+        onMouseEnter={(e) => {
+          if (isClickable) {
+            e.currentTarget.style.backgroundColor = colors.primary.coolGray[50];
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (isClickable) {
+            e.currentTarget.style.backgroundColor = 'transparent';
+          }
+        }}
       >
         {columns.map((column, index) => (
           <Cell

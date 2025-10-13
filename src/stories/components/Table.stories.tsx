@@ -102,29 +102,41 @@ const meta: Meta<typeof Table> = {
       description: '데이터가 없을 때 표시할 텍스트',
       control: 'text',
     },
-    pagination: {
-      description: '페이지네이션 사용 여부',
-      control: 'boolean',
+    onLoadMore: {
+      description: '더 보기 버튼 클릭 시 호출되는 콜백 함수',
+      action: 'loadMore',
     },
-    pageSize: {
-      description: '페이지당 표시할 항목 수',
-      control: { type: 'number', min: 1, max: 50, step: 1 },
+    onPageJump: {
+      description: '페이지 점프 시 호출되는 콜백 함수',
+      action: 'pageJumped',
     },
-    initialPage: {
-      description: '초기 페이지 번호',
+    onRowClick: {
+      description: '행 클릭 시 호출되는 콜백 함수',
+      action: 'rowClicked',
+    },
+    tableMinWidth: {
+      description: '테이블 최소 너비 (픽셀 또는 문자열)',
+      control: { type: 'text' },
+    },
+    totalPages: {
+      description: '전체 페이지 수',
       control: { type: 'number', min: 1 },
     },
-    maxVisiblePages: {
-      description: '페이지네이션에서 최대 표시할 페이지 수',
-      control: { type: 'number', min: 3, max: 10 },
+    currentPage: {
+      description: '현재 페이지 번호',
+      control: { type: 'number', min: 1 },
     },
-    paginationDisabled: {
-      description: '페이지네이션 비활성화 여부',
+    hasNextPage: {
+      description: '다음 페이지 존재 여부',
       control: 'boolean',
     },
-    onPageChange: {
-      description: '페이지 변경 시 호출되는 콜백 함수',
-      action: 'pageChanged',
+    isFetchingNextPage: {
+      description: '다음 페이지 로딩 상태',
+      control: 'boolean',
+    },
+    totalCount: {
+      description: '전체 데이터 수',
+      control: { type: 'number', min: 0 },
     },
   },
 };
@@ -692,7 +704,7 @@ export const CustomStyling: Story = {
             </div>
           </div>
         ),
-        style: { minWidth: '200px' },
+        minWidth: '200px',
       },
       {
         header: '가격',
@@ -703,7 +715,8 @@ export const CustomStyling: Story = {
             </Font>
           </div>
         ),
-        style: { textAlign: 'right', minWidth: '120px' },
+        justifyContent: 'flex-end',
+        minWidth: '120px',
       },
       {
         header: '재고',
@@ -733,7 +746,7 @@ export const CustomStyling: Story = {
             </Font>
           </div>
         ),
-        style: { minWidth: '120px' },
+        minWidth: '120px',
       },
       {
         header: '상태',
@@ -949,11 +962,10 @@ export const WithPagination: Story = {
     ],
     isLoading: false,
     type: 'parent',
-    pagination: true,
-    pageSize: 10,
-    initialPage: 1,
-    maxVisiblePages: 5,
-    onPageChange: action('page-changed'),
+    totalPages: 5,
+    currentPage: 1,
+    totalCount: 47,
+    onPageJump: action('page-jumped'),
   },
 };
 
@@ -1020,11 +1032,10 @@ export const SmallPageSize: Story = {
     ],
     isLoading: false,
     type: 'parent',
-    pagination: true,
-    pageSize: 5,
-    initialPage: 1,
-    maxVisiblePages: 5,
-    onPageChange: action('page-changed'),
+    totalPages: 10,
+    currentPage: 1,
+    totalCount: 47,
+    onPageJump: action('page-jumped'),
   },
   parameters: {
     docs: {
@@ -1075,11 +1086,10 @@ export const LargePageSize: Story = {
     ],
     isLoading: false,
     type: 'parent',
-    pagination: true,
-    pageSize: 20,
-    initialPage: 1,
-    maxVisiblePages: 7,
-    onPageChange: action('page-changed'),
+    totalPages: 5,
+    currentPage: 1,
+    totalCount: 100,
+    onPageJump: action('page-jumped'),
   },
   parameters: {
     docs: {
@@ -1120,14 +1130,12 @@ export const DisabledPagination: Story = {
         ),
       },
     ],
-    isLoading: false,
+    isLoading: true,
     type: 'parent',
-    pagination: true,
-    pageSize: 10,
-    initialPage: 1,
-    maxVisiblePages: 5,
-    paginationDisabled: true,
-    onPageChange: action('page-changed'),
+    totalPages: 5,
+    currentPage: 1,
+    totalCount: 47,
+    onPageJump: action('page-jumped'),
   },
   parameters: {
     docs: {
@@ -1264,16 +1272,373 @@ export const PaginationWithAccordion: Story = {
     ),
     isLoading: false,
     type: 'parent',
-    pagination: true,
-    pageSize: 8,
-    initialPage: 1,
-    maxVisiblePages: 5,
-    onPageChange: action('page-changed'),
+    totalPages: 6,
+    currentPage: 1,
+    totalCount: 47,
+    onPageJump: action('page-jumped'),
   },
   parameters: {
     docs: {
       description: {
         story: '아코디언 기능과 페이지네이션을 함께 사용하는 예시입니다.',
+      },
+    },
+  },
+};
+
+// 행 클릭 기능이 있는 테이블
+export const WithRowClick: Story = {
+  args: {
+    data: sampleUsers,
+    columns: [
+      {
+        header: 'ID',
+        cell: (user: any) => (
+          <Font type="body3" color="text/black">
+            {user.id}
+          </Font>
+        ),
+      },
+      {
+        header: '이름',
+        cell: (user: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            {user.name}
+          </Font>
+        ),
+      },
+      {
+        header: '이메일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.email}
+          </Font>
+        ),
+      },
+      {
+        header: '상태',
+        cell: (user: any) => (
+          <div
+            style={{
+              padding: '4px 8px',
+              borderRadius: '12px',
+              backgroundColor:
+                user.status === '등록 완료'
+                  ? '#E7F5FF'
+                  : user.status === '미등록'
+                    ? '#FFE8E8'
+                    : '#FFF4E6',
+              display: 'inline-block',
+            }}
+          >
+            <Font
+              type="caption"
+              color={
+                user.status === '등록 완료'
+                  ? 'blue/500'
+                  : user.status === '미등록'
+                    ? 'red/500'
+                    : 'orange/500'
+              }
+            >
+              {user.status}
+            </Font>
+          </div>
+        ),
+      },
+    ],
+    isLoading: false,
+    type: 'parent',
+    onRowClick: action('row-clicked'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '행을 클릭할 수 있는 테이블입니다. 행에 마우스를 올리면 hover 효과를 확인할 수 있습니다.',
+      },
+    },
+  },
+};
+
+// 행 클릭과 아코디언이 함께 있는 테이블
+export const WithRowClickAndAccordion: Story = {
+  args: {
+    data: sampleUsers,
+    columns: [
+      {
+        header: '확장',
+        cell: () => <div style={{ fontSize: '16px', cursor: 'pointer' }}>▼</div>,
+      },
+      {
+        header: '이름',
+        cell: (user: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            {user.name}
+          </Font>
+        ),
+      },
+      {
+        header: '이메일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.email}
+          </Font>
+        ),
+      },
+      {
+        header: '상태',
+        cell: (user: any) => (
+          <div
+            style={{
+              padding: '4px 8px',
+              borderRadius: '12px',
+              backgroundColor:
+                user.status === '등록 완료'
+                  ? '#E7F5FF'
+                  : user.status === '미등록'
+                    ? '#FFE8E8'
+                    : '#FFF4E6',
+              display: 'inline-block',
+            }}
+          >
+            <Font
+              type="caption"
+              color={
+                user.status === '등록 완료'
+                  ? 'blue/500'
+                  : user.status === '미등록'
+                    ? 'red/500'
+                    : 'orange/500'
+              }
+            >
+              {user.status}
+            </Font>
+          </div>
+        ),
+      },
+    ],
+    rowAccordion: (user: any) => (
+      <div
+        style={{
+          padding: '20px',
+          backgroundColor: '#f8f9fa',
+          borderTop: '1px solid #dee2e6',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <Font type="heading5" color="text/black">
+            사용자 상세 정보
+          </Font>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <Font type="body3" color="text/gray" style={{ marginBottom: '4px' }}>
+                사용자 ID
+              </Font>
+              <Font type="body2" color="text/black">
+                {user.id}
+              </Font>
+            </div>
+            <div>
+              <Font type="body3" color="text/gray" style={{ marginBottom: '4px' }}>
+                역할
+              </Font>
+              <Font type="body2" color="text/black">
+                {user.role}
+              </Font>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    isLoading: false,
+    type: 'parent',
+    onRowClick: action('row-clicked'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '행 클릭과 아코디언 기능이 모두 있는 테이블입니다. 행 클릭 시 아코디언 토글과 클릭 이벤트가 동시에 발생합니다.',
+      },
+    },
+  },
+};
+
+// Hover 효과를 보여주는 테이블
+export const HoverEffects: Story = {
+  args: {
+    data: sampleProducts,
+    columns: [
+      {
+        header: '상품명',
+        cell: (product: any) => (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                backgroundColor: '#e9ecef',
+                borderRadius: '6px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              📦
+            </div>
+            <Font type="body2" color="text/black" fontWeight="medium">
+              {product.name}
+            </Font>
+          </div>
+        ),
+      },
+      {
+        header: '카테고리',
+        cell: (product: any) => (
+          <Font type="body3" color="text/gray">
+            {product.category}
+          </Font>
+        ),
+      },
+      {
+        header: '가격',
+        cell: (product: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            ₩{product.price.toLocaleString()}
+          </Font>
+        ),
+        justifyContent: 'flex-end',
+      },
+      {
+        header: '액션',
+        cell: (product: any) => (
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                action('edit-product')(product);
+              }}
+              style={{
+                padding: '4px 8px',
+                border: '1px solid #007bff',
+                borderRadius: '4px',
+                background: 'white',
+                color: '#007bff',
+                cursor: 'pointer',
+                fontSize: '12px',
+              }}
+            >
+              편집
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                action('delete-product')(product);
+              }}
+              style={{
+                padding: '4px 8px',
+                border: '1px solid #dc3545',
+                borderRadius: '4px',
+                background: '#dc3545',
+                color: 'white',
+                cursor: 'pointer',
+                fontSize: '12px',
+              }}
+            >
+              삭제
+            </button>
+          </div>
+        ),
+      },
+    ],
+    isLoading: false,
+    type: 'parent',
+    onRowClick: action('product-row-clicked'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Hover 효과를 확인할 수 있는 테이블입니다. 마우스를 행 위에 올려보세요. 버튼 클릭 시에는 행 클릭 이벤트가 발생하지 않습니다 (stopPropagation 사용).',
+      },
+    },
+  },
+};
+
+// Infinite Scroll 스타일 페이지네이션
+export const InfiniteScrollStyle: Story = {
+  args: {
+    data: largeDataset.slice(0, 10),
+    columns: [
+      {
+        header: 'ID',
+        cell: (user: any) => (
+          <Font type="body3" color="text/black">
+            {user.id}
+          </Font>
+        ),
+      },
+      {
+        header: '이름',
+        cell: (user: any) => (
+          <Font type="body2" color="text/black" fontWeight="medium">
+            {user.name}
+          </Font>
+        ),
+      },
+      {
+        header: '이메일',
+        cell: (user: any) => (
+          <Font type="body3" color="text/gray">
+            {user.email}
+          </Font>
+        ),
+      },
+    ],
+    isLoading: false,
+    type: 'parent',
+    totalPages: 5,
+    currentPage: 1,
+    hasNextPage: true,
+    isFetchingNextPage: false,
+    totalCount: 47,
+    onPageJump: action('page-jumped'),
+    onLoadMore: action('load-more'),
+    onRowClick: action('user-clicked'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Infinite Scroll 스타일의 페이지네이션과 행 클릭 기능을 함께 사용하는 예시입니다.',
+      },
+    },
+  },
+};
+
+// 빈 데이터 - 기본 empty illust 사용
+export const EmptyDataWithDefaultIllust: Story = {
+  args: {
+    data: [],
+    columns: [
+      {
+        header: '이름',
+        cell: (item: any) => <Font type="body2">{item.name}</Font>,
+      },
+      {
+        header: '설명',
+        cell: (item: any) => <Font type="body3">{item.description}</Font>,
+      },
+    ],
+    isLoading: false,
+    type: 'parent',
+    emptyText: '데이터가 없습니다',
+    onRowClick: action('empty-row-clicked'),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'emptyIcon을 지정하지 않으면 기본 empty illust(32px)가 자동으로 표시됩니다.',
       },
     },
   },
