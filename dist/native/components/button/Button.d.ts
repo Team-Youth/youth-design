@@ -10,7 +10,7 @@ export interface ButtonProps {
     rightIcon?: IconType;
     iconOnly?: IconType;
     children?: React.ReactNode;
-    onClick?: () => void;
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
     className?: string;
     isLoading?: boolean;
     underline?: boolean;

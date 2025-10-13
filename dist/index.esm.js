@@ -1186,9 +1186,9 @@ var Button = function (_a) {
       backgroundColor: 'transparent'
     };
   };
-  var handleClick = function () {
+  var handleClick = function (e) {
     if (!disabled && !isLoading && onClick) {
-      onClick();
+      onClick(e);
     }
   };
   var handleMouseEnter = function () {

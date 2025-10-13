@@ -12,7 +12,7 @@ export interface ButtonProps {
   rightIcon?: IconType;
   iconOnly?: IconType; // 아이콘만 있는 버튼
   children?: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   className?: string;
   isLoading?: boolean;
   underline?: boolean; // text 타입에서 사용
@@ -329,9 +329,9 @@ export const Button: React.FC<ButtonProps> = ({
     };
   };
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled && !isLoading && onClick) {
-      onClick();
+      onClick(e);
     }
   };
 
