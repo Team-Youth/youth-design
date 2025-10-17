@@ -20680,10 +20680,10 @@ var Checkbox = function (_a) {
       cursor: disabled ? 'not-allowed' : 'pointer'
     });
   };
-  var handleChange = function () {
+  var handleChange = function (e) {
     if (!disabled) {
       onChange === null || onChange === void 0 ? void 0 : onChange(!checked);
-      onClick === null || onClick === void 0 ? void 0 : onClick();
+      onClick === null || onClick === void 0 ? void 0 : onClick(e);
     }
   };
   var handleMouseEnter = function () {

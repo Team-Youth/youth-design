@@ -16,7 +16,7 @@ export interface CheckboxProps {
   /** 변경 이벤트 핸들러 */
   onChange?: (checked: boolean) => void;
   /** 클릭 이벤트 핸들러 */
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
   /** 추가 CSS 클래스 */
   className?: string;
   /** 체크박스 너비 */
@@ -166,10 +166,10 @@ export const Checkbox: React.FC<CheckboxProps> = ({
     };
   };
 
-  const handleChange = () => {
+  const handleChange = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!disabled) {
       onChange?.(!checked);
-      onClick?.();
+      onClick?.(e);
     }
   };
 
