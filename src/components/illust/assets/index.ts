@@ -105,6 +105,21 @@ const guide = `<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns
 </svg>
 `;
 
+const googleLogo = `
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_9_640" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="1" y="1" width="22" height="22">
+<path d="M23 1H1V23H23V1Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_9_640)">
+<path d="M22.56 12.25C22.56 11.47 22.49 10.7201 22.36 10H12V14.255H17.92C17.665 15.63 16.8901 16.795 15.725 17.575V20.335H19.28C21.36 18.4201 22.56 15.6 22.56 12.25Z" fill="#4285F4"/>
+<path d="M12 23C14.97 23 17.4599 22.0149 19.2799 20.335L15.7249 17.575C14.74 18.235 13.4799 18.6249 12 18.6249C9.1349 18.6249 6.70995 16.6899 5.84491 14.09H2.16992V16.94C3.97997 20.535 7.69995 23 12 23Z" fill="#34A853"/>
+<path d="M5.84495 14.09C5.62495 13.43 5.49999 12.7251 5.49999 12C5.49999 11.275 5.62495 10.57 5.84495 9.91005V7.06006H2.16996C1.42504 8.54506 1 10.2251 1 12C1 13.775 1.42504 15.455 2.16996 16.94L5.84495 14.09Z" fill="#FBBC04"/>
+<path d="M12 5.37503C13.6149 5.37503 15.0649 5.92998 16.2049 7.01997L19.36 3.86495C17.455 2.08999 14.9649 1 12 1C7.69995 1 3.97997 3.46499 2.16992 7.06001L5.84491 9.91C6.70995 7.31004 9.1349 5.37503 12 5.37503Z" fill="#E94235"/>
+</g>
+</svg>
+
+`;
+
 // 일러스트 맵 - 실제 일러스트 파일들을 추가할 때 여기에 등록
 export const illustMap = {
   empty: emptySvg,
@@ -122,6 +137,7 @@ export const illustMap = {
   feedback: feedback,
   goal: goal,
   guide: guide,
+  googleLogo: googleLogo,
 } as const;
 
 // illustMap의 키들로부터 자동으로 타입 추출
