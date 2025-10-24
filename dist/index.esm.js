@@ -23680,7 +23680,7 @@ var ToastRenderer = function () {
         title: toast.title || '',
         description: toast.description,
         showLeadingIcon: true,
-        showCloseButton: false,
+        showCloseButton: true,
         position: position
       }, toast.id);
     })
@@ -23732,11 +23732,10 @@ var useToast = function () {
       id: options === null || options === void 0 ? void 0 : options.id,
       type: 'success',
       title: title,
-      description: description
+      description: description,
+      // duration이 명시적으로 null이 아닌 이상 timeout을 설정 (0도 유효한 값)
+      timeout: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : undefined
     };
-    if ((options === null || options === void 0 ? void 0 : options.duration) != null) {
-      payload.timeout = options.duration;
-    }
     return toastManager.add(payload);
   }, [toastManager]);
   var error = useCallback(function (title, description, options) {
@@ -23744,11 +23743,9 @@ var useToast = function () {
       id: options === null || options === void 0 ? void 0 : options.id,
       type: 'error',
       title: title,
-      description: description
+      description: description,
+      timeout: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : undefined
     };
-    if ((options === null || options === void 0 ? void 0 : options.duration) != null) {
-      payload.timeout = options.duration;
-    }
     return toastManager.add(payload);
   }, [toastManager]);
   var warning = useCallback(function (title, description, options) {
@@ -23756,11 +23753,9 @@ var useToast = function () {
       id: options === null || options === void 0 ? void 0 : options.id,
       type: 'warning',
       title: title,
-      description: description
+      description: description,
+      timeout: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : undefined
     };
-    if ((options === null || options === void 0 ? void 0 : options.duration) != null) {
-      payload.timeout = options.duration;
-    }
     return toastManager.add(payload);
   }, [toastManager]);
   var info = useCallback(function (title, description, options) {
@@ -23768,29 +23763,27 @@ var useToast = function () {
       id: options === null || options === void 0 ? void 0 : options.id,
       type: 'info',
       title: title,
-      description: description
+      description: description,
+      timeout: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : undefined
     };
-    if ((options === null || options === void 0 ? void 0 : options.duration) != null) {
-      payload.timeout = options.duration;
-    }
     return toastManager.add(payload);
   }, [toastManager]);
   var custom = useCallback(function (options) {
     var payload = {
       type: options.status,
       title: options.title,
-      description: options.description
+      description: options.description,
+      timeout: options.duration !== undefined ? options.duration : undefined
     };
-    if (options.duration != null) {
-      payload.timeout = options.duration;
-    }
     return toastManager.add(payload);
   }, [toastManager]);
   var remove = useCallback(function (id) {
     return toastManager.close(id);
   }, [toastManager]);
   var removeAll = useCallback(function () {
-    toastManager.toasts.forEach(function (toast) {
+    // toasts 배열을 복사하여 동시성 문제 방지
+    var toastsToRemove = __spreadArray([], toastManager.toasts, true);
+    toastsToRemove.forEach(function (toast) {
       return toastManager.close(toast.id);
     });
   }, [toastManager]);

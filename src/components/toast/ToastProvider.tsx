@@ -77,7 +77,7 @@ const ToastRenderer: React.FC = () => {
           title={toast.title || ''}
           description={toast.description}
           showLeadingIcon={true}
-          showCloseButton={false}
+          showCloseButton={true}
           position={position}
         />
       ))}
@@ -135,10 +135,9 @@ export const useToast = () => {
         type: 'success',
         title,
         description,
+        // duration이 명시적으로 null이 아닌 이상 timeout을 설정 (0도 유효한 값)
+        timeout: options?.duration !== undefined ? options.duration : undefined,
       };
-      if (options?.duration != null) {
-        payload.timeout = options.duration;
-      }
       return toastManager.add(payload);
     },
     [toastManager],
@@ -151,10 +150,8 @@ export const useToast = () => {
         type: 'error',
         title,
         description,
+        timeout: options?.duration !== undefined ? options.duration : undefined,
       };
-      if (options?.duration != null) {
-        payload.timeout = options.duration;
-      }
       return toastManager.add(payload);
     },
     [toastManager],
@@ -167,10 +164,8 @@ export const useToast = () => {
         type: 'warning',
         title,
         description,
+        timeout: options?.duration !== undefined ? options.duration : undefined,
       };
-      if (options?.duration != null) {
-        payload.timeout = options.duration;
-      }
       return toastManager.add(payload);
     },
     [toastManager],
@@ -183,10 +178,8 @@ export const useToast = () => {
         type: 'info',
         title,
         description,
+        timeout: options?.duration !== undefined ? options.duration : undefined,
       };
-      if (options?.duration != null) {
-        payload.timeout = options.duration;
-      }
       return toastManager.add(payload);
     },
     [toastManager],
@@ -198,10 +191,8 @@ export const useToast = () => {
         type: options.status,
         title: options.title,
         description: options.description,
+        timeout: options.duration !== undefined ? options.duration : undefined,
       };
-      if (options.duration != null) {
-        payload.timeout = options.duration;
-      }
       return toastManager.add(payload);
     },
     [toastManager],
@@ -209,7 +200,9 @@ export const useToast = () => {
 
   const remove = useCallback((id: string) => toastManager.close(id), [toastManager]);
   const removeAll = useCallback(() => {
-    toastManager.toasts.forEach((toast) => toastManager.close(toast.id));
+    // toasts 배열을 복사하여 동시성 문제 방지
+    const toastsToRemove = [...toastManager.toasts];
+    toastsToRemove.forEach((toast) => toastManager.close(toast.id));
   }, [toastManager]);
 
   return {
