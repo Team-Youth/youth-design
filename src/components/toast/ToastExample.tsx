@@ -65,12 +65,11 @@ const ToastButtons: React.FC = () => {
 
   return (
     <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <h2>🍞 Toast 테스트 (Base UI 기반)</h2>
+      <h2>🍞 Toast 테스트 (Sonner 기반)</h2>
       <p style={{ color: '#6b7280', marginBottom: '16px' }}>
-        Base UI의 강력한 기능들을 테스트해보세요:
-        <br />• <kbd>F6</kbd> - 토스트에 포커스 • <kbd>Escape</kbd> - 포커스된 토스트 닫기 •{' '}
-        <strong>스와이프</strong> - 터치로 토스트 닫기 • <strong>호버</strong> - 마우스 호버 시
-        타이머 일시정지
+        Sonner 라이브러리의 강력한 기능들을 테스트해보세요:
+        <br />• <strong>스와이프</strong> - 터치로 토스트 닫기 • <strong>호버</strong> - 마우스 호버
+        시 타이머 일시정지 • <strong>키보드</strong> - 접근성 지원
       </p>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -182,25 +181,25 @@ const ToastButtons: React.FC = () => {
           color: '#374151',
         }}
       >
-        <h4 style={{ margin: '0 0 8px 0', color: '#1f2937' }}>🎯 Base UI 기능 테스트:</h4>
+        <h4 style={{ margin: '0 0 8px 0', color: '#1f2937' }}>🎯 Sonner 기능 테스트:</h4>
         <ul style={{ margin: '0', paddingLeft: '20px' }}>
           <li>
             <strong>접근성</strong>: 토스트가 표시되면 스크린 리더가 자동으로 읽어줍니다
           </li>
           <li>
-            <strong>키보드 네비게이션</strong>: F6 키로 토스트에 포커스, Escape로 닫기
-          </li>
-          <li>
             <strong>터치 제스처</strong>: 모바일에서 스와이프로 토스트 닫기
-          </li>
-          <li>
-            <strong>포커스 관리</strong>: 토스트 닫힘 후 이전 포커스 위치로 복귀
           </li>
           <li>
             <strong>애니메이션</strong>: 부드러운 입장/퇴장 애니메이션
           </li>
           <li>
             <strong>스택 관리</strong>: 최대 3개까지 표시, 초과 시 오래된 것부터 제거
+          </li>
+          <li>
+            <strong>호버 일시정지</strong>: 마우스 호버 시 타이머가 일시정지됩니다
+          </li>
+          <li>
+            <strong>커스텀 스타일링</strong>: youth-design 디자인 토큰 적용
           </li>
         </ul>
       </div>
@@ -285,10 +284,10 @@ function YourComponent() {
               borderRadius: '8px',
             }}
           >
-            <h4 style={{ color: '#065f46', margin: '0 0 8px 0' }}>✨ Base UI의 장점</h4>
+            <h4 style={{ color: '#065f46', margin: '0 0 8px 0' }}>✨ Sonner의 장점</h4>
             <p style={{ color: '#047857', margin: '0', fontSize: '14px' }}>
-              기존 react-hot-toast와 동일한 API를 유지하면서, 접근성, 키보드 네비게이션, 터치 제스처
-              등 웹 표준을 준수하는 강력한 기능들을 추가로 제공합니다.
+              기존 API를 유지하면서, 성능 최적화, 접근성, 터치 제스처 등 현대적인 사용자 경험을
+              제공합니다. youth-design 디자인 토큰과 완벽하게 통합되어 일관된 UI를 제공합니다.
             </p>
           </div>
         </div>

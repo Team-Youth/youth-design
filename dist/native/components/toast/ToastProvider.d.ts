@@ -1,8 +1,13 @@
 import React, { ReactNode } from 'react';
-import { ToastProps } from './Toast';
-export interface ToastItem extends Omit<ToastProps, 'onClose' | 'toast'> {
+export type ToastStatus = 'success' | 'error' | 'warning' | 'info';
+export interface ToastItem {
     id?: string;
+    status?: ToastStatus;
+    title?: string;
+    description?: string;
     duration?: number;
+    showLeadingIcon?: boolean;
+    showCloseButton?: boolean;
 }
 interface ToastProviderProps {
     children: ReactNode;
@@ -16,21 +21,21 @@ interface ToastProviderProps {
 /**
  * Toast Provider 컴포넌트
  *
- * base-ui의 toast 시스템을 래핑하여 기존 Toast 컴포넌트와 함께 사용할 수 있는 Provider입니다.
+ * sonner 라이브러리를 래핑하여 기존 API 호환성을 유지하는 Provider입니다.
  */
 export declare const ToastProvider: React.FC<ToastProviderProps>;
 /**
  * useToast 훅
  *
- * base-ui의 toast 시스템을 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
+ * sonner 라이브러리를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 export declare const useToast: () => {
-    success: (title: string, description?: string, options?: Partial<ToastItem>) => string;
-    error: (title: string, description?: string, options?: Partial<ToastItem>) => string;
-    warning: (title: string, description?: string, options?: Partial<ToastItem>) => string;
-    info: (title: string, description?: string, options?: Partial<ToastItem>) => string;
-    custom: (options: Omit<ToastItem, "id">) => string;
-    remove: (id: string) => void;
-    removeAll: () => void;
+    success: (title: string, description?: string, options?: Partial<ToastItem>) => string | number;
+    error: (title: string, description?: string, options?: Partial<ToastItem>) => string | number;
+    warning: (title: string, description?: string, options?: Partial<ToastItem>) => string | number;
+    info: (title: string, description?: string, options?: Partial<ToastItem>) => string | number;
+    custom: (options: Omit<ToastItem, "id">) => string | number;
+    remove: (id: string) => string | number;
+    removeAll: () => string | number;
 };
 export default ToastProvider;

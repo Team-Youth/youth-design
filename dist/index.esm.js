@@ -1,8 +1,6 @@
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
-import * as React from 'react';
-import React__default, { useState, forwardRef, useRef, useImperativeHandle, useCallback, useLayoutEffect, createContext, useContext, useEffect, useMemo, memo } from 'react';
-import * as ReactDOM from 'react-dom';
-import { createPortal } from 'react-dom';
+import React, { useState, forwardRef, useRef, useImperativeHandle, useCallback, useEffect, useMemo, memo } from 'react';
+import ReactDOM, { createPortal } from 'react-dom';
 
 /**
  * Color Design Tokens
@@ -18761,7 +18759,7 @@ function requireLottie () {
 
 (function (module, exports) {
 	(function (global, factory) {
-	  factory(exports, requireLottie(), React__default) ;
+	  factory(exports, requireLottie(), React) ;
 	})(commonjsGlobal, (function (exports, lottie, React) {
 	  function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
@@ -19525,7 +19523,7 @@ var YouthLottie = forwardRef(function (_a, ref) {
     segments: segments
   });
   // 애니메이션 설정 적용
-  React__default.useEffect(function () {
+  React.useEffect(function () {
     if (lottieRef.current) {
       lottieRef.current.setSpeed(speed);
       lottieRef.current.setDirection(direction);
@@ -20063,7 +20061,7 @@ var Tab = function (_a) {
     });
   };
   // underline용 ::after 스타일을 위한 unique id 생성
-  var uniqueId = React__default.useId();
+  var uniqueId = React.useId();
   var buttonId = "tab-".concat(uniqueId);
   // toggle 타입의 CSS 클래스 생성
   var getToggleClasses = function () {
@@ -21036,2352 +21034,1158 @@ var Toggle = function (_a) {
   });
 };
 
-function hasWindow() {
-  return typeof window !== 'undefined';
-}
-function getWindow(node) {
-  var _node$ownerDocument;
-  return (node == null || (_node$ownerDocument = node.ownerDocument) == null ? void 0 : _node$ownerDocument.defaultView) || window;
-}
-function isShadowRoot(value) {
-  if (!hasWindow() || typeof ShadowRoot === 'undefined') {
-    return false;
-  }
-  return value instanceof ShadowRoot || value instanceof getWindow(value).ShadowRoot;
-}
-
-function getUserAgent() {
-  const uaData = navigator.userAgentData;
-  if (uaData && Array.isArray(uaData.brands)) {
-    return uaData.brands.map(_ref => {
-      let {
-        brand,
-        version
-      } = _ref;
-      return brand + "/" + version;
-    }).join(' ');
-  }
-  return navigator.userAgent;
-}
-function isSafari() {
-  // Chrome DevTools does not complain about navigator.vendor
-  return /apple/i.test(navigator.vendor);
-}
-function isJSDOM() {
-  return getUserAgent().includes('jsdom/');
-}
-
-function activeElement(doc) {
-  let activeElement = doc.activeElement;
-  while (((_activeElement = activeElement) == null || (_activeElement = _activeElement.shadowRoot) == null ? void 0 : _activeElement.activeElement) != null) {
-    var _activeElement;
-    activeElement = activeElement.shadowRoot.activeElement;
-  }
-  return activeElement;
-}
-function contains(parent, child) {
-  if (!parent || !child) {
-    return false;
-  }
-  const rootNode = child.getRootNode == null ? void 0 : child.getRootNode();
-
-  // First, attempt with faster native method
-  if (parent.contains(child)) {
-    return true;
-  }
-
-  // then fallback to custom implementation with Shadow DOM support
-  if (rootNode && isShadowRoot(rootNode)) {
-    let next = child;
-    while (next) {
-      if (parent === next) {
-        return true;
-      }
-      // @ts-ignore
-      next = next.parentNode || next.host;
-    }
-  }
-
-  // Give up, the result is false
-  return false;
-}
-function getTarget(event) {
-  if ('composedPath' in event) {
-    return event.composedPath()[0];
-  }
-
-  // TS thinks `event` is of type never as it assumes all browsers support
-  // `composedPath()`, but browsers without shadow DOM don't.
-  return event.target;
-}
-function getDocument(node) {
-  return (node == null ? void 0 : node.ownerDocument) || document;
-}
-function matchesFocusVisible(element) {
-  // We don't want to block focus from working with `visibleOnly`
-  // (JSDOM doesn't match `:focus-visible` when the element has `:focus`)
-  if (!element || isJSDOM()) return true;
-  try {
-    return element.matches(':focus-visible');
-  } catch (_e) {
-    return true;
-  }
-}
-
-var isClient = typeof document !== 'undefined';
-
-var noop = function noop() {};
-var index = isClient ? useLayoutEffect : noop;
-
-function useLatestRef$1(value) {
-  const ref = React.useRef(value);
-  index(() => {
-    ref.current = value;
-  });
-  return ref;
-}
-
-const ToastContext = /*#__PURE__*/React.createContext(undefined);
-if (process.env.NODE_ENV !== "production") ToastContext.displayName = "ToastContext";
-function useToastContext() {
-  const context = React.useContext(ToastContext);
-  if (!context) {
-    throw new Error('Base UI: useToast must be used within <Toast.Provider>.');
-  }
-  return context;
-}
-
-const UNINITIALIZED = {};
-
 /**
- * A React.useRef() that is initialized lazily with a function. Note that it accepts an optional
- * initialization argument, so the initialization function doesn't need to be an inline closure.
+ * @deprecated 이 컴포넌트는 더 이상 사용되지 않습니다.
+ * 대신 useToast 훅을 사용하여 toast를 표시하세요.
  *
- * @usage
- *   const ref = useLazyRef(sortColumns, columns)
- */
-
-function useLazyRef(init, initArg) {
-  const ref = React.useRef(UNINITIALIZED);
-  if (ref.current === UNINITIALIZED) {
-    ref.current = init(initArg);
-  }
-  return ref;
-}
-
-// https://github.com/mui/material-ui/issues/41190#issuecomment-2040873379
-const useInsertionEffect = React[`useInsertionEffect${Math.random().toFixed(1)}`.slice(0, -3)] || (fn => fn());
-function useEventCallback(callback) {
-  const stable = useLazyRef(createStableCallback).current;
-  stable.next = callback;
-  useInsertionEffect(stable.effect);
-  return stable.trampoline;
-}
-function createStableCallback() {
-  const stable = {
-    next: undefined,
-    callback: assertNotCalled,
-    trampoline: (...args) => stable.callback?.(...args),
-    effect: () => {
-      stable.callback = stable.next;
-    }
-  };
-  return stable;
-}
-function assertNotCalled() {
-  throw new Error('Cannot call an event handler while rendering.');
-}
-
-let counter = 0;
-function generateId(prefix) {
-  counter += 1;
-  return `${prefix}-${Math.random().toString(36).slice(2, 6)}-${counter}`;
-}
-
-function resolvePromiseOptions(options, result) {
-  if (typeof options === 'string') {
-    return {
-      description: options
-    };
-  }
-  if (typeof options === 'function') {
-    const resolvedOptions = options(result);
-    return typeof resolvedOptions === 'string' ? {
-      description: resolvedOptions
-    } : resolvedOptions;
-  }
-  return options;
-}
-
-const EMPTY$2 = [];
-
-/**
- * A React.useEffect equivalent that runs once, when the component is mounted.
- */
-function useOnMount(fn) {
-  // TODO: uncomment once we enable eslint-plugin-react-compiler // eslint-disable-next-line react-compiler/react-compiler -- no need to put `fn` in the dependency array
-  /* eslint-disable react-hooks/exhaustive-deps */
-  React.useEffect(fn, EMPTY$2);
-  /* eslint-enable react-hooks/exhaustive-deps */
-}
-
-const EMPTY$1 = 0;
-class Timeout {
-  static create() {
-    return new Timeout();
-  }
-  currentId = (() => EMPTY$1)();
-
-  /**
-   * Executes `fn` after `delay`, clearing any previously scheduled call.
-   */
-  start(delay, fn) {
-    this.clear();
-    this.currentId = setTimeout(() => {
-      this.currentId = EMPTY$1;
-      fn();
-    }, delay); /* Node.js types are enabled in development */
-  }
-  isStarted() {
-    return this.currentId !== EMPTY$1;
-  }
-  clear = () => {
-    if (this.currentId !== EMPTY$1) {
-      clearTimeout(this.currentId);
-      this.currentId = EMPTY$1;
-    }
-  };
-  disposeEffect = () => {
-    return this.clear;
-  };
-}
-
-/**
- * A `setTimeout` with automatic cleanup and guard.
- */
-function useTimeout() {
-  const timeout = useLazyRef(Timeout.create).current;
-  useOnMount(timeout.disposeEffect);
-  return timeout;
-}
-
-/**
- * Provides a context for creating and managing toasts.
+ * 마이그레이션 예시:
+ * ```tsx
+ * // 이전
+ * <Toast status="success" title="성공!" description="작업이 완료되었습니다." />
  *
- * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
+ * // 이후
+ * const { success } = useToast();
+ * success('성공!', '작업이 완료되었습니다.');
+ * ```
  */
-const ToastProvider$1 = function ToastProvider(props) {
-  const {
-    children,
-    timeout = 5000,
-    limit = 3,
-    toastManager
-  } = props;
-  const [toasts, setToasts] = React.useState([]);
-  const [hovering, setHovering] = React.useState(false);
-  const [focused, setFocused] = React.useState(false);
-  const [prevFocusElement, setPrevFocusElement] = React.useState(null);
-  if (toasts.length === 0) {
-    if (hovering) {
-      setHovering(false);
-    }
-    if (focused) {
-      setFocused(false);
-    }
-  }
-
-  // It's not possible to stack a smaller height toast onto a larger height toast, but
-  // the reverse is possible. For simplicity, we'll enforce the expanded state if the
-  // toasts aren't all the same height.
-  const hasDifferingHeights = React.useMemo(() => {
-    const heights = toasts.map(t => t.height).filter(h => h !== 0);
-    return heights.length > 0 && new Set(heights).size > 1;
-  }, [toasts]);
-  const timersRef = React.useRef(new Map());
-  const viewportRef = React.useRef(null);
-  const windowFocusedRef = React.useRef(true);
-  const isPausedRef = React.useRef(false);
-  const hoveringRef = useLatestRef$1(hovering);
-  const focusedRef = useLatestRef$1(focused);
-  const handleFocusManagement = useEventCallback(toastId => {
-    const activeEl = activeElement(getDocument(viewportRef.current));
-    if (!viewportRef.current || !contains(viewportRef.current, activeEl) || !matchesFocusVisible(activeEl)) {
-      return;
-    }
-    const currentIndex = toasts.findIndex(toast => toast.id === toastId);
-    let nextToast = null;
-
-    // Try to find the next toast that isn't animating out
-    let index = currentIndex + 1;
-    while (index < toasts.length) {
-      if (toasts[index].transitionStatus !== 'ending') {
-        nextToast = toasts[index];
-        break;
-      }
-      index += 1;
-    }
-
-    // Go backwards if no next toast is found
-    if (!nextToast) {
-      index = currentIndex - 1;
-      while (index >= 0) {
-        if (toasts[index].transitionStatus !== 'ending') {
-          nextToast = toasts[index];
-          break;
-        }
-        index -= 1;
-      }
-    }
-    if (nextToast) {
-      nextToast.ref?.current?.focus();
-    } else {
-      prevFocusElement?.focus({
-        preventScroll: true
-      });
-    }
-  });
-  const pauseTimers = useEventCallback(() => {
-    if (isPausedRef.current) {
-      return;
-    }
-    isPausedRef.current = true;
-    timersRef.current.forEach(timer => {
-      if (timer.timeout) {
-        timer.timeout.clear();
-        const elapsed = Date.now() - timer.start;
-        const remaining = timer.delay - elapsed;
-        timer.remaining = remaining > 0 ? remaining : 0;
-      }
-    });
-  });
-  const resumeTimers = useEventCallback(() => {
-    if (!isPausedRef.current) {
-      return;
-    }
-    isPausedRef.current = false;
-    timersRef.current.forEach((timer, id) => {
-      timer.remaining = timer.remaining > 0 ? timer.remaining : timer.delay;
-      timer.timeout ??= Timeout.create();
-      timer.timeout.start(timer.remaining, () => {
-        timersRef.current.delete(id);
-        timer.callback();
-      });
-      timer.start = Date.now();
-    });
-  });
-  const close = useEventCallback(toastId => {
-    setToasts(prevToasts => {
-      const toastsWithEnding = prevToasts.map(toast => toast.id === toastId ? {
-        ...toast,
-        transitionStatus: 'ending',
-        height: 0
-      } : toast);
-      const activeToasts = toastsWithEnding.filter(t => t.transitionStatus !== 'ending');
-      return toastsWithEnding.map(toast => {
-        if (toast.transitionStatus === 'ending') {
-          return toast;
-        }
-        const isActiveToastLimited = activeToasts.indexOf(toast) >= limit;
-        return {
-          ...toast,
-          limited: isActiveToastLimited
-        };
-      });
-    });
-    const timer = timersRef.current.get(toastId);
-    if (timer && timer.timeout) {
-      timer.timeout.clear();
-      timersRef.current.delete(toastId);
-    }
-    const toast = toasts.find(t => t.id === toastId);
-    toast?.onClose?.();
-    handleFocusManagement(toastId);
-    if (toasts.length === 1) {
-      hoveringRef.current = false;
-      focusedRef.current = false;
-    }
-  });
-  const remove = useEventCallback(toastId => {
-    setToasts(prev => prev.filter(toast => toast.id !== toastId));
-    const toast = toasts.find(t => t.id === toastId);
-    toast?.onRemove?.();
-  });
-  const scheduleTimer = useEventCallback((id, delay, callback) => {
-    const start = Date.now();
-    const shouldStartActive = windowFocusedRef.current && !hoveringRef.current && !focusedRef.current;
-    const currentTimeout = shouldStartActive ? Timeout.create() : undefined;
-    currentTimeout?.start(delay, () => {
-      timersRef.current.delete(id);
-      callback();
-    });
-    timersRef.current.set(id, {
-      timeout: currentTimeout,
-      start: shouldStartActive ? start : 0,
-      delay,
-      remaining: delay,
-      callback
-    });
-  });
-  const add = useEventCallback(toast => {
-    const id = toast.id || generateId('toast');
-    const toastToAdd = {
-      ...toast,
-      id,
-      transitionStatus: 'starting'
-    };
-    setToasts(prev => {
-      const updatedToasts = [toastToAdd, ...prev];
-      const activeToasts = updatedToasts.filter(t => t.transitionStatus !== 'ending');
-
-      // Mark oldest toasts for removal when over limit
-      if (activeToasts.length > limit) {
-        const excessCount = activeToasts.length - limit;
-        const oldestActiveToasts = activeToasts.slice(-excessCount);
-        return updatedToasts.map(t => oldestActiveToasts.some(old => old.id === t.id) ? {
-          ...t,
-          limited: true
-        } : {
-          ...t,
-          limited: false
-        });
-      }
-      return updatedToasts.map(t => ({
-        ...t,
-        limited: false
-      }));
-    });
-    const duration = toastToAdd.timeout ?? timeout;
-    if (toastToAdd.type !== 'loading' && duration > 0) {
-      scheduleTimer(id, duration, () => close(id));
-    }
-    if (hoveringRef.current || focusedRef.current || !windowFocusedRef.current) {
-      pauseTimers();
-    }
-    return id;
-  });
-  const update = useEventCallback((id, updates) => {
-    setToasts(prev => prev.map(toast => toast.id === id ? {
-      ...toast,
-      ...updates
-    } : toast));
-  });
-  const promise = useEventCallback((promiseValue, options) => {
-    // Create a loading toast (which does not auto-dismiss).
-    const loadingOptions = resolvePromiseOptions(options.loading);
-    const id = add({
-      ...loadingOptions,
-      type: 'loading'
-    });
-    const handledPromise = promiseValue.then(result => {
-      update(id, {
-        ...resolvePromiseOptions(options.success, result),
-        type: 'success'
-      });
-      scheduleTimer(id, timeout, () => close(id));
-      if (hoveringRef.current || focusedRef.current || !windowFocusedRef.current) {
-        pauseTimers();
-      }
-      return result;
-    }).catch(error => {
-      update(id, {
-        ...resolvePromiseOptions(options.error, error),
-        type: 'error'
-      });
-      scheduleTimer(id, timeout, () => close(id));
-      if (hoveringRef.current || focusedRef.current || !windowFocusedRef.current) {
-        pauseTimers();
-      }
-      return Promise.reject(error);
-    });
-
-    // Private API used exclusively by `Manager` to handoff the promise
-    // back to the manager after it's handled here.
-    if ({}.hasOwnProperty.call(options, 'setPromise')) {
-      options.setPromise(handledPromise);
-    }
-    return handledPromise;
-  });
-  React.useEffect(function subscribeToToastManager() {
-    if (!toastManager) {
-      return undefined;
-    }
-    const unsubscribe = toastManager[' subscribe'](({
-      action,
-      options
-    }) => {
-      const id = options.id;
-      if (action === 'promise' && options.promise) {
-        promise(options.promise, options);
-      } else if (action === 'update' && id) {
-        update(id, options);
-      } else if (action === 'close' && id) {
-        close(id);
-      } else {
-        add(options);
-      }
-    });
-    return unsubscribe;
-  }, [add, update, scheduleTimer, timeout, toastManager, promise, close]);
-  const contextValue = React.useMemo(() => ({
-    toasts,
-    setToasts,
-    hovering,
-    setHovering,
-    focused,
-    setFocused,
-    add,
-    close,
-    remove,
-    update,
-    promise,
-    pauseTimers,
-    resumeTimers,
-    prevFocusElement,
-    setPrevFocusElement,
-    viewportRef,
-    scheduleTimer,
-    windowFocusedRef,
-    hasDifferingHeights
-  }), [add, close, focused, hovering, pauseTimers, prevFocusElement, promise, remove, resumeTimers, scheduleTimer, toasts, update, hasDifferingHeights]);
-  return /*#__PURE__*/jsx(ToastContext.Provider, {
-    value: contextValue,
-    children: children
-  });
-};
-if (process.env.NODE_ENV !== "production") ToastProvider$1.displayName = "ToastProvider";
-
-const ToastViewportContext = /*#__PURE__*/React.createContext(undefined);
-if (process.env.NODE_ENV !== "production") ToastViewportContext.displayName = "ToastViewportContext";
-
-const visuallyHidden = {
-  clip: 'rect(0 0 0 0)',
-  overflow: 'hidden',
-  whiteSpace: 'nowrap',
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  border: 0,
-  padding: 0,
-  width: 1,
-  height: 1,
-  margin: -1
-};
-
-const FocusGuard = /*#__PURE__*/React.forwardRef(function FocusGuard(props, ref) {
-  const [role, setRole] = React.useState();
-  index(() => {
-    if (isSafari()) {
-      // Unlike other screen readers such as NVDA and JAWS, the virtual cursor
-      // on VoiceOver does trigger the onFocus event, so we can use the focus
-      // trap element. On Safari, only buttons trigger the onFocus event.
-      setRole('button');
-    }
-  }, []);
-  const restProps = {
-    ref,
-    tabIndex: 0,
-    // Role is only for VoiceOver
-    role,
-    'aria-hidden': role ? undefined : true,
-    style: visuallyHidden
-  };
-  return /*#__PURE__*/jsx("span", {
-    ...props,
-    ...restProps,
-    "data-base-ui-focus-guard": ""
-  });
-});
-if (process.env.NODE_ENV !== "production") FocusGuard.displayName = "FocusGuard";
-
-function getStyleHookProps(state, customMapping) {
-  const props = {};
-
-  /* eslint-disable-next-line guard-for-in */
-  for (const key in state) {
-    const value = state[key];
-    if (customMapping?.hasOwnProperty(key)) {
-      const customProps = customMapping[key](value);
-      if (customProps != null) {
-        Object.assign(props, customProps);
-      }
-      continue;
-    }
-    if (value === true) {
-      props[`data-${key.toLowerCase()}`] = '';
-    } else if (value) {
-      props[`data-${key.toLowerCase()}`] = value.toString();
-    }
-  }
-  return props;
-}
-
-/**
- * Merges refs into a single memoized callback ref or `null`.
- */
-
-function useForkRef(a, b, c, d) {
-  const forkRef = useLazyRef(createForkRef).current;
-  if (didChange(forkRef, a, b, c, d)) {
-    update(forkRef, [a, b, c, d]);
-  }
-  return forkRef.callback;
-}
-
-/**
- * Merges variadic amount of refs into a single memoized callback ref or `null`.
- */
-function useForkRefN(...refs) {
-  const forkRef = useLazyRef(createForkRef).current;
-  if (didChangeN(forkRef, refs)) {
-    update(forkRef, refs);
-  }
-  return forkRef.callback;
-}
-function createForkRef() {
-  return {
-    callback: null,
-    cleanup: null,
-    refs: []
-  };
-}
-function didChange(forkRef, a, b, c, d) {
-  // prettier-ignore
-  return forkRef.refs[0] !== a || forkRef.refs[1] !== b || forkRef.refs[2] !== c || forkRef.refs[3] !== d;
-}
-function didChangeN(forkRef, newRefs) {
-  return forkRef.refs.length !== newRefs.length || forkRef.refs.some((ref, index) => ref !== newRefs[index]);
-}
-function update(forkRef, refs) {
-  forkRef.refs = refs;
-  if (refs.every(ref => ref == null)) {
-    forkRef.callback = null;
-    return;
-  }
-  forkRef.callback = instance => {
-    if (forkRef.cleanup) {
-      forkRef.cleanup();
-      forkRef.cleanup = null;
-    }
-    if (instance != null) {
-      const cleanupCallbacks = Array(refs.length).fill(null);
-      for (let i = 0; i < refs.length; i += 1) {
-        const ref = refs[i];
-        if (ref == null) {
-          continue;
-        }
-        switch (typeof ref) {
-          case 'function':
-            {
-              const refCleanup = ref(instance);
-              if (typeof refCleanup === 'function') {
-                cleanupCallbacks[i] = refCleanup;
-              }
-              break;
-            }
-          case 'object':
-            {
-              ref.current = instance;
-              break;
-            }
-        }
-      }
-      forkRef.cleanup = () => {
-        for (let i = 0; i < refs.length; i += 1) {
-          const ref = refs[i];
-          if (ref == null) {
-            continue;
-          }
-          switch (typeof ref) {
-            case 'function':
-              {
-                const cleanupCallback = cleanupCallbacks[i];
-                if (typeof cleanupCallback === 'function') {
-                  cleanupCallback();
-                } else {
-                  ref(null);
-                }
-                break;
-              }
-            case 'object':
-              {
-                ref.current = null;
-                break;
-              }
-          }
-        }
-      };
-    }
-  };
-}
-
-/**
- * If the provided className is a string, it will be returned as is.
- * Otherwise, the function will call the className function with the state as the first argument.
- *
- * @param className
- * @param state
- */
-function resolveClassName(className, state) {
-  return typeof className === 'function' ? className(state) : className;
-}
-
-const majorVersion = parseInt(React.version, 10);
-function isReactVersionAtLeast(reactVersionToCheck) {
-  return majorVersion >= reactVersionToCheck;
-}
-
-function mergeObjects(a, b) {
-  if (a && !b) {
-    return a;
-  }
-  if (!a && b) {
-    return b;
-  }
-  if (a || b) {
-    return {
-      ...a,
-      ...b
-    };
-  }
-  return undefined;
-}
-
-const EMPTY_PROPS = {};
-
-/**
- * Merges multiple sets of React props. It follows the Object.assign pattern where the rightmost object's fields overwrite
- * the conflicting ones from others. This doesn't apply to event handlers, `className` and `style` props.
- * Event handlers are merged such that they are called in sequence (the rightmost one being called first),
- * and allows the user to prevent the subsequent event handlers from being
- * executed by attaching a `preventBaseUIHandler` method.
- * It also merges the `className` and `style` props, whereby the classes are concatenated
- * and the rightmost styles overwrite the subsequent ones.
- *
- * Props can either be provided as objects or as functions that take the previous props as an argument.
- * The function will receive the merged props up to that point (going from left to right):
- * so in the case of `(obj1, obj2, fn, obj3)`, `fn` will receive the merged props of `obj1` and `obj2`.
- * The function is responsible for chaining event handlers if needed (i.e. we don't run the merge logic).
- *
- * Event handlers returned by the functions are not automatically prevented when `preventBaseUIHandler` is called.
- * They must check `event.baseUIHandlerPrevented` themselves and bail out if it's true.
- *
- * @important **`ref` is not merged.**
- * @param props props to merge.
- * @returns the merged props.
- */
-/* eslint-disable id-denylist */
-
-function mergeProps(a, b, c, d, e) {
-  // We need to mutably own `merged`
-  let merged = {
-    ...resolvePropsGetter(a, EMPTY_PROPS)
-  };
-  if (b) {
-    merged = mergeOne(merged, b);
-  }
-  if (c) {
-    merged = mergeOne(merged, c);
-  }
-  if (d) {
-    merged = mergeOne(merged, d);
-  }
-  if (e) {
-    merged = mergeOne(merged, e);
-  }
-  return merged;
-}
-/* eslint-enable id-denylist */
-
-function mergePropsN(props) {
-  if (props.length === 0) {
-    return EMPTY_PROPS;
-  }
-  if (props.length === 1) {
-    return resolvePropsGetter(props[0], EMPTY_PROPS);
-  }
-
-  // We need to mutably own `merged`
-  let merged = {
-    ...resolvePropsGetter(props[0], EMPTY_PROPS)
-  };
-  for (let i = 1; i < props.length; i += 1) {
-    merged = mergeOne(merged, props[i]);
-  }
-  return merged;
-}
-function mergeOne(merged, inputProps) {
-  if (isPropsGetter(inputProps)) {
-    return inputProps(merged);
-  }
-  return mutablyMergeInto(merged, inputProps);
-}
-
-/**
- * Merges two sets of props. In case of conflicts, the external props take precedence.
- */
-function mutablyMergeInto(mergedProps, externalProps) {
-  if (!externalProps) {
-    return mergedProps;
-  }
-
-  // eslint-disable-next-line guard-for-in
-  for (const propName in externalProps) {
-    const externalPropValue = externalProps[propName];
-    switch (propName) {
-      case 'style':
-        {
-          mergedProps[propName] = mergeObjects(mergedProps.style, externalPropValue);
-          break;
-        }
-      case 'className':
-        {
-          mergedProps[propName] = mergeClassNames(mergedProps.className, externalPropValue);
-          break;
-        }
-      default:
-        {
-          if (isEventHandler(propName, externalPropValue)) {
-            mergedProps[propName] = mergeEventHandlers(mergedProps[propName], externalPropValue);
-          } else {
-            mergedProps[propName] = externalPropValue;
-          }
-        }
-    }
-  }
-  return mergedProps;
-}
-function isEventHandler(key, value) {
-  // This approach is more efficient than using a regex.
-  const code0 = key.charCodeAt(0);
-  const code1 = key.charCodeAt(1);
-  const code2 = key.charCodeAt(2);
-  return code0 === 111 /* o */ && code1 === 110 /* n */ && code2 >= 65 /* A */ && code2 <= 90 /* Z */ && typeof value === 'function';
-}
-function isPropsGetter(inputProps) {
-  return typeof inputProps === 'function';
-}
-function resolvePropsGetter(inputProps, previousProps) {
-  if (isPropsGetter(inputProps)) {
-    return inputProps(previousProps);
-  }
-  return inputProps ?? EMPTY_PROPS;
-}
-function mergeEventHandlers(ourHandler, theirHandler) {
-  return event => {
-    if (isSyntheticEvent(event)) {
-      const baseUIEvent = event;
-      makeEventPreventable(baseUIEvent);
-      const result = theirHandler(baseUIEvent);
-      if (!baseUIEvent.baseUIHandlerPrevented) {
-        ourHandler?.(baseUIEvent);
-      }
-      return result;
-    }
-    const result = theirHandler(event);
-    ourHandler?.(event);
-    return result;
-  };
-}
-function makeEventPreventable(event) {
-  event.preventBaseUIHandler = () => {
-    event.baseUIHandlerPrevented = true;
-  };
-  return event;
-}
-function mergeClassNames(ourClassName, theirClassName) {
-  if (theirClassName) {
-    if (ourClassName) {
-      // eslint-disable-next-line prefer-template
-      return theirClassName + ' ' + ourClassName;
-    }
-    return theirClassName;
-  }
-  return ourClassName;
-}
-function isSyntheticEvent(event) {
-  return event != null && typeof event === 'object' && 'nativeEvent' in event;
-}
-
-const EMPTY_OBJECT = {};
-const IDENTITY = x => x;
-
-/**
- * Render a Base UI element.
- */
-function useRenderElement(element, componentProps, params = {}) {
-  const renderProp = componentProps.render;
-  const outProps = useRenderElementProps(componentProps, params);
-  if (params.enabled === false) {
-    return null;
-  }
-  const state = params.state ?? EMPTY_OBJECT;
-  return evaluateRenderProp(element, renderProp, outProps, state);
-}
-
-/**
- * Computes render element final props.
- */
-function useRenderElementProps(componentProps, params = {}) {
-  const {
-    className: classNameProp,
-    render: renderProp
-  } = componentProps;
-  const {
-    propGetter = IDENTITY,
-    state = EMPTY_OBJECT,
-    ref,
-    props,
-    disableStyleHooks,
-    customStyleHookMapping,
-    enabled = true
-  } = params;
-  const className = enabled ? resolveClassName(classNameProp, state) : undefined;
-  let styleHooks;
-  if (disableStyleHooks !== true) {
-    // SAFETY: We use typings to ensure `disableStyleHooks` is either always set or
-    // always unset, so this `if` block is stable across renders.
-    /* eslint-disable-next-line react-hooks/rules-of-hooks */
-    styleHooks = React.useMemo(() => enabled ? getStyleHookProps(state, customStyleHookMapping) : EMPTY_OBJECT, [state, customStyleHookMapping, enabled]);
-  }
-  const outProps = enabled ? propGetter(mergeObjects(styleHooks, Array.isArray(props) ? mergePropsN(props) : props) ?? EMPTY_OBJECT) : EMPTY_OBJECT;
-
-  // SAFETY: The `useForkRef` functions use a single hook to store the same value,
-  // switching between them at runtime is safe. If this assertion fails, React will
-  // throw at runtime anyway.
-  /* eslint-disable react-hooks/rules-of-hooks */
-  if (!enabled) {
-    useForkRef(null, null);
-  } else if (Array.isArray(ref)) {
-    outProps.ref = useForkRefN(outProps.ref, getChildRef(renderProp), ...ref);
-  } else {
-    outProps.ref = useForkRef(outProps.ref, getChildRef(renderProp), ref);
-  }
-  /* eslint-enable react-hooks/rules-of-hooks */
-
-  if (!enabled) {
-    return EMPTY_OBJECT;
-  }
-  if (className !== undefined) {
-    outProps.className = className;
-  }
-  return outProps;
-}
-function evaluateRenderProp(element, render, props, state) {
-  if (render) {
-    if (typeof render === 'function') {
-      return render(props, state);
-    }
-    const mergedProps = mergeProps(props, render.props);
-    mergedProps.ref = props.ref;
-    return /*#__PURE__*/React.cloneElement(render, mergedProps);
-  }
-  if (element) {
-    if (typeof element === 'string') {
-      return renderTag(element, props);
-    }
-  }
-  // Unreachable, but the typings on `useRenderElement` need to be reworked
-  // to annotate it correctly.
-  throw new Error('Need either element or render to be defined');
-}
-function renderTag(Tag, props) {
-  if (Tag === 'button') {
-    return /*#__PURE__*/jsx("button", {
-      type: "button",
-      ...props
-    });
-  }
-  if (Tag === 'img') {
-    return /*#__PURE__*/jsx("img", {
-      alt: "",
-      ...props
-    });
-  }
-  return /*#__PURE__*/React.createElement(Tag, props);
-}
-function getChildRef(render) {
-  if (render && typeof render !== 'function') {
-    return isReactVersionAtLeast(19) ? render.props.ref : render.ref;
-  }
+var Toast$1 = function () {
+  console.warn('Toast 컴포넌트는 더 이상 사용되지 않습니다. useToast 훅을 사용하세요.');
   return null;
-}
-
-const ToastViewport = /*#__PURE__*/React.forwardRef(function ToastViewport(componentProps, forwardedRef) {
-  const {
-    render,
-    className,
-    children,
-    ...elementProps
-  } = componentProps;
-  const {
-    toasts,
-    pauseTimers,
-    resumeTimers,
-    setHovering,
-    setFocused,
-    viewportRef,
-    windowFocusedRef,
-    prevFocusElement,
-    setPrevFocusElement,
-    hovering,
-    focused,
-    hasDifferingHeights
-  } = useToastContext();
-  const handlingFocusGuardRef = React.useRef(false);
-  const focusedRef = useLatestRef$1(focused);
-  const numToasts = toasts.length;
-
-  // Listen globally for F6 so we can force-focus the viewport.
-  React.useEffect(() => {
-    if (!viewportRef.current) {
-      return undefined;
-    }
-    function handleGlobalKeyDown(event) {
-      if (numToasts === 0) {
-        return;
-      }
-      if (event.key === 'F6' && event.target !== viewportRef.current) {
-        event.preventDefault();
-        setPrevFocusElement(activeElement(getDocument(viewportRef.current)));
-        viewportRef.current?.focus();
-        pauseTimers();
-        setFocused(true);
-      }
-    }
-    const win = getWindow(viewportRef.current);
-    win.addEventListener('keydown', handleGlobalKeyDown);
-    return () => {
-      win.removeEventListener('keydown', handleGlobalKeyDown);
-    };
-  }, [pauseTimers, setFocused, setPrevFocusElement, numToasts, viewportRef]);
-  React.useEffect(() => {
-    if (!viewportRef.current || !numToasts) {
-      return undefined;
-    }
-    const win = getWindow(viewportRef.current);
-    function handleWindowBlur(event) {
-      if (event.target !== win) {
-        return;
-      }
-      windowFocusedRef.current = false;
-      pauseTimers();
-    }
-    function handleWindowFocus(event) {
-      if (event.relatedTarget || event.target === win) {
-        return;
-      }
-      const target = getTarget(event);
-      const activeEl = activeElement(getDocument(viewportRef.current));
-      if (!contains(viewportRef.current, target) || !matchesFocusVisible(activeEl)) {
-        resumeTimers();
-      }
-
-      // Wait for the `handleFocus` event to fire.
-      setTimeout(() => {
-        windowFocusedRef.current = true;
-      });
-    }
-    win.addEventListener('blur', handleWindowBlur, true);
-    win.addEventListener('focus', handleWindowFocus, true);
-    return () => {
-      win.removeEventListener('blur', handleWindowBlur, true);
-      win.removeEventListener('focus', handleWindowFocus, true);
-    };
-  }, [pauseTimers, resumeTimers, viewportRef, windowFocusedRef, setFocused, focusedRef,
-  // `viewportRef.current` isn't available on the first render,
-  // since the portal node hasn't yet been created.
-  // By adding this dependency, we ensure the window listeners
-  // are added when toasts have been created, once the ref is available.
-  numToasts]);
-  function handleFocusGuard(event) {
-    if (!viewportRef.current) {
-      return;
-    }
-    handlingFocusGuardRef.current = true;
-
-    // If we're coming off the container, move to the first toast
-    if (event.relatedTarget === viewportRef.current) {
-      toasts[0]?.ref?.current?.focus();
-    } else {
-      prevFocusElement?.focus({
-        preventScroll: true
-      });
-    }
-  }
-  function handleKeyDown(event) {
-    if (event.key === 'Tab' && event.shiftKey && event.target === viewportRef.current) {
-      event.preventDefault();
-      prevFocusElement?.focus({
-        preventScroll: true
-      });
-      resumeTimers();
-    }
-  }
-  function handleMouseEnter() {
-    pauseTimers();
-    setHovering(true);
-  }
-  function handleMouseLeave() {
-    const activeEl = activeElement(getDocument(viewportRef.current));
-    if (contains(viewportRef.current, activeEl) && matchesFocusVisible(activeEl)) {
-      return;
-    }
-    resumeTimers();
-    setHovering(false);
-  }
-  function handleFocus() {
-    if (handlingFocusGuardRef.current) {
-      handlingFocusGuardRef.current = false;
-      return;
-    }
-    if (focused) {
-      return;
-    }
-
-    // If the window was previously blurred, the focus must be visible to
-    // pause the timers, since for pointers it's unexpected that focus is
-    // considered inside the viewport at this point.
-    const activeEl = activeElement(getDocument(viewportRef.current));
-    if (!windowFocusedRef.current && !matchesFocusVisible(activeEl)) {
-      return;
-    }
-    setFocused(true);
-    pauseTimers();
-  }
-  function handleBlur(event) {
-    if (!focused || contains(viewportRef.current, event.relatedTarget)) {
-      return;
-    }
-    setFocused(false);
-    resumeTimers();
-  }
-  const props = {
-    role: 'region',
-    tabIndex: -1,
-    'aria-label': `${numToasts} notification${numToasts !== 1 ? 's' : ''} (F6)`,
-    onMouseEnter: handleMouseEnter,
-    onMouseMove: handleMouseEnter,
-    onMouseLeave: handleMouseLeave,
-    onFocus: handleFocus,
-    onBlur: handleBlur,
-    onKeyDown: handleKeyDown,
-    onClick: handleFocus
-  };
-  const state = React.useMemo(() => ({
-    expanded: hovering || focused || hasDifferingHeights
-  }), [hovering, focused, hasDifferingHeights]);
-  const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, viewportRef],
-    state,
-    props: [props, {
-      ...elementProps,
-      children: /*#__PURE__*/jsxs(React.Fragment, {
-        children: [numToasts > 0 && prevFocusElement && /*#__PURE__*/jsx(FocusGuard, {
-          onFocus: handleFocusGuard
-        }), children, numToasts > 0 && prevFocusElement && /*#__PURE__*/jsx(FocusGuard, {
-          onFocus: handleFocusGuard
-        })]
-      })
-    }]
-  });
-  const contextValue = React.useMemo(() => ({
-    viewportRef
-  }), [viewportRef]);
-  return /*#__PURE__*/jsxs(ToastViewportContext.Provider, {
-    value: contextValue,
-    children: [numToasts > 0 && prevFocusElement && /*#__PURE__*/jsx(FocusGuard, {
-      onFocus: handleFocusGuard
-    }), element]
-  });
-});
-if (process.env.NODE_ENV !== "production") ToastViewport.displayName = "ToastViewport";
-
-const ToastRootContext = /*#__PURE__*/React.createContext(undefined);
-if (process.env.NODE_ENV !== "production") ToastRootContext.displayName = "ToastRootContext";
-function useToastRootContext() {
-  const context = React.useContext(ToastRootContext);
-  if (!context) {
-    throw new Error('useToastRoot must be used within a ToastRoot');
-  }
-  return context;
-}
-
-let TransitionStatusDataAttributes = /*#__PURE__*/function (TransitionStatusDataAttributes) {
-  /**
-   * Present when the component is animating in.
-   */
-  TransitionStatusDataAttributes["startingStyle"] = "data-starting-style";
-  /**
-   * Present when the component is animating out.
-   */
-  TransitionStatusDataAttributes["endingStyle"] = "data-ending-style";
-  return TransitionStatusDataAttributes;
-}({});
-const STARTING_HOOK = {
-  [TransitionStatusDataAttributes.startingStyle]: ''
-};
-const ENDING_HOOK = {
-  [TransitionStatusDataAttributes.endingStyle]: ''
-};
-const transitionStatusMapping = {
-  transitionStatus(value) {
-    if (value === 'starting') {
-      return STARTING_HOOK;
-    }
-    if (value === 'ending') {
-      return ENDING_HOOK;
-    }
-    return null;
-  }
 };
 
-/** Unlike `setTimeout`, rAF doesn't guarantee a positive integer return value, so we can't have
- * a monomorphic `uint` type with `0` meaning empty.
- * See warning note at:
- * https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame#return_value */
-const EMPTY = null;
-let LAST_RAF = globalThis.requestAnimationFrame;
-class Scheduler {
-  /* This implementation uses an array as a backing data-structure for frame callbacks.
-   * It allows `O(1)` callback cancelling by inserting a `null` in the array, though it
-   * never calls the native `cancelAnimationFrame` if there are no frames left. This can
-   * be much more efficient if there is a call pattern that alterns as
-   * "request-cancel-request-cancel-…".
-   * But in the case of "request-request-…-cancel-cancel-…", it leaves the final animation
-   * frame to run anyway. We turn that frame into a `O(1)` no-op via `callbacksCount`. */
-
-  callbacks = (() => [])();
-  callbacksCount = 0;
-  nextId = 1;
-  startId = 1;
-  isScheduled = false;
-  tick = timestamp => {
-    this.isScheduled = false;
-    const currentCallbacks = this.callbacks;
-    const currentCallbacksCount = this.callbacksCount;
-
-    // Update these before iterating, callbacks could call `requestAnimationFrame` again.
-    this.callbacks = [];
-    this.callbacksCount = 0;
-    this.startId = this.nextId;
-    if (currentCallbacksCount > 0) {
-      for (let i = 0; i < currentCallbacks.length; i += 1) {
-        currentCallbacks[i]?.(timestamp);
-      }
-    }
-  };
-  request(fn) {
-    const id = this.nextId;
-    this.nextId += 1;
-    this.callbacks.push(fn);
-    this.callbacksCount += 1;
-
-    /* In a test environment with fake timers, a fake `requestAnimationFrame` can be called
-     * but there's no guarantee that the animation frame will actually run before the fake
-     * timers are teared, which leaves `isScheduled` set, but won't run our `tick()`. */
-    const didRAFChange = process.env.NODE_ENV === 'test' && LAST_RAF !== requestAnimationFrame && (LAST_RAF = requestAnimationFrame, true);
-    if (!this.isScheduled || didRAFChange) {
-      requestAnimationFrame(this.tick);
-      this.isScheduled = true;
-    }
-    return id;
-  }
-  cancel(id) {
-    const index = id - this.startId;
-    if (index < 0 || index >= this.callbacks.length) {
-      return;
-    }
-    this.callbacks[index] = null;
-    this.callbacksCount -= 1;
-  }
-}
-const scheduler = new Scheduler();
-class AnimationFrame {
-  static create() {
-    return new AnimationFrame();
-  }
-  static request(fn) {
-    return scheduler.request(fn);
-  }
-  static cancel(id) {
-    return scheduler.cancel(id);
-  }
-  currentId = (() => EMPTY)();
-
-  /**
-   * Executes `fn` after `delay`, clearing any previously scheduled call.
-   */
-  request(fn) {
-    this.cancel();
-    this.currentId = scheduler.request(() => {
-      this.currentId = EMPTY;
-      fn();
-    });
-  }
-  cancel = () => {
-    if (this.currentId !== EMPTY) {
-      scheduler.cancel(this.currentId);
-      this.currentId = EMPTY;
-    }
-  };
-  disposeEffect = () => {
-    return this.cancel;
-  };
+function __insertCSS(code) {
+  if (!code || typeof document == 'undefined') return
+  let head = document.head || document.getElementsByTagName('head')[0];
+  let style = document.createElement('style');
+  style.type = 'text/css';
+  head.appendChild(style)
+  ;style.styleSheet ? (style.styleSheet.cssText = code) : style.appendChild(document.createTextNode(code));
 }
 
-/**
- * A `requestAnimationFrame` with automatic cleanup and guard.
- */
-function useAnimationFrame() {
-  const timeout = useLazyRef(AnimationFrame.create).current;
-  useOnMount(timeout.disposeEffect);
-  return timeout;
-}
-
-/**
- * Executes a function once all animations have finished on the provided element.
- * @param ref - The element to watch for animations.
- * @param waitForNextTick - Whether to wait for the next tick before checking for animations.
- */
-function useAnimationsFinished(ref, waitForNextTick = false) {
-  const frame = useAnimationFrame();
-  const timeout = useTimeout();
-  return useEventCallback((fnToExecute,
-  /**
-   * An optional [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) that
-   * can be used to abort `fnToExecute` before all the animations have finished.
-   * @default null
-   */
-  signal = null) => {
-    frame.cancel();
-    timeout.clear();
-    const element = ref.current;
-    if (!element) {
-      return;
+const getAsset = (type)=>{
+    switch(type){
+        case 'success':
+            return SuccessIcon;
+        case 'info':
+            return InfoIcon$1;
+        case 'warning':
+            return WarningIcon;
+        case 'error':
+            return ErrorIcon;
+        default:
+            return null;
     }
-    if (typeof element.getAnimations !== 'function' || globalThis.BASE_UI_ANIMATIONS_DISABLED) {
-      fnToExecute();
-    } else {
-      frame.request(() => {
-        function exec() {
-          if (!element) {
-            return;
-          }
-          Promise.allSettled(element.getAnimations().map(anim => anim.finished)).then(() => {
-            if (signal != null && signal.aborted) {
-              return;
+};
+const bars = Array(12).fill(0);
+const Loader = ({ visible, className })=>{
+    return /*#__PURE__*/ React.createElement("div", {
+        className: [
+            'sonner-loading-wrapper',
+            className
+        ].filter(Boolean).join(' '),
+        "data-visible": visible
+    }, /*#__PURE__*/ React.createElement("div", {
+        className: "sonner-spinner"
+    }, bars.map((_, i)=>/*#__PURE__*/ React.createElement("div", {
+            className: "sonner-loading-bar",
+            key: `spinner-bar-${i}`
+        }))));
+};
+const SuccessIcon = /*#__PURE__*/ React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 20 20",
+    fill: "currentColor",
+    height: "20",
+    width: "20"
+}, /*#__PURE__*/ React.createElement("path", {
+    fillRule: "evenodd",
+    d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z",
+    clipRule: "evenodd"
+}));
+const WarningIcon = /*#__PURE__*/ React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 24 24",
+    fill: "currentColor",
+    height: "20",
+    width: "20"
+}, /*#__PURE__*/ React.createElement("path", {
+    fillRule: "evenodd",
+    d: "M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z",
+    clipRule: "evenodd"
+}));
+const InfoIcon$1 = /*#__PURE__*/ React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 20 20",
+    fill: "currentColor",
+    height: "20",
+    width: "20"
+}, /*#__PURE__*/ React.createElement("path", {
+    fillRule: "evenodd",
+    d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z",
+    clipRule: "evenodd"
+}));
+const ErrorIcon = /*#__PURE__*/ React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    viewBox: "0 0 20 20",
+    fill: "currentColor",
+    height: "20",
+    width: "20"
+}, /*#__PURE__*/ React.createElement("path", {
+    fillRule: "evenodd",
+    d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z",
+    clipRule: "evenodd"
+}));
+const CloseIcon = /*#__PURE__*/ React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+}, /*#__PURE__*/ React.createElement("line", {
+    x1: "18",
+    y1: "6",
+    x2: "6",
+    y2: "18"
+}), /*#__PURE__*/ React.createElement("line", {
+    x1: "6",
+    y1: "6",
+    x2: "18",
+    y2: "18"
+}));
+
+const useIsDocumentHidden = ()=>{
+    const [isDocumentHidden, setIsDocumentHidden] = React.useState(document.hidden);
+    React.useEffect(()=>{
+        const callback = ()=>{
+            setIsDocumentHidden(document.hidden);
+        };
+        document.addEventListener('visibilitychange', callback);
+        return ()=>window.removeEventListener('visibilitychange', callback);
+    }, []);
+    return isDocumentHidden;
+};
+
+let toastsCounter = 1;
+class Observer {
+    constructor(){
+        // We use arrow functions to maintain the correct `this` reference
+        this.subscribe = (subscriber)=>{
+            this.subscribers.push(subscriber);
+            return ()=>{
+                const index = this.subscribers.indexOf(subscriber);
+                this.subscribers.splice(index, 1);
+            };
+        };
+        this.publish = (data)=>{
+            this.subscribers.forEach((subscriber)=>subscriber(data));
+        };
+        this.addToast = (data)=>{
+            this.publish(data);
+            this.toasts = [
+                ...this.toasts,
+                data
+            ];
+        };
+        this.create = (data)=>{
+            var _data_id;
+            const { message, ...rest } = data;
+            const id = typeof (data == null ? void 0 : data.id) === 'number' || ((_data_id = data.id) == null ? void 0 : _data_id.length) > 0 ? data.id : toastsCounter++;
+            const alreadyExists = this.toasts.find((toast)=>{
+                return toast.id === id;
+            });
+            const dismissible = data.dismissible === undefined ? true : data.dismissible;
+            if (this.dismissedToasts.has(id)) {
+                this.dismissedToasts.delete(id);
             }
-            // Synchronously flush the unmounting of the component so that the browser doesn't
-            // paint: https://github.com/mui/base-ui/issues/979
-            ReactDOM.flushSync(fnToExecute);
-          });
-        }
+            if (alreadyExists) {
+                this.toasts = this.toasts.map((toast)=>{
+                    if (toast.id === id) {
+                        this.publish({
+                            ...toast,
+                            ...data,
+                            id,
+                            title: message
+                        });
+                        return {
+                            ...toast,
+                            ...data,
+                            id,
+                            dismissible,
+                            title: message
+                        };
+                    }
+                    return toast;
+                });
+            } else {
+                this.addToast({
+                    title: message,
+                    ...rest,
+                    dismissible,
+                    id
+                });
+            }
+            return id;
+        };
+        this.dismiss = (id)=>{
+            if (id) {
+                this.dismissedToasts.add(id);
+                requestAnimationFrame(()=>this.subscribers.forEach((subscriber)=>subscriber({
+                            id,
+                            dismiss: true
+                        })));
+            } else {
+                this.toasts.forEach((toast)=>{
+                    this.subscribers.forEach((subscriber)=>subscriber({
+                            id: toast.id,
+                            dismiss: true
+                        }));
+                });
+            }
+            return id;
+        };
+        this.message = (message, data)=>{
+            return this.create({
+                ...data,
+                message
+            });
+        };
+        this.error = (message, data)=>{
+            return this.create({
+                ...data,
+                message,
+                type: 'error'
+            });
+        };
+        this.success = (message, data)=>{
+            return this.create({
+                ...data,
+                type: 'success',
+                message
+            });
+        };
+        this.info = (message, data)=>{
+            return this.create({
+                ...data,
+                type: 'info',
+                message
+            });
+        };
+        this.warning = (message, data)=>{
+            return this.create({
+                ...data,
+                type: 'warning',
+                message
+            });
+        };
+        this.loading = (message, data)=>{
+            return this.create({
+                ...data,
+                type: 'loading',
+                message
+            });
+        };
+        this.promise = (promise, data)=>{
+            if (!data) {
+                // Nothing to show
+                return;
+            }
+            let id = undefined;
+            if (data.loading !== undefined) {
+                id = this.create({
+                    ...data,
+                    promise,
+                    type: 'loading',
+                    message: data.loading,
+                    description: typeof data.description !== 'function' ? data.description : undefined
+                });
+            }
+            const p = Promise.resolve(promise instanceof Function ? promise() : promise);
+            let shouldDismiss = id !== undefined;
+            let result;
+            const originalPromise = p.then(async (response)=>{
+                result = [
+                    'resolve',
+                    response
+                ];
+                const isReactElementResponse = React.isValidElement(response);
+                if (isReactElementResponse) {
+                    shouldDismiss = false;
+                    this.create({
+                        id,
+                        type: 'default',
+                        message: response
+                    });
+                } else if (isHttpResponse(response) && !response.ok) {
+                    shouldDismiss = false;
+                    const promiseData = typeof data.error === 'function' ? await data.error(`HTTP error! status: ${response.status}`) : data.error;
+                    const description = typeof data.description === 'function' ? await data.description(`HTTP error! status: ${response.status}`) : data.description;
+                    const isExtendedResult = typeof promiseData === 'object' && !React.isValidElement(promiseData);
+                    const toastSettings = isExtendedResult ? promiseData : {
+                        message: promiseData
+                    };
+                    this.create({
+                        id,
+                        type: 'error',
+                        description,
+                        ...toastSettings
+                    });
+                } else if (response instanceof Error) {
+                    shouldDismiss = false;
+                    const promiseData = typeof data.error === 'function' ? await data.error(response) : data.error;
+                    const description = typeof data.description === 'function' ? await data.description(response) : data.description;
+                    const isExtendedResult = typeof promiseData === 'object' && !React.isValidElement(promiseData);
+                    const toastSettings = isExtendedResult ? promiseData : {
+                        message: promiseData
+                    };
+                    this.create({
+                        id,
+                        type: 'error',
+                        description,
+                        ...toastSettings
+                    });
+                } else if (data.success !== undefined) {
+                    shouldDismiss = false;
+                    const promiseData = typeof data.success === 'function' ? await data.success(response) : data.success;
+                    const description = typeof data.description === 'function' ? await data.description(response) : data.description;
+                    const isExtendedResult = typeof promiseData === 'object' && !React.isValidElement(promiseData);
+                    const toastSettings = isExtendedResult ? promiseData : {
+                        message: promiseData
+                    };
+                    this.create({
+                        id,
+                        type: 'success',
+                        description,
+                        ...toastSettings
+                    });
+                }
+            }).catch(async (error)=>{
+                result = [
+                    'reject',
+                    error
+                ];
+                if (data.error !== undefined) {
+                    shouldDismiss = false;
+                    const promiseData = typeof data.error === 'function' ? await data.error(error) : data.error;
+                    const description = typeof data.description === 'function' ? await data.description(error) : data.description;
+                    const isExtendedResult = typeof promiseData === 'object' && !React.isValidElement(promiseData);
+                    const toastSettings = isExtendedResult ? promiseData : {
+                        message: promiseData
+                    };
+                    this.create({
+                        id,
+                        type: 'error',
+                        description,
+                        ...toastSettings
+                    });
+                }
+            }).finally(()=>{
+                if (shouldDismiss) {
+                    // Toast is still in load state (and will be indefinitely — dismiss it)
+                    this.dismiss(id);
+                    id = undefined;
+                }
+                data.finally == null ? void 0 : data.finally.call(data);
+            });
+            const unwrap = ()=>new Promise((resolve, reject)=>originalPromise.then(()=>result[0] === 'reject' ? reject(result[1]) : resolve(result[1])).catch(reject));
+            if (typeof id !== 'string' && typeof id !== 'number') {
+                // cannot Object.assign on undefined
+                return {
+                    unwrap
+                };
+            } else {
+                return Object.assign(id, {
+                    unwrap
+                });
+            }
+        };
+        this.custom = (jsx, data)=>{
+            const id = (data == null ? void 0 : data.id) || toastsCounter++;
+            this.create({
+                jsx: jsx(id),
+                id,
+                ...data
+            });
+            return id;
+        };
+        this.getActiveToasts = ()=>{
+            return this.toasts.filter((toast)=>!this.dismissedToasts.has(toast.id));
+        };
+        this.subscribers = [];
+        this.toasts = [];
+        this.dismissedToasts = new Set();
+    }
+}
+const ToastState = new Observer();
+// bind this to the toast function
+const toastFunction = (message, data)=>{
+    const id = (data == null ? void 0 : data.id) || toastsCounter++;
+    ToastState.addToast({
+        title: message,
+        ...data,
+        id
+    });
+    return id;
+};
+const isHttpResponse = (data)=>{
+    return data && typeof data === 'object' && 'ok' in data && typeof data.ok === 'boolean' && 'status' in data && typeof data.status === 'number';
+};
+const basicToast = toastFunction;
+const getHistory = ()=>ToastState.toasts;
+const getToasts = ()=>ToastState.getActiveToasts();
+// We use `Object.assign` to maintain the correct types as we would lose them otherwise
+const toast = Object.assign(basicToast, {
+    success: ToastState.success,
+    info: ToastState.info,
+    warning: ToastState.warning,
+    error: ToastState.error,
+    custom: ToastState.custom,
+    message: ToastState.message,
+    promise: ToastState.promise,
+    dismiss: ToastState.dismiss,
+    loading: ToastState.loading
+}, {
+    getHistory,
+    getToasts
+});
 
-        // `open: true` animations need to wait for the next tick to be detected
-        if (waitForNextTick) {
-          timeout.start(0, exec);
+__insertCSS("[data-sonner-toaster][dir=ltr],html[dir=ltr]{--toast-icon-margin-start:-3px;--toast-icon-margin-end:4px;--toast-svg-margin-start:-1px;--toast-svg-margin-end:0px;--toast-button-margin-start:auto;--toast-button-margin-end:0;--toast-close-button-start:0;--toast-close-button-end:unset;--toast-close-button-transform:translate(-35%, -35%)}[data-sonner-toaster][dir=rtl],html[dir=rtl]{--toast-icon-margin-start:4px;--toast-icon-margin-end:-3px;--toast-svg-margin-start:0px;--toast-svg-margin-end:-1px;--toast-button-margin-start:0;--toast-button-margin-end:auto;--toast-close-button-start:unset;--toast-close-button-end:0;--toast-close-button-transform:translate(35%, -35%)}[data-sonner-toaster]{position:fixed;width:var(--width);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;--gray1:hsl(0, 0%, 99%);--gray2:hsl(0, 0%, 97.3%);--gray3:hsl(0, 0%, 95.1%);--gray4:hsl(0, 0%, 93%);--gray5:hsl(0, 0%, 90.9%);--gray6:hsl(0, 0%, 88.7%);--gray7:hsl(0, 0%, 85.8%);--gray8:hsl(0, 0%, 78%);--gray9:hsl(0, 0%, 56.1%);--gray10:hsl(0, 0%, 52.3%);--gray11:hsl(0, 0%, 43.5%);--gray12:hsl(0, 0%, 9%);--border-radius:8px;box-sizing:border-box;padding:0;margin:0;list-style:none;outline:0;z-index:999999999;transition:transform .4s ease}@media (hover:none) and (pointer:coarse){[data-sonner-toaster][data-lifted=true]{transform:none}}[data-sonner-toaster][data-x-position=right]{right:var(--offset-right)}[data-sonner-toaster][data-x-position=left]{left:var(--offset-left)}[data-sonner-toaster][data-x-position=center]{left:50%;transform:translateX(-50%)}[data-sonner-toaster][data-y-position=top]{top:var(--offset-top)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--offset-bottom)}[data-sonner-toast]{--y:translateY(100%);--lift-amount:calc(var(--lift) * var(--gap));z-index:var(--z-index);position:absolute;opacity:0;transform:var(--y);touch-action:none;transition:transform .4s,opacity .4s,height .4s,box-shadow .2s;box-sizing:border-box;outline:0;overflow-wrap:anywhere}[data-sonner-toast][data-styled=true]{padding:16px;background:var(--normal-bg);border:1px solid var(--normal-border);color:var(--normal-text);border-radius:var(--border-radius);box-shadow:0 4px 12px rgba(0,0,0,.1);width:var(--width);font-size:13px;display:flex;align-items:center;gap:6px}[data-sonner-toast]:focus-visible{box-shadow:0 4px 12px rgba(0,0,0,.1),0 0 0 2px rgba(0,0,0,.2)}[data-sonner-toast][data-y-position=top]{top:0;--y:translateY(-100%);--lift:1;--lift-amount:calc(1 * var(--gap))}[data-sonner-toast][data-y-position=bottom]{bottom:0;--y:translateY(100%);--lift:-1;--lift-amount:calc(var(--lift) * var(--gap))}[data-sonner-toast][data-styled=true] [data-description]{font-weight:400;line-height:1.4;color:#3f3f3f}[data-rich-colors=true][data-sonner-toast][data-styled=true] [data-description]{color:inherit}[data-sonner-toaster][data-sonner-theme=dark] [data-description]{color:#e8e8e8}[data-sonner-toast][data-styled=true] [data-title]{font-weight:500;line-height:1.5;color:inherit}[data-sonner-toast][data-styled=true] [data-icon]{display:flex;height:16px;width:16px;position:relative;justify-content:flex-start;align-items:center;flex-shrink:0;margin-left:var(--toast-icon-margin-start);margin-right:var(--toast-icon-margin-end)}[data-sonner-toast][data-promise=true] [data-icon]>svg{opacity:0;transform:scale(.8);transform-origin:center;animation:sonner-fade-in .3s ease forwards}[data-sonner-toast][data-styled=true] [data-icon]>*{flex-shrink:0}[data-sonner-toast][data-styled=true] [data-icon] svg{margin-left:var(--toast-svg-margin-start);margin-right:var(--toast-svg-margin-end)}[data-sonner-toast][data-styled=true] [data-content]{display:flex;flex-direction:column;gap:2px}[data-sonner-toast][data-styled=true] [data-button]{border-radius:4px;padding-left:8px;padding-right:8px;height:24px;font-size:12px;color:var(--normal-bg);background:var(--normal-text);margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end);border:none;font-weight:500;cursor:pointer;outline:0;display:flex;align-items:center;flex-shrink:0;transition:opacity .4s,box-shadow .2s}[data-sonner-toast][data-styled=true] [data-button]:focus-visible{box-shadow:0 0 0 2px rgba(0,0,0,.4)}[data-sonner-toast][data-styled=true] [data-button]:first-of-type{margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end)}[data-sonner-toast][data-styled=true] [data-cancel]{color:var(--normal-text);background:rgba(0,0,0,.08)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast][data-styled=true] [data-cancel]{background:rgba(255,255,255,.3)}[data-sonner-toast][data-styled=true] [data-close-button]{position:absolute;left:var(--toast-close-button-start);right:var(--toast-close-button-end);top:0;height:20px;width:20px;display:flex;justify-content:center;align-items:center;padding:0;color:var(--gray12);background:var(--normal-bg);border:1px solid var(--gray4);transform:var(--toast-close-button-transform);border-radius:50%;cursor:pointer;z-index:1;transition:opacity .1s,background .2s,border-color .2s}[data-sonner-toast][data-styled=true] [data-close-button]:focus-visible{box-shadow:0 4px 12px rgba(0,0,0,.1),0 0 0 2px rgba(0,0,0,.2)}[data-sonner-toast][data-styled=true] [data-disabled=true]{cursor:not-allowed}[data-sonner-toast][data-styled=true]:hover [data-close-button]:hover{background:var(--gray2);border-color:var(--gray5)}[data-sonner-toast][data-swiping=true]::before{content:'';position:absolute;left:-100%;right:-100%;height:100%;z-index:-1}[data-sonner-toast][data-y-position=top][data-swiping=true]::before{bottom:50%;transform:scaleY(3) translateY(50%)}[data-sonner-toast][data-y-position=bottom][data-swiping=true]::before{top:50%;transform:scaleY(3) translateY(-50%)}[data-sonner-toast][data-swiping=false][data-removed=true]::before{content:'';position:absolute;inset:0;transform:scaleY(2)}[data-sonner-toast][data-expanded=true]::after{content:'';position:absolute;left:0;height:calc(var(--gap) + 1px);bottom:100%;width:100%}[data-sonner-toast][data-mounted=true]{--y:translateY(0);opacity:1}[data-sonner-toast][data-expanded=false][data-front=false]{--scale:var(--toasts-before) * 0.05 + 1;--y:translateY(calc(var(--lift-amount) * var(--toasts-before))) scale(calc(-1 * var(--scale)));height:var(--front-toast-height)}[data-sonner-toast]>*{transition:opacity .4s}[data-sonner-toast][data-x-position=right]{right:0}[data-sonner-toast][data-x-position=left]{left:0}[data-sonner-toast][data-expanded=false][data-front=false][data-styled=true]>*{opacity:0}[data-sonner-toast][data-visible=false]{opacity:0;pointer-events:none}[data-sonner-toast][data-mounted=true][data-expanded=true]{--y:translateY(calc(var(--lift) * var(--offset)));height:var(--initial-height)}[data-sonner-toast][data-removed=true][data-front=true][data-swipe-out=false]{--y:translateY(calc(var(--lift) * -100%));opacity:0}[data-sonner-toast][data-removed=true][data-front=false][data-swipe-out=false][data-expanded=true]{--y:translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));opacity:0}[data-sonner-toast][data-removed=true][data-front=false][data-swipe-out=false][data-expanded=false]{--y:translateY(40%);opacity:0;transition:transform .5s,opacity .2s}[data-sonner-toast][data-removed=true][data-front=false]::before{height:calc(var(--initial-height) + 20%)}[data-sonner-toast][data-swiping=true]{transform:var(--y) translateY(var(--swipe-amount-y,0)) translateX(var(--swipe-amount-x,0));transition:none}[data-sonner-toast][data-swiped=true]{user-select:none}[data-sonner-toast][data-swipe-out=true][data-y-position=bottom],[data-sonner-toast][data-swipe-out=true][data-y-position=top]{animation-duration:.2s;animation-timing-function:ease-out;animation-fill-mode:forwards}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=left]{animation-name:swipe-out-left}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=right]{animation-name:swipe-out-right}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=up]{animation-name:swipe-out-up}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=down]{animation-name:swipe-out-down}@keyframes swipe-out-left{from{transform:var(--y) translateX(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translateX(calc(var(--swipe-amount-x) - 100%));opacity:0}}@keyframes swipe-out-right{from{transform:var(--y) translateX(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translateX(calc(var(--swipe-amount-x) + 100%));opacity:0}}@keyframes swipe-out-up{from{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) - 100%));opacity:0}}@keyframes swipe-out-down{from{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) + 100%));opacity:0}}@media (max-width:600px){[data-sonner-toaster]{position:fixed;right:var(--mobile-offset-right);left:var(--mobile-offset-left);width:100%}[data-sonner-toaster][dir=rtl]{left:calc(var(--mobile-offset-left) * -1)}[data-sonner-toaster] [data-sonner-toast]{left:0;right:0;width:calc(100% - var(--mobile-offset-left) * 2)}[data-sonner-toaster][data-x-position=left]{left:var(--mobile-offset-left)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--mobile-offset-bottom)}[data-sonner-toaster][data-y-position=top]{top:var(--mobile-offset-top)}[data-sonner-toaster][data-x-position=center]{left:var(--mobile-offset-left);right:var(--mobile-offset-right);transform:none}}[data-sonner-toaster][data-sonner-theme=light]{--normal-bg:#fff;--normal-border:var(--gray4);--normal-text:var(--gray12);--success-bg:hsl(143, 85%, 96%);--success-border:hsl(145, 92%, 87%);--success-text:hsl(140, 100%, 27%);--info-bg:hsl(208, 100%, 97%);--info-border:hsl(221, 91%, 93%);--info-text:hsl(210, 92%, 45%);--warning-bg:hsl(49, 100%, 97%);--warning-border:hsl(49, 91%, 84%);--warning-text:hsl(31, 92%, 45%);--error-bg:hsl(359, 100%, 97%);--error-border:hsl(359, 100%, 94%);--error-text:hsl(360, 100%, 45%)}[data-sonner-toaster][data-sonner-theme=light] [data-sonner-toast][data-invert=true]{--normal-bg:#000;--normal-border:hsl(0, 0%, 20%);--normal-text:var(--gray1)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast][data-invert=true]{--normal-bg:#fff;--normal-border:var(--gray3);--normal-text:var(--gray12)}[data-sonner-toaster][data-sonner-theme=dark]{--normal-bg:#000;--normal-bg-hover:hsl(0, 0%, 12%);--normal-border:hsl(0, 0%, 20%);--normal-border-hover:hsl(0, 0%, 25%);--normal-text:var(--gray1);--success-bg:hsl(150, 100%, 6%);--success-border:hsl(147, 100%, 12%);--success-text:hsl(150, 86%, 65%);--info-bg:hsl(215, 100%, 6%);--info-border:hsl(223, 43%, 17%);--info-text:hsl(216, 87%, 65%);--warning-bg:hsl(64, 100%, 6%);--warning-border:hsl(60, 100%, 9%);--warning-text:hsl(46, 87%, 65%);--error-bg:hsl(358, 76%, 10%);--error-border:hsl(357, 89%, 16%);--error-text:hsl(358, 100%, 81%)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast] [data-close-button]{background:var(--normal-bg);border-color:var(--normal-border);color:var(--normal-text)}[data-sonner-toaster][data-sonner-theme=dark] [data-sonner-toast] [data-close-button]:hover{background:var(--normal-bg-hover);border-color:var(--normal-border-hover)}[data-rich-colors=true][data-sonner-toast][data-type=success]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=success] [data-close-button]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=info]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=info] [data-close-button]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning] [data-close-button]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=error]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}[data-rich-colors=true][data-sonner-toast][data-type=error] [data-close-button]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}.sonner-loading-wrapper{--size:16px;height:var(--size);width:var(--size);position:absolute;inset:0;z-index:10}.sonner-loading-wrapper[data-visible=false]{transform-origin:center;animation:sonner-fade-out .2s ease forwards}.sonner-spinner{position:relative;top:50%;left:50%;height:var(--size);width:var(--size)}.sonner-loading-bar{animation:sonner-spin 1.2s linear infinite;background:var(--gray11);border-radius:6px;height:8%;left:-10%;position:absolute;top:-3.9%;width:24%}.sonner-loading-bar:first-child{animation-delay:-1.2s;transform:rotate(.0001deg) translate(146%)}.sonner-loading-bar:nth-child(2){animation-delay:-1.1s;transform:rotate(30deg) translate(146%)}.sonner-loading-bar:nth-child(3){animation-delay:-1s;transform:rotate(60deg) translate(146%)}.sonner-loading-bar:nth-child(4){animation-delay:-.9s;transform:rotate(90deg) translate(146%)}.sonner-loading-bar:nth-child(5){animation-delay:-.8s;transform:rotate(120deg) translate(146%)}.sonner-loading-bar:nth-child(6){animation-delay:-.7s;transform:rotate(150deg) translate(146%)}.sonner-loading-bar:nth-child(7){animation-delay:-.6s;transform:rotate(180deg) translate(146%)}.sonner-loading-bar:nth-child(8){animation-delay:-.5s;transform:rotate(210deg) translate(146%)}.sonner-loading-bar:nth-child(9){animation-delay:-.4s;transform:rotate(240deg) translate(146%)}.sonner-loading-bar:nth-child(10){animation-delay:-.3s;transform:rotate(270deg) translate(146%)}.sonner-loading-bar:nth-child(11){animation-delay:-.2s;transform:rotate(300deg) translate(146%)}.sonner-loading-bar:nth-child(12){animation-delay:-.1s;transform:rotate(330deg) translate(146%)}@keyframes sonner-fade-in{0%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}@keyframes sonner-fade-out{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.8)}}@keyframes sonner-spin{0%{opacity:1}100%{opacity:.15}}@media (prefers-reduced-motion){.sonner-loading-bar,[data-sonner-toast],[data-sonner-toast]>*{transition:none!important;animation:none!important}}.sonner-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center;transition:opacity .2s,transform .2s}.sonner-loader[data-visible=false]{opacity:0;transform:scale(.8) translate(-50%,-50%)}");
+
+function isAction(action) {
+    return action.label !== undefined;
+}
+
+// Visible toasts amount
+const VISIBLE_TOASTS_AMOUNT = 3;
+// Viewport padding
+const VIEWPORT_OFFSET = '24px';
+// Mobile viewport padding
+const MOBILE_VIEWPORT_OFFSET = '16px';
+// Default lifetime of a toasts (in ms)
+const TOAST_LIFETIME = 4000;
+// Default toast width
+const TOAST_WIDTH = 356;
+// Default gap between toasts
+const GAP = 14;
+// Threshold to dismiss a toast
+const SWIPE_THRESHOLD = 45;
+// Equal to exit animation duration
+const TIME_BEFORE_UNMOUNT = 200;
+function cn(...classes) {
+    return classes.filter(Boolean).join(' ');
+}
+function getDefaultSwipeDirections(position) {
+    const [y, x] = position.split('-');
+    const directions = [];
+    if (y) {
+        directions.push(y);
+    }
+    if (x) {
+        directions.push(x);
+    }
+    return directions;
+}
+const Toast = (props)=>{
+    var _toast_classNames, _toast_classNames1, _toast_classNames2, _toast_classNames3, _toast_classNames4, _toast_classNames5, _toast_classNames6, _toast_classNames7, _toast_classNames8;
+    const { invert: ToasterInvert, toast, unstyled, interacting, setHeights, visibleToasts, heights, index, toasts, expanded, removeToast, defaultRichColors, closeButton: closeButtonFromToaster, style, cancelButtonStyle, actionButtonStyle, className = '', descriptionClassName = '', duration: durationFromToaster, position, gap, expandByDefault, classNames, icons, closeButtonAriaLabel = 'Close toast' } = props;
+    const [swipeDirection, setSwipeDirection] = React.useState(null);
+    const [swipeOutDirection, setSwipeOutDirection] = React.useState(null);
+    const [mounted, setMounted] = React.useState(false);
+    const [removed, setRemoved] = React.useState(false);
+    const [swiping, setSwiping] = React.useState(false);
+    const [swipeOut, setSwipeOut] = React.useState(false);
+    const [isSwiped, setIsSwiped] = React.useState(false);
+    const [offsetBeforeRemove, setOffsetBeforeRemove] = React.useState(0);
+    const [initialHeight, setInitialHeight] = React.useState(0);
+    const remainingTime = React.useRef(toast.duration || durationFromToaster || TOAST_LIFETIME);
+    const dragStartTime = React.useRef(null);
+    const toastRef = React.useRef(null);
+    const isFront = index === 0;
+    const isVisible = index + 1 <= visibleToasts;
+    const toastType = toast.type;
+    const dismissible = toast.dismissible !== false;
+    const toastClassname = toast.className || '';
+    const toastDescriptionClassname = toast.descriptionClassName || '';
+    // Height index is used to calculate the offset as it gets updated before the toast array, which means we can calculate the new layout faster.
+    const heightIndex = React.useMemo(()=>heights.findIndex((height)=>height.toastId === toast.id) || 0, [
+        heights,
+        toast.id
+    ]);
+    const closeButton = React.useMemo(()=>{
+        var _toast_closeButton;
+        return (_toast_closeButton = toast.closeButton) != null ? _toast_closeButton : closeButtonFromToaster;
+    }, [
+        toast.closeButton,
+        closeButtonFromToaster
+    ]);
+    const duration = React.useMemo(()=>toast.duration || durationFromToaster || TOAST_LIFETIME, [
+        toast.duration,
+        durationFromToaster
+    ]);
+    const closeTimerStartTimeRef = React.useRef(0);
+    const offset = React.useRef(0);
+    const lastCloseTimerStartTimeRef = React.useRef(0);
+    const pointerStartRef = React.useRef(null);
+    const [y, x] = position.split('-');
+    const toastsHeightBefore = React.useMemo(()=>{
+        return heights.reduce((prev, curr, reducerIndex)=>{
+            // Calculate offset up until current toast
+            if (reducerIndex >= heightIndex) {
+                return prev;
+            }
+            return prev + curr.height;
+        }, 0);
+    }, [
+        heights,
+        heightIndex
+    ]);
+    const isDocumentHidden = useIsDocumentHidden();
+    const invert = toast.invert || ToasterInvert;
+    const disabled = toastType === 'loading';
+    offset.current = React.useMemo(()=>heightIndex * gap + toastsHeightBefore, [
+        heightIndex,
+        toastsHeightBefore
+    ]);
+    React.useEffect(()=>{
+        remainingTime.current = duration;
+    }, [
+        duration
+    ]);
+    React.useEffect(()=>{
+        // Trigger enter animation without using CSS animation
+        setMounted(true);
+    }, []);
+    React.useEffect(()=>{
+        const toastNode = toastRef.current;
+        if (toastNode) {
+            const height = toastNode.getBoundingClientRect().height;
+            // Add toast height to heights array after the toast is mounted
+            setInitialHeight(height);
+            setHeights((h)=>[
+                    {
+                        toastId: toast.id,
+                        height,
+                        position: toast.position
+                    },
+                    ...h
+                ]);
+            return ()=>setHeights((h)=>h.filter((height)=>height.toastId !== toast.id));
+        }
+    }, [
+        setHeights,
+        toast.id
+    ]);
+    React.useLayoutEffect(()=>{
+        // Keep height up to date with the content in case it updates
+        if (!mounted) return;
+        const toastNode = toastRef.current;
+        const originalHeight = toastNode.style.height;
+        toastNode.style.height = 'auto';
+        const newHeight = toastNode.getBoundingClientRect().height;
+        toastNode.style.height = originalHeight;
+        setInitialHeight(newHeight);
+        setHeights((heights)=>{
+            const alreadyExists = heights.find((height)=>height.toastId === toast.id);
+            if (!alreadyExists) {
+                return [
+                    {
+                        toastId: toast.id,
+                        height: newHeight,
+                        position: toast.position
+                    },
+                    ...heights
+                ];
+            } else {
+                return heights.map((height)=>height.toastId === toast.id ? {
+                        ...height,
+                        height: newHeight
+                    } : height);
+            }
+        });
+    }, [
+        mounted,
+        toast.title,
+        toast.description,
+        setHeights,
+        toast.id,
+        toast.jsx,
+        toast.action,
+        toast.cancel
+    ]);
+    const deleteToast = React.useCallback(()=>{
+        // Save the offset for the exit swipe animation
+        setRemoved(true);
+        setOffsetBeforeRemove(offset.current);
+        setHeights((h)=>h.filter((height)=>height.toastId !== toast.id));
+        setTimeout(()=>{
+            removeToast(toast);
+        }, TIME_BEFORE_UNMOUNT);
+    }, [
+        toast,
+        removeToast,
+        setHeights,
+        offset
+    ]);
+    React.useEffect(()=>{
+        if (toast.promise && toastType === 'loading' || toast.duration === Infinity || toast.type === 'loading') return;
+        let timeoutId;
+        // Pause the timer on each hover
+        const pauseTimer = ()=>{
+            if (lastCloseTimerStartTimeRef.current < closeTimerStartTimeRef.current) {
+                // Get the elapsed time since the timer started
+                const elapsedTime = new Date().getTime() - closeTimerStartTimeRef.current;
+                remainingTime.current = remainingTime.current - elapsedTime;
+            }
+            lastCloseTimerStartTimeRef.current = new Date().getTime();
+        };
+        const startTimer = ()=>{
+            // setTimeout(, Infinity) behaves as if the delay is 0.
+            // As a result, the toast would be closed immediately, giving the appearance that it was never rendered.
+            // See: https://github.com/denysdovhan/wtfjs?tab=readme-ov-file#an-infinite-timeout
+            if (remainingTime.current === Infinity) return;
+            closeTimerStartTimeRef.current = new Date().getTime();
+            // Let the toast know it has started
+            timeoutId = setTimeout(()=>{
+                toast.onAutoClose == null ? void 0 : toast.onAutoClose.call(toast, toast);
+                deleteToast();
+            }, remainingTime.current);
+        };
+        if (expanded || interacting || isDocumentHidden) {
+            pauseTimer();
         } else {
-          exec();
+            startTimer();
         }
-      });
+        return ()=>clearTimeout(timeoutId);
+    }, [
+        expanded,
+        interacting,
+        toast,
+        toastType,
+        isDocumentHidden,
+        deleteToast
+    ]);
+    React.useEffect(()=>{
+        if (toast.delete) {
+            deleteToast();
+            toast.onDismiss == null ? void 0 : toast.onDismiss.call(toast, toast);
+        }
+    }, [
+        deleteToast,
+        toast.delete
+    ]);
+    function getLoadingIcon() {
+        var _toast_classNames;
+        if (icons == null ? void 0 : icons.loading) {
+            var _toast_classNames1;
+            return /*#__PURE__*/ React.createElement("div", {
+                className: cn(classNames == null ? void 0 : classNames.loader, toast == null ? void 0 : (_toast_classNames1 = toast.classNames) == null ? void 0 : _toast_classNames1.loader, 'sonner-loader'),
+                "data-visible": toastType === 'loading'
+            }, icons.loading);
+        }
+        return /*#__PURE__*/ React.createElement(Loader, {
+            className: cn(classNames == null ? void 0 : classNames.loader, toast == null ? void 0 : (_toast_classNames = toast.classNames) == null ? void 0 : _toast_classNames.loader),
+            visible: toastType === 'loading'
+        });
     }
-  });
-}
-
-function useLatestRef(value) {
-  const latest = useLazyRef(createLatestRef, value).current;
-  latest.next = value;
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  index(latest.effect);
-  return latest;
-}
-function createLatestRef(value) {
-  const latest = {
-    current: value,
-    next: value,
-    effect: () => {
-      latest.current = latest.next;
-    }
-  };
-  return latest;
-}
-
-/**
- * Calls the provided function when the CSS open/close animation or transition completes.
- */
-function useOpenChangeComplete(parameters) {
-  const {
-    enabled = true,
-    open,
-    ref,
-    onComplete: onCompleteParam
-  } = parameters;
-  const openRef = useLatestRef(open);
-  const onComplete = useEventCallback(onCompleteParam);
-  const runOnceAnimationsFinish = useAnimationsFinished(ref, open);
-  React.useEffect(() => {
-    if (!enabled) {
-      return;
-    }
-    runOnceAnimationsFinish(() => {
-      if (open === openRef.current) {
-        onComplete();
-      }
-    });
-  }, [enabled, open, onComplete, runOnceAnimationsFinish, openRef]);
-}
-
-let ToastRootCssVars = /*#__PURE__*/function (ToastRootCssVars) {
-  /**
-   * Indicates the index of the toast in the list.
-   * @type {number}
-   */
-  ToastRootCssVars["index"] = "--toast-index";
-  /**
-   * Indicates the vertical pixels offset of the toast in the list when expanded.
-   * @type {number}
-   */
-  ToastRootCssVars["offsetY"] = "--toast-offset-y";
-  /**
-   * Indicates the horizontal swipe movement of the toast.
-   * @type {number}
-   */
-  ToastRootCssVars["swipeMovementX"] = "--toast-swipe-movement-x";
-  /**
-   * Indicates the vertical swipe movement of the toast.
-   * @type {number}
-   */
-  ToastRootCssVars["swipeMovementY"] = "--toast-swipe-movement-y";
-  return ToastRootCssVars;
-}({});
-
-function inertValue(value) {
-  if (isReactVersionAtLeast(19)) {
-    return value;
-  }
-  // compatibility with React < 19
-  return value ? 'true' : undefined;
-}
-
-const customStyleHookMapping = {
-  ...transitionStatusMapping,
-  swipeDirection(value) {
-    return value ? {
-      'data-swipe-direction': value
-    } : null;
-  }
+    const icon = toast.icon || (icons == null ? void 0 : icons[toastType]) || getAsset(toastType);
+    var _toast_richColors, _icons_close;
+    return /*#__PURE__*/ React.createElement("li", {
+        tabIndex: 0,
+        ref: toastRef,
+        className: cn(className, toastClassname, classNames == null ? void 0 : classNames.toast, toast == null ? void 0 : (_toast_classNames = toast.classNames) == null ? void 0 : _toast_classNames.toast, classNames == null ? void 0 : classNames.default, classNames == null ? void 0 : classNames[toastType], toast == null ? void 0 : (_toast_classNames1 = toast.classNames) == null ? void 0 : _toast_classNames1[toastType]),
+        "data-sonner-toast": "",
+        "data-rich-colors": (_toast_richColors = toast.richColors) != null ? _toast_richColors : defaultRichColors,
+        "data-styled": !Boolean(toast.jsx || toast.unstyled || unstyled),
+        "data-mounted": mounted,
+        "data-promise": Boolean(toast.promise),
+        "data-swiped": isSwiped,
+        "data-removed": removed,
+        "data-visible": isVisible,
+        "data-y-position": y,
+        "data-x-position": x,
+        "data-index": index,
+        "data-front": isFront,
+        "data-swiping": swiping,
+        "data-dismissible": dismissible,
+        "data-type": toastType,
+        "data-invert": invert,
+        "data-swipe-out": swipeOut,
+        "data-swipe-direction": swipeOutDirection,
+        "data-expanded": Boolean(expanded || expandByDefault && mounted),
+        "data-testid": toast.testId,
+        style: {
+            '--index': index,
+            '--toasts-before': index,
+            '--z-index': toasts.length - index,
+            '--offset': `${removed ? offsetBeforeRemove : offset.current}px`,
+            '--initial-height': expandByDefault ? 'auto' : `${initialHeight}px`,
+            ...style,
+            ...toast.style
+        },
+        onDragEnd: ()=>{
+            setSwiping(false);
+            setSwipeDirection(null);
+            pointerStartRef.current = null;
+        },
+        onPointerDown: (event)=>{
+            if (event.button === 2) return; // Return early on right click
+            if (disabled || !dismissible) return;
+            dragStartTime.current = new Date();
+            setOffsetBeforeRemove(offset.current);
+            // Ensure we maintain correct pointer capture even when going outside of the toast (e.g. when swiping)
+            event.target.setPointerCapture(event.pointerId);
+            if (event.target.tagName === 'BUTTON') return;
+            setSwiping(true);
+            pointerStartRef.current = {
+                x: event.clientX,
+                y: event.clientY
+            };
+        },
+        onPointerUp: ()=>{
+            var _toastRef_current, _toastRef_current1, _dragStartTime_current;
+            if (swipeOut || !dismissible) return;
+            pointerStartRef.current = null;
+            const swipeAmountX = Number(((_toastRef_current = toastRef.current) == null ? void 0 : _toastRef_current.style.getPropertyValue('--swipe-amount-x').replace('px', '')) || 0);
+            const swipeAmountY = Number(((_toastRef_current1 = toastRef.current) == null ? void 0 : _toastRef_current1.style.getPropertyValue('--swipe-amount-y').replace('px', '')) || 0);
+            const timeTaken = new Date().getTime() - ((_dragStartTime_current = dragStartTime.current) == null ? void 0 : _dragStartTime_current.getTime());
+            const swipeAmount = swipeDirection === 'x' ? swipeAmountX : swipeAmountY;
+            const velocity = Math.abs(swipeAmount) / timeTaken;
+            if (Math.abs(swipeAmount) >= SWIPE_THRESHOLD || velocity > 0.11) {
+                setOffsetBeforeRemove(offset.current);
+                toast.onDismiss == null ? void 0 : toast.onDismiss.call(toast, toast);
+                if (swipeDirection === 'x') {
+                    setSwipeOutDirection(swipeAmountX > 0 ? 'right' : 'left');
+                } else {
+                    setSwipeOutDirection(swipeAmountY > 0 ? 'down' : 'up');
+                }
+                deleteToast();
+                setSwipeOut(true);
+                return;
+            } else {
+                var _toastRef_current2, _toastRef_current3;
+                (_toastRef_current2 = toastRef.current) == null ? void 0 : _toastRef_current2.style.setProperty('--swipe-amount-x', `0px`);
+                (_toastRef_current3 = toastRef.current) == null ? void 0 : _toastRef_current3.style.setProperty('--swipe-amount-y', `0px`);
+            }
+            setIsSwiped(false);
+            setSwiping(false);
+            setSwipeDirection(null);
+        },
+        onPointerMove: (event)=>{
+            var _window_getSelection, // Apply transform using both x and y values
+            _toastRef_current, _toastRef_current1;
+            if (!pointerStartRef.current || !dismissible) return;
+            const isHighlighted = ((_window_getSelection = window.getSelection()) == null ? void 0 : _window_getSelection.toString().length) > 0;
+            if (isHighlighted) return;
+            const yDelta = event.clientY - pointerStartRef.current.y;
+            const xDelta = event.clientX - pointerStartRef.current.x;
+            var _props_swipeDirections;
+            const swipeDirections = (_props_swipeDirections = props.swipeDirections) != null ? _props_swipeDirections : getDefaultSwipeDirections(position);
+            // Determine swipe direction if not already locked
+            if (!swipeDirection && (Math.abs(xDelta) > 1 || Math.abs(yDelta) > 1)) {
+                setSwipeDirection(Math.abs(xDelta) > Math.abs(yDelta) ? 'x' : 'y');
+            }
+            let swipeAmount = {
+                x: 0,
+                y: 0
+            };
+            const getDampening = (delta)=>{
+                const factor = Math.abs(delta) / 20;
+                return 1 / (1.5 + factor);
+            };
+            // Only apply swipe in the locked direction
+            if (swipeDirection === 'y') {
+                // Handle vertical swipes
+                if (swipeDirections.includes('top') || swipeDirections.includes('bottom')) {
+                    if (swipeDirections.includes('top') && yDelta < 0 || swipeDirections.includes('bottom') && yDelta > 0) {
+                        swipeAmount.y = yDelta;
+                    } else {
+                        // Smoothly transition to dampened movement
+                        const dampenedDelta = yDelta * getDampening(yDelta);
+                        // Ensure we don't jump when transitioning to dampened movement
+                        swipeAmount.y = Math.abs(dampenedDelta) < Math.abs(yDelta) ? dampenedDelta : yDelta;
+                    }
+                }
+            } else if (swipeDirection === 'x') {
+                // Handle horizontal swipes
+                if (swipeDirections.includes('left') || swipeDirections.includes('right')) {
+                    if (swipeDirections.includes('left') && xDelta < 0 || swipeDirections.includes('right') && xDelta > 0) {
+                        swipeAmount.x = xDelta;
+                    } else {
+                        // Smoothly transition to dampened movement
+                        const dampenedDelta = xDelta * getDampening(xDelta);
+                        // Ensure we don't jump when transitioning to dampened movement
+                        swipeAmount.x = Math.abs(dampenedDelta) < Math.abs(xDelta) ? dampenedDelta : xDelta;
+                    }
+                }
+            }
+            if (Math.abs(swipeAmount.x) > 0 || Math.abs(swipeAmount.y) > 0) {
+                setIsSwiped(true);
+            }
+            (_toastRef_current = toastRef.current) == null ? void 0 : _toastRef_current.style.setProperty('--swipe-amount-x', `${swipeAmount.x}px`);
+            (_toastRef_current1 = toastRef.current) == null ? void 0 : _toastRef_current1.style.setProperty('--swipe-amount-y', `${swipeAmount.y}px`);
+        }
+    }, closeButton && !toast.jsx && toastType !== 'loading' ? /*#__PURE__*/ React.createElement("button", {
+        "aria-label": closeButtonAriaLabel,
+        "data-disabled": disabled,
+        "data-close-button": true,
+        onClick: disabled || !dismissible ? ()=>{} : ()=>{
+            deleteToast();
+            toast.onDismiss == null ? void 0 : toast.onDismiss.call(toast, toast);
+        },
+        className: cn(classNames == null ? void 0 : classNames.closeButton, toast == null ? void 0 : (_toast_classNames2 = toast.classNames) == null ? void 0 : _toast_classNames2.closeButton)
+    }, (_icons_close = icons == null ? void 0 : icons.close) != null ? _icons_close : CloseIcon) : null, (toastType || toast.icon || toast.promise) && toast.icon !== null && ((icons == null ? void 0 : icons[toastType]) !== null || toast.icon) ? /*#__PURE__*/ React.createElement("div", {
+        "data-icon": "",
+        className: cn(classNames == null ? void 0 : classNames.icon, toast == null ? void 0 : (_toast_classNames3 = toast.classNames) == null ? void 0 : _toast_classNames3.icon)
+    }, toast.promise || toast.type === 'loading' && !toast.icon ? toast.icon || getLoadingIcon() : null, toast.type !== 'loading' ? icon : null) : null, /*#__PURE__*/ React.createElement("div", {
+        "data-content": "",
+        className: cn(classNames == null ? void 0 : classNames.content, toast == null ? void 0 : (_toast_classNames4 = toast.classNames) == null ? void 0 : _toast_classNames4.content)
+    }, /*#__PURE__*/ React.createElement("div", {
+        "data-title": "",
+        className: cn(classNames == null ? void 0 : classNames.title, toast == null ? void 0 : (_toast_classNames5 = toast.classNames) == null ? void 0 : _toast_classNames5.title)
+    }, toast.jsx ? toast.jsx : typeof toast.title === 'function' ? toast.title() : toast.title), toast.description ? /*#__PURE__*/ React.createElement("div", {
+        "data-description": "",
+        className: cn(descriptionClassName, toastDescriptionClassname, classNames == null ? void 0 : classNames.description, toast == null ? void 0 : (_toast_classNames6 = toast.classNames) == null ? void 0 : _toast_classNames6.description)
+    }, typeof toast.description === 'function' ? toast.description() : toast.description) : null), /*#__PURE__*/ React.isValidElement(toast.cancel) ? toast.cancel : toast.cancel && isAction(toast.cancel) ? /*#__PURE__*/ React.createElement("button", {
+        "data-button": true,
+        "data-cancel": true,
+        style: toast.cancelButtonStyle || cancelButtonStyle,
+        onClick: (event)=>{
+            // We need to check twice because typescript
+            if (!isAction(toast.cancel)) return;
+            if (!dismissible) return;
+            toast.cancel.onClick == null ? void 0 : toast.cancel.onClick.call(toast.cancel, event);
+            deleteToast();
+        },
+        className: cn(classNames == null ? void 0 : classNames.cancelButton, toast == null ? void 0 : (_toast_classNames7 = toast.classNames) == null ? void 0 : _toast_classNames7.cancelButton)
+    }, toast.cancel.label) : null, /*#__PURE__*/ React.isValidElement(toast.action) ? toast.action : toast.action && isAction(toast.action) ? /*#__PURE__*/ React.createElement("button", {
+        "data-button": true,
+        "data-action": true,
+        style: toast.actionButtonStyle || actionButtonStyle,
+        onClick: (event)=>{
+            // We need to check twice because typescript
+            if (!isAction(toast.action)) return;
+            toast.action.onClick == null ? void 0 : toast.action.onClick.call(toast.action, event);
+            if (event.defaultPrevented) return;
+            deleteToast();
+        },
+        className: cn(classNames == null ? void 0 : classNames.actionButton, toast == null ? void 0 : (_toast_classNames8 = toast.classNames) == null ? void 0 : _toast_classNames8.actionButton)
+    }, toast.action.label) : null);
 };
-const SWIPE_THRESHOLD = 40;
-const REVERSE_CANCEL_THRESHOLD = 10;
-const OPPOSITE_DIRECTION_DAMPING_FACTOR = 0.5;
-const MIN_DRAG_THRESHOLD = 1;
-function getDisplacement(direction, deltaX, deltaY) {
-  switch (direction) {
-    case 'up':
-      return -deltaY;
-    case 'down':
-      return deltaY;
-    case 'left':
-      return -deltaX;
-    case 'right':
-      return deltaX;
-    default:
-      return 0;
-  }
+function getDocumentDirection() {
+    if (typeof window === 'undefined') return 'ltr';
+    if (typeof document === 'undefined') return 'ltr'; // For Fresh purpose
+    const dirAttribute = document.documentElement.getAttribute('dir');
+    if (dirAttribute === 'auto' || !dirAttribute) {
+        return window.getComputedStyle(document.documentElement).direction;
+    }
+    return dirAttribute;
 }
-function getElementTransform(element) {
-  const computedStyle = window.getComputedStyle(element);
-  const transform = computedStyle.transform;
-  let translateX = 0;
-  let translateY = 0;
-  let scale = 1;
-  if (transform && transform !== 'none') {
-    const matrix = transform.match(/matrix(?:3d)?\(([^)]+)\)/);
-    if (matrix) {
-      const values = matrix[1].split(', ').map(parseFloat);
-      if (values.length === 6) {
-        translateX = values[4];
-        translateY = values[5];
-        scale = Math.sqrt(values[0] * values[0] + values[1] * values[1]);
-      } else if (values.length === 16) {
-        translateX = values[12];
-        translateY = values[13];
-        scale = values[0];
-      }
-    }
-  }
-  return {
-    x: translateX,
-    y: translateY,
-    scale
-  };
-}
-
-/**
- * Groups all parts of an individual toast.
- * Renders a `<div>` element.
- *
- * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
- */
-const ToastRoot = /*#__PURE__*/React.forwardRef(function ToastRoot(componentProps, forwardedRef) {
-  const {
-    toast,
-    render,
-    className,
-    children,
-    swipeDirection = ['down', 'right'],
-    ...elementProps
-  } = componentProps;
-  const swipeDirections = Array.isArray(swipeDirection) ? swipeDirection : [swipeDirection];
-  const {
-    toasts,
-    hovering,
-    focused,
-    close,
-    remove,
-    setToasts,
-    pauseTimers,
-    resumeTimers,
-    hasDifferingHeights
-  } = useToastContext();
-  const [renderScreenReaderContent, setRenderScreenReaderContent] = React.useState(false);
-  const [currentSwipeDirection, setCurrentSwipeDirection] = React.useState(undefined);
-  const [isSwiping, setIsSwiping] = React.useState(false);
-  const [isRealSwipe, setIsRealSwipe] = React.useState(false);
-  const [dragDismissed, setDragDismissed] = React.useState(false);
-  const [dragOffset, setDragOffset] = React.useState({
-    x: 0,
-    y: 0
-  });
-  const [initialTransform, setInitialTransform] = React.useState({
-    x: 0,
-    y: 0,
-    scale: 1
-  });
-  const [titleId, setTitleId] = React.useState();
-  const [descriptionId, setDescriptionId] = React.useState();
-  const [lockedDirection, setLockedDirection] = React.useState(null);
-  const rootRef = React.useRef(null);
-  const dragStartPosRef = React.useRef({
-    x: 0,
-    y: 0
-  });
-  const initialTransformRef = React.useRef({
-    x: 0,
-    y: 0,
-    scale: 1
-  });
-  const intendedSwipeDirectionRef = React.useRef(undefined);
-  const maxSwipeDisplacementRef = React.useRef(0);
-  const cancelledSwipeRef = React.useRef(false);
-  const swipeCancelBaselineRef = React.useRef({
-    x: 0,
-    y: 0
-  });
-  const isFirstPointerMoveRef = React.useRef(false);
-  const domIndex = React.useMemo(() => toasts.indexOf(toast), [toast, toasts]);
-  const visibleIndex = React.useMemo(() => toasts.filter(t => t.transitionStatus !== 'ending').indexOf(toast), [toast, toasts]);
-  const offsetY = React.useMemo(() => {
-    return toasts.slice(0, toasts.indexOf(toast)).reduce((acc, t) => acc + (t.height || 0), 0);
-  }, [toasts, toast]);
-  useOpenChangeComplete({
-    open: toast.transitionStatus !== 'ending',
-    ref: rootRef,
-    onComplete() {
-      if (toast.transitionStatus === 'ending') {
-        remove(toast.id);
-      }
-    }
-  });
-  React.useEffect(() => {
-    if (!rootRef.current) {
-      return undefined;
-    }
-    function setHeights() {
-      const height = rootRef.current?.offsetHeight;
-      setToasts(prev => prev.map(t => t.id === toast.id ? {
-        ...t,
-        ref: rootRef,
-        height,
-        transitionStatus: undefined
-      } : t));
-    }
-    setHeights();
-    if (typeof ResizeObserver === 'function') {
-      const resizeObserver = new ResizeObserver(setHeights);
-      resizeObserver.observe(rootRef.current);
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }
-    return undefined;
-  }, [toast.id, setToasts]);
-  function applyDirectionalDamping(deltaX, deltaY) {
-    let newDeltaX = deltaX;
-    let newDeltaY = deltaY;
-    if (!swipeDirections.includes('left') && !swipeDirections.includes('right')) {
-      newDeltaX = deltaX > 0 ? deltaX ** OPPOSITE_DIRECTION_DAMPING_FACTOR : -(Math.abs(deltaX) ** OPPOSITE_DIRECTION_DAMPING_FACTOR);
-    } else {
-      if (!swipeDirections.includes('right') && deltaX > 0) {
-        newDeltaX = deltaX ** OPPOSITE_DIRECTION_DAMPING_FACTOR;
-      }
-      if (!swipeDirections.includes('left') && deltaX < 0) {
-        newDeltaX = -(Math.abs(deltaX) ** OPPOSITE_DIRECTION_DAMPING_FACTOR);
-      }
-    }
-    if (!swipeDirections.includes('up') && !swipeDirections.includes('down')) {
-      newDeltaY = deltaY > 0 ? deltaY ** OPPOSITE_DIRECTION_DAMPING_FACTOR : -(Math.abs(deltaY) ** OPPOSITE_DIRECTION_DAMPING_FACTOR);
-    } else {
-      if (!swipeDirections.includes('down') && deltaY > 0) {
-        newDeltaY = deltaY ** OPPOSITE_DIRECTION_DAMPING_FACTOR;
-      }
-      if (!swipeDirections.includes('up') && deltaY < 0) {
-        newDeltaY = -(Math.abs(deltaY) ** OPPOSITE_DIRECTION_DAMPING_FACTOR);
-      }
-    }
-    return {
-      x: newDeltaX,
-      y: newDeltaY
-    };
-  }
-  function handlePointerDown(event) {
-    if (event.button !== 0) {
-      return;
-    }
-    if (event.pointerType === 'touch') {
-      pauseTimers();
-    }
-    const target = getTarget(event.nativeEvent);
-    const isInteractiveElement = target ? target.closest('button,a,input,textarea,[role="button"],[data-swipe-ignore]') : false;
-    if (isInteractiveElement) {
-      return;
-    }
-    cancelledSwipeRef.current = false;
-    intendedSwipeDirectionRef.current = undefined;
-    maxSwipeDisplacementRef.current = 0;
-    dragStartPosRef.current = {
-      x: event.clientX,
-      y: event.clientY
-    };
-    swipeCancelBaselineRef.current = dragStartPosRef.current;
-    if (rootRef.current) {
-      const transform = getElementTransform(rootRef.current);
-      initialTransformRef.current = transform;
-      setInitialTransform(transform);
-      setDragOffset({
-        x: transform.x,
-        y: transform.y
-      });
-    }
-    setIsSwiping(true);
-    setIsRealSwipe(false);
-    setLockedDirection(null);
-    isFirstPointerMoveRef.current = true;
-    rootRef.current?.setPointerCapture(event.pointerId);
-  }
-  function handlePointerMove(event) {
-    if (!isSwiping) {
-      return;
-    }
-
-    // Prevent text selection on Safari
-    event.preventDefault();
-    if (isFirstPointerMoveRef.current) {
-      // Adjust the starting position to the current position on the first move
-      // to account for the delay between pointerdown and the first pointermove on iOS.
-      dragStartPosRef.current = {
-        x: event.clientX,
-        y: event.clientY
-      };
-      isFirstPointerMoveRef.current = false;
-    }
-    const {
-      clientY,
-      clientX,
-      movementX,
-      movementY
-    } = event;
-    if (movementY < 0 && clientY > swipeCancelBaselineRef.current.y || movementY > 0 && clientY < swipeCancelBaselineRef.current.y) {
-      swipeCancelBaselineRef.current = {
-        x: swipeCancelBaselineRef.current.x,
-        y: clientY
-      };
-    }
-    if (movementX < 0 && clientX > swipeCancelBaselineRef.current.x || movementX > 0 && clientX < swipeCancelBaselineRef.current.x) {
-      swipeCancelBaselineRef.current = {
-        x: clientX,
-        y: swipeCancelBaselineRef.current.y
-      };
-    }
-    const deltaX = clientX - dragStartPosRef.current.x;
-    const deltaY = clientY - dragStartPosRef.current.y;
-    const cancelDeltaY = clientY - swipeCancelBaselineRef.current.y;
-    const cancelDeltaX = clientX - swipeCancelBaselineRef.current.x;
-    if (!isRealSwipe) {
-      const movementDistance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-      if (movementDistance >= MIN_DRAG_THRESHOLD) {
-        setIsRealSwipe(true);
-        if (lockedDirection === null) {
-          const hasHorizontal = swipeDirections.includes('left') || swipeDirections.includes('right');
-          const hasVertical = swipeDirections.includes('up') || swipeDirections.includes('down');
-          if (hasHorizontal && hasVertical) {
-            const absX = Math.abs(deltaX);
-            const absY = Math.abs(deltaY);
-            setLockedDirection(absX > absY ? 'horizontal' : 'vertical');
-          }
+function assignOffset(defaultOffset, mobileOffset) {
+    const styles = {};
+    [
+        defaultOffset,
+        mobileOffset
+    ].forEach((offset, index)=>{
+        const isMobile = index === 1;
+        const prefix = isMobile ? '--mobile-offset' : '--offset';
+        const defaultValue = isMobile ? MOBILE_VIEWPORT_OFFSET : VIEWPORT_OFFSET;
+        function assignAll(offset) {
+            [
+                'top',
+                'right',
+                'bottom',
+                'left'
+            ].forEach((key)=>{
+                styles[`${prefix}-${key}`] = typeof offset === 'number' ? `${offset}px` : offset;
+            });
         }
-      }
-    }
-    let candidate;
-    if (!intendedSwipeDirectionRef.current) {
-      if (lockedDirection === 'vertical') {
-        if (deltaY > 0) {
-          candidate = 'down';
-        } else if (deltaY < 0) {
-          candidate = 'up';
+        if (typeof offset === 'number' || typeof offset === 'string') {
+            assignAll(offset);
+        } else if (typeof offset === 'object') {
+            [
+                'top',
+                'right',
+                'bottom',
+                'left'
+            ].forEach((key)=>{
+                if (offset[key] === undefined) {
+                    styles[`${prefix}-${key}`] = defaultValue;
+                } else {
+                    styles[`${prefix}-${key}`] = typeof offset[key] === 'number' ? `${offset[key]}px` : offset[key];
+                }
+            });
+        } else {
+            assignAll(defaultValue);
         }
-      } else if (lockedDirection === 'horizontal') {
-        if (deltaX > 0) {
-          candidate = 'right';
-        } else if (deltaX < 0) {
-          candidate = 'left';
-        }
-      } else if (Math.abs(deltaX) >= Math.abs(deltaY)) {
-        candidate = deltaX > 0 ? 'right' : 'left';
-      } else {
-        candidate = deltaY > 0 ? 'down' : 'up';
-      }
-      if (candidate && swipeDirections.includes(candidate)) {
-        intendedSwipeDirectionRef.current = candidate;
-        maxSwipeDisplacementRef.current = getDisplacement(candidate, deltaX, deltaY);
-        setCurrentSwipeDirection(candidate);
-      }
-    } else {
-      const direction = intendedSwipeDirectionRef.current;
-      const currentDisplacement = getDisplacement(direction, cancelDeltaX, cancelDeltaY);
-      if (currentDisplacement > SWIPE_THRESHOLD) {
-        cancelledSwipeRef.current = false;
-        setCurrentSwipeDirection(direction);
-      } else if (maxSwipeDisplacementRef.current - currentDisplacement >= REVERSE_CANCEL_THRESHOLD) {
-        // Mark that a change-of-mind has occurred
-        cancelledSwipeRef.current = true;
-      }
-    }
-    const dampedDelta = applyDirectionalDamping(deltaX, deltaY);
-    let newOffsetX = initialTransformRef.current.x;
-    let newOffsetY = initialTransformRef.current.y;
-    if (lockedDirection === 'horizontal') {
-      if (swipeDirections.includes('left') || swipeDirections.includes('right')) {
-        newOffsetX += dampedDelta.x;
-      }
-    } else if (lockedDirection === 'vertical') {
-      if (swipeDirections.includes('up') || swipeDirections.includes('down')) {
-        newOffsetY += dampedDelta.y;
-      }
-    } else {
-      if (swipeDirections.includes('left') || swipeDirections.includes('right')) {
-        newOffsetX += dampedDelta.x;
-      }
-      if (swipeDirections.includes('up') || swipeDirections.includes('down')) {
-        newOffsetY += dampedDelta.y;
-      }
-    }
-    setDragOffset({
-      x: newOffsetX,
-      y: newOffsetY
     });
-  }
-  function handlePointerUp(event) {
-    if (!isSwiping) {
-      return;
-    }
-    if (event.pointerType === 'touch' && !focused) {
-      resumeTimers();
-    }
-    setIsSwiping(false);
-    setIsRealSwipe(false);
-    setLockedDirection(null);
-    rootRef.current?.releasePointerCapture(event.pointerId);
-    if (cancelledSwipeRef.current) {
-      setDragOffset({
-        x: initialTransform.x,
-        y: initialTransform.y
-      });
-      setCurrentSwipeDirection(undefined);
-      return;
-    }
-    let shouldClose = false;
-    const deltaX = dragOffset.x - initialTransform.x;
-    const deltaY = dragOffset.y - initialTransform.y;
-    let dismissDirection;
-    for (const direction of swipeDirections) {
-      switch (direction) {
-        case 'right':
-          if (deltaX > SWIPE_THRESHOLD) {
-            shouldClose = true;
-            dismissDirection = 'right';
-          }
-          break;
-        case 'left':
-          if (deltaX < -SWIPE_THRESHOLD) {
-            shouldClose = true;
-            dismissDirection = 'left';
-          }
-          break;
-        case 'down':
-          if (deltaY > SWIPE_THRESHOLD) {
-            shouldClose = true;
-            dismissDirection = 'down';
-          }
-          break;
-        case 'up':
-          if (deltaY < -SWIPE_THRESHOLD) {
-            shouldClose = true;
-            dismissDirection = 'up';
-          }
-          break;
-      }
-      if (shouldClose) {
-        break;
-      }
-    }
-    if (shouldClose) {
-      setCurrentSwipeDirection(dismissDirection);
-      setDragDismissed(true);
-      close(toast.id);
-    } else {
-      setDragOffset({
-        x: initialTransform.x,
-        y: initialTransform.y
-      });
-      setCurrentSwipeDirection(undefined);
-    }
-  }
-  function handleKeyDown(event) {
-    if (event.key === 'Escape') {
-      if (!rootRef.current || !contains(rootRef.current, activeElement(getDocument(rootRef.current)))) {
-        return;
-      }
-      close(toast.id);
-    }
-  }
-  React.useEffect(() => {
-    const element = rootRef.current;
-    if (!element) {
-      return undefined;
-    }
-    function preventDefaultTouchStart(event) {
-      if (contains(element, event.target)) {
-        event.preventDefault();
-      }
-    }
-    element.addEventListener('touchmove', preventDefaultTouchStart, {
-      passive: false
-    });
-    return () => {
-      element.removeEventListener('touchmove', preventDefaultTouchStart);
-    };
-  }, []);
-
-  // macOS Safari needs some time to pass after the status node has been
-  // created before changing its text content to reliably announce its content.
-  const screenReaderTimeout = useTimeout();
-  useOnMount(() => {
-    screenReaderTimeout.start(50, () => setRenderScreenReaderContent(true));
-  });
-  function getDragStyles() {
-    if (!isSwiping && dragOffset.x === initialTransform.x && dragOffset.y === initialTransform.y && !dragDismissed) {
-      return {
-        [ToastRootCssVars.swipeMovementX]: '0px',
-        [ToastRootCssVars.swipeMovementY]: '0px'
-      };
-    }
-    const deltaX = dragOffset.x - initialTransform.x;
-    const deltaY = dragOffset.y - initialTransform.y;
-    return {
-      transition: isSwiping ? 'none' : undefined,
-      [ToastRootCssVars.swipeMovementX]: `${deltaX}px`,
-      [ToastRootCssVars.swipeMovementY]: `${deltaY}px`
-    };
-  }
-  const props = {
-    role: toast.priority === 'high' ? 'alertdialog' : 'dialog',
-    tabIndex: 0,
-    'aria-modal': false,
-    'aria-labelledby': titleId,
-    'aria-describedby': descriptionId,
-    onPointerDown: handlePointerDown,
-    onPointerMove: handlePointerMove,
-    onPointerUp: handlePointerUp,
-    onKeyDown: handleKeyDown,
-    inert: inertValue(toast.limited),
-    style: {
-      ...getDragStyles(),
-      [ToastRootCssVars.index]: toast.transitionStatus === 'ending' ? domIndex : visibleIndex,
-      [ToastRootCssVars.offsetY]: `${offsetY}px`
-    }
-  };
-  const toastRoot = React.useMemo(() => ({
-    rootRef,
-    renderScreenReaderContent,
-    toast,
-    titleId,
-    setTitleId,
-    descriptionId,
-    setDescriptionId,
-    swiping: isSwiping,
-    swipeDirection: currentSwipeDirection
-  }), [renderScreenReaderContent, toast, titleId, descriptionId, isSwiping, currentSwipeDirection]);
-  const state = React.useMemo(() => ({
-    transitionStatus: toast.transitionStatus,
-    expanded: hovering || focused || hasDifferingHeights,
-    limited: toast.limited || false,
-    type: toast.type,
-    swiping: toastRoot.swiping,
-    swipeDirection: toastRoot.swipeDirection
-  }), [hovering, focused, hasDifferingHeights, toast.transitionStatus, toast.limited, toast.type, toastRoot.swiping, toastRoot.swipeDirection]);
-  const element = useRenderElement('div', componentProps, {
-    ref: [forwardedRef, toastRoot.rootRef],
-    state,
-    customStyleHookMapping,
-    props: [props, elementProps, {
-      // Screen readers won't announce the text upon DOM insertion of the component.
-      // We need to wait until the next tick to render the children so that screen
-      // readers can announce the contents.
-      children: /*#__PURE__*/jsxs(React.Fragment, {
-        children: [children, !focused && /*#__PURE__*/jsx("div", {
-          style: visuallyHidden,
-          ...(toast.priority === 'high' ? {
-            role: 'alert',
-            'aria-atomic': true
-          } : {
-            role: 'status',
-            'aria-live': 'polite'
-          }),
-          children: toastRoot.renderScreenReaderContent && /*#__PURE__*/jsxs(React.Fragment, {
-            children: [toast.title && /*#__PURE__*/jsx("div", {
-              children: toast.title
-            }), toast.description && /*#__PURE__*/jsx("div", {
-              children: toast.description
-            })]
-          })
-        })]
-      })
-    }]
-  });
-  return /*#__PURE__*/jsx(ToastRootContext.Provider, {
-    value: toastRoot,
-    children: element
-  });
+    return styles;
+}
+const Toaster = /*#__PURE__*/ React.forwardRef(function Toaster(props, ref) {
+    const { id, invert, position = 'bottom-right', hotkey = [
+        'altKey',
+        'KeyT'
+    ], expand, closeButton, className, offset, mobileOffset, theme = 'light', richColors, duration, style, visibleToasts = VISIBLE_TOASTS_AMOUNT, toastOptions, dir = getDocumentDirection(), gap = GAP, icons, containerAriaLabel = 'Notifications' } = props;
+    const [toasts, setToasts] = React.useState([]);
+    const filteredToasts = React.useMemo(()=>{
+        if (id) {
+            return toasts.filter((toast)=>toast.toasterId === id);
+        }
+        return toasts.filter((toast)=>!toast.toasterId);
+    }, [
+        toasts,
+        id
+    ]);
+    const possiblePositions = React.useMemo(()=>{
+        return Array.from(new Set([
+            position
+        ].concat(filteredToasts.filter((toast)=>toast.position).map((toast)=>toast.position))));
+    }, [
+        filteredToasts,
+        position
+    ]);
+    const [heights, setHeights] = React.useState([]);
+    const [expanded, setExpanded] = React.useState(false);
+    const [interacting, setInteracting] = React.useState(false);
+    const [actualTheme, setActualTheme] = React.useState(theme !== 'system' ? theme : typeof window !== 'undefined' ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light' : 'light');
+    const listRef = React.useRef(null);
+    const hotkeyLabel = hotkey.join('+').replace(/Key/g, '').replace(/Digit/g, '');
+    const lastFocusedElementRef = React.useRef(null);
+    const isFocusWithinRef = React.useRef(false);
+    const removeToast = React.useCallback((toastToRemove)=>{
+        setToasts((toasts)=>{
+            var _toasts_find;
+            if (!((_toasts_find = toasts.find((toast)=>toast.id === toastToRemove.id)) == null ? void 0 : _toasts_find.delete)) {
+                ToastState.dismiss(toastToRemove.id);
+            }
+            return toasts.filter(({ id })=>id !== toastToRemove.id);
+        });
+    }, []);
+    React.useEffect(()=>{
+        return ToastState.subscribe((toast)=>{
+            if (toast.dismiss) {
+                // Prevent batching of other state updates
+                requestAnimationFrame(()=>{
+                    setToasts((toasts)=>toasts.map((t)=>t.id === toast.id ? {
+                                ...t,
+                                delete: true
+                            } : t));
+                });
+                return;
+            }
+            // Prevent batching, temp solution.
+            setTimeout(()=>{
+                ReactDOM.flushSync(()=>{
+                    setToasts((toasts)=>{
+                        const indexOfExistingToast = toasts.findIndex((t)=>t.id === toast.id);
+                        // Update the toast if it already exists
+                        if (indexOfExistingToast !== -1) {
+                            return [
+                                ...toasts.slice(0, indexOfExistingToast),
+                                {
+                                    ...toasts[indexOfExistingToast],
+                                    ...toast
+                                },
+                                ...toasts.slice(indexOfExistingToast + 1)
+                            ];
+                        }
+                        return [
+                            toast,
+                            ...toasts
+                        ];
+                    });
+                });
+            });
+        });
+    }, [
+        toasts
+    ]);
+    React.useEffect(()=>{
+        if (theme !== 'system') {
+            setActualTheme(theme);
+            return;
+        }
+        if (theme === 'system') {
+            // check if current preference is dark
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                // it's currently dark
+                setActualTheme('dark');
+            } else {
+                // it's not dark
+                setActualTheme('light');
+            }
+        }
+        if (typeof window === 'undefined') return;
+        const darkMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        try {
+            // Chrome & Firefox
+            darkMediaQuery.addEventListener('change', ({ matches })=>{
+                if (matches) {
+                    setActualTheme('dark');
+                } else {
+                    setActualTheme('light');
+                }
+            });
+        } catch (error) {
+            // Safari < 14
+            darkMediaQuery.addListener(({ matches })=>{
+                try {
+                    if (matches) {
+                        setActualTheme('dark');
+                    } else {
+                        setActualTheme('light');
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            });
+        }
+    }, [
+        theme
+    ]);
+    React.useEffect(()=>{
+        // Ensure expanded is always false when no toasts are present / only one left
+        if (toasts.length <= 1) {
+            setExpanded(false);
+        }
+    }, [
+        toasts
+    ]);
+    React.useEffect(()=>{
+        const handleKeyDown = (event)=>{
+            var _listRef_current;
+            const isHotkeyPressed = hotkey.every((key)=>event[key] || event.code === key);
+            if (isHotkeyPressed) {
+                var _listRef_current1;
+                setExpanded(true);
+                (_listRef_current1 = listRef.current) == null ? void 0 : _listRef_current1.focus();
+            }
+            if (event.code === 'Escape' && (document.activeElement === listRef.current || ((_listRef_current = listRef.current) == null ? void 0 : _listRef_current.contains(document.activeElement)))) {
+                setExpanded(false);
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return ()=>document.removeEventListener('keydown', handleKeyDown);
+    }, [
+        hotkey
+    ]);
+    React.useEffect(()=>{
+        if (listRef.current) {
+            return ()=>{
+                if (lastFocusedElementRef.current) {
+                    lastFocusedElementRef.current.focus({
+                        preventScroll: true
+                    });
+                    lastFocusedElementRef.current = null;
+                    isFocusWithinRef.current = false;
+                }
+            };
+        }
+    }, [
+        listRef.current
+    ]);
+    return(// Remove item from normal navigation flow, only available via hotkey
+    /*#__PURE__*/ React.createElement("section", {
+        ref: ref,
+        "aria-label": `${containerAriaLabel} ${hotkeyLabel}`,
+        tabIndex: -1,
+        "aria-live": "polite",
+        "aria-relevant": "additions text",
+        "aria-atomic": "false",
+        suppressHydrationWarning: true
+    }, possiblePositions.map((position, index)=>{
+        var _heights_;
+        const [y, x] = position.split('-');
+        if (!filteredToasts.length) return null;
+        return /*#__PURE__*/ React.createElement("ol", {
+            key: position,
+            dir: dir === 'auto' ? getDocumentDirection() : dir,
+            tabIndex: -1,
+            ref: listRef,
+            className: className,
+            "data-sonner-toaster": true,
+            "data-sonner-theme": actualTheme,
+            "data-y-position": y,
+            "data-x-position": x,
+            style: {
+                '--front-toast-height': `${((_heights_ = heights[0]) == null ? void 0 : _heights_.height) || 0}px`,
+                '--width': `${TOAST_WIDTH}px`,
+                '--gap': `${gap}px`,
+                ...style,
+                ...assignOffset(offset, mobileOffset)
+            },
+            onBlur: (event)=>{
+                if (isFocusWithinRef.current && !event.currentTarget.contains(event.relatedTarget)) {
+                    isFocusWithinRef.current = false;
+                    if (lastFocusedElementRef.current) {
+                        lastFocusedElementRef.current.focus({
+                            preventScroll: true
+                        });
+                        lastFocusedElementRef.current = null;
+                    }
+                }
+            },
+            onFocus: (event)=>{
+                const isNotDismissible = event.target instanceof HTMLElement && event.target.dataset.dismissible === 'false';
+                if (isNotDismissible) return;
+                if (!isFocusWithinRef.current) {
+                    isFocusWithinRef.current = true;
+                    lastFocusedElementRef.current = event.relatedTarget;
+                }
+            },
+            onMouseEnter: ()=>setExpanded(true),
+            onMouseMove: ()=>setExpanded(true),
+            onMouseLeave: ()=>{
+                // Avoid setting expanded to false when interacting with a toast, e.g. swiping
+                if (!interacting) {
+                    setExpanded(false);
+                }
+            },
+            onDragEnd: ()=>setExpanded(false),
+            onPointerDown: (event)=>{
+                const isNotDismissible = event.target instanceof HTMLElement && event.target.dataset.dismissible === 'false';
+                if (isNotDismissible) return;
+                setInteracting(true);
+            },
+            onPointerUp: ()=>setInteracting(false)
+        }, filteredToasts.filter((toast)=>!toast.position && index === 0 || toast.position === position).map((toast, index)=>{
+            var _toastOptions_duration, _toastOptions_closeButton;
+            return /*#__PURE__*/ React.createElement(Toast, {
+                key: toast.id,
+                icons: icons,
+                index: index,
+                toast: toast,
+                defaultRichColors: richColors,
+                duration: (_toastOptions_duration = toastOptions == null ? void 0 : toastOptions.duration) != null ? _toastOptions_duration : duration,
+                className: toastOptions == null ? void 0 : toastOptions.className,
+                descriptionClassName: toastOptions == null ? void 0 : toastOptions.descriptionClassName,
+                invert: invert,
+                visibleToasts: visibleToasts,
+                closeButton: (_toastOptions_closeButton = toastOptions == null ? void 0 : toastOptions.closeButton) != null ? _toastOptions_closeButton : closeButton,
+                interacting: interacting,
+                position: position,
+                style: toastOptions == null ? void 0 : toastOptions.style,
+                unstyled: toastOptions == null ? void 0 : toastOptions.unstyled,
+                classNames: toastOptions == null ? void 0 : toastOptions.classNames,
+                cancelButtonStyle: toastOptions == null ? void 0 : toastOptions.cancelButtonStyle,
+                actionButtonStyle: toastOptions == null ? void 0 : toastOptions.actionButtonStyle,
+                closeButtonAriaLabel: toastOptions == null ? void 0 : toastOptions.closeButtonAriaLabel,
+                removeToast: removeToast,
+                toasts: filteredToasts.filter((t)=>t.position == toast.position),
+                heights: heights.filter((h)=>h.position == toast.position),
+                setHeights: setHeights,
+                expandByDefault: expand,
+                gap: gap,
+                expanded: expanded,
+                swipeDirections: props.swipeDirections
+            });
+        }));
+    })));
 });
-if (process.env.NODE_ENV !== "production") ToastRoot.displayName = "ToastRoot";
 
-let globalId = 0;
-
-// TODO React 17: Remove `useGlobalId` once React 17 support is removed
-function useGlobalId(idOverride, prefix = 'mui') {
-  const [defaultId, setDefaultId] = React.useState(idOverride);
-  const id = idOverride || defaultId;
-  React.useEffect(() => {
-    if (defaultId == null) {
-      // Fallback to this default id when possible.
-      // Use the incrementing value for client-side rendering only.
-      // We can't use it server-side.
-      // If you want to use random values please consider the Birthday Problem: https://en.wikipedia.org/wiki/Birthday_problem
-      globalId += 1;
-      setDefaultId(`${prefix}-${globalId}`);
-    }
-  }, [defaultId, prefix]);
-  return id;
-}
-
-// See https://github.com/mui/material-ui/issues/41190#issuecomment-2040873379 for why
-const safeReact = {
-  ...React
-};
-const maybeReactUseId = safeReact.useId;
-
-/**
- *
- * @example <div id={useId()} />
- * @param idOverride
- * @returns {string}
- */
-function useId(idOverride, prefix) {
-  // React.useId() is only available from React 17.0.0.
-  if (maybeReactUseId !== undefined) {
-    const reactId = maybeReactUseId();
-    return idOverride ?? (prefix ? `${prefix}-${reactId}` : reactId);
-  }
-
-  // TODO: uncomment once we enable eslint-plugin-react-compiler // eslint-disable-next-line react-compiler/react-compiler
-  // eslint-disable-next-line react-hooks/rules-of-hooks -- `React.useId` is invariant at runtime.
-  return useGlobalId(idOverride, prefix);
-}
-
-/**
- * A description that describes the toast.
- * Can be used as the default message for the toast when no title is provided.
- * Renders a `<p>` element.
- *
- * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
- */
-const ToastDescription = /*#__PURE__*/React.forwardRef(function ToastDescription(componentProps, forwardedRef) {
-  const {
-    render,
-    className,
-    id: idProp,
-    children: childrenProp,
-    ...elementProps
-  } = componentProps;
-  const {
-    toast
-  } = useToastRootContext();
-  const children = childrenProp ?? toast.description;
-  const shouldRender = Boolean(children);
-  const id = useId(idProp);
-  const {
-    setDescriptionId
-  } = useToastRootContext();
-  index(() => {
-    if (!shouldRender) {
-      return undefined;
-    }
-    setDescriptionId(id);
-    return () => {
-      setDescriptionId(undefined);
-    };
-  }, [shouldRender, id, setDescriptionId]);
-  const state = React.useMemo(() => ({
-    type: toast.type
-  }), [toast.type]);
-  const element = useRenderElement('p', componentProps, {
-    ref: forwardedRef,
-    state,
-    props: {
-      ...elementProps,
-      id,
-      children
-    }
-  });
-  if (!shouldRender) {
-    return null;
-  }
-  return element;
-});
-if (process.env.NODE_ENV !== "production") ToastDescription.displayName = "ToastDescription";
-
-/**
- * A title that labels the toast.
- * Renders an `<h2>` element.
- *
- * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
- */
-const ToastTitle = /*#__PURE__*/React.forwardRef(function ToastTitle(componentProps, forwardedRef) {
-  const {
-    render,
-    className,
-    id: idProp,
-    children: childrenProp,
-    ...elementProps
-  } = componentProps;
-  const {
-    toast
-  } = useToastRootContext();
-  const children = childrenProp ?? toast.title;
-  const shouldRender = Boolean(children);
-  const id = useId(idProp);
-  const {
-    setTitleId
-  } = useToastRootContext();
-  index(() => {
-    if (!shouldRender) {
-      return undefined;
-    }
-    setTitleId(id);
-    return () => {
-      setTitleId(undefined);
-    };
-  }, [shouldRender, id, setTitleId]);
-  const state = React.useMemo(() => ({
-    type: toast.type
-  }), [toast.type]);
-  const element = useRenderElement('h2', componentProps, {
-    ref: forwardedRef,
-    state,
-    props: {
-      ...elementProps,
-      id,
-      children
-    }
-  });
-  if (!shouldRender) {
-    return null;
-  }
-  return element;
-});
-if (process.env.NODE_ENV !== "production") ToastTitle.displayName = "ToastTitle";
-
-let set;
-if (process.env.NODE_ENV !== 'production') {
-  set = new Set();
-}
-function warn(...messages) {
-  if (process.env.NODE_ENV !== 'production') {
-    const messageKey = messages.join(' ');
-    if (!set.has(messageKey)) {
-      set.add(messageKey);
-      console.warn(`Base UI: ${messageKey}`);
-    }
-  }
-}
-
-/**
- * Use this function determine the host element correctly on the server (in a SSR context, for example Next.js)
- */
-function useRootElementName(parameters) {
-  const {
-    rootElementName: rootElementNameProp = ''
-  } = parameters;
-  const [rootElementName, setRootElementName] = React.useState(rootElementNameProp.toUpperCase());
-  if (process.env.NODE_ENV !== 'production') {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    index(() => {
-      if (rootElementNameProp && rootElementName !== rootElementNameProp.toUpperCase()) {
-        warn(`useRootElementName expected the '${rootElementNameProp}' element, but a '${rootElementName.toLowerCase()}' was rendered instead`, 'This may cause hydration issues in an SSR context, for example in a Next.js app');
-      }
-    }, [rootElementNameProp, rootElementName]);
-  }
-  const updateRootElementName = React.useCallback(element => {
-    setRootElementName(element?.tagName ?? '');
-  }, []);
-  return {
-    rootElementName,
-    updateRootElementName
-  };
-}
-
-const CompositeRootContext = /*#__PURE__*/React.createContext(undefined);
-if (process.env.NODE_ENV !== "production") CompositeRootContext.displayName = "CompositeRootContext";
-function useCompositeRootContext(optional = false) {
-  const context = React.useContext(CompositeRootContext);
-  if (context === undefined && !optional) {
-    throw new Error('Base UI: CompositeRootContext is missing. Composite parts must be placed within <Composite.Root>.');
-  }
-  return context;
-}
-
-const BUTTON_TYPES = new Set(['button', 'submit', 'reset']);
-function useButton(parameters = {}) {
-  const {
-    buttonRef: externalRef,
-    disabled = false,
-    focusableWhenDisabled,
-    tabIndex = 0,
-    type = 'button',
-    elementName: elementNameProp
-  } = parameters;
-  const buttonRef = React.useRef(null);
-  const {
-    rootElementName: elementName,
-    updateRootElementName
-  } = useRootElementName({
-    rootElementName: elementNameProp
-  });
-  const isCompositeItem = useCompositeRootContext(true) !== undefined;
-  const isNativeButton = useEventCallback(() => {
-    const element = buttonRef.current;
-    return elementName === 'BUTTON' || elementName === 'INPUT' && BUTTON_TYPES.has(element?.type);
-  });
-  const isValidLink = useEventCallback(() => {
-    const element = buttonRef.current;
-    return Boolean(elementName === 'A' && element?.href);
-  });
-  const mergedRef = useForkRef(updateRootElementName, externalRef, buttonRef);
-  const buttonProps = React.useMemo(() => {
-    const additionalProps = {};
-    if (tabIndex !== undefined && !isCompositeItem) {
-      additionalProps.tabIndex = tabIndex;
-    }
-    if (elementName === 'BUTTON' || elementName === 'INPUT') {
-      if (focusableWhenDisabled || isCompositeItem) {
-        additionalProps['aria-disabled'] = disabled;
-      } else if (!isCompositeItem) {
-        additionalProps.disabled = disabled;
-      }
-    } else if (elementName !== '') {
-      if (elementName !== 'A') {
-        additionalProps.role = 'button';
-        if (!isCompositeItem) {
-          additionalProps.tabIndex = tabIndex ?? 0;
-        }
-      } else if (tabIndex && !isCompositeItem) {
-        additionalProps.tabIndex = tabIndex;
-      }
-      if (disabled) {
-        additionalProps['aria-disabled'] = disabled;
-        if (!isCompositeItem) {
-          additionalProps.tabIndex = focusableWhenDisabled ? tabIndex ?? 0 : -1;
-        }
-      }
-    }
-    return additionalProps;
-  }, [disabled, elementName, focusableWhenDisabled, isCompositeItem, tabIndex]);
-
-  // handles a disabled composite button rendering another button, e.g.
-  // <Toolbar.Button disabled render={<Menu.Trigger />} />
-  // the `disabled` prop needs to pass through 2 `useButton`s then finally
-  // delete the `disabled` attribute from DOM
-  index(() => {
-    const element = buttonRef.current;
-    if (!(element instanceof HTMLButtonElement)) {
-      return;
-    }
-    if (isCompositeItem && disabled && buttonProps.disabled === undefined && element.disabled) {
-      element.disabled = false;
-    }
-  }, [disabled, buttonProps.disabled, isCompositeItem]);
-  const getButtonProps = React.useCallback((externalProps = {}) => {
-    const {
-      onClick: externalOnClick,
-      onMouseDown: externalOnMouseDown,
-      onKeyUp: externalOnKeyUp,
-      onKeyDown: externalOnKeyDown,
-      onPointerDown: externalOnPointerDown,
-      ...otherExternalProps
-    } = externalProps;
-    return mergeProps({
-      type: elementName === 'BUTTON' || elementName === 'INPUT' ? type : undefined,
-      onClick(event) {
-        if (disabled) {
-          event.preventDefault();
-          return;
-        }
-        externalOnClick?.(event);
-      },
-      onMouseDown(event) {
-        if (!disabled) {
-          externalOnMouseDown?.(event);
-        }
-      },
-      onKeyDown(event) {
-        if (
-        // allow Tabbing away from focusableWhenDisabled buttons
-        disabled && focusableWhenDisabled && event.key !== 'Tab' || event.target === event.currentTarget && !isNativeButton() && event.key === ' ') {
-          event.preventDefault();
-        }
-        if (!disabled) {
-          makeEventPreventable(event);
-          externalOnKeyDown?.(event);
-        }
-        if (event.baseUIHandlerPrevented) {
-          return;
-        }
-
-        // Keyboard accessibility for non interactive elements
-        if (event.target === event.currentTarget && !isNativeButton() && !isValidLink() && event.key === 'Enter' && !disabled) {
-          externalOnClick?.(event);
-          event.preventDefault();
-        }
-      },
-      onKeyUp(event) {
-        // calling preventDefault in keyUp on a <button> will not dispatch a click event if Space is pressed
-        // https://codesandbox.io/p/sandbox/button-keyup-preventdefault-dn7f0
-        // Keyboard accessibility for non interactive elements
-        if (!disabled) {
-          makeEventPreventable(event);
-          externalOnKeyUp?.(event);
-        }
-        if (event.baseUIHandlerPrevented) {
-          return;
-        }
-        if (event.target === event.currentTarget && !isNativeButton() && !disabled && event.key === ' ') {
-          externalOnClick?.(event);
-        }
-      },
-      onPointerDown(event) {
-        if (disabled) {
-          event.preventDefault();
-          return;
-        }
-        externalOnPointerDown?.(event);
-      },
-      ref: mergedRef
-    }, buttonProps, otherExternalProps);
-  }, [buttonProps, disabled, elementName, focusableWhenDisabled, isNativeButton, isValidLink, mergedRef, type]);
-  return {
-    getButtonProps,
-    buttonRef: mergedRef
-  };
-}
-
-/**
- * Closes the toast when clicked.
- * Renders a `<button>` element.
- *
- * Documentation: [Base UI Toast](https://base-ui.com/react/components/toast)
- */
-const ToastClose = /*#__PURE__*/React.forwardRef(function ToastClose(componentProps, forwardedRef) {
-  const {
-    render,
-    className,
-    disabled,
-    ...elementProps
-  } = componentProps;
-  const {
-    close
-  } = useToastContext();
-  const {
-    toast
-  } = useToastRootContext();
-  const {
-    getButtonProps
-  } = useButton({
-    disabled,
-    buttonRef: forwardedRef
-  });
-  const state = React.useMemo(() => ({
-    type: toast.type
-  }), [toast.type]);
-  const element = useRenderElement('button', componentProps, {
-    ref: forwardedRef,
-    state,
-    props: [{
-      onClick() {
-        close(toast.id);
-      }
-    }, elementProps, getButtonProps]
-  });
-  return element;
-});
-if (process.env.NODE_ENV !== "production") ToastClose.displayName = "ToastClose";
-
-/**
- * Returns the array of toasts and methods to manage them.
- */
-function useToastManager() {
-  const context = React.useContext(ToastContext);
-  if (!context) {
-    throw new Error('Base UI: useToast must be used within <Toast.Provider>.');
-  }
-  const {
-    toasts,
-    add,
-    close,
-    update,
-    promise
-  } = context;
-  return React.useMemo(() => ({
-    toasts,
-    add,
-    close,
-    update,
-    promise
-  }), [toasts, add, close, update, promise]);
-}
-
-// 아이콘 컴포넌트들
+// 커스텀 아이콘 컴포넌트들 (Figma 사양: 24x24px)
 var CheckCircleIcon = function (_a) {
   var color = _a.color;
   return jsxs("svg", {
@@ -23478,218 +22282,19 @@ var InfoIcon = function (_a) {
     })]
   });
 };
-// 상태별 설정
-var statusConfig = {
-  success: {
-    icon: CheckCircleIcon,
-    color: colors.semantic.state.success
-  },
-  error: {
-    icon: CloseCircleIcon,
-    color: colors.semantic.state.error
-  },
-  warning: {
-    icon: CautionIcon,
-    color: colors.semantic.state.warning
-  },
-  info: {
-    icon: InfoIcon,
-    color: colors.semantic.state.info
-  }
-};
-// 위치별 진입/퇴장 변환 계산
-var getEnterTransform = function (position) {
-  if (!position) return 'translateX(100%) scale(0.95)';
-  if (position.includes('left')) return 'translateX(-100%) scale(0.95)';
-  if (position.includes('right')) return 'translateX(100%) scale(0.95)';
-  if (position.includes('top')) return 'translateY(-100%) scale(0.95)';
-  if (position.includes('bottom')) return 'translateY(100%) scale(0.95)';
-  return 'translateX(100%) scale(0.95)';
-};
-var getExitTransform = function (position) {
-  // 퇴장 방향은 진입과 동일한 반대방향으로 살짝 축소
-  return getEnterTransform(position);
-};
-/**
- * Base UI Toast를 youth-design 스타일로 래핑한 컴포넌트
- */
-var Toast = React__default.memo(function (_a) {
-  var status = _a.status,
-    title = _a.title,
-    description = _a.description,
-    _b = _a.showLeadingIcon,
-    showLeadingIcon = _b === void 0 ? true : _b,
-    _c = _a.showCloseButton,
-    showCloseButton = _c === void 0 ? false : _c,
-    toast = _a.toast,
-    position = _a.position;
-  var config = statusConfig[status];
-  var IconComponent = config.icon;
-  var isStarting = (toast === null || toast === void 0 ? void 0 : toast.transitionStatus) === 'starting';
-  var isEnding = (toast === null || toast === void 0 ? void 0 : toast.transitionStatus) === 'ending';
-  var baseTransition = 'transform 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 300ms ease';
-  var rootStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: spacing.m,
-    padding: spacing.l,
-    backgroundColor: colors.semantic.background.primary,
-    borderRadius: radius.l,
-    boxShadow: shadows.s,
-    width: '360px',
-    minHeight: 'fit-content',
-    position: 'relative',
-    pointerEvents: 'auto',
-    transition: baseTransition,
-    opacity: isStarting || isEnding ? 0 : 1,
-    transform: isStarting ? getEnterTransform(position) : isEnding ? getExitTransform(position) : 'translateX(0) translateY(0) scale(1)'
-  };
-  var contentStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: spacing.xxs,
-    flex: 1,
-    transition: 'opacity 250ms ease, transform 250ms ease',
-    opacity: isStarting ? 0 : 1,
-    transform: isStarting ? 'translateY(8px)' : 'none'
-  };
-  var titleStyle = __assign(__assign({}, textStyles.heading3), {
-    color: colors.semantic.text.primary,
-    margin: 0,
-    whiteSpace: 'pre-line'
-  });
-  var descriptionStyle = __assign(__assign({}, textStyles.body2), {
-    color: colors.semantic.text.secondary,
-    margin: 0,
-    whiteSpace: 'pre-line'
-  });
-  var iconWrapperStyle = {
-    opacity: isStarting ? 0 : 1,
-    transform: isStarting ? 'scale(0.8)' : 'scale(1)',
-    transition: 'opacity 250ms ease 100ms, transform 250ms ease 100ms',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  };
-  var closeButtonStyle = {
-    background: 'none',
-    border: 'none',
-    cursor: 'pointer',
-    padding: spacing.xxs,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radius.xs,
-    transition: 'background-color 0.2s ease, transform 0.15s ease',
-    position: 'absolute',
-    top: spacing.m,
-    right: spacing.m
-  };
-  return jsxs(ToastRoot, {
-    toast: toast,
-    style: rootStyle,
-    className: "toast-root toast toast--".concat(status),
-    "data-transition-status": toast === null || toast === void 0 ? void 0 : toast.transitionStatus,
-    "data-position": position,
-    "data-swiping": (toast === null || toast === void 0 ? void 0 : toast.swiping) ? 'true' : 'false',
-    children: [showLeadingIcon && jsx("div", {
-      className: "toast__icon",
-      style: iconWrapperStyle,
-      children: jsx(IconComponent, {
-        color: config.color
-      })
-    }), jsxs("div", {
-      className: "toast__content",
-      style: contentStyle,
-      children: [jsx(ToastTitle, {
-        style: titleStyle,
-        className: "toast__title",
-        children: title
-      }), description && jsx(ToastDescription, {
-        style: descriptionStyle,
-        className: "toast__description",
-        children: description
-      })]
-    }), showCloseButton && jsx(ToastClose, {
-      style: closeButtonStyle,
-      className: "toast__close",
-      "aria-label": "\uC54C\uB9BC \uB2EB\uAE30",
-      onMouseEnter: function (e) {
-        e.target.style.backgroundColor = colors.primary.coolGray[100];
-        e.target.style.transform = 'scale(1.05)';
-      },
-      onMouseLeave: function (e) {
-        e.target.style.backgroundColor = 'transparent';
-        e.target.style.transform = 'scale(1)';
-      },
-      children: jsx(Icon, {
-        type: "close",
-        size: 16,
-        color: colors.semantic.text.tertiary
-      })
-    })]
-  });
-});
-// displayName 추가 (React Dev Tools에서 식별하기 쉽게)
-Toast.displayName = 'Toast';
-
-// Position Context for sharing position info
-var ToastPositionContext = createContext('top-right');
-// Position 스타일 맵핑
-var positionStyles = {
-  'top-right': {
-    top: '16px',
-    right: '16px'
-  },
-  'top-left': {
-    top: '16px',
-    left: '16px'
-  },
-  'bottom-right': {
-    bottom: '16px',
-    right: '16px'
-  },
-  'bottom-left': {
-    bottom: '16px',
-    left: '16px'
-  },
-  'top-center': {
-    top: '40px',
-    left: '50%',
-    transform: 'translateX(-50%)'
-  },
-  'bottom-center': {
-    bottom: '16px',
-    left: '50%',
-    transform: 'translateX(-50%)'
-  }
-};
-/**
- * 토스트 렌더러 컴포넌트
- *
- * base-ui의 toast manager에서 관리되는 토스트들을 실제 UI로 렌더링합니다.
- */
-var ToastRenderer = function () {
-  var toasts = useToastManager().toasts;
-  var position = useContext(ToastPositionContext);
-  return jsx(Fragment, {
-    children: toasts.map(function (toast) {
-      return jsx(Toast, {
-        toast: toast,
-        status: toast.type || 'info',
-        title: toast.title || '',
-        description: toast.description,
-        showLeadingIcon: true,
-        showCloseButton: true,
-        position: position
-      }, toast.id);
-    })
-  });
+// Position 매핑 (sonner 호환)
+var positionMapping = {
+  'top-right': 'top-right',
+  'top-left': 'top-left',
+  'bottom-right': 'bottom-right',
+  'bottom-left': 'bottom-left',
+  'top-center': 'top-center',
+  'bottom-center': 'bottom-center'
 };
 /**
  * Toast Provider 컴포넌트
  *
- * base-ui의 toast 시스템을 래핑하여 기존 Toast 컴포넌트와 함께 사용할 수 있는 Provider입니다.
+ * sonner 라이브러리를 래핑하여 기존 API 호환성을 유지하는 Provider입니다.
  */
 var ToastProvider = function (_a) {
   var children = _a.children,
@@ -23699,94 +22304,124 @@ var ToastProvider = function (_a) {
     defaultDuration = _c === void 0 ? 3000 : _c,
     _d = _a.limit,
     limit = _d === void 0 ? 3 : _d;
-  return jsx(ToastProvider$1, {
-    timeout: defaultDuration,
-    limit: limit,
-    children: jsxs(ToastPositionContext.Provider, {
-      value: position,
-      children: [children, jsx(ToastViewport, {
-        style: __assign({
-          position: 'fixed',
-          zIndex: 9999,
+  // Figma 디자인 사양에 맞는 스타일 인젝션
+  React.useEffect(function () {
+    var styleId = 'youth-toast-styles';
+    if (!document.getElementById(styleId)) {
+      var style = document.createElement('style');
+      style.id = styleId;
+      style.innerHTML = "\n        .youth-toast-title {\n          /* Figma Title/H3 \uC2A4\uD0C0\uC77C */\n          font-family: ".concat(textStyles.heading3.fontFamily, ";\n          font-size: 18px !important;\n          font-weight: ").concat(textStyles.heading3.fontWeight, " !important;\n          line-height: 1.33 !important;\n          color: ").concat(colors.primary.coolGray[800], " !important;\n          letter-spacing: 0 !important;\n          margin: 0 !important;\n          white-space: pre-line !important;\n        }\n        \n        .youth-toast-description {\n          /* Figma body/b2_regular \uC2A4\uD0C0\uC77C */\n          font-family: ").concat(textStyles.body2.fontFamily, ";\n          font-size: 14px !important;\n          font-weight: ").concat(textStyles.body2.fontWeight, " !important;\n          line-height: 1.57 !important;\n          letter-spacing: -0.02em !important;\n          color: ").concat(colors.primary.coolGray[500], " !important;\n          margin: 0 !important;\n          margin-top: 4px !important;\n          white-space: pre-line !important;\n        }\n\n        /* \uD14D\uC2A4\uD2B8 \uCEE8\uD14C\uC774\uB108 \uAC04\uACA9 \uC870\uC815 */\n        [data-sonner-toast] [data-content] {\n          display: flex;\n          flex-direction: column;\n          gap: 4px;\n        }\n      ");
+      document.head.appendChild(style);
+    }
+  }, []);
+  return jsxs(Fragment, {
+    children: [children, jsx(Toaster, {
+      position: positionMapping[position],
+      duration: defaultDuration,
+      visibleToasts: limit,
+      richColors: false,
+      closeButton: false,
+      icons: {
+        success: jsx(CheckCircleIcon, {
+          color: colors.semantic.state.success
+        }),
+        error: jsx(CloseCircleIcon, {
+          color: colors.semantic.state.error
+        }),
+        warning: jsx(CautionIcon, {
+          color: colors.semantic.state.warning
+        }),
+        info: jsx(InfoIcon, {
+          color: colors.semantic.state.info
+        })
+      },
+      toastOptions: {
+        style: {
+          // Figma 디자인과 완전 일치
+          background: colors.primary.gray.white,
+          border: 'none',
+          borderRadius: radius.l,
+          // 16px - Figma 사양
+          boxShadow: '0px 1px 8px 0px rgba(21, 23, 25, 0.08)',
+          // Figma shadow-s
+          width: '360px',
+          // Figma 고정 너비
+          maxWidth: '360px',
+          padding: '20px',
+          // Figma 패딩
+          gap: '16px',
+          // Figma row gap
           display: 'flex',
-          flexDirection: 'column',
-          gap: '8px',
-          maxWidth: '380px',
-          outline: 'none',
-          pointerEvents: 'none'
-        }, positionStyles[position]),
-        children: jsx(ToastRenderer, {})
-      })]
-    })
+          alignItems: 'center',
+          fontFamily: textStyles.heading3.fontFamily
+        },
+        classNames: {
+          title: 'youth-toast-title',
+          description: 'youth-toast-description'
+        }
+      }
+    })]
   });
 };
 /**
  * useToast 훅
  *
- * base-ui의 toast 시스템을 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
+ * sonner 라이브러리를 래핑하여 기존 API 호환성을 유지하면서 Toast를 사용할 수 있는 훅입니다.
  */
 var useToast = function () {
-  var toastManager = useToastManager();
   var success = useCallback(function (title, description, options) {
-    var payload = {
+    var toastOptions = {
       id: options === null || options === void 0 ? void 0 : options.id,
-      type: 'success',
-      title: title,
       description: description,
-      // duration이 명시적으로 null이 아닌 이상 timeout을 설정 (0도 유효한 값)
-      timeout: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : undefined
+      duration: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : 3000
     };
-    return toastManager.add(payload);
-  }, [toastManager]);
+    return toast.success(title, toastOptions);
+  }, []);
   var error = useCallback(function (title, description, options) {
-    var payload = {
+    var toastOptions = {
       id: options === null || options === void 0 ? void 0 : options.id,
-      type: 'error',
-      title: title,
       description: description,
-      timeout: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : undefined
+      duration: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : 3000
     };
-    return toastManager.add(payload);
-  }, [toastManager]);
+    return toast.error(title, toastOptions);
+  }, []);
   var warning = useCallback(function (title, description, options) {
-    var payload = {
+    var toastOptions = {
       id: options === null || options === void 0 ? void 0 : options.id,
-      type: 'warning',
-      title: title,
       description: description,
-      timeout: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : undefined
+      duration: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : 3000
     };
-    return toastManager.add(payload);
-  }, [toastManager]);
+    return toast.warning(title, toastOptions);
+  }, []);
   var info = useCallback(function (title, description, options) {
-    var payload = {
+    var toastOptions = {
       id: options === null || options === void 0 ? void 0 : options.id,
-      type: 'info',
-      title: title,
       description: description,
-      timeout: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : undefined
+      duration: (options === null || options === void 0 ? void 0 : options.duration) !== undefined ? options.duration : 3000
     };
-    return toastManager.add(payload);
-  }, [toastManager]);
+    return toast.info(title, toastOptions);
+  }, []);
   var custom = useCallback(function (options) {
-    var payload = {
-      type: options.status,
-      title: options.title,
+    var toastOptions = {
       description: options.description,
-      timeout: options.duration !== undefined ? options.duration : undefined
+      duration: options.duration !== undefined ? options.duration : 3000
     };
-    return toastManager.add(payload);
-  }, [toastManager]);
+    if (options.status === 'success') {
+      return toast.success(options.title || '', toastOptions);
+    } else if (options.status === 'error') {
+      return toast.error(options.title || '', toastOptions);
+    } else if (options.status === 'warning') {
+      return toast.warning(options.title || '', toastOptions);
+    } else {
+      return toast.info(options.title || '', toastOptions);
+    }
+  }, []);
   var remove = useCallback(function (id) {
-    return toastManager.close(id);
-  }, [toastManager]);
+    return toast.dismiss(id);
+  }, []);
   var removeAll = useCallback(function () {
-    // toasts 배열을 복사하여 동시성 문제 방지
-    var toastsToRemove = __spreadArray([], toastManager.toasts, true);
-    toastsToRemove.forEach(function (toast) {
-      return toastManager.close(toast.id);
-    });
-  }, [toastManager]);
+    return toast.dismiss();
+  }, []);
   return {
     success: success,
     error: error,
@@ -23813,7 +22448,7 @@ var Popup = function (_a) {
     width = _d === void 0 ? '480px' : _d,
     _e = _a.style,
     style = _e === void 0 ? {} : _e;
-  var _f = React__default.useState(null),
+  var _f = React.useState(null),
     portalRoot = _f[0],
     setPortalRoot = _f[1];
   // Portal root 설정
@@ -23967,16 +22602,16 @@ var Modal = function (_a) {
     style = _g === void 0 ? {} : _g,
     _h = _a.overlayStyle,
     overlayStyle = _h === void 0 ? {} : _h;
-  var _j = React__default.useState(false),
+  var _j = React.useState(false),
     isContentOverflowing = _j[0],
     setIsContentOverflowing = _j[1];
-  var _k = React__default.useState(true),
+  var _k = React.useState(true),
     isPrimaryDefaultDisabled = _k[0],
     setIsPrimaryDefaultDisabled = _k[1];
-  var _l = React__default.useState(null),
+  var _l = React.useState(null),
     portalRoot = _l[0],
     setPortalRoot = _l[1];
-  var contentRef = React__default.useRef(null);
+  var contentRef = React.useRef(null);
   // Portal root 설정
   useEffect(function () {
     // 기존 portal root가 있는지 확인
@@ -27317,15 +25952,15 @@ var hasRequiredUseSyncExternalStoreShim_production;
 function requireUseSyncExternalStoreShim_production () {
 	if (hasRequiredUseSyncExternalStoreShim_production) return useSyncExternalStoreShim_production;
 	hasRequiredUseSyncExternalStoreShim_production = 1;
-	var React = React__default;
+	var React$1 = React;
 	function is(x, y) {
 	  return (x === y && (0 !== x || 1 / x === 1 / y)) || (x !== x && y !== y);
 	}
 	var objectIs = "function" === typeof Object.is ? Object.is : is,
-	  useState = React.useState,
-	  useEffect = React.useEffect,
-	  useLayoutEffect = React.useLayoutEffect,
-	  useDebugValue = React.useDebugValue;
+	  useState = React$1.useState,
+	  useEffect = React$1.useEffect,
+	  useLayoutEffect = React$1.useLayoutEffect,
+	  useDebugValue = React$1.useDebugValue;
 	function useSyncExternalStore$2(subscribe, getSnapshot) {
 	  var value = getSnapshot(),
 	    _useState = useState({ inst: { value: value, getSnapshot: getSnapshot } }),
@@ -27371,7 +26006,7 @@ function requireUseSyncExternalStoreShim_production () {
 	    ? useSyncExternalStore$1
 	    : useSyncExternalStore$2;
 	useSyncExternalStoreShim_production.useSyncExternalStore =
-	  void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
+	  void 0 !== React$1.useSyncExternalStore ? React$1.useSyncExternalStore : shim;
 	return useSyncExternalStoreShim_production;
 }
 
@@ -27399,7 +26034,7 @@ function requireUseSyncExternalStoreShim_development () {
 	    }
 	    function useSyncExternalStore$2(subscribe, getSnapshot) {
 	      didWarnOld18Alpha ||
-	        void 0 === React.startTransition ||
+	        void 0 === React$1.startTransition ||
 	        ((didWarnOld18Alpha = !0),
 	        console.error(
 	          "You are using an outdated, pre-release alpha of React 18 that does not support useSyncExternalStore. The use-sync-external-store shim will not work correctly. Upgrade to a newer pre-release."
@@ -27455,12 +26090,12 @@ function requireUseSyncExternalStoreShim_development () {
 	      "function" ===
 	        typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart &&
 	      __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-	    var React = React__default,
+	    var React$1 = React,
 	      objectIs = "function" === typeof Object.is ? Object.is : is,
-	      useState = React.useState,
-	      useEffect = React.useEffect,
-	      useLayoutEffect = React.useLayoutEffect,
-	      useDebugValue = React.useDebugValue,
+	      useState = React$1.useState,
+	      useEffect = React$1.useEffect,
+	      useLayoutEffect = React$1.useLayoutEffect,
+	      useDebugValue = React$1.useDebugValue,
 	      didWarnOld18Alpha = !1,
 	      didWarnUncachedGetSnapshot = !1,
 	      shim =
@@ -27470,7 +26105,7 @@ function requireUseSyncExternalStoreShim_development () {
 	          ? useSyncExternalStore$1
 	          : useSyncExternalStore$2;
 	    useSyncExternalStoreShim_development.useSyncExternalStore =
-	      void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
+	      void 0 !== React$1.useSyncExternalStore ? React$1.useSyncExternalStore : shim;
 	    "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ &&
 	      "function" ===
 	        typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStop &&
@@ -28611,7 +27246,7 @@ var sizeConfig = {
  * 페이지 내에서 사용자에게 중요한 정보나 상태를 알려주는 컴포넌트입니다.
  * 피그마 디자인에 따라 크기(s, m)와 타입(normal, success, warning)을 지원합니다.
  */
-var InlineNotification = React__default.memo(function (_a) {
+var InlineNotification = React.memo(function (_a) {
   var type = _a.type,
     message = _a.message,
     _b = _a.size,
@@ -29185,10 +27820,10 @@ var styles = {
 var BreadcrumbItem = function (_a) {
   var item = _a.item,
     isCurrent = _a.isCurrent;
-  var _b = React__default.useState(false),
+  var _b = React.useState(false),
     isHovered = _b[0],
     setIsHovered = _b[1];
-  var _c = React__default.useState(false),
+  var _c = React.useState(false),
     isPressed = _c[0],
     setIsPressed = _c[1];
   var handleClick = function () {
@@ -29307,7 +27942,7 @@ var Breadcrumb = function (_a) {
     children: items.map(function (item, index) {
       var isCurrent = index === items.length - 1;
       var isLast = index === items.length - 1;
-      return jsxs(React__default.Fragment, {
+      return jsxs(React.Fragment, {
         children: [jsx(BreadcrumbItem, {
           item: item,
           isCurrent: isCurrent
@@ -29319,5 +27954,5 @@ var Breadcrumb = function (_a) {
   });
 };
 
-export { ActivityGoalCard, Breadcrumb, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Logo, Modal, Pagination, Popover, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast, ToastProvider, Toggle, YouthLottie, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
+export { ActivityGoalCard, Breadcrumb, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Logo, Modal, Pagination, Popover, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast$1 as Toast, ToastProvider, Toggle, YouthLottie, borders, colors, coolGray, fontFamily, fontSize, fontWeight, gray, illustration, letterSpacing, lineHeight, primary, radius, semantic, shadows, spacing, textStyles, tint, tokens, typography, useToast };
 //# sourceMappingURL=index.esm.js.map
