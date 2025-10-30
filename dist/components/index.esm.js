@@ -27814,5 +27814,443 @@ var Breadcrumb = function (_a) {
   });
 };
 
-export { ActivityGoalCard, Breadcrumb, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Logo, Modal, Pagination, Popover, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast$1 as Toast, ToastProvider, Toggle, YouthLottie, useToast };
+var ARROW_SIZE = 8;
+var Tooltip = memo(function (_a) {
+  var content = _a.content,
+    children = _a.children,
+    _b = _a.position,
+    position = _b === void 0 ? 'top' : _b,
+    _c = _a.trigger,
+    trigger = _c === void 0 ? 'hover' : _c,
+    _d = _a.showCloseButton,
+    showCloseButton = _d === void 0 ? false : _d,
+    controlledVisible = _a.visible,
+    onVisibleChange = _a.onVisibleChange,
+    _e = _a.className,
+    className = _e === void 0 ? '' : _e,
+    _f = _a.mouseEnterDelay,
+    mouseEnterDelay = _f === void 0 ? 100 : _f,
+    _g = _a.mouseLeaveDelay,
+    mouseLeaveDelay = _g === void 0 ? 100 : _g,
+    _h = _a.offset,
+    offset = _h === void 0 ? 12 : _h;
+  var _j = useState(false),
+    internalVisible = _j[0],
+    setInternalVisible = _j[1];
+  var _k = useState({}),
+    tooltipStyle = _k[0],
+    setTooltipStyle = _k[1];
+  var _l = useState({}),
+    arrowStyle = _l[0],
+    setArrowStyle = _l[1];
+  var targetRef = useRef(null);
+  var tooltipRef = useRef(null);
+  var enterTimeoutRef = useRef(undefined);
+  var leaveTimeoutRef = useRef(undefined);
+  var _m = useState(null),
+    portalRoot = _m[0],
+    setPortalRoot = _m[1];
+  // Controlled vs Uncontrolled
+  var isControlled = controlledVisible !== undefined;
+  var visible = isControlled ? controlledVisible : internalVisible;
+  // Portal root 설정
+  useEffect(function () {
+    var tooltipRoot = document.getElementById('tooltip-root');
+    if (!tooltipRoot) {
+      tooltipRoot = document.createElement('div');
+      tooltipRoot.id = 'tooltip-root';
+      tooltipRoot.style.position = 'absolute';
+      tooltipRoot.style.top = '0';
+      tooltipRoot.style.left = '0';
+      tooltipRoot.style.zIndex = '10000';
+      tooltipRoot.style.pointerEvents = 'none';
+      document.body.appendChild(tooltipRoot);
+    }
+    setPortalRoot(tooltipRoot);
+  }, []);
+  var updateVisible = useCallback(function (newVisible) {
+    if (!isControlled) {
+      setInternalVisible(newVisible);
+    }
+    onVisibleChange === null || onVisibleChange === void 0 ? void 0 : onVisibleChange(newVisible);
+  }, [isControlled, onVisibleChange]);
+  var calculatePosition = useCallback(function () {
+    if (!targetRef.current || !tooltipRef.current || !visible) return;
+    var targetRect = targetRef.current.getBoundingClientRect();
+    var tooltipRect = tooltipRef.current.getBoundingClientRect();
+    var viewportWidth = window.innerWidth;
+    var viewportHeight = window.innerHeight;
+    var top = 0;
+    var left = 0;
+    var finalPosition = position;
+    // 초기 위치 계산
+    var positions = {
+      top: {
+        top: targetRect.top - tooltipRect.height - offset,
+        left: targetRect.left + targetRect.width / 2 - tooltipRect.width / 2
+      },
+      topLeft: {
+        top: targetRect.top - tooltipRect.height - offset,
+        left: targetRect.left
+      },
+      topRight: {
+        top: targetRect.top - tooltipRect.height - offset,
+        left: targetRect.right - tooltipRect.width
+      },
+      bottom: {
+        top: targetRect.bottom + offset,
+        left: targetRect.left + targetRect.width / 2 - tooltipRect.width / 2
+      },
+      bottomLeft: {
+        top: targetRect.bottom + offset,
+        left: targetRect.left
+      },
+      bottomRight: {
+        top: targetRect.bottom + offset,
+        left: targetRect.right - tooltipRect.width
+      },
+      left: {
+        top: targetRect.top + targetRect.height / 2 - tooltipRect.height / 2,
+        left: targetRect.left - tooltipRect.width - offset
+      },
+      leftTop: {
+        top: targetRect.top,
+        left: targetRect.left - tooltipRect.width - offset
+      },
+      leftBottom: {
+        top: targetRect.bottom - tooltipRect.height,
+        left: targetRect.left - tooltipRect.width - offset
+      },
+      right: {
+        top: targetRect.top + targetRect.height / 2 - tooltipRect.height / 2,
+        left: targetRect.right + offset
+      },
+      rightTop: {
+        top: targetRect.top,
+        left: targetRect.right + offset
+      },
+      rightBottom: {
+        top: targetRect.bottom - tooltipRect.height,
+        left: targetRect.right + offset
+      }
+    };
+    var pos = positions[position];
+    top = pos.top;
+    left = pos.left;
+    // 화면 밖으로 벗어나는지 확인하고 위치 조정
+    var wouldOverflowTop = top < 10;
+    var wouldOverflowBottom = top + tooltipRect.height > viewportHeight - 10;
+    var wouldOverflowLeft = left < 10;
+    var wouldOverflowRight = left + tooltipRect.width > viewportWidth - 10;
+    // 위치 자동 조정
+    if (position.includes('top') && wouldOverflowTop) {
+      // top -> bottom
+      if (position === 'top') {
+        finalPosition = 'bottom';
+      } else if (position === 'topLeft') {
+        finalPosition = 'bottomLeft';
+      } else if (position === 'topRight') {
+        finalPosition = 'bottomRight';
+      }
+      var newPos = positions[finalPosition];
+      top = newPos.top;
+      left = newPos.left;
+    } else if (position.includes('bottom') && wouldOverflowBottom) {
+      // bottom -> top
+      if (position === 'bottom') {
+        finalPosition = 'top';
+      } else if (position === 'bottomLeft') {
+        finalPosition = 'topLeft';
+      } else if (position === 'bottomRight') {
+        finalPosition = 'topRight';
+      }
+      var newPos = positions[finalPosition];
+      top = newPos.top;
+      left = newPos.left;
+    }
+    if ((position.includes('left') || position === 'leftTop' || position === 'leftBottom') && wouldOverflowLeft) {
+      // left -> right
+      if (position === 'left') {
+        finalPosition = 'right';
+      } else if (position === 'leftTop') {
+        finalPosition = 'rightTop';
+      } else if (position === 'leftBottom') {
+        finalPosition = 'rightBottom';
+      }
+      var newPos = positions[finalPosition];
+      top = newPos.top;
+      left = newPos.left;
+    } else if ((position.includes('right') || position === 'rightTop' || position === 'rightBottom') && wouldOverflowRight) {
+      // right -> left
+      if (position === 'right') {
+        finalPosition = 'left';
+      } else if (position === 'rightTop') {
+        finalPosition = 'leftTop';
+      } else if (position === 'rightBottom') {
+        finalPosition = 'leftBottom';
+      }
+      var newPos = positions[finalPosition];
+      top = newPos.top;
+      left = newPos.left;
+    }
+    // 좌우 경계 체크 후 미세 조정
+    if (left < 10) {
+      left = 10;
+    } else if (left + tooltipRect.width > viewportWidth - 10) {
+      left = viewportWidth - tooltipRect.width - 10;
+    }
+    // 상하 경계 체크 후 미세 조정
+    if (top < 10) {
+      top = 10;
+    } else if (top + tooltipRect.height > viewportHeight - 10) {
+      top = viewportHeight - tooltipRect.height - 10;
+    }
+    setTooltipStyle({
+      position: 'fixed',
+      top: "".concat(top, "px"),
+      left: "".concat(left, "px")
+    });
+    // 화살표 위치 계산
+    var arrowStyles = getArrowStyle(finalPosition, targetRect, {
+      top: top,
+      left: left,
+      tooltipRect: tooltipRect,
+      offset: offset
+    });
+    setArrowStyle(arrowStyles);
+  }, [position, visible, offset]);
+  var getArrowStyle = function (pos, targetRect, tooltip) {
+    var baseStyle = {
+      position: 'absolute',
+      width: 0,
+      height: 0,
+      border: 'solid transparent'
+    };
+    // 화살표 위치 계산을 위한 기준점
+    var tooltipTop = tooltip.top;
+    tooltip.tooltipRect.height;
+    var targetTop = targetRect.top;
+    targetRect.bottom;
+    // 패딩 값 (툴팁 내부 패딩 12px)
+    var PADDING = 12;
+    if (pos === 'top') {
+      // 상단 중앙: 화살표가 정중앙에 위치
+      baseStyle.bottom = "-".concat(ARROW_SIZE, "px");
+      baseStyle.left = '50%';
+      baseStyle.transform = 'translateX(-50%)';
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px 0 ").concat(ARROW_SIZE, "px");
+      baseStyle.borderTopColor = colors.primary.coolGray[600];
+    } else if (pos === 'topLeft') {
+      // 상단 좌측: 화살표가 좌측으로 완전히 치우쳐있어야 함 (패딩 위치)
+      baseStyle.bottom = "-".concat(ARROW_SIZE, "px");
+      baseStyle.left = "".concat(PADDING, "px");
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px 0 ").concat(ARROW_SIZE, "px");
+      baseStyle.borderTopColor = colors.primary.coolGray[600];
+    } else if (pos === 'topRight') {
+      // 상단 우측: 화살표가 우측으로 완전히 치우쳐있어야 함
+      baseStyle.bottom = "-".concat(ARROW_SIZE, "px");
+      baseStyle.right = "".concat(PADDING, "px");
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px 0 ").concat(ARROW_SIZE, "px");
+      baseStyle.borderTopColor = colors.primary.coolGray[600];
+    } else if (pos === 'bottom') {
+      // 하단 중앙: 화살표가 정중앙에 위치
+      baseStyle.top = "-".concat(ARROW_SIZE, "px");
+      baseStyle.left = '50%';
+      baseStyle.transform = 'translateX(-50%)';
+      baseStyle.borderWidth = "0 ".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px");
+      baseStyle.borderBottomColor = colors.primary.coolGray[600];
+    } else if (pos === 'bottomLeft') {
+      // 하단 좌측: 화살표가 좌측으로 치우쳐있어야 함
+      baseStyle.top = "-".concat(ARROW_SIZE, "px");
+      baseStyle.left = "".concat(PADDING, "px");
+      baseStyle.borderWidth = "0 ".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px");
+      baseStyle.borderBottomColor = colors.primary.coolGray[600];
+    } else if (pos === 'bottomRight') {
+      // 하단 우측: 화살표가 우측으로 치우쳐있어야 함
+      baseStyle.top = "-".concat(ARROW_SIZE, "px");
+      baseStyle.right = "".concat(PADDING, "px");
+      baseStyle.borderWidth = "0 ".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px");
+      baseStyle.borderBottomColor = colors.primary.coolGray[600];
+    } else if (pos === 'left') {
+      // 좌측: 화살표가 중앙이 아니라 위로 치우쳐있어야 함 (target의 상단과 맞춤)
+      var arrowTop = targetTop - tooltipTop + PADDING;
+      baseStyle.right = "-".concat(ARROW_SIZE, "px");
+      baseStyle.top = "".concat(arrowTop, "px");
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px 0 ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px");
+      baseStyle.borderLeftColor = colors.primary.coolGray[600];
+    } else if (pos === 'leftTop') {
+      // 좌측 상단: 화살표가 툴팁 본문의 상단에 위치 (패딩 위치)
+      baseStyle.right = "-".concat(ARROW_SIZE, "px");
+      baseStyle.top = "".concat(PADDING, "px");
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px 0 ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px");
+      baseStyle.borderLeftColor = colors.primary.coolGray[600];
+    } else if (pos === 'leftBottom') {
+      // 좌측 하단: 화살표가 툴팁 본문의 하단에 위치 (하단에서 패딩만큼 위)
+      baseStyle.right = "-".concat(ARROW_SIZE, "px");
+      baseStyle.bottom = "".concat(PADDING, "px");
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px 0 ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px");
+      baseStyle.borderLeftColor = colors.primary.coolGray[600];
+    } else if (pos === 'right') {
+      // 우측: 화살표가 중앙이 아니라 위로 치우쳐있어야 함 (target의 상단과 맞춤)
+      var arrowTop = targetTop - tooltipTop + PADDING;
+      baseStyle.left = "-".concat(ARROW_SIZE, "px");
+      baseStyle.top = "".concat(arrowTop, "px");
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px 0");
+      baseStyle.borderRightColor = colors.primary.coolGray[600];
+    } else if (pos === 'rightTop') {
+      // 우측 상단: 화살표가 툴팁 본문의 상단에 위치 (패딩 위치)
+      baseStyle.left = "-".concat(ARROW_SIZE, "px");
+      baseStyle.top = "".concat(PADDING, "px");
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px 0");
+      baseStyle.borderRightColor = colors.primary.coolGray[600];
+    } else if (pos === 'rightBottom') {
+      // 우측 하단: 화살표가 툴팁 본문의 하단에 위치 (하단에서 패딩만큼 위)
+      baseStyle.left = "-".concat(ARROW_SIZE, "px");
+      baseStyle.bottom = "".concat(PADDING, "px");
+      baseStyle.borderWidth = "".concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px ").concat(ARROW_SIZE, "px 0");
+      baseStyle.borderRightColor = colors.primary.coolGray[600];
+    }
+    return baseStyle;
+  };
+  useEffect(function () {
+    if (visible) {
+      calculatePosition();
+      window.addEventListener('scroll', calculatePosition, true);
+      window.addEventListener('resize', calculatePosition);
+      return function () {
+        window.removeEventListener('scroll', calculatePosition, true);
+        window.removeEventListener('resize', calculatePosition);
+      };
+    }
+  }, [visible, calculatePosition]);
+  useEffect(function () {
+    return function () {
+      if (enterTimeoutRef.current) {
+        clearTimeout(enterTimeoutRef.current);
+      }
+      if (leaveTimeoutRef.current) {
+        clearTimeout(leaveTimeoutRef.current);
+      }
+    };
+  }, []);
+  var handleMouseEnter = function () {
+    if (trigger !== 'hover') return;
+    if (leaveTimeoutRef.current) {
+      clearTimeout(leaveTimeoutRef.current);
+    }
+    enterTimeoutRef.current = setTimeout(function () {
+      updateVisible(true);
+    }, mouseEnterDelay);
+  };
+  var handleMouseLeave = function () {
+    if (trigger !== 'hover') return;
+    if (enterTimeoutRef.current) {
+      clearTimeout(enterTimeoutRef.current);
+    }
+    leaveTimeoutRef.current = setTimeout(function () {
+      updateVisible(false);
+    }, mouseLeaveDelay);
+  };
+  var handleClick = function () {
+    if (trigger !== 'click') return;
+    updateVisible(!visible);
+  };
+  var handleClose = function (e) {
+    e.stopPropagation();
+    updateVisible(false);
+  };
+  // click 트리거일 때 외부 클릭 감지
+  useEffect(function () {
+    if (trigger !== 'click' || !visible) return;
+    var handleClickOutside = function (e) {
+      if (targetRef.current && !targetRef.current.contains(e.target) && tooltipRef.current && !tooltipRef.current.contains(e.target)) {
+        updateVisible(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return function () {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [trigger, visible, updateVisible]);
+  var tooltipContentStyle = __assign(__assign(__assign({
+    position: 'relative',
+    backgroundColor: colors.primary.coolGray[600],
+    color: colors.primary.gray.white,
+    borderRadius: '8px'
+  }, textStyles.body2), {
+    fontWeight: 500,
+    fontSize: '14px',
+    lineHeight: '1.57',
+    maxWidth: '300px',
+    wordWrap: 'break-word',
+    display: 'flex',
+    flexDirection: 'column',
+    pointerEvents: 'auto',
+    zIndex: 10001,
+    overflow: 'visible'
+  }), tooltipStyle);
+  var tooltipInnerStyle = {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: '4px',
+    padding: '9px 12px'
+  };
+  var tooltipTextStyle = {
+    flex: 1,
+    paddingTop: showCloseButton ? '0px' : '0px'
+  };
+  var wrapperStyle = {
+    display: 'inline-block',
+    cursor: trigger === 'click' ? 'pointer' : 'default'
+  };
+  var tooltipContent = visible && portalRoot && jsxs("div", {
+    ref: tooltipRef,
+    style: tooltipContentStyle,
+    className: className,
+    children: [jsxs("div", {
+      style: tooltipInnerStyle,
+      children: [jsx("span", {
+        style: tooltipTextStyle,
+        children: content
+      }), showCloseButton && jsx("button", {
+        onClick: handleClose,
+        style: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'transparent',
+          border: 'none',
+          padding: '2px',
+          cursor: 'pointer',
+          color: colors.primary.gray.white,
+          flexShrink: 0,
+          alignSelf: 'flex-start',
+          marginTop: '0px'
+        },
+        "aria-label": "Close tooltip",
+        children: jsx(Icon, {
+          type: "close",
+          size: 16,
+          color: colors.primary.gray.white
+        })
+      })]
+    }), jsx("div", {
+      style: arrowStyle
+    })]
+  });
+  return jsxs(Fragment, {
+    children: [jsx("div", {
+      ref: targetRef,
+      style: wrapperStyle,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+      onClick: handleClick,
+      children: children
+    }), portalRoot && createPortal(tooltipContent, portalRoot)]
+  });
+});
+Tooltip.displayName = 'Tooltip';
+
+export { ActivityGoalCard, Breadcrumb, Button, Checkbox, Chip, Dropdown, ExerciseCard, ExerciseList, Font, GreetingHeader, Icon, Illust, InlineNotification, Label, Logo, Modal, Pagination, Popover, Popup, Radio, SearchField, Stepper, Tab, TabBar, Table, TextArea, TextButton, TextField, TextInput, Toast$1 as Toast, ToastProvider, Toggle, Tooltip, YouthLottie, useToast };
 //# sourceMappingURL=index.esm.js.map

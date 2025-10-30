@@ -42,10 +42,22 @@ const meta: Meta<typeof Label> = {
     },
     color: {
       control: { type: 'select' },
-      options: ['lightGray', 'darkGray', 'lightViolet', 'violet', 'lightRed', 'red', 'lightGreen', 'green', 'lightYellow', 'yellow', 'grey'],
+      options: [
+        'lightGray',
+        'darkGray',
+        'lightViolet',
+        'violet',
+        'lightRed',
+        'red',
+        'lightGreen',
+        'green',
+        'lightYellow',
+        'yellow',
+        'grey',
+      ],
       description: '라벨의 색상을 설정합니다.',
       table: {
-        type: { summary: "LabelColor" },
+        type: { summary: 'LabelColor' },
         defaultValue: { summary: "'darkGray'" },
       },
     },
@@ -55,12 +67,28 @@ const meta: Meta<typeof Label> = {
     },
     leadingIcon: {
       control: { type: 'select' },
-      options: [undefined, 'add', 'minus', 'check', 'heart-stroke', 'profile-stroke', 'settings-stroke'],
+      options: [
+        undefined,
+        'add',
+        'minus',
+        'check',
+        'heart-stroke',
+        'profile-stroke',
+        'settings-stroke',
+      ],
       description: '라벨 텍스트 앞에 표시되는 아이콘입니다.',
     },
     trailingIcon: {
       control: { type: 'select' },
-      options: [undefined, 'add', 'minus', 'check', 'heart-stroke', 'profile-stroke', 'settings-stroke'],
+      options: [
+        undefined,
+        'add',
+        'minus',
+        'check',
+        'heart-stroke',
+        'profile-stroke',
+        'settings-stroke',
+      ],
       description: '라벨 텍스트 뒤에 표시되는 아이콘입니다.',
     },
   },
@@ -143,30 +171,56 @@ export const SquareVariations: Story = {
       <div>
         <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>Square - Large</h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label size="l" type="square" color="darkGray">New</Label>
-          <Label size="l" type="square" color="violet">Featured</Label>
-          <Label size="l" type="square" color="green" leadingIcon="check">완료</Label>
-          <Label size="l" type="square" color="red" leadingIcon="heart-stroke">중요</Label>
+          <Label size="l" type="square" color="darkGray">
+            New
+          </Label>
+          <Label size="l" type="square" color="violet">
+            Featured
+          </Label>
+          <Label size="l" type="square" color="green" leadingIcon="check">
+            완료
+          </Label>
+          <Label size="l" type="square" color="red" leadingIcon="heart-stroke">
+            중요
+          </Label>
         </div>
       </div>
-      
+
       <div>
-        <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>Square - Medium</h4>
+        <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>
+          Square - Medium
+        </h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label size="m" type="square" color="lightGray">Draft</Label>
-          <Label size="m" type="square" color="lightViolet">Beta</Label>
-          <Label size="m" type="square" color="lightGreen" trailingIcon="add">Add</Label>
-          <Label size="m" type="square" color="yellow">주의</Label>
+          <Label size="m" type="square" color="lightGray">
+            Draft
+          </Label>
+          <Label size="m" type="square" color="lightViolet">
+            Beta
+          </Label>
+          <Label size="m" type="square" color="lightGreen" trailingIcon="add">
+            Add
+          </Label>
+          <Label size="m" type="square" color="yellow">
+            주의
+          </Label>
         </div>
       </div>
-      
+
       <div>
         <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>Square - Small</h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label size="s" type="square" color="lightGray">v1.0</Label>
-          <Label size="s" type="square" color="violet">Pro</Label>
-          <Label size="s" type="square" color="green">✓</Label>
-          <Label size="s" type="square" color="red">!</Label>
+          <Label size="s" type="square" color="lightGray">
+            v1.0
+          </Label>
+          <Label size="s" type="square" color="violet">
+            Pro
+          </Label>
+          <Label size="s" type="square" color="green">
+            ✓
+          </Label>
+          <Label size="s" type="square" color="red">
+            !
+          </Label>
         </div>
       </div>
     </div>
@@ -178,32 +232,62 @@ export const CapsuleVariations: Story = {
   render: () => (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div>
-        <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>Capsule - Large</h4>
+        <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>
+          Capsule - Large
+        </h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label size="l" type="capsule" color="darkGray">카테고리</Label>
-          <Label size="l" type="capsule" color="violet">프리미엄</Label>
-          <Label size="l" type="capsule" color="green" leadingIcon="profile-stroke">멤버</Label>
-          <Label size="l" type="capsule" color="lightRed" trailingIcon="settings-stroke">설정</Label>
+          <Label size="l" type="capsule" color="darkGray">
+            카테고리
+          </Label>
+          <Label size="l" type="capsule" color="violet">
+            프리미엄
+          </Label>
+          <Label size="l" type="capsule" color="green" leadingIcon="profile-stroke">
+            멤버
+          </Label>
+          <Label size="l" type="capsule" color="lightRed" trailingIcon="settings-stroke">
+            설정
+          </Label>
         </div>
       </div>
-      
+
       <div>
-        <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>Capsule - Medium</h4>
+        <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>
+          Capsule - Medium
+        </h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label size="m" type="capsule" color="lightGray">태그</Label>
-          <Label size="m" type="capsule" color="lightViolet">라벨</Label>
-          <Label size="m" type="capsule" color="lightGreen">진행중</Label>
-          <Label size="m" type="capsule" color="yellow">대기</Label>
+          <Label size="m" type="capsule" color="lightGray">
+            태그
+          </Label>
+          <Label size="m" type="capsule" color="lightViolet">
+            라벨
+          </Label>
+          <Label size="m" type="capsule" color="lightGreen">
+            진행중
+          </Label>
+          <Label size="m" type="capsule" color="yellow">
+            대기
+          </Label>
         </div>
       </div>
-      
+
       <div>
-        <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>Capsule - Small</h4>
+        <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: '600' }}>
+          Capsule - Small
+        </h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label size="s" type="capsule" color="lightGray">소형</Label>
-          <Label size="s" type="capsule" color="violet">작음</Label>
-          <Label size="s" type="capsule" color="green">ON</Label>
-          <Label size="s" type="capsule" color="red">OFF</Label>
+          <Label size="s" type="capsule" color="lightGray">
+            소형
+          </Label>
+          <Label size="s" type="capsule" color="violet">
+            작음
+          </Label>
+          <Label size="s" type="capsule" color="green">
+            ON
+          </Label>
+          <Label size="s" type="capsule" color="red">
+            OFF
+          </Label>
         </div>
       </div>
     </div>
@@ -217,29 +301,49 @@ export const UseCases: Story = {
       <div>
         <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600' }}>상태 표시</h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label color="green" leadingIcon="check">활성</Label>
-          <Label color="red" leadingIcon="minus">비활성</Label>
-          <Label color="yellow" leadingIcon="heart-stroke">대기</Label>
+          <Label color="green" leadingIcon="check">
+            활성
+          </Label>
+          <Label color="red" leadingIcon="minus">
+            비활성
+          </Label>
+          <Label color="yellow" leadingIcon="heart-stroke">
+            대기
+          </Label>
           <Label color="lightGray">미정</Label>
         </div>
       </div>
-      
+
       <div>
         <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600' }}>카테고리 분류</h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label type="capsule" color="violet">기술</Label>
-          <Label type="capsule" color="lightGreen">디자인</Label>
-          <Label type="capsule" color="lightRed">마케팅</Label>
-          <Label type="capsule" color="lightYellow">기획</Label>
+          <Label type="capsule" color="violet">
+            기술
+          </Label>
+          <Label type="capsule" color="lightGreen">
+            디자인
+          </Label>
+          <Label type="capsule" color="lightRed">
+            마케팅
+          </Label>
+          <Label type="capsule" color="lightYellow">
+            기획
+          </Label>
         </div>
       </div>
-      
+
       <div>
         <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', fontWeight: '600' }}>우선순위</h4>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
-          <Label color="red" size="s">높음</Label>
-          <Label color="yellow" size="s">보통</Label>
-          <Label color="lightGray" size="s">낮음</Label>
+          <Label color="red" size="s">
+            높음
+          </Label>
+          <Label color="yellow" size="s">
+            보통
+          </Label>
+          <Label color="lightGray" size="s">
+            낮음
+          </Label>
         </div>
       </div>
     </div>

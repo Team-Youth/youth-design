@@ -97,3 +97,6 @@ export type { PopoverProps, PopoverItem } from './popover';
 
 export { Breadcrumb } from './breadcrumb';
 export type { BreadcrumbProps, BreadcrumbItem } from './breadcrumb';
+
+export { Tooltip } from './tooltip';
+export type { TooltipProps, TooltipPosition, TooltipTrigger } from './tooltip';
