@@ -25581,8 +25581,9 @@ var Stepper = function (_a) {
         setEditValue(inputValue);
       }
     } else {
-      // 숫자와 마이너스 기호만 허용
-      if (inputValue === '' || /^-?\d*$/.test(inputValue)) {
+      // 숫자, 마이너스 기호, 소수점 허용
+      // 소수점은 하나만 허용하며, 소수점만 있는 경우도 허용 (예: "22.", ".5")
+      if (inputValue === '' || /^-?(\d+\.?\d*|\.\d+)$/.test(inputValue)) {
         setEditValue(inputValue);
       }
     }
@@ -25601,9 +25602,9 @@ var Stepper = function (_a) {
         return;
       }
     } else {
-      newValue = parseInt(editValue, 10);
+      newValue = parseFloat(editValue);
       // 빈 값이거나 유효하지 않은 값인 경우 현재 값 유지
-      if (editValue === '' || isNaN(newValue)) {
+      if (editValue === '' || editValue === '.' || isNaN(newValue)) {
         setEditValue(String(currentValue));
         return;
       }
